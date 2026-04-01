@@ -2,6 +2,17 @@
 
 All notable changes to Journey OS will be documented in this file.
 
+## [0.1.1.0] - 2026-04-01
+
+### Added
+- Inngest event system scaffold with typed event definitions for lecture upload, pipeline step completion, and Neo4j sync
+- Inngest client instance with environment-scoped app ID (dev/staging/prod isolation)
+- Event type constants (`INNGEST_EVENT_NAMES`) to prevent string literal drift
+- Typed event triggers using Inngest v4 `eventType()` + `staticSchema()` pattern
+- Empty function registry ready for E02+ pipeline functions
+- Next.js API route (`/api/inngest`) serving the Inngest dev server endpoint
+- Workspace packages: `@journey/inngest` (client + functions), `@journey/web` (Next.js app), `@journey/types` barrel export
+
 ## [0.1.0.0] - 2026-04-01
 
 ### Added
