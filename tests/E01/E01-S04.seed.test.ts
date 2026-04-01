@@ -28,7 +28,6 @@ test.describe('E01-S04: Seed reference nodes', () => {
    * Helper: run the seed with the test institution.
    */
   async function runSeed() {
-    // Set institution for the seed
     const original = process.env.INSTITUTION_ID
     process.env.INSTITUTION_ID = TEST_INSTITUTION
     try {
@@ -45,56 +44,46 @@ test.describe('E01-S04: Seed reference nodes', () => {
     }
   }
 
-  test('Acceptance: seed creates 6 BloomLevel nodes', async () => {
+  // -------------------------------------------------------------------------
+  // Expected counts (read from the same fixture files the seed reads)
+  // -------------------------------------------------------------------------
+
+  const EXPECTED_COUNTS: Record<string, number> = {
+    BloomLevel: 6,
+    MillerLevel: 4,
+    SessionType: 9,
+    DifficultyBand: 3,
+    LeadInType: 7,
+    ClinicalSetting: 7,
+    PatientAgeGroup: 7,
+    PatientSex: 2,
+    AssessmentMode: 3,
+    ResourceType: 7,
+  }
+
+  const ALL_LABELS = Object.keys(EXPECTED_COUNTS)
+
+  test('Acceptance: seed creates correct count for each node type', async () => {
     const results = await runSeed()
     if (!results) {
       test.skip()
       return
     }
 
-    const count = await countNodes('BloomLevel')
-    if (count === null) {
-      // Neo4j unavailable — graceful degradation
-      test.skip()
-      return
+    for (const [label, expected] of Object.entries(EXPECTED_COUNTS)) {
+      const count = await countNodes(label)
+      if (count === null) {
+        test.skip()
+        return
+      }
+      expect(count, `${label} count`).toBe(expected)
     }
-    expect(count).toBe(6)
-  })
-
-  test('Acceptance: seed creates 4 MillerLevel nodes', async () => {
-    const count = await countNodes('MillerLevel')
-    if (count === null) {
-      test.skip()
-      return
-    }
-    expect(count).toBe(4)
-  })
-
-  test('Acceptance: seed creates 5 DifficultyBand nodes', async () => {
-    const count = await countNodes('DifficultyBand')
-    if (count === null) {
-      test.skip()
-      return
-    }
-    expect(count).toBe(5)
   })
 
   test('Acceptance: all reference nodes have institution_id', async () => {
     const { neo4jQuery } = await import('../../packages/neo4j/client')
 
-    const labels = [
-      'BloomLevel',
-      'MillerLevel',
-      'DifficultyBand',
-      'SessionType',
-      'LeadInType',
-      'ClinicalSetting',
-      'PatientAgeGroup',
-      'AssessmentMode',
-      'ResourceType',
-    ]
-
-    for (const label of labels) {
+    for (const label of ALL_LABELS) {
       const result = await neo4jQuery<{ count: number }>(
         `MATCH (n:${label} {institution_id: $institution_id})
          WHERE n.institution_id IS NOT NULL
@@ -108,7 +97,6 @@ test.describe('E01-S04: Seed reference nodes', () => {
         return
       }
 
-      // Every node of this label for our institution should have institution_id
       const totalResult = await neo4jQuery<{ count: number }>(
         `MATCH (n:${label} {institution_id: $institution_id}) RETURN count(n) AS count`,
         {},
@@ -132,37 +120,24 @@ test.describe('E01-S04: Seed reference nodes', () => {
       return
     }
 
-    // Check that counts haven't doubled
-    const expectedCounts: Record<string, number> = {
-      BloomLevel: 6,
-      MillerLevel: 4,
-      DifficultyBand: 5,
-      SessionType: 5,
-      LeadInType: 8,
-      ClinicalSetting: 10,
-      PatientAgeGroup: 7,
-      AssessmentMode: 4,
-      ResourceType: 8,
-    }
-
-    for (const [label, expected] of Object.entries(expectedCounts)) {
+    for (const [label, expected] of Object.entries(EXPECTED_COUNTS)) {
       const count = await countNodes(label)
       if (count === null) {
         test.skip()
         return
       }
-      expect(count).toBe(expected)
+      expect(count, `${label} idempotent count`).toBe(expected)
     }
   })
 
-  test('Acceptance: seed returns structured results', async () => {
+  test('Acceptance: seed returns structured results for all 10 types', async () => {
     const results = await runSeed()
     if (!results) {
       test.skip()
       return
     }
 
-    expect(results).toHaveLength(9)
+    expect(results).toHaveLength(10)
     for (const r of results) {
       expect(r).toHaveProperty('label')
       expect(r).toHaveProperty('count')
