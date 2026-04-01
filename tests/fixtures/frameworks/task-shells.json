@@ -1,0 +1,89 @@
+{
+  "source": "Journey OS Production Bible §09 — ECD Task Model (G02)",
+  "shells": [
+    {
+      "id": "ts-dx-from-presentation", "name": "Diagnosis from Presentation",
+      "concept_family": "diagnosis", "bloom_range": [2, 4], "lead_in_type": "diagnosis",
+      "variable_slots": ["patient_age", "patient_sex", "chief_complaint", "duration", "key_findings", "labs_imaging"],
+      "template_structure": "A {patient_age}-year-old {patient_sex} presents with {chief_complaint} for {duration}. {key_findings}. {labs_imaging}. Which of the following is the most likely diagnosis?",
+      "avg_quality_score": 0
+    },
+    {
+      "id": "ts-dx-from-lab", "name": "Diagnosis from Laboratory Pattern",
+      "concept_family": "diagnosis", "bloom_range": [3, 5], "lead_in_type": "diagnosis",
+      "variable_slots": ["patient_age", "patient_sex", "symptoms", "lab_panel", "abnormal_values"],
+      "template_structure": "A {patient_age}-year-old {patient_sex} presents with {symptoms}. Laboratory evaluation reveals {lab_panel} with {abnormal_values}. Which of the following is the most likely cause?",
+      "avg_quality_score": 0
+    },
+    {
+      "id": "ts-dx-from-imaging", "name": "Diagnosis from Imaging Description",
+      "concept_family": "diagnosis", "bloom_range": [3, 5], "lead_in_type": "diagnosis",
+      "variable_slots": ["patient_age", "patient_sex", "presenting_context", "imaging_modality", "imaging_findings"],
+      "template_structure": "{presenting_context}. {imaging_modality} reveals {imaging_findings}. Which of the following is the most likely diagnosis?",
+      "avg_quality_score": 0
+    },
+    {
+      "id": "ts-mechanism-drug", "name": "Drug Mechanism of Action",
+      "concept_family": "mechanism", "bloom_range": [2, 4], "lead_in_type": "mechanism",
+      "variable_slots": ["clinical_scenario", "drug_name", "therapeutic_effect"],
+      "template_structure": "{clinical_scenario}. {drug_name} is initiated. Which of the following best describes its primary mechanism of action?",
+      "avg_quality_score": 0
+    },
+    {
+      "id": "ts-mechanism-pathophysiology", "name": "Pathophysiological Mechanism",
+      "concept_family": "mechanism", "bloom_range": [3, 5], "lead_in_type": "mechanism",
+      "variable_slots": ["patient_demographics", "condition_context", "specific_finding"],
+      "template_structure": "{patient_demographics} with {condition_context}. {specific_finding}. Which of the following best explains the pathophysiological mechanism responsible for this finding?",
+      "avg_quality_score": 0
+    },
+    {
+      "id": "ts-mechanism-anatomy", "name": "Anatomical Mechanism / Structural Basis",
+      "concept_family": "mechanism", "bloom_range": [2, 4], "lead_in_type": "mechanism",
+      "variable_slots": ["clinical_scenario", "anatomical_finding", "nerve_or_vessel"],
+      "template_structure": "{clinical_scenario}. {anatomical_finding}. Which of the following structures is most likely responsible?",
+      "avg_quality_score": 0
+    },
+    {
+      "id": "ts-next-step-diagnostic", "name": "Next Best Diagnostic Step",
+      "concept_family": "next_step", "bloom_range": [3, 5], "lead_in_type": "next_best_step",
+      "variable_slots": ["patient_demographics", "presentation", "initial_evaluation"],
+      "template_structure": "{patient_demographics} presents with {presentation}. {initial_evaluation}. Which of the following is the most appropriate next step in the evaluation?",
+      "avg_quality_score": 0
+    },
+    {
+      "id": "ts-next-step-management", "name": "Next Best Management Step",
+      "concept_family": "next_step", "bloom_range": [3, 5], "lead_in_type": "next_best_step",
+      "variable_slots": ["patient_demographics", "diagnosis_established", "current_status"],
+      "template_structure": "{patient_demographics} is diagnosed with {diagnosis_established}. {current_status}. Which of the following is the most appropriate next step in management?",
+      "avg_quality_score": 0
+    },
+    {
+      "id": "ts-next-step-emergency", "name": "Emergency Immediate Action",
+      "concept_family": "next_step", "bloom_range": [4, 6], "lead_in_type": "next_best_step",
+      "variable_slots": ["emergent_scenario", "vital_signs", "physical_findings"],
+      "template_structure": "{emergent_scenario}. Vital signs: {vital_signs}. Examination reveals {physical_findings}. Which of the following is the most appropriate immediate action?",
+      "avg_quality_score": 0
+    },
+    {
+      "id": "ts-biomarker-select", "name": "Biomarker / Laboratory Test Selection",
+      "concept_family": "test_selection", "bloom_range": [2, 4], "lead_in_type": "diagnosis",
+      "variable_slots": ["clinical_scenario", "clinical_question", "timing_context"],
+      "template_structure": "{clinical_scenario}. {timing_context}. Which of the following laboratory tests is most appropriate to {clinical_question}?",
+      "avg_quality_score": 0
+    },
+    {
+      "id": "ts-drug-select-indication", "name": "Drug Selection by Indication / Patient Profile",
+      "concept_family": "test_selection", "bloom_range": [3, 5], "lead_in_type": "management",
+      "variable_slots": ["patient_profile", "diagnosis", "contraindication_context"],
+      "template_structure": "{patient_profile} with {diagnosis}. {contraindication_context}. Which of the following is the most appropriate pharmacotherapy?",
+      "avg_quality_score": 0
+    },
+    {
+      "id": "ts-screening-recommendation", "name": "Screening Test Recommendation",
+      "concept_family": "test_selection", "bloom_range": [2, 3], "lead_in_type": "next_best_step",
+      "variable_slots": ["patient_demographics", "risk_factors", "screening_context"],
+      "template_structure": "{patient_demographics} presents for a routine health maintenance visit. {risk_factors}. According to current guidelines, which of the following screening tests is most appropriate?",
+      "avg_quality_score": 0
+    }
+  ]
+}
