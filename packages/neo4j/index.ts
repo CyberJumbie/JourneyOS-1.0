@@ -13,6 +13,9 @@
 export { neo4jQuery } from './client'
 export type { Neo4jQueryResult, RequestContext } from './client'
 
+// Driver lifecycle — for test teardown and graceful server shutdown
+export { closeDriver } from './driver'
+
 // SAME_AS — safe edge creation with cycle detection (C09)
 export { createSameAsIfSafe } from './same-as'
 export type { SameAsProperties, SameAsResult } from './same-as'

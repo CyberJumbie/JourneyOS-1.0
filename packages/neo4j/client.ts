@@ -70,6 +70,28 @@ const REFERENCE_NODE_LABELS = new Set([
   'MisconceptionCategory',
   'TaskShell',
   'CarePhase',
+  // Phase 3-4 seed node types
+  'AnatomyRegion',
+  'FewShotExample',
+  'DifficultyBand',
+  'SessionType',
+  'LeadInType',
+  'ClinicalSetting',
+  'PatientAgeGroup',
+  'PatientSex',
+  'AssessmentMode',
+  'ResourceType',
+  'IPEC_Competency',
+  'IPEC_SubCompetency',
+  'LCME_Element',
+  'Course',
+  'ILO',
+  // HetioNet / DrugBank reference nodes
+  'Gene',
+  'Disease',
+  'Compound',
+  'Drug',
+  'DrugTarget',
 ])
 
 /**

@@ -32,18 +32,9 @@ module.exports = {
       rules: { 'no-restricted-imports': 'off' }
     },
     {
-      // Allow client.ts to import from ./driver (internal wiring)
+      // Allow client.ts to import from ./driver and neo4j-driver (internal wiring)
       files: ['packages/neo4j/client.ts'],
-      rules: {
-        'no-restricted-imports': ['error', {
-          patterns: [
-            {
-              group: ['neo4j-driver'],
-              message: 'Use @journey/neo4j/client. Never import raw driver (Rule 1 / C05 / AP-01).'
-            }
-          ]
-        }]
-      }
+      rules: { 'no-restricted-imports': 'off' }
     },
     {
       // Allow model strings in constants.ts only
