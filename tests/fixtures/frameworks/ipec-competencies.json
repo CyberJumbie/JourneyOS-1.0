@@ -1,0 +1,67 @@
+{
+  "source": "IPEC (2016) Core Competencies for Interprofessional Collaborative Practice",
+  "domains": [
+    {
+      "code": "VE", "name": "Values and Ethics for Interprofessional Practice",
+      "description": "Work with individuals of other professions to maintain a climate of mutual respect and shared values",
+      "sub_competencies": [
+        { "code": "VE-1", "title": "Place interests of patients and populations at center of interprofessional health care delivery" },
+        { "code": "VE-2", "title": "Respect the dignity and privacy of patients while maintaining confidentiality" },
+        { "code": "VE-3", "title": "Embrace cultural diversity and individual differences" },
+        { "code": "VE-4", "title": "Respect the unique cultures, values, roles/responsibilities of other health professions" },
+        { "code": "VE-5", "title": "Work with individuals of other professions to maintain mutual respect and shared values" },
+        { "code": "VE-6", "title": "Develop a trusting relationship with patients, families, and other team members" },
+        { "code": "VE-7", "title": "Demonstrate high standards of ethical conduct in contributions to others" },
+        { "code": "VE-8", "title": "Manage ethical dilemmas specific to interprofessional practice" },
+        { "code": "VE-9", "title": "Act with honesty and integrity in relationships with patients, families, and team members" },
+        { "code": "VE-10", "title": "Maintain competence in own profession appropriate to scope of practice" }
+      ]
+    },
+    {
+      "code": "RR", "name": "Roles and Responsibilities",
+      "description": "Use the knowledge of one's own role and those of other professions to appropriately assess and address health care needs of patients",
+      "sub_competencies": [
+        { "code": "RR-1", "title": "Communicate one's roles and responsibilities clearly to patients, families, and professionals" },
+        { "code": "RR-2", "title": "Recognize one's limitations in skills, knowledge, and abilities" },
+        { "code": "RR-3", "title": "Engage diverse professionals who complement one's own expertise to optimize care" },
+        { "code": "RR-4", "title": "Explain the roles and responsibilities of other care providers" },
+        { "code": "RR-5", "title": "Use the full scope of knowledge, skills, and abilities of professionals from health to provide care" },
+        { "code": "RR-6", "title": "Communicate with team members to clarify each member's responsibility in executing care plan" },
+        { "code": "RR-7", "title": "Forge interdependent relationships with other professions to improve care and advance learning" },
+        { "code": "RR-8", "title": "Engage in continuous professional and interprofessional development" },
+        { "code": "RR-9", "title": "Use unique and complementary abilities of all members of the team to optimize care" },
+        { "code": "RR-10", "title": "Describe how professionals in health and other fields can collaborate and integrate" }
+      ]
+    },
+    {
+      "code": "CC", "name": "Interprofessional Communication",
+      "description": "Communicate with patients, families, communities, and professionals in health and other fields in a responsive and responsible manner",
+      "sub_competencies": [
+        { "code": "CC-1", "title": "Choose effective communication tools and techniques for interprofessional interactions" },
+        { "code": "CC-2", "title": "Communicate information with patients, families, and team members in an understandable form" },
+        { "code": "CC-3", "title": "Express one's knowledge and opinions to team members with confidence, clarity, and respect" },
+        { "code": "CC-4", "title": "Listen actively and encourage ideas and opinions of other team members" },
+        { "code": "CC-5", "title": "Give timely, sensitive, instructive feedback to others about their performance" },
+        { "code": "CC-6", "title": "Use respectful language appropriate for a given difficult situation, conflict, or disagreement" },
+        { "code": "CC-7", "title": "Recognize how one's uniqueness contributes to effective communication and conflict resolution" },
+        { "code": "CC-8", "title": "Communicate consistently the importance of teamwork in patient-centered care" }
+      ]
+    },
+    {
+      "code": "TT", "name": "Teams and Teamwork",
+      "description": "Apply relationship-building values and principles of team dynamics to perform effectively in different team roles",
+      "sub_competencies": [
+        { "code": "TT-1", "title": "Describe the process of team development and the roles and practices of effective teams" },
+        { "code": "TT-2", "title": "Develop consensus on the ethical principles to guide all aspects of team work" },
+        { "code": "TT-3", "title": "Engage health and other professionals in shared patient-centered and population-focused problem-solving" },
+        { "code": "TT-4", "title": "Integrate the knowledge and experience of other professions to inform health care decisions" },
+        { "code": "TT-5", "title": "Apply leadership practices that support collaborative practice and team effectiveness" },
+        { "code": "TT-6", "title": "Engage self and others to constructively manage disagreements about values, roles, goals, and actions" },
+        { "code": "TT-7", "title": "Share accountability with other professions, patients, and communities for outcomes relevant to prevention and health care" },
+        { "code": "TT-8", "title": "Reflect on individual and team performance for individual and team performance improvement" },
+        { "code": "TT-9", "title": "Use process improvement strategies to increase the effectiveness of interprofessional teamwork" },
+        { "code": "TT-10", "title": "Use available evidence to inform effective teamwork and team-based practices" }
+      ]
+    }
+  ]
+}

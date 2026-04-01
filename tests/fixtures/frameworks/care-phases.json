@@ -1,0 +1,10 @@
+{
+  "source": "Journey OS Production Bible §10 — CarePhase (G09)",
+  "phases": [
+    { "name": "Preventive Care", "description": "Screening, immunization, health promotion before disease onset" },
+    { "name": "Acute Care", "description": "Diagnosis and immediate management of new or worsening conditions" },
+    { "name": "Chronic Disease Management", "description": "Long-term management of established conditions" },
+    { "name": "Rehabilitative Care", "description": "Restoration of function after illness or injury" },
+    { "name": "Palliative and End-of-Life Care", "description": "Symptom management and support for patients with serious illness" }
+  ]
+}
