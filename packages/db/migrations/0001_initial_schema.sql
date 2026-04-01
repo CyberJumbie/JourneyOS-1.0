@@ -659,12 +659,12 @@ CREATE POLICY distractor_via_item ON distractors
     )
   );
 
--- Admin-only tables (faculty with admin role)
+-- Admin-only tables (faculty with admin/dean role)
 CREATE POLICY admin_pipeline_dead_letters ON pipeline_dead_letters
   FOR ALL USING (
     EXISTS (
       SELECT 1 FROM faculty_profiles fp
-      WHERE fp.id = auth.uid() AND fp.role = 'admin'
+      WHERE fp.id = auth.uid() AND fp.role IN ('admin','dean')
     )
   );
 
@@ -701,14 +701,16 @@ CREATE POLICY item_versions_institution ON item_versions
     )
   );
 
--- Accommodations (admin + own student)
+-- Accommodations (admin + own student, institution-scoped)
 CREATE POLICY accommodations_access ON student_accommodations
   FOR ALL USING (
     student_id = auth.uid()
     OR EXISTS (
       SELECT 1 FROM faculty_profiles fp
+      JOIN student_profiles sp ON sp.institution_id = fp.institution_id
       WHERE fp.id = auth.uid()
       AND fp.role IN ('admin','dean','advisor')
+      AND sp.id = student_accommodations.student_id
     )
   );
 
@@ -903,5 +905,55 @@ CREATE POLICY faculty_lecture_read ON storage.objects
     AND EXISTS (
       SELECT 1 FROM faculty_profiles fp
       WHERE fp.id = auth.uid()
+    )
+  );
+
+-- =============================================================================
+-- E01 HARDENING: RLS on admin tables + distractor UPDATE policy
+-- =============================================================================
+
+-- Enable RLS on admin tables (defense-in-depth)
+ALTER TABLE institution_generation_limits ENABLE ROW LEVEL SECURITY;
+CREATE POLICY admin_generation_limits ON institution_generation_limits
+  FOR ALL USING (
+    institution_id IN (
+      SELECT fp.institution_id FROM faculty_profiles fp
+      WHERE fp.id = auth.uid() AND fp.role IN ('admin', 'dean')
+    )
+  );
+
+-- lod_brief_history has no institution_id; scope via subconcept_uuid -> subconcepts
+ALTER TABLE lod_brief_history ENABLE ROW LEVEL SECURITY;
+CREATE POLICY faculty_lod_brief_history ON lod_brief_history
+  FOR SELECT USING (
+    EXISTS (
+      SELECT 1 FROM subconcepts sc
+      JOIN faculty_profiles fp ON fp.institution_id = sc.institution_id
+      WHERE sc.id = lod_brief_history.subconcept_uuid
+      AND fp.id = auth.uid()
+    )
+  );
+
+-- entity_resolution_conflicts has no institution_id; scope via source_uuid -> subconcepts
+ALTER TABLE entity_resolution_conflicts ENABLE ROW LEVEL SECURITY;
+CREATE POLICY admin_entity_conflicts ON entity_resolution_conflicts
+  FOR ALL USING (
+    EXISTS (
+      SELECT 1 FROM subconcepts sc
+      JOIN faculty_profiles fp ON fp.institution_id = sc.institution_id
+      WHERE sc.id = entity_resolution_conflicts.source_uuid
+      AND fp.id = auth.uid()
+      AND fp.role IN ('admin', 'dean')
+    )
+  );
+
+-- Faculty distractor UPDATE (for review UI edits)
+CREATE POLICY faculty_distractor_update ON distractors
+  FOR UPDATE USING (
+    EXISTS (
+      SELECT 1 FROM assessment_items ai
+      JOIN faculty_profiles fp ON fp.institution_id = ai.institution_id
+      WHERE ai.id = distractors.item_id
+      AND fp.id = auth.uid()
     )
   );
