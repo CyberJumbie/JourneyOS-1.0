@@ -51,10 +51,11 @@ export async function seedLCMEStandards(): Promise<void> {
   const fixture = loadFixture()
 
   console.log('[seed:06] Seeding LCME standards and elements from fixture...')
+  let errors = 0
 
   for (const standard of fixture.standards) {
     // MERGE standard node — idempotent on code + institution_id
-    await neo4jQuery(
+    const stdResult = await neo4jQuery(
       `MERGE (s:LCME_Standard {code: $code, institution_id: $institution_id})
        ON CREATE SET
          s.uuid = $uuid,
@@ -74,10 +75,14 @@ export async function seedLCMEStandards(): Promise<void> {
       },
       ctx
     )
+    if (!stdResult) {
+      console.error(`  ✗ Failed: LCME_Standard (${standard.id})`)
+      errors++
+    }
 
     // MERGE each element and its edge
     for (const element of standard.elements) {
-      await neo4jQuery(
+      const elResult = await neo4jQuery(
         `MERGE (e:LCME_Element {code: $elementCode, institution_id: $institution_id})
          ON CREATE SET
            e.uuid = $uuid,
@@ -100,6 +105,10 @@ export async function seedLCMEStandards(): Promise<void> {
         },
         ctx
       )
+      if (!elResult) {
+        console.error(`  ✗ Failed: LCME_Element (${element.id})`)
+        errors++
+      }
     }
   }
 
@@ -107,6 +116,10 @@ export async function seedLCMEStandards(): Promise<void> {
     (sum, s) => sum + s.elements.length,
     0
   )
+  if (errors > 0) {
+    console.error(`[seed:06] ⚠ ${errors} nodes failed`)
+    throw new Error(`[seed:06] ${errors} nodes failed to seed`)
+  }
   console.log(
     `[seed:06] Done — ${fixture.standards.length} standards, ${totalElements} elements`
   )

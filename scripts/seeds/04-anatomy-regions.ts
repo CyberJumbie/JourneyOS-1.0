@@ -137,9 +137,11 @@ export async function seedAnatomyRegions(): Promise<void> {
 
   console.log('[seed:04] Seeding anatomy regions...')
 
+  let errors = 0
+
   for (const region of ANATOMY_REGIONS) {
     // MERGE top-level region — parent_code is null
-    await neo4jQuery(
+    const regionResult = await neo4jQuery(
       `MERGE (r:AnatomyRegion {code: $code, institution_id: $institution_id})
        ON CREATE SET
          r.uuid = $uuid,
@@ -155,10 +157,14 @@ export async function seedAnatomyRegions(): Promise<void> {
       },
       ctx
     )
+    if (!regionResult) {
+      console.error(`  ✗ Failed: AnatomyRegion (${region.name})`)
+      errors++
+    }
 
     // MERGE each sub-region and edge
     for (const sub of region.subRegions) {
-      await neo4jQuery(
+      const subResult = await neo4jQuery(
         `MERGE (sr:AnatomyRegion {code: $subCode, institution_id: $institution_id})
          ON CREATE SET
            sr.uuid = $uuid,
@@ -178,6 +184,10 @@ export async function seedAnatomyRegions(): Promise<void> {
         },
         ctx
       )
+      if (!subResult) {
+        console.error(`  ✗ Failed: AnatomyRegion sub-region (${sub.name})`)
+        errors++
+      }
     }
   }
 
@@ -185,6 +195,10 @@ export async function seedAnatomyRegions(): Promise<void> {
     (sum, r) => sum + r.subRegions.length,
     0
   )
+  if (errors > 0) {
+    console.error(`[seed:04] ⚠ ${errors} nodes failed`)
+    throw new Error(`[seed:04] ${errors} nodes failed to seed`)
+  }
   console.log(
     `[seed:04] Done — ${ANATOMY_REGIONS.length} top-level regions, ${totalSubs} sub-regions (${ANATOMY_REGIONS.length + totalSubs} total)`
   )

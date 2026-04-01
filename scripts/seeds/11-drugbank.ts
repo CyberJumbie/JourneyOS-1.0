@@ -82,6 +82,7 @@ const DRUGS: DrugData[] = [
   { name: 'Rifampin', drugbank_id: 'DB01045', mechanism_class: 'rifamycin', mechanism_detail: 'Inhibits bacterial DNA-dependent RNA polymerase beta subunit' },
   { name: 'Fluconazole', drugbank_id: 'DB00196', mechanism_class: 'azole_antifungal', mechanism_detail: 'Inhibits lanosterol 14-alpha-demethylase (CYP51); blocks ergosterol synthesis' },
   { name: 'Acyclovir', drugbank_id: 'DB00787', mechanism_class: 'guanosine_analog', mechanism_detail: 'Activated by viral thymidine kinase; inhibits viral DNA polymerase as chain terminator' },
+  { name: 'Metronidazole', drugbank_id: 'DB00916', mechanism_class: 'nitroimidazole_antibiotic', mechanism_detail: 'Reduced by anaerobic organisms to cytotoxic intermediates that damage DNA; also active against protozoa' },
 
   // Analgesic / Anti-inflammatory
   { name: 'Aspirin', drugbank_id: 'DB00945', mechanism_class: 'irreversible_COX_inhibitor', mechanism_detail: 'Irreversibly acetylates COX-1 (Ser530) and COX-2; inhibits TXA2 and prostaglandins' },
@@ -249,7 +250,7 @@ const DRUG_INTERACTIONS: DrugInteraction[] = [
   { drug1: 'Lisinopril', drug2: 'Losartan', severity: 'major', description: 'Dual RAAS blockade; increased risk of hyperkalemia and renal failure' },
   { drug1: 'Digoxin', drug2: 'Amiodarone', severity: 'major', description: 'Amiodarone inhibits P-glycoprotein; raises digoxin levels 70-100%' },
   { drug1: 'Digoxin', drug2: 'Furosemide', severity: 'moderate', description: 'Loop diuretic-induced hypokalemia increases digoxin toxicity risk' },
-  { drug1: 'Fluoxetine', drug2: 'Morphine', severity: 'moderate', description: 'Serotonergic effects of tramadol + SSRI may cause serotonin syndrome' },
+  { drug1: 'Fluoxetine', drug2: 'Morphine', severity: 'moderate', description: 'SSRIs inhibit CYP2D6, reducing morphine metabolism to active metabolite (morphine-6-glucuronide); may alter analgesic effect' },
   { drug1: 'Ciprofloxacin', drug2: 'Phenytoin', severity: 'moderate', description: 'Ciprofloxacin inhibits CYP1A2; may increase phenytoin levels' },
   { drug1: 'Isoniazid', drug2: 'Rifampin', severity: 'moderate', description: 'Both hepatotoxic; rifampin induces isoniazid metabolism via CYP2E1' },
   { drug1: 'Methotrexate', drug2: 'Trimethoprim', severity: 'major', description: 'Both inhibit folate metabolism; synergistic bone marrow suppression' },
