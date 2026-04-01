@@ -1,0 +1,605 @@
+{
+  "$schema": "MSM Quest Catalog Extract v2",
+  "institution": {
+    "id": "msm",
+    "name": "Morehouse School of Medicine",
+    "abbreviation": "MSM",
+    "program": "Doctor of Medicine (MD)",
+    "total_credits": 191.0,
+    "accreditation": "LCME",
+    "tracks": ["4-Year Standard", "5-Year Decelerated"],
+    "learning_outcome_domains": [
+      "Medical Knowledge",
+      "Clinical Skills",
+      "Professional Attributes"
+    ]
+  },
+
+  "programs": [
+    {
+      "id": "msm_md",
+      "name": "Doctor of Medicine",
+      "degree": "MD",
+      "total_credits": 191.0,
+      "academic_years": [
+        {
+          "id": "msm_m1",
+          "name": "M1",
+          "year_number": 1,
+          "type": "preclinical",
+          "total_credits": 51.0,
+          "theme": "Normal Structure & Function",
+          "phases": [
+            {
+              "id": "msm_phase_bp",
+              "name": "Basic Principles",
+              "abbreviation": "BP",
+              "months": "July-September",
+              "order": 1,
+              "blocks": [
+                {
+                  "id": "msm_block_bp",
+                  "name": "Basic Principles Block",
+                  "courses": [
+                    {
+                      "id": "msm_medi_530",
+                      "code": "MEDI 530",
+                      "name": "Basic Principles",
+                      "course_type": "integrated_organ_system",
+                      "credit_hours": 10.0,
+                      "description": "Integrated course covering anatomy, biochemistry, cell biology, genetics, embryology, and physiology as foundational sciences.",
+                      "grading": "letter",
+                      "required": true,
+                      "usmle_systems": ["General Principles", "Immune System", "Blood & Lymphoreticular"],
+                      "ilos": [],
+                      "curriculum_units": [
+                        { "id": "cu_gross_anatomy", "name": "Gross Anatomy", "order": 1, "usmle_systems": ["General Principles"] },
+                        { "id": "cu_biochemistry", "name": "Biochemistry", "order": 2, "usmle_systems": ["General Principles"] },
+                        { "id": "cu_cell_biology", "name": "Cell Biology", "order": 3, "usmle_systems": ["General Principles"] },
+                        { "id": "cu_genetics", "name": "Genetics", "order": 4, "usmle_systems": ["General Principles"] },
+                        { "id": "cu_embryology", "name": "Embryology", "order": 5, "usmle_systems": ["General Principles"] },
+                        { "id": "cu_physiology", "name": "Physiology", "order": 6, "usmle_systems": ["General Principles"] }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "msm_phase_os1",
+              "name": "Organ Systems 1",
+              "abbreviation": "OS1",
+              "months": "September-November",
+              "order": 2,
+              "blocks": [
+                {
+                  "id": "msm_block_os1",
+                  "name": "Organ Systems 1 Block",
+                  "courses": [
+                    {
+                      "id": "msm_medi_531",
+                      "code": "MEDI 531",
+                      "name": "Organ Systems 1",
+                      "course_type": "integrated_organ_system",
+                      "credit_hours": 10.0,
+                      "description": "Integrated systems-based course covering cardiovascular, respiratory, and renal systems.",
+                      "grading": "letter",
+                      "required": true,
+                      "usmle_systems": ["Cardiovascular", "Respiratory", "Renal & Urinary"],
+                      "ilos": [],
+                      "curriculum_units": [
+                        { "id": "cu_cardio", "name": "Cardiovascular", "order": 1, "usmle_systems": ["Cardiovascular System"] },
+                        { "id": "cu_respiratory", "name": "Respiratory", "order": 2, "usmle_systems": ["Respiratory System"] },
+                        { "id": "cu_renal", "name": "Renal", "order": 3, "usmle_systems": ["Renal & Urinary System"] }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "msm_phase_os2",
+              "name": "Organ Systems 2",
+              "abbreviation": "OS2",
+              "months": "January-February",
+              "order": 3,
+              "blocks": [
+                {
+                  "id": "msm_block_os2",
+                  "name": "Organ Systems 2 Block",
+                  "courses": [
+                    {
+                      "id": "msm_medi_532",
+                      "code": "MEDI 532",
+                      "name": "Organ Systems 2",
+                      "course_type": "integrated_organ_system",
+                      "credit_hours": 10.0,
+                      "description": "Integrated systems-based course covering gastrointestinal, endocrine, and reproductive systems.",
+                      "grading": "letter",
+                      "required": true,
+                      "usmle_systems": ["Gastrointestinal", "Endocrine", "Reproductive"],
+                      "ilos": [],
+                      "curriculum_units": [
+                        { "id": "cu_gi", "name": "Gastrointestinal", "order": 1, "usmle_systems": ["Gastrointestinal System"] },
+                        { "id": "cu_endocrine", "name": "Endocrine", "order": 2, "usmle_systems": ["Endocrine System"] },
+                        { "id": "cu_reproductive", "name": "Reproductive", "order": 3, "usmle_systems": ["Reproductive System"] }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "msm_phase_os3",
+              "name": "Organ Systems 3",
+              "abbreviation": "OS3",
+              "months": "March-May",
+              "order": 4,
+              "blocks": [
+                {
+                  "id": "msm_block_os3",
+                  "name": "Organ Systems 3 Block",
+                  "courses": [
+                    {
+                      "id": "msm_medi_533",
+                      "code": "MEDI 533",
+                      "name": "Organ Systems 3",
+                      "course_type": "integrated_organ_system",
+                      "credit_hours": 10.0,
+                      "description": "Integrated systems-based course covering musculoskeletal, nervous system, and special senses.",
+                      "grading": "letter",
+                      "required": true,
+                      "usmle_systems": ["Musculoskeletal, Skin & Subcutaneous Tissue", "Nervous System & Special Senses"],
+                      "ilos": [],
+                      "curriculum_units": [
+                        { "id": "cu_msk", "name": "Musculoskeletal", "order": 1, "usmle_systems": ["Musculoskeletal, Skin & Subcutaneous Tissue"] },
+                        { "id": "cu_neuro", "name": "Nervous System", "order": 2, "usmle_systems": ["Nervous System & Special Senses"] }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "longitudinal_courses": [
+            {
+              "id": "msm_medi_509",
+              "code": "MEDI 509",
+              "name": "Community Health",
+              "course_type": "longitudinal",
+              "credit_hours": 4.0,
+              "duration_weeks": 48,
+              "description": "Longitudinal course addressing community health, population health, health disparities, and social determinants of health.",
+              "grading": "letter",
+              "required": true,
+              "usmle_systems": ["Social Sciences"],
+              "ilos": [],
+              "curriculum_units": []
+            },
+            {
+              "id": "msm_medi_511",
+              "code": "MEDI 511",
+              "name": "Fundamentals of Medicine 1",
+              "course_type": "longitudinal",
+              "credit_hours": 7.0,
+              "duration_weeks": 48,
+              "description": "Longitudinal course introducing clinical skills, history taking, physical examination, and communication.",
+              "grading": "pass_fail",
+              "required": true,
+              "usmle_systems": ["General Principles"],
+              "ilos": [],
+              "curriculum_units": []
+            }
+          ]
+        },
+        {
+          "id": "msm_m2",
+          "name": "M2",
+          "year_number": 2,
+          "type": "preclinical",
+          "total_credits": 42.0,
+          "theme": "Abnormal Structure & Function",
+          "phases": [
+            {
+              "id": "msm_phase_m2",
+              "name": "M2 Discipline-Based",
+              "abbreviation": "M2",
+              "months": "July-May",
+              "order": 1,
+              "blocks": [
+                {
+                  "id": "msm_block_m2",
+                  "name": "M2 Block",
+                  "courses": [
+                    {
+                      "id": "msm_medi_600",
+                      "code": "MEDI 600",
+                      "name": "Pathophysiology",
+                      "course_type": "discipline_based",
+                      "credit_hours": 7.0,
+                      "description": "Disease mechanisms and clinical correlations integrating basic science with clinical pathology.",
+                      "grading": "letter",
+                      "required": true,
+                      "usmle_systems": ["General Principles", "Multisystem Processes & Disorders"],
+                      "ilos": [],
+                      "curriculum_units": []
+                    },
+                    {
+                      "id": "msm_medi_602",
+                      "code": "MEDI 602",
+                      "name": "Microbiology and Immunology",
+                      "course_type": "discipline_based",
+                      "credit_hours": 7.0,
+                      "description": "Bacteriology, virology, mycology, parasitology, immunology, and host defense mechanisms.",
+                      "grading": "letter",
+                      "required": true,
+                      "usmle_systems": ["Immune System"],
+                      "ilos": [],
+                      "curriculum_units": []
+                    },
+                    {
+                      "id": "msm_medi_603",
+                      "code": "MEDI 603",
+                      "name": "Pharmacology and Toxicology",
+                      "course_type": "discipline_based",
+                      "credit_hours": 7.0,
+                      "description": "Drug mechanisms, pharmacokinetics, pharmacodynamics, therapeutics, and toxicology.",
+                      "grading": "letter",
+                      "required": true,
+                      "usmle_systems": ["General Principles"],
+                      "ilos": [],
+                      "curriculum_units": []
+                    },
+                    {
+                      "id": "msm_medi_606",
+                      "code": "MEDI 606",
+                      "name": "Pathology",
+                      "course_type": "discipline_based",
+                      "credit_hours": 12.0,
+                      "description": "General and systemic pathology covering disease processes across all organ systems.",
+                      "grading": "letter",
+                      "required": true,
+                      "usmle_systems": ["General Principles"],
+                      "ilos": [],
+                      "curriculum_units": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "longitudinal_courses": [
+            {
+              "id": "msm_medi_611",
+              "code": "MEDI 611",
+              "name": "Fundamentals of Medicine 2",
+              "course_type": "longitudinal",
+              "credit_hours": 8.0,
+              "duration_weeks": 48,
+              "description": "Continues clinical skills development with emphasis on diagnostic reasoning and patient management.",
+              "grading": "pass_fail",
+              "required": true,
+              "usmle_systems": ["General Principles"],
+              "ilos": [],
+              "curriculum_units": []
+            },
+            {
+              "id": "msm_medi_512",
+              "code": "MEDI 512",
+              "name": "Board Preparation",
+              "course_type": "assessment",
+              "credit_hours": 1.0,
+              "duration_weeks": 8,
+              "description": "Dedicated board preparation period before USMLE Step 1.",
+              "grading": "pass_fail",
+              "required": true,
+              "usmle_systems": [],
+              "ilos": [],
+              "curriculum_units": []
+            }
+          ]
+        },
+        {
+          "id": "msm_m3",
+          "name": "M3",
+          "year_number": 3,
+          "type": "clinical",
+          "total_credits": 63.0,
+          "theme": "Core Clinical Experience",
+          "phases": [
+            {
+              "id": "msm_phase_clerkship",
+              "name": "Core Clerkships",
+              "abbreviation": "CLK",
+              "months": "July-June",
+              "order": 1,
+              "blocks": [
+                {
+                  "id": "msm_block_clerkship",
+                  "name": "Core Clerkship Block",
+                  "courses": [
+                    {
+                      "id": "msm_medi_700",
+                      "code": "MEDI 700",
+                      "name": "Internal Medicine",
+                      "course_type": "clerkship",
+                      "credit_hours": 10.0,
+                      "duration_weeks": 12,
+                      "description": "Focuses on managing complex disease states, history taking, and problem-oriented medical records.",
+                      "grading": "letter",
+                      "required": true,
+                      "usmle_systems": ["General Principles"],
+                      "acgme_domains": ["PC", "MK", "ICS"],
+                      "clinical_sites": ["Grady Memorial Hospital", "Atlanta VA Medical Center"],
+                      "ilos": ["msm_ilo_01", "msm_ilo_05"],
+                      "curriculum_units": []
+                    },
+                    {
+                      "id": "msm_medi_701",
+                      "code": "MEDI 701",
+                      "name": "Pediatrics",
+                      "course_type": "clerkship",
+                      "credit_hours": 10.0,
+                      "duration_weeks": 8,
+                      "description": "Ambulatory and hospital settings focusing on care of children from birth through adolescence.",
+                      "grading": "letter",
+                      "required": true,
+                      "usmle_systems": ["General Principles"],
+                      "acgme_domains": ["PC", "MK", "ICS"],
+                      "clinical_sites": ["Children's Healthcare of Atlanta"],
+                      "ilos": ["msm_ilo_01", "msm_ilo_05"],
+                      "curriculum_units": []
+                    },
+                    {
+                      "id": "msm_medi_703",
+                      "code": "MEDI 703",
+                      "name": "Obstetrics & Gynecology",
+                      "course_type": "clerkship",
+                      "credit_hours": 10.0,
+                      "duration_weeks": 8,
+                      "description": "Involves labor and delivery, surgeries, and outpatient care. Covers maternal-fetal medicine, oncology, and reproductive endocrinology.",
+                      "grading": "letter",
+                      "required": true,
+                      "usmle_systems": ["Reproductive"],
+                      "acgme_domains": ["PC", "MK", "ICS"],
+                      "clinical_sites": [],
+                      "ilos": ["msm_ilo_01", "msm_ilo_05"],
+                      "curriculum_units": []
+                    },
+                    {
+                      "id": "msm_medi_704",
+                      "code": "MEDI 704",
+                      "name": "Psychiatry",
+                      "course_type": "clerkship",
+                      "credit_hours": 8.0,
+                      "duration_weeks": 6,
+                      "description": "Diagnosis and management of psychiatric disorders in inpatient and outpatient settings.",
+                      "grading": "letter",
+                      "required": true,
+                      "usmle_systems": ["Nervous System", "Behavioral Health"],
+                      "acgme_domains": ["PC", "MK", "ICS", "PROF"],
+                      "clinical_sites": ["Ridgeview Institute", "Georgia Regional Hospital"],
+                      "ilos": ["msm_ilo_01", "msm_ilo_06"],
+                      "curriculum_units": []
+                    },
+                    {
+                      "id": "msm_medi_705",
+                      "code": "MEDI 705",
+                      "name": "Surgery",
+                      "course_type": "clerkship",
+                      "credit_hours": 10.0,
+                      "duration_weeks": 8,
+                      "description": "Covers general surgery and subspecialties with participation in OR, trauma management, and perioperative care.",
+                      "grading": "letter",
+                      "required": true,
+                      "usmle_systems": ["General Principles"],
+                      "acgme_domains": ["PC", "MK", "SBP"],
+                      "clinical_sites": ["Grady Memorial Hospital"],
+                      "ilos": ["msm_ilo_01", "msm_ilo_02"],
+                      "curriculum_units": []
+                    },
+                    {
+                      "id": "msm_medi_707",
+                      "code": "MEDI 707",
+                      "name": "Family Medicine & Rural Health",
+                      "course_type": "clerkship",
+                      "credit_hours": 8.0,
+                      "duration_weeks": 6,
+                      "description": "Emphasizes comprehensive, continuous care in ambulatory settings, often including a rural placement.",
+                      "grading": "letter",
+                      "required": true,
+                      "usmle_systems": ["General Principles"],
+                      "acgme_domains": ["PC", "MK", "ICS", "SBP"],
+                      "clinical_sites": [],
+                      "ilos": ["msm_ilo_01", "msm_ilo_08"],
+                      "curriculum_units": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "longitudinal_courses": [
+            {
+              "id": "msm_medi_711",
+              "code": "MEDI 711",
+              "name": "Fundamentals of Medicine 3",
+              "course_type": "longitudinal",
+              "credit_hours": 2.0,
+              "duration_weeks": 48,
+              "description": "Longitudinal seminar course discussing multi-disciplinary topics and ethics during clerkship year.",
+              "grading": "pass_fail",
+              "required": true,
+              "usmle_systems": [],
+              "ilos": [],
+              "curriculum_units": []
+            },
+            {
+              "id": "msm_medi_712",
+              "code": "MEDI 712",
+              "name": "Clinical Passport",
+              "course_type": "requirement",
+              "credit_hours": 0.0,
+              "duration_weeks": null,
+              "description": "Mandatory modules and certifications required before beginning clinical rotations.",
+              "grading": "pass_fail",
+              "required": true,
+              "usmle_systems": [],
+              "ilos": [],
+              "curriculum_units": []
+            },
+            {
+              "id": "msm_medi_713",
+              "code": "MEDI 713",
+              "name": "Career Exploration",
+              "course_type": "elective",
+              "credit_hours": 5.0,
+              "duration_weeks": 4,
+              "description": "Two 2-week rotations for exploring specialty interests.",
+              "grading": "pass_fail",
+              "required": true,
+              "usmle_systems": [],
+              "ilos": [],
+              "curriculum_units": []
+            }
+          ]
+        },
+        {
+          "id": "msm_m4",
+          "name": "M4",
+          "year_number": 4,
+          "type": "clinical",
+          "total_credits": 35.0,
+          "theme": "Advanced Clinical & Transition to Residency",
+          "phases": [
+            {
+              "id": "msm_phase_senior",
+              "name": "Senior Year",
+              "abbreviation": "SR",
+              "months": "July-May",
+              "order": 1,
+              "blocks": [
+                {
+                  "id": "msm_block_senior",
+                  "name": "Senior Block",
+                  "courses": [
+                    {
+                      "id": "msm_medi_senior_selective",
+                      "code": "MEDI 800",
+                      "name": "Senior Selective",
+                      "course_type": "selective",
+                      "credit_hours": 4.0,
+                      "duration_weeks": 4,
+                      "description": "Acting internship or ICU rotation. Required sub-internship experience.",
+                      "grading": "letter",
+                      "required": true,
+                      "usmle_systems": [],
+                      "ilos": [],
+                      "curriculum_units": []
+                    },
+                    {
+                      "id": "msm_medi_734",
+                      "code": "MEDI 734",
+                      "name": "Directed Studies",
+                      "course_type": "elective",
+                      "credit_hours": 6.0,
+                      "duration_weeks": 6,
+                      "description": "Faculty-mentored independent study or research project.",
+                      "grading": "pass_fail",
+                      "required": false,
+                      "usmle_systems": [],
+                      "ilos": [],
+                      "curriculum_units": []
+                    },
+                    {
+                      "id": "msm_medi_electives",
+                      "code": "MEDI 8XX",
+                      "name": "Elective Rotations",
+                      "course_type": "elective_block",
+                      "credit_hours": 25.0,
+                      "duration_weeks": 28,
+                      "description": "Six 4-week elective rotations across clinical specialties. Students select from approved list.",
+                      "grading": "pass_fail",
+                      "required": true,
+                      "usmle_systems": [],
+                      "ilos": [],
+                      "curriculum_units": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "longitudinal_courses": []
+        }
+      ]
+    }
+  ],
+
+  "prerequisites": [
+    { "course": "MEDI 531", "requires": "MEDI 530", "type": "sequential" },
+    { "course": "MEDI 532", "requires": "MEDI 531", "type": "sequential" },
+    { "course": "MEDI 533", "requires": "MEDI 532", "type": "sequential" },
+    { "course": "MEDI 602", "requires": "M1 curriculum", "type": "year_completion" },
+    { "course": "MEDI 603", "requires": "biochemistry and physiology", "type": "course_completion" },
+    { "course": "MEDI 606", "requires": "Human Morphology, Biochemistry, Neuroscience, Medical Physiology", "type": "course_completion" },
+    { "course": "MEDI 611", "requires": "MEDI 511", "type": "sequential" },
+    { "course": "M3 clerkships", "requires": "USMLE Step 1 passing score", "type": "promotion_gate" },
+    { "course": "MEDI 712", "requires": "mandatory modules completed", "type": "certification" },
+    { "course": "MEDI 705", "requires": "all M1/M2 requirements", "type": "year_completion" },
+    { "course": "M4 selective", "requires": "M3 core clerkships completed", "type": "promotion_gate" }
+  ],
+
+  "promotion_gates": [
+    { "id": "gate_step1", "name": "USMLE Step 1", "from_year": "M2", "to_year": "M3", "type": "exam", "required": true },
+    { "id": "gate_clinical_comp", "name": "Clinical Competency Assessment", "from_year": "M2", "to_year": "M3", "type": "assessment", "required": true },
+    { "id": "gate_clerkship_completion", "name": "Core Clerkship Completion", "from_year": "M3", "to_year": "M4", "type": "completion", "required": true },
+    { "id": "gate_step2", "name": "USMLE Step 2 CK", "from_year": "M4", "to_year": "graduation", "type": "exam", "required": true },
+    { "id": "gate_osce", "name": "Comprehensive OSCE", "from_year": "M4", "to_year": "graduation", "type": "assessment", "required": true }
+  ],
+
+  "institutional_learning_objectives": [
+    { "id": "msm_ilo_01", "domain": "Medical Knowledge", "text": "Apply knowledge of normal and abnormal human structure, function, and development to clinical reasoning" },
+    { "id": "msm_ilo_02", "domain": "Medical Knowledge", "text": "Integrate biochemical, immunologic, pharmacologic, and microbiologic principles in understanding disease" },
+    { "id": "msm_ilo_03", "domain": "Medical Knowledge", "text": "Apply principles of epidemiology and biostatistics to evidence-based practice" },
+    { "id": "msm_ilo_04", "domain": "Medical Knowledge", "text": "Recognize the impact of social determinants on health and disease" },
+    { "id": "msm_ilo_05", "domain": "Clinical Skills", "text": "Perform a complete history and physical examination" },
+    { "id": "msm_ilo_06", "domain": "Clinical Skills", "text": "Analyze clinical presentations and develop differential diagnoses" },
+    { "id": "msm_ilo_07", "domain": "Clinical Skills", "text": "Develop evidence-based diagnostic and therapeutic plans" },
+    { "id": "msm_ilo_08", "domain": "Clinical Skills", "text": "Communicate effectively with patients, families, and healthcare teams" },
+    { "id": "msm_ilo_09", "domain": "Professional Attributes", "text": "Demonstrate ethical behavior and moral reasoning in clinical practice" },
+    { "id": "msm_ilo_10", "domain": "Professional Attributes", "text": "Commit to service, health equity, and advocacy for underserved populations" }
+  ],
+
+  "academic_terms": [
+    { "id": "fall_2025", "semester": "Fall", "year": 2025, "start_date": "2025-07-28", "end_date": "2025-12-12", "order": 1 },
+    { "id": "spring_2026", "semester": "Spring", "year": 2026, "start_date": "2026-01-12", "end_date": "2026-05-15", "order": 2 },
+    { "id": "fall_2026", "semester": "Fall", "year": 2026, "start_date": "2026-07-27", "end_date": "2026-12-11", "order": 3 },
+    { "id": "spring_2027", "semester": "Spring", "year": 2027, "start_date": "2027-01-11", "end_date": "2027-05-14", "order": 4 },
+    { "id": "fall_2027", "semester": "Fall", "year": 2027, "start_date": "2027-07-26", "end_date": "2027-12-10", "order": 5 },
+    { "id": "spring_2028", "semester": "Spring", "year": 2028, "start_date": "2028-01-10", "end_date": "2028-05-12", "order": 6 },
+    { "id": "fall_2028", "semester": "Fall", "year": 2028, "start_date": "2028-07-24", "end_date": "2028-12-08", "order": 7 },
+    { "id": "spring_2029", "semester": "Spring", "year": 2029, "start_date": "2029-01-08", "end_date": "2029-05-11", "order": 8 }
+  ],
+
+  "session_types": [
+    { "id": "lecture", "name": "Lecture", "description": "Didactic presentation to full class" },
+    { "id": "gross_lab", "name": "Gross Lab", "description": "Anatomy dissection laboratory" },
+    { "id": "small_group", "name": "Small Group", "description": "PBL, TBL, case-based discussion" },
+    { "id": "self_directed", "name": "Self-directed", "description": "Independent study, computer-based tutorials" },
+    { "id": "demonstration", "name": "Demonstration", "description": "Faculty demonstration of clinical or lab techniques" },
+    { "id": "problem_session", "name": "Problem Session", "description": "Structured problem-solving exercises" },
+    { "id": "case_based", "name": "Case-based", "description": "Case-based learning sessions" },
+    { "id": "simulation", "name": "Simulation", "description": "Standardized patient encounters, simulation lab" },
+    { "id": "preceptorship", "name": "Preceptorship", "description": "Clinical preceptorship visit in community settings" }
+  ],
+
+  "clinical_sites": [
+    { "id": "grady", "name": "Grady Memorial Hospital", "type": "teaching_hospital", "location": "Atlanta, GA" },
+    { "id": "choa", "name": "Children's Healthcare of Atlanta", "type": "children_hospital", "location": "Atlanta, GA" },
+    { "id": "va_atlanta", "name": "Atlanta VA Medical Center", "type": "va_hospital", "location": "Decatur, GA" },
+    { "id": "wellstar", "name": "WellStar Atlanta Medical Center", "type": "teaching_hospital", "location": "Atlanta, GA" },
+    { "id": "ridgeview", "name": "Ridgeview Institute", "type": "psychiatric_facility", "location": "Smyrna, GA" },
+    { "id": "grh", "name": "Georgia Regional Hospital", "type": "psychiatric_facility", "location": "Atlanta, GA" }
+  ]
+}

@@ -1,0 +1,76 @@
+# Journey OS — Sidecar Services
+# Run: docker compose up -d pptx-renderer pdf-renderer
+# MetaMap separately (needs 4GB RAM): docker compose up -d metamap
+
+services:
+
+  pptx-renderer:
+    image: python:3.11-slim
+    container_name: jrns-pptx-renderer
+    working_dir: /app
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./sidecars/pptx-renderer:/app
+    command: >
+      bash -c "
+        pip install flask python-pptx Pillow --quiet &&
+        python app.py
+      "
+    environment:
+      - FLASK_ENV=production
+      - PORT=5000
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+
+  pdf-renderer:
+    image: python:3.11-slim
+    container_name: jrns-pdf-renderer
+    working_dir: /app
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./sidecars/pdf-renderer:/app
+    command: >
+      bash -c "
+        apt-get update -qq && apt-get install -qq -y poppler-utils &&
+        pip install flask pdfplumber pdf2image Pillow --quiet &&
+        python app.py
+      "
+    environment:
+      - FLASK_ENV=production
+      - PORT=5001
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5001/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+
+  metamap:
+    image: eclipse-temurin:11-jre
+    container_name: jrns-metamap
+    working_dir: /metamap
+    ports:
+      - "8080:8080"
+    volumes:
+      - metamap-data:/metamap
+    environment:
+      - METAMAP_PORT=8080
+    # MetaMap requires manual setup — see sidecars/metamap/README.md
+    # The image here is a placeholder; replace with your MetaMap Docker image
+    # Recommended: use QuickUMLS as a lighter alternative (see README)
+    command: >
+      bash -c "echo 'MetaMap placeholder — see sidecars/metamap/README.md for setup' && sleep infinity"
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+
+volumes:
+  metamap-data:

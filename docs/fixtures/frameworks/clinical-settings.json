@@ -1,0 +1,12 @@
+{
+  "source": "MSM Quest internal definition",
+  "settings": [
+    "Emergency Department",
+    "Outpatient Clinic",
+    "Inpatient Ward",
+    "Intensive Care Unit",
+    "Operating Room",
+    "Community Health Center",
+    "Telehealth"
+  ]
+}

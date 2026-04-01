@@ -1,0 +1,12 @@
+{
+  "source": "MSM Quest internal definition — educational resource categories",
+  "types": [
+    { "name": "Textbook", "description": "Published textbook or textbook chapter" },
+    { "name": "Journal Article", "description": "Peer-reviewed journal article or review" },
+    { "name": "Video", "description": "Educational video or recorded lecture" },
+    { "name": "Simulation", "description": "Interactive simulation or virtual patient case" },
+    { "name": "Clinical Case", "description": "Written clinical case study or vignette" },
+    { "name": "Lecture Notes", "description": "Faculty-authored lecture notes or slides" },
+    { "name": "Practice Questions", "description": "Question bank or practice assessment items" }
+  ]
+}

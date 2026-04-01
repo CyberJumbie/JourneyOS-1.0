@@ -1,0 +1,198 @@
+{
+  "$schema": "lcme-standards-schema",
+  "source": "LCME Functions and Structure of a Medical School, 2025-26",
+  "version": "2025",
+  "total_standards": 12,
+  "total_elements": 93,
+  "standards": [
+    {
+      "id": "LCME-1",
+      "number": 1,
+      "title": "Mission, Planning, Organization, and Integrity",
+      "summary": "Written statement of mission and goals, ongoing planning, written bylaws, effective organizational structure, integrity in all activities.",
+      "elements": [
+        { "id": "1.1", "title": "Strategic Planning and Continuous Quality Improvement", "summary": "Ongoing strategic planning and CQI processes with measurable outcomes to improve program quality and monitor accreditation compliance." },
+        { "id": "1.2", "title": "Conflict of Interest", "summary": "Effective policies for board members, faculty, and others to avoid conflicts of interest in medical education program operations." },
+        { "id": "1.3", "title": "Mechanisms for Faculty Participation", "summary": "Effective mechanisms for direct faculty participation in decision-making related to the medical education program." },
+        { "id": "1.4", "title": "Affiliation Agreements", "summary": "Written affiliation agreements with clinical affiliates specifying responsibilities, student/faculty access, academic authority, and learning environment." },
+        { "id": "1.5", "title": "Bylaws", "summary": "Bylaws or similar documents describing responsibilities and privileges of administrative officers, faculty, and committees." },
+        { "id": "1.6", "title": "Eligibility Requirements", "summary": "Medical education program meets all LCME eligibility requirements including degree-granting authority and regional accreditation." }
+      ]
+    },
+    {
+      "id": "LCME-2",
+      "number": 2,
+      "title": "Leadership and Administration",
+      "summary": "Sufficient faculty in leadership roles and senior administrative staff with skills, time, and support to achieve program goals.",
+      "elements": [
+        { "id": "2.1", "title": "Administrative Officer and Faculty Appointments", "summary": "Senior administrative staff and faculty appointed by or on authority of the governing board." },
+        { "id": "2.2", "title": "Dean's Qualifications", "summary": "Dean qualified by education, training, and experience for effective leadership in medical education, scholarly activity, and patient care." },
+        { "id": "2.3", "title": "Access and Authority of the Dean", "summary": "Dean has sufficient access to institutional officials and clear definition of authority and responsibility for the program." },
+        { "id": "2.4", "title": "Sufficiency of Administrative Staff", "summary": "Sufficient associate/assistant deans, unit leaders, and senior administrative staff able to commit necessary time." },
+        { "id": "2.5", "title": "Responsibility of and to the Dean", "summary": "Dean administratively responsible for conduct and quality of the program; principal academic officers at regional campuses report to dean." },
+        { "id": "2.6", "title": "Functional Integration of the Faculty", "summary": "Faculty at all campuses functionally integrated through appropriate administrative mechanisms." }
+      ]
+    },
+    {
+      "id": "LCME-3",
+      "number": 3,
+      "title": "Academic and Learning Environments",
+      "summary": "Professional, respectful, intellectually stimulating environments that recognize diversity benefits and promote required competencies.",
+      "elements": [
+        { "id": "3.1", "title": "Resident Participation in Medical Student Education", "summary": "Each student participates in required clinical experiences with resident physicians in accredited GME programs." },
+        { "id": "3.2", "title": "Community of Scholars/Research Opportunities", "summary": "Environment fosters intellectual challenge and spirit of inquiry with sufficient opportunities for student research participation." },
+        { "id": "3.3", "title": "Diversity/Pipeline Programs and Partnerships", "summary": "Effective policies and systematic recruitment/retention activities to achieve mission-appropriate diversity outcomes." },
+        { "id": "3.4", "title": "Anti-Discrimination Policy", "summary": "Policy ensuring no discrimination on basis of age, disability, gender identity, national origin, race, religion, sex, sexual orientation, or federal protected basis." },
+        { "id": "3.5", "title": "Learning Environment/Professionalism", "summary": "Learning environment conducive to professional behaviors; periodic evaluation to enhance positive and mitigate negative influences." },
+        { "id": "3.6", "title": "Student Mistreatment", "summary": "Written mistreatment policies, prompt response mechanisms, educational activities for prevention, and reporting without fear of retaliation." }
+      ]
+    },
+    {
+      "id": "LCME-4",
+      "number": 4,
+      "title": "Faculty Preparation, Productivity, Participation, and Policies",
+      "summary": "Faculty qualified through education, training, experience, and continuing professional development to support institutional goals.",
+      "elements": [
+        { "id": "4.1", "title": "Sufficiency of Faculty", "summary": "Sufficient faculty cohort with qualifications and time to deliver curriculum and meet institutional missions." },
+        { "id": "4.2", "title": "Scholarly Productivity", "summary": "Faculty demonstrate commitment to continuing scholarly productivity characteristic of higher learning." },
+        { "id": "4.3", "title": "Faculty Appointment Policies", "summary": "Clear policies for appointment, renewal, promotion, tenure, remediation, and dismissal with written information for each faculty member." },
+        { "id": "4.4", "title": "Feedback to Faculty", "summary": "Regularly scheduled and timely feedback on academic performance and progress toward promotion/tenure." },
+        { "id": "4.5", "title": "Faculty Professional Development", "summary": "Opportunities for professional development in discipline content, curricular design, program evaluation, assessment, instructional methodology, and research." },
+        { "id": "4.6", "title": "Responsibility for Medical School Policies", "summary": "Dean and faculty committee determine governance and policymaking processes within their purview." }
+      ]
+    },
+    {
+      "id": "LCME-5",
+      "number": 5,
+      "title": "Educational Resources and Infrastructure",
+      "summary": "Sufficient personnel, financial resources, facilities, equipment, and clinical/informational/technological resources across all locations.",
+      "elements": [
+        { "id": "5.1", "title": "Adequacy of Financial Resources", "summary": "Financial resources from diverse sources adequate to sustain sound medical education and accomplish institutional goals." },
+        { "id": "5.2", "title": "Dean's Authority/Resources", "summary": "Dean has sufficient resources and budgetary authority for management and evaluation of the medical curriculum." },
+        { "id": "5.3", "title": "Pressures for Self-Financing", "summary": "School admits only as many applicants as resources accommodate; financial influences do not compromise educational mission." },
+        { "id": "5.4", "title": "Sufficiency of Buildings and Equipment", "summary": "Buildings and equipment sufficient for educational, clinical, and research missions." },
+        { "id": "5.5", "title": "Resources for Clinical Instruction", "summary": "Appropriate resources for clinical instruction in ambulatory and inpatient settings with adequate patient numbers and types." },
+        { "id": "5.6", "title": "Clinical Instructional Facilities/Information Resources", "summary": "Affiliated clinical facilities have sufficient information resources and instructional facilities." },
+        { "id": "5.7", "title": "Security, Student Safety, and Disaster Preparedness", "summary": "Adequate security systems, published safety policies, and emergency/disaster preparedness at all locations." },
+        { "id": "5.8", "title": "Library Resources/Staff", "summary": "Ready access to well-maintained library resources with professional staff familiar with regional/national information systems." },
+        { "id": "5.9", "title": "Information Technology Resources/Staff", "summary": "Access to well-maintained IT resources with sufficient staff expertise responsive to institutional needs." },
+        { "id": "5.10", "title": "Resources Used by Transfer/Visiting Students", "summary": "Resources for visiting/transfer students do not significantly diminish resources for enrolled students." },
+        { "id": "5.11", "title": "Study/Lounge/Storage Space/Call Rooms", "summary": "Adequate study space, lounge areas, secure storage, and call rooms at each campus and clinical site." },
+        { "id": "5.12", "title": "Required Notifications to the LCME", "summary": "School notifies LCME of substantial changes in enrollment, resources, curriculum modifications, or affiliation status changes." }
+      ]
+    },
+    {
+      "id": "LCME-6",
+      "number": 6,
+      "title": "Competencies, Curricular Objectives, and Curricular Design",
+      "summary": "Faculty define competencies through program objectives and design curriculum components enabling students to achieve them.",
+      "elements": [
+        { "id": "6.1", "title": "Program and Learning Objectives", "summary": "Faculty define outcome-based program objectives allowing assessment of student progress; objectives known to all students and faculty." },
+        { "id": "6.2", "title": "Required Clinical Experiences", "summary": "Faculty define required patient types, clinical conditions, student skills, appropriate settings, and expected levels of responsibility." },
+        { "id": "6.3", "title": "Self-Directed and Life-Long Learning", "summary": "Curriculum includes self-directed learning experiences and unscheduled time for developing lifelong learning skills." },
+        { "id": "6.4", "title": "Inpatient/Outpatient Experiences", "summary": "Curriculum includes clinical experiences in both outpatient and inpatient settings." },
+        { "id": "6.5", "title": "Elective Opportunities", "summary": "Elective opportunities supplement required experiences, permitting exposure to specialties and individual academic interests." },
+        { "id": "6.6", "title": "Service-Learning/Community Service", "summary": "Sufficient opportunities for, encouragement of, and support for student participation in service-learning and community service." },
+        { "id": "6.7", "title": "Academic Environments", "summary": "Opportunities for interaction with other health professions students and physicians in GME and CME programs." },
+        { "id": "6.8", "title": "Education Program Duration", "summary": "Medical education program includes at least 130 weeks of instruction." }
+      ]
+    },
+    {
+      "id": "LCME-7",
+      "number": 7,
+      "title": "Curricular Content",
+      "summary": "Curriculum provides content of sufficient breadth and depth to prepare students for entry into any residency program.",
+      "elements": [
+        { "id": "7.1", "title": "Biomedical, Behavioral, Social Sciences", "summary": "Content from biomedical, behavioral, and socioeconomic sciences supporting mastery of contemporary medical science knowledge and concepts." },
+        { "id": "7.2", "title": "Organ Systems/Life Cycle/Prevention/Symptoms/Signs/Differential Diagnosis, Treatment Planning", "summary": "Content and clinical experiences related to each organ system, life cycle phase, and continuity/preventive/acute/chronic/rehabilitative/end-of-life care." },
+        { "id": "7.3", "title": "Scientific Method/Clinical/Translational Research", "summary": "Instruction in scientific method and basic scientific/ethical principles of clinical and translational research." },
+        { "id": "7.4", "title": "Critical Judgment/Problem-Solving Skills", "summary": "Fundamental principles of medicine, skills of critical judgment based on evidence and experience, and effective problem-solving." },
+        { "id": "7.5", "title": "Societal Problems", "summary": "Instruction in diagnosis, prevention, appropriate reporting, and treatment of medical consequences of common societal problems." },
+        { "id": "7.6", "title": "Cultural Competence and Health Care Disparities", "summary": "Opportunities to recognize and address biases; culturally competent care; health care disparities; multidimensional diverse society." },
+        { "id": "7.7", "title": "Medical Ethics", "summary": "Instruction in medical ethics and human values prior to and during patient care activities; ethical behavior in caring for patients." },
+        { "id": "7.8", "title": "Communication Skills", "summary": "Specific instruction in communication skills with patients, families, colleagues, and other health professionals." },
+        { "id": "7.9", "title": "Interprofessional Collaborative Skills", "summary": "Core curriculum prepares students to function collaboratively on interprofessional health care teams." }
+      ]
+    },
+    {
+      "id": "LCME-8",
+      "number": 8,
+      "title": "Curricular Management, Evaluation, and Enhancement",
+      "summary": "Faculty engage in curricular revision and program evaluation to maintain/enhance quality and ensure students achieve all objectives.",
+      "elements": [
+        { "id": "8.1", "title": "Curricular Management", "summary": "Faculty committee oversees the medical education program with responsibility for overall design, management, integration, evaluation, and enhancement." },
+        { "id": "8.2", "title": "Use of Medical Educational Program Objectives", "summary": "Program objectives guide curriculum content selection; course/clerkship learning objectives linked to program objectives." },
+        { "id": "8.3", "title": "Curricular Design, Review, Revision/Content Monitoring", "summary": "Faculty committee responsible for detailed development, design, implementation, and ongoing monitoring of all curriculum components." },
+        { "id": "8.4", "title": "Evaluation of Educational Program Outcomes", "summary": "Variety of outcome data including national norms used to demonstrate student achievement and enhance program quality." },
+        { "id": "8.5", "title": "Medical Student Feedback", "summary": "Formal processes to collect and consider student evaluations of courses, clerkships, teachers, and other relevant information." },
+        { "id": "8.6", "title": "Monitoring of Completion of Required Clinical Experiences", "summary": "Central oversight system monitors and ensures completion of required clinical experiences and remedies gaps." },
+        { "id": "8.7", "title": "Comparability of Education/Assessment", "summary": "Comparable educational experiences and equivalent assessment methods across all locations within courses and clerkships." },
+        { "id": "8.8", "title": "Monitoring Student Time", "summary": "Effective policies regarding amount of time students spend in required activities including clinical and educational hours during clerkships." }
+      ]
+    },
+    {
+      "id": "LCME-9",
+      "number": 9,
+      "title": "Teaching, Supervision, Assessment, and Student and Patient Safety",
+      "summary": "Comprehensive, fair, uniform assessment system; all teachers/supervisors/assessors adequately prepared for their responsibilities.",
+      "elements": [
+        { "id": "9.1", "title": "Preparation of Resident and Non-Faculty Instructors", "summary": "Residents and non-faculty instructors familiar with learning objectives and prepared for teaching/assessment roles with skill enhancement resources." },
+        { "id": "9.2", "title": "Faculty Appointments", "summary": "Supervision of student learning experiences provided by faculty members throughout required clerkships." },
+        { "id": "9.3", "title": "Clinical Supervision of Medical Students", "summary": "Appropriate supervision at all times for patient safety and student safety; delegated responsibility appropriate to training level." },
+        { "id": "9.4", "title": "Assessment System", "summary": "Centralized system employing variety of measures including direct observation for assessing student achievement of program objectives." },
+        { "id": "9.5", "title": "Narrative Assessment", "summary": "Narrative description of student performance including non-cognitive achievement in each required course/clerkship where interaction permits." },
+        { "id": "9.6", "title": "Setting Standards of Achievement", "summary": "Faculty with appropriate knowledge and expertise set standards of achievement in each required learning experience." },
+        { "id": "9.7", "title": "Formative Assessment and Feedback", "summary": "Each student assessed and provided formal formative feedback early enough for remediation, at least at midpoint." },
+        { "id": "9.8", "title": "Fair and Timely Summative Assessment", "summary": "Fair and timely summative assessment system; final grades available within six weeks of course/clerkship end." },
+        { "id": "9.9", "title": "Student Advancement and Appeal Process", "summary": "Single set of core standards for advancement/graduation across all locations; fair and formal process for actions affecting student status." }
+      ]
+    },
+    {
+      "id": "LCME-10",
+      "number": 10,
+      "title": "Medical Student Selection, Assignment, and Progress",
+      "summary": "Published admission requirements with effective policies for student selection, enrollment, and assignment.",
+      "elements": [
+        { "id": "10.1", "title": "Premedical Education/Required Coursework", "summary": "Requirements encourage broad undergraduate education; specific premedical requirements confined to essential preparation." },
+        { "id": "10.2", "title": "Final Authority of Admission Committee", "summary": "Formally constituted admission committee with faculty majority has final responsibility for accepting students; no political/financial influence." },
+        { "id": "10.3", "title": "Policies Regarding Student Selection/Progress and Their Dissemination", "summary": "Faculty establish criteria and implement effective policies for application, selection, admission, assessment, promotion, graduation, and discipline." },
+        { "id": "10.4", "title": "Characteristics of Accepted Applicants", "summary": "Applicants possess intelligence, integrity, and personal/emotional characteristics necessary for physician competence." },
+        { "id": "10.5", "title": "Technical Standards", "summary": "Published technical standards for admission, retention, and graduation in accordance with legal requirements." },
+        { "id": "10.6", "title": "Content of Informational Materials", "summary": "Accurate representation of mission, objectives, degree requirements, academic calendar, and required courses/clerkships." },
+        { "id": "10.7", "title": "Transfer Students", "summary": "Transfer students demonstrate comparable achievements; final-year transfer only in rare and extraordinary circumstances." },
+        { "id": "10.8", "title": "Visiting Students", "summary": "Credential verification, qualification comparison, roster maintenance, assignment approval, performance assessment, and health protocols for visitors." },
+        { "id": "10.9", "title": "Student Assignment", "summary": "School assumes ultimate responsibility for student selection and assignment to each location/track with process for alternative requests." }
+      ]
+    },
+    {
+      "id": "LCME-11",
+      "number": 11,
+      "title": "Medical Student Academic Support, Career Advising, and Educational Records",
+      "summary": "Effective academic support and career advising to assist students in achieving career goals and program objectives.",
+      "elements": [
+        { "id": "11.1", "title": "Academic Advising", "summary": "Effective academic advising integrating faculty, course/clerkship directors, student affairs, counseling, and tutorial services." },
+        { "id": "11.2", "title": "Career Advising", "summary": "Effective career advising integrating faculty, clerkship directors, and student affairs for electives, career options, and residency applications." },
+        { "id": "11.3", "title": "Oversight of Extramural Electives", "summary": "Centralized system to review proposed extramural electives, ensure performance assessment return, and evaluate risks." },
+        { "id": "11.4", "title": "Provision of MSPE", "summary": "Medical Student Performance Evaluation provided only on or after October 1 of the student's final year." },
+        { "id": "11.5", "title": "Confidentiality of Student Educational Records", "summary": "Educational records confidential and available only to those with need to know unless released by student or governed by law." },
+        { "id": "11.6", "title": "Student Access to Educational Records", "summary": "Students can review and challenge their educational records including MSPE if considered inaccurate, misleading, or inappropriate." }
+      ]
+    },
+    {
+      "id": "LCME-12",
+      "number": 12,
+      "title": "Medical Student Health Services, Personal Counseling, and Financial Aid Services",
+      "summary": "Effective student services to assist in achieving program goals; all students have same rights and receive comparable services.",
+      "elements": [
+        { "id": "12.1", "title": "Financial Aid/Debt Management Counseling/Student Educational Debt", "summary": "Effective financial aid and debt management counseling with mechanisms to minimize impact of direct educational expenses." },
+        { "id": "12.2", "title": "Tuition Refund Policy", "summary": "Clear policies for refund of tuition, fees, and other allowable payments following withdrawal." },
+        { "id": "12.3", "title": "Personal Counseling/Well-Being Programs", "summary": "Effective personal counseling system with well-being programs facilitating adjustment to medical education demands." },
+        { "id": "12.4", "title": "Student Access to Health Care Services", "summary": "Timely access to diagnostic, preventive, and therapeutic health services in reasonable proximity with excusal policies." },
+        { "id": "12.5", "title": "Non-Involvement of Providers of Student Health Services in Student Assessment/Location of Student Health Records", "summary": "Health providers not involved in academic assessment/promotion of students they serve; health records maintained per legal requirements." },
+        { "id": "12.6", "title": "Student Health and Disability Insurance", "summary": "Health and disability insurance available to each student; health insurance also available for dependents." },
+        { "id": "12.7", "title": "Immunization Requirements and Monitoring", "summary": "Accepted guidelines for immunization requirements with student compliance monitoring." },
+        { "id": "12.8", "title": "Student Exposure Policies/Procedures", "summary": "Policies for infectious/environmental hazard exposure including education, care/treatment procedures, financial responsibility, and impact on learning." }
+      ]
+    }
+  ]
+}

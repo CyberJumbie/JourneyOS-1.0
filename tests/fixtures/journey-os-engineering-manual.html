@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Journey OS — Complete Engineering Manual</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap');
+:root{
+  --ink:#0c0c0c;--paper:#f4f1eb;--edge:#ddd6c4;
+  --r:#a82828;--g:#185230;--y:#6a4c14;--b:#162450;
+  --gold:#8a6614;--teal:#0a4c4c;--violet:#3a1060;
+  --blue-50:#e6f1fb;--blue-800:#0c447c;
+  --teal-50:#e1f5ee;--teal-800:#085041;
+  --amber-50:#faeeda;--amber-800:#633806;
+  --purple-50:#eeedfe;--purple-800:#3c3489;
+  --green-50:#eaf3de;--green-800:#27500a;
+  --red-50:#fcebeb;--red-800:#791f1f;
+  --gray-50:#f1efe8;--gray-800:#444441;
+  --pre-bg:#080d12;--pre-fg:#c4d4b0;
+  --pre-key:#5dcaa5;--pre-str:#ef9f27;--pre-cmt:#4a5a42;--pre-typ:#85b7eb;
+  --cmd-bg:#0a0f0a;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);font-size:13.5px;line-height:1.8}
+
+/* COVER */
+.cover{background:var(--ink);min-height:88vh;padding:80px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+.cg{position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent,transparent 79px,rgba(22,36,80,.06) 80px),repeating-linear-gradient(0deg,transparent,transparent 79px,rgba(22,36,80,.05) 80px)}
+.cr{position:relative;z-index:1}
+.eye{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:#5dcaa5;margin-bottom:16px}
+h1{font-family:'Fraunces',serif;font-size:62px;font-weight:300;line-height:.88;letter-spacing:-2px;color:#ede8e0;margin-bottom:12px}
+h1 em{font-style:italic;color:#ef9f27}
+.c-sub{font-family:'Fraunces',serif;font-style:italic;font-size:19px;color:#333;max-width:740px;margin-bottom:28px}
+.stat-row{display:flex;gap:1px;background:rgba(255,255,255,.04);margin-bottom:20px}
+.stat{padding:11px 18px}
+.stat-n{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:600;display:block;line-height:1;color:#5dcaa5}
+.stat-l{font-size:9px;color:#333;font-family:'JetBrains Mono',monospace;letter-spacing:.04em;margin-top:3px}
+.chips{display:flex;gap:4px;flex-wrap:wrap}
+.c-chip{font-family:'JetBrains Mono',monospace;font-size:8px;padding:4px 10px;border:1px solid #1a1a1a;color:#333}
+.c-chip.ok{border-color:#1a2a1a;color:#5dcaa5}
+
+/* PHASE BANNER */
+.phase{padding:22px 80px;border-bottom:2px solid var(--edge);display:flex;align-items:baseline;gap:16px}
+.phase-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:#aaa;letter-spacing:.1em;text-transform:uppercase;flex-shrink:0;min-width:90px}
+.phase-title{font-family:'Fraunces',serif;font-size:26px;font-weight:300;flex:1}
+.phase-time{font-family:'JetBrains Mono',monospace;font-size:9px;color:#bbb;flex-shrink:0}
+
+/* SECTIONS */
+section{padding:44px 80px;border-bottom:1px solid var(--edge)}
+.sid{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:#ef9f27;margin-bottom:8px}
+h2{font-family:'Fraunces',serif;font-size:30px;font-weight:300;line-height:1.07;margin-bottom:14px}
+h3{font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#999;margin:24px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--edge)}
+h4{font-family:'Fraunces',serif;font-size:16px;font-weight:400;margin:12px 0 4px}
+p{margin-bottom:10px;max-width:840px;line-height:1.75}
+code{font-family:'JetBrains Mono',monospace;font-size:11px;background:var(--gray-50);padding:1px 5px;border-radius:2px;color:#162450}
+
+/* COMMAND BLOCKS — primary UI of the manual */
+.cmd{background:var(--cmd-bg);border:1px solid #0f1f0f;border-radius:4px;margin:10px 0;overflow:hidden}
+.cmd-head{padding:7px 14px;background:#060d06;border-bottom:1px solid #0f1f0f;display:flex;justify-content:space-between;align-items:center}
+.cmd-head .dir{font-family:'JetBrains Mono',monospace;font-size:9px;color:#3a5a3a;letter-spacing:.05em}
+.cmd-head .label{font-family:'JetBrains Mono',monospace;font-size:8px;color:#2a4a2a;letter-spacing:.1em;text-transform:uppercase}
+.cmd-body{padding:12px 16px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#c4d4b0;line-height:1.8}
+.cmd-body .prompt{color:#3a5a3a;user-select:none}
+.cmd-body .c{color:#2a4a2a}
+.cmd-body .k{color:#5dcaa5}
+.cmd-body .s{color:#ef9f27}
+.cmd-body .out{color:#555}
+
+/* CODE BLOCKS */
+pre{background:var(--pre-bg);padding:14px 18px;border-radius:4px;margin:10px 0;overflow-x:auto;border:1px solid #0f1a0f;font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.7;color:var(--pre-fg)}
+pre .k{color:var(--pre-key)}
+pre .s{color:var(--pre-str)}
+pre .c{color:var(--pre-cmt)}
+pre .t{color:var(--pre-typ)}
+pre .n{color:#c4bfb0}
+pre .num{color:#afd87f}
+
+/* CALLOUTS */
+.call{padding:11px 15px;margin:10px 0;border-radius:0 2px 2px 0}
+.call .cl{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;margin-bottom:4px}
+.call p{font-size:12.5px;margin:0;max-width:none}
+.call-b{border-left:3px solid var(--b);background:var(--blue-50)}.call-b .cl{color:var(--b)}
+.call-g{border-left:3px solid var(--g);background:var(--green-50)}.call-g .cl{color:var(--g)}
+.call-gold{border-left:3px solid var(--gold);background:var(--amber-50)}.call-gold .cl{color:var(--gold)}
+.call-r{border-left:3px solid var(--r);background:var(--red-50)}.call-r .cl{color:var(--r)}
+.call-v{border-left:3px solid #534ab7;background:var(--purple-50)}.call-v .cl{color:#534ab7}
+
+/* STEP BLOCKS */
+.step-block{display:flex;gap:16px;margin:8px 0;padding:12px 0;border-bottom:1px solid var(--edge)}
+.step-block:last-child{border:none}
+.step-n{width:32px;height:32px;border-radius:50%;background:var(--b);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;flex-shrink:0;margin-top:2px}
+.step-body{flex:1}
+.step-title{font-weight:600;font-size:13.5px;margin-bottom:3px}
+.step-desc{font-size:12.5px;color:#555;line-height:1.7}
+.step-n.warn{background:var(--y)}
+.step-n.done{background:var(--g)}
+
+/* SKILLS TABLE */
+.skill-row{display:grid;grid-template-columns:120px 1fr 1fr;gap:12px;padding:9px 0;border-bottom:1px solid var(--edge);align-items:start;font-size:12.5px}
+.skill-cmd{font-family:'JetBrains Mono',monospace;font-size:11px;color:#162450;background:var(--blue-50);padding:2px 8px;border-radius:3px;display:inline-block}
+
+/* CHECKLIST */
+.checklist{list-style:none;padding:0;margin:8px 0}
+.checklist li{padding:5px 0;border-bottom:1px solid var(--gray-50);font-size:12.5px;display:flex;gap:10px;align-items:flex-start}
+.checklist li:last-child{border:none}
+.checklist li::before{content:'□';font-family:'JetBrains Mono',monospace;color:#bbb;flex-shrink:0;margin-top:1px}
+.checklist li.ok::before{content:'✓';color:var(--g)}
+.checklist li.warn::before{content:'⚠';color:var(--y)}
+.checklist li.stop::before{content:'✗';color:var(--r)}
+
+/* PILLS */
+.pill{display:inline-block;padding:2px 7px;border-radius:2px;font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:600;vertical-align:middle;white-space:nowrap}
+.p-b{background:var(--blue-50);color:var(--blue-800)}.p-g{background:var(--green-50);color:var(--green-800)}
+.p-t{background:var(--teal-50);color:var(--teal-800)}.p-gold{background:var(--amber-50);color:var(--amber-800)}
+.p-v{background:var(--purple-50);color:var(--purple-800)}.p-r{background:var(--red-50);color:var(--red-800)}
+.p-gray{background:var(--gray-50);color:var(--gray-800)}.p-ink{background:var(--ink);color:#9dcaa5}
+
+/* NAV */
+.nav{background:#060a06;border-bottom:1px solid #0a140a;padding:0 80px;display:flex;overflow-x:auto;position:sticky;top:0;z-index:100}
+.ni{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.07em;text-transform:uppercase;color:#2a3a22;padding:9px 12px;border-right:1px solid #0a140a;white-space:nowrap;text-decoration:none;flex-shrink:0}
+.ni:hover{color:#5dcaa5;background:#060d06}
+
+/* TABLES */
+table{width:100%;border-collapse:collapse;font-size:12px;margin:8px 0 14px}
+th{background:var(--ink);color:var(--paper);padding:7px 11px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase}
+td{padding:7px 11px;border-bottom:1px solid var(--edge);vertical-align:top}
+tr:nth-child(even) td{background:#faf7f0}
+.mono{font-family:'JetBrains Mono',monospace;font-size:10.5px}
+
+/* LAYOUT */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:10px 0}
+.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:10px 0}
+.card{border:1px solid var(--edge);padding:14px;background:#fff;border-radius:4px}
+.card .cl{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#bbb;margin-bottom:4px}
+.card p{font-size:12px;color:#666;line-height:1.65;margin:0}
+
+/* FLOW DIAGRAM */
+.flow{display:flex;align-items:center;flex-wrap:wrap;gap:0;margin:12px 0}
+.flow-node{padding:7px 14px;border:1px solid var(--edge);background:#fff;font-size:11.5px;white-space:nowrap}
+.flow-node.active{background:var(--blue-50);border-color:#85b7eb;color:var(--blue-800);font-weight:500}
+.flow-node.done{background:var(--green-50);border-color:#97c459;color:var(--green-800)}
+.flow-node.warn{background:var(--amber-50);border-color:#ef9f27;color:var(--amber-800)}
+.flow-arrow{padding:0 4px;color:#bbb;font-size:14px}
+
+/* TROUBLESHOOT */
+.trouble{border:1px solid var(--edge);margin:8px 0;border-radius:4px;overflow:hidden}
+.trouble-q{padding:10px 14px;background:var(--gray-50);font-size:12.5px;font-weight:500;cursor:pointer;display:flex;justify-content:space-between}
+.trouble-a{padding:12px 14px;background:#fff;font-size:12.5px;color:#444;border-top:1px solid var(--edge)}
+
+/* SECURITY BOX */
+.sec-item{padding:10px 14px;border-left:4px solid var(--r);background:var(--red-50);margin:6px 0;border-radius:0 4px 4px 0}
+.sec-item .si-head{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--r);margin-bottom:4px}
+.sec-item p{font-size:12.5px;color:#555;margin:0;max-width:none}
+
+.footer{background:var(--ink);padding:24px 80px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-family:'JetBrains Mono',monospace;font-size:9px;color:#2a3a22}
+@media(max-width:900px){.cover,.nav,.footer,.phase,section{padding-left:24px;padding-right:24px}.two,.three{grid-template-columns:1fr}h1{font-size:42px}.skill-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+<div class="cg"></div>
+<div class="cr">
+  <div>
+    <div class="eye">Journey OS · Complete Engineering Manual · Repo Unzip to Final Feature</div>
+    <h1>Zero to<br>Feature<br><em>Shipped</em></h1>
+    <div class="c-sub">The complete, opinionated, step-by-step guide for every engineer on the Journey OS team — from unzipping the starter repo to merging a production-grade feature with passing tests, FERPA compliance, and BKT working correctly</div>
+  </div>
+  <div>
+    <div class="stat-row">
+      <div class="stat"><span class="stat-n">12</span><div class="stat-l">Phases covered</div></div>
+      <div class="stat"><span class="stat-n">Day 1</span><div class="stat-l">First feature</div></div>
+      <div class="stat"><span class="stat-n">6</span><div class="stat-l">Custom skills</div></div>
+      <div class="stat"><span class="stat-n">0</span><div class="stat-l">Guesswork</div></div>
+    </div>
+    <div class="chips">
+      <span class="c-chip ok">✓ Prerequisites → env setup → first boot</span>
+      <span class="c-chip ok">✓ Claude Code workflow with all 6 custom skills</span>
+      <span class="c-chip ok">✓ Bootstrap Prompt 1 + 2 — exact text to paste</span>
+      <span class="c-chip ok">✓ Epic → Story → Context Packet → Ship loop</span>
+      <span class="c-chip ok">✓ Database migrations, dual-write, type generation</span>
+      <span class="c-chip ok">✓ P1 / P2 / P3 pipeline testing workflow</span>
+      <span class="c-chip ok">✓ Security checklist — HMAC, FERPA, RLS, injection</span>
+      <span class="c-chip ok">✓ Complete troubleshooting reference</span>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="nav">
+  <a class="ni" href="#phase0">0 · Prerequisites</a>
+  <a class="ni" href="#phase1">1 · Unzip & Boot</a>
+  <a class="ni" href="#phase2">2 · Corpus</a>
+  <a class="ni" href="#phase3">3 · Claude Code</a>
+  <a class="ni" href="#phase4">4 · Bootstrap</a>
+  <a class="ni" href="#phase5">5 · Epic Execution</a>
+  <a class="ni" href="#phase6">6 · Context Packets</a>
+  <a class="ni" href="#phase7">7 · Database</a>
+  <a class="ni" href="#phase8">8 · Pipelines</a>
+  <a class="ni" href="#phase9">9 · Security</a>
+  <a class="ni" href="#phase10">10 · Testing</a>
+  <a class="ni" href="#phase11">11 · CI/CD</a>
+  <a class="ni" href="#phase12">12 · Production</a>
+  <a class="ni" href="#troubleshoot">Troubleshoot</a>
+</div>
+
+<!-- OVERVIEW -->
+<section style="padding-top:36px;padding-bottom:28px">
+<div class="call-g"><div class="cl">How to use this manual</div>
+<p>Read Phase 0 → Phase 4 sequentially on your first day. After that, use the sticky nav to jump to whatever phase you're in. Every command is exact — copy/paste ready. Every decision includes the reason behind it so you understand, not just comply. When something breaks, go to the Troubleshooting section at the bottom before asking teammates.</p>
+</div>
+
+<div class="flow" style="margin-top:14px">
+  <div class="flow-node done">0 · Prerequisites</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-node done">1 · Unzip & Boot</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-node done">2 · Read corpus</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-node active">3 · Claude Code</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-node">4 · Bootstrap</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-node">5–6 · Epic → Story</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-node">7–10 · Build & test</div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-node">11–12 · Ship</div>
+</div>
+</section>
+
+<!-- PHASE 0: PREREQUISITES -->
+<div class="phase" id="phase0">
+  <div class="phase-num">Phase 0</div>
+  <div class="phase-title">Prerequisites — install these before touching the repo</div>
+  <div class="phase-time">~30 min first time</div>
+</div>
+<section>
+<div class="sid">0 / System Requirements</div>
+<h2>What your machine needs — versions matter</h2>
+
+<div class="call-r"><div class="cl">Version pinning</div>
+<p>Journey OS uses pnpm workspaces + Turbo. Using npm or yarn will break the workspace linking. Using Node 18 will break several dependencies that require Node 20 features. Check versions exactly.</p>
+</div>
+
+<div class="cmd">
+  <div class="cmd-head"><span class="dir">terminal</span><span class="label">Version check — run this first</span></div>
+  <div class="cmd-body">
+<span class="prompt">$ </span><span class="k">node</span> --version    <span class="c"># must be ≥ 20.0.0</span>
+<span class="out">v20.11.0</span>
+<span class="prompt">$ </span><span class="k">pnpm</span> --version   <span class="c"># must be ≥ 8.0.0</span>
+<span class="out">8.15.4</span>
+<span class="prompt">$ </span><span class="k">git</span> --version    <span class="c"># any recent version</span>
+<span class="out">git version 2.43.0</span>
+<span class="prompt">$ </span><span class="k">docker</span> --version <span class="c"># needed for sidecars (MetaMap, pdf/pptx renderers)</span>
+<span class="out">Docker version 25.0.3, build 4debf41</span>
+  </div>
+</div>
+
+<h3>Install missing tools</h3>
+<div class="cmd">
+  <div class="cmd-head"><span class="dir">terminal — macOS</span></div>
+  <div class="cmd-body">
+<span class="c"># Node 20 via nvm (recommended over system Node)</span>
+<span class="prompt">$ </span><span class="k">curl</span> -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+<span class="prompt">$ </span><span class="k">nvm</span> install 20 && nvm use 20 && nvm alias default 20
+
+<span class="c"># pnpm</span>
+<span class="prompt">$ </span><span class="k">npm</span> install -g pnpm@8
+
+<span class="c"># Claude Code (the CLI — not the web app)</span>
+<span class="prompt">$ </span><span class="k">npm</span> install -g @anthropic-ai/claude-code
+
+<span class="c"># Docker Desktop: download from https://www.docker.com/products/docker-desktop/</span>
+  </div>
+</div>
+
+<h3>Service accounts — create all before starting</h3>
+<table>
+<thead><tr><th>Service</th><th>URL</th><th>What you need</th><th>Cost</th></tr></thead>
+<tbody>
+<tr><td><strong>Supabase</strong></td><td>supabase.com</td><td>Create project → get URL, anon key, service_role key, DB password</td><td>Free tier works for dev</td></tr>
+<tr><td><strong>Neo4j Aura</strong></td><td>neo4j.com/cloud/aura</td><td>Create AuraDB Free → get URI, username, password</td><td>Free tier (1GB)</td></tr>
+<tr><td><strong>Anthropic</strong></td><td>console.anthropic.com</td><td>Create API key — needs Sonnet 4 + Haiku 4.5 access</td><td>~$50/month dev usage</td></tr>
+<tr><td><strong>OpenAI</strong></td><td>platform.openai.com</td><td>Create API key — embeddings only (text-embedding-3-small)</td><td>~$1/month dev</td></tr>
+<tr><td><strong>UMLS</strong></td><td>uts.nlm.nih.gov</td><td>Register → apply for license (free, instant) → get API key</td><td>Free</td></tr>
+<tr><td><strong>Inngest</strong></td><td>inngest.com</td><td>Create account → get Signing Key + Event Key</td><td>Free dev tier</td></tr>
+<tr><td><strong>Resend</strong></td><td>resend.com</td><td>Create API key (optional for dev — email notifications)</td><td>Free tier works</td></tr>
+</tbody>
+</table>
+</section>
+
+<!-- PHASE 1: UNZIP & BOOT -->
+<div class="phase" id="phase1">
+  <div class="phase-num">Phase 1</div>
+  <div class="phase-title">Unzip, configure, and verify first boot</div>
+  <div class="phase-time">~45 min</div>
+</div>
+<section>
+<div class="sid">1 / Initial Setup</div>
+<h2>From zip to running dev server in one session</h2>
+
+<div class="step-block">
+  <div class="step-n">1</div>
+  <div class="step-body">
+    <div class="step-title">Unzip and enter the repo</div>
+    <div class="cmd">
+      <div class="cmd-head"><span class="dir">~/projects</span></div>
+      <div class="cmd-body">
+<span class="prompt">$ </span><span class="k">unzip</span> journey-os-starter-v3.zip
+<span class="prompt">$ </span><span class="k">mv</span> journey-os-repo journey-os   <span class="c"># rename to your preference</span>
+<span class="prompt">$ </span><span class="k">cd</span> journey-os
+<span class="prompt">$ </span><span class="k">ls</span>
+<span class="out">CLAUDE.md  apps/  packages/  tests/  .claude/  .context/  .env.example  ...</span>
+      </div>
+    </div>
+    <div class="step-desc">The repo is a pnpm workspace monorepo (Turbo). Never run <code>npm install</code> — only <code>pnpm install</code>.</div>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-n">2</div>
+  <div class="step-body">
+    <div class="step-title">Run the setup script</div>
+    <div class="cmd">
+      <div class="cmd-head"><span class="dir">journey-os/</span></div>
+      <div class="cmd-body">
+<span class="prompt">$ </span><span class="k">bash</span> .claude/skills/journey-os/setup.sh
+<span class="out">Journey OS — Development Environment Setup</span>
+<span class="out">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="out">Checking prerequisites...</span>
+<span class="out">  ✓ node found</span>
+<span class="out">  ✓ pnpm found</span>
+<span class="out">  ✓ docker found</span>
+<span class="out">  ...</span>
+<span class="out">Setup complete!</span>
+      </div>
+    </div>
+    <div class="step-desc">The script checks prerequisites, installs gstack, and runs <code>pnpm install</code>. If anything fails, fix the missing tool and re-run — it's idempotent.</div>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-n">3</div>
+  <div class="step-body">
+    <div class="step-title">Copy and fill environment variables</div>
+    <div class="cmd">
+      <div class="cmd-head"><span class="dir">journey-os/</span></div>
+      <div class="cmd-body">
+<span class="prompt">$ </span><span class="k">cp</span> .env.example .env.local
+<span class="prompt">$ </span><span class="k">open</span> .env.local   <span class="c"># macOS — or: code .env.local / nano .env.local</span>
+      </div>
+    </div>
+    <div class="step-desc">Fill every variable in the following order. Leave nothing blank — the app will hard-fail at startup on missing required vars.</div>
+    <ul class="checklist" style="margin-top:8px">
+      <li class="stop">NEXT_PUBLIC_SUPABASE_URL — from Supabase project Settings → API</li>
+      <li class="stop">NEXT_PUBLIC_SUPABASE_ANON_KEY — from same page</li>
+      <li class="stop">SUPABASE_SERVICE_ROLE_KEY — from same page. <strong>Server-only. Never expose to client.</strong></li>
+      <li class="stop">SUPABASE_DB_URL — from Supabase Settings → Database → Connection pooling (pgbouncer=true)</li>
+      <li class="stop">SUPABASE_DB_DIRECT_URL — same page but direct connection (no pooler)</li>
+      <li class="stop">NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD — from Neo4j Aura dashboard</li>
+      <li class="stop">ANTHROPIC_API_KEY — from Anthropic console</li>
+      <li class="stop">OPENAI_API_KEY — from OpenAI platform</li>
+      <li class="stop">UMLS_API_KEY — from UMLS UTS account</li>
+      <li class="stop">INNGEST_SIGNING_KEY + INNGEST_EVENT_KEY — from Inngest dashboard</li>
+      <li class="warn">EXAM_SCRAMBLE_SECRET — generate 32 random bytes: <code>openssl rand -hex 32</code></li>
+      <li>RESEND_API_KEY — optional for dev (skip if not needed yet)</li>
+    </ul>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-n">4</div>
+  <div class="step-body">
+    <div class="step-title">Start the sidecars (Docker)</div>
+    <div class="cmd">
+      <div class="cmd-head"><span class="dir">journey-os/</span></div>
+      <div class="cmd-body">
+<span class="c"># Start document processing sidecars in background</span>
+<span class="prompt">$ </span><span class="k">docker</span> compose up -d pptx-renderer pdf-renderer
+
+<span class="c"># MetaMap requires more memory — start separately when needed</span>
+<span class="prompt">$ </span><span class="k">docker</span> compose up -d metamap   <span class="c"># ~2GB RAM, slow to start (60s)</span>
+
+<span class="c"># Verify they're running</span>
+<span class="prompt">$ </span><span class="k">docker</span> compose ps
+<span class="out">NAME              STATUS          PORTS</span>
+<span class="out">pptx-renderer     Up 4 seconds    0.0.0.0:5000->5000/tcp</span>
+<span class="out">pdf-renderer      Up 4 seconds    0.0.0.0:5001->5001/tcp</span>
+      </div>
+    </div>
+    <div class="step-desc">If Docker compose file doesn't exist yet, it gets generated in Phase 4 (Bootstrap). Skip this step until then — you need it for P1 pipeline testing.</div>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-n">5</div>
+  <div class="step-body">
+    <div class="step-title">Verify database connectivity</div>
+    <div class="cmd">
+      <div class="cmd-head"><span class="dir">journey-os/</span></div>
+      <div class="cmd-body">
+<span class="c"># Generate TypeScript types from Supabase schema</span>
+<span class="c"># (Schema must be migrated first — see Phase 7)</span>
+<span class="prompt">$ </span><span class="k">pnpm</span> db:types
+<span class="out">Generating types for project: [your-project-id]</span>
+<span class="out">✓ packages/db/types/database.generated.ts written (4,221 lines)</span>
+
+<span class="c"># Quick Neo4j connectivity test</span>
+<span class="prompt">$ </span><span class="k">pnpm</span> --filter packages/neo4j exec node -e "
+  const driver = require('./src/client').getDriver();
+  driver.verifyConnectivity().then(() => console.log('Neo4j: connected')).catch(e => console.error('Neo4j: FAILED', e.message));
+"
+<span class="out">Neo4j: connected</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-n done">✓</div>
+  <div class="step-body">
+    <div class="step-title">Boot verification checklist</div>
+    <ul class="checklist">
+      <li class="ok"><code>pnpm install</code> completed without errors</li>
+      <li class="ok"><code>.env.local</code> has all required vars filled</li>
+      <li class="ok">Supabase project accessible (URL resolves)</li>
+      <li class="ok">Neo4j Aura connected</li>
+      <li class="ok">Docker sidecars running (pptx-renderer, pdf-renderer)</li>
+      <li><code>pnpm dev</code> starts without errors at localhost:3000 (after Phase 4 bootstrap)</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<!-- PHASE 2: THE CORPUS -->
+<div class="phase" id="phase2">
+  <div class="phase-num">Phase 2</div>
+  <div class="phase-title">Read the corpus — understand before building</div>
+  <div class="phase-time">3–4 hours · once</div>
+</div>
+<section>
+<div class="sid">2 / The Source-of-Truth Documents</div>
+<h2>Ten HTML files in tests/fixtures/ — the engineering bible</h2>
+
+<p>Every document in <code>tests/fixtures/</code> exists because Claude Code will read all of them at startup via the bootstrap prompt. But you need to read them too. Not every word — but every section heading and every major decision. The documents answer the "why" questions you'll have when implementing stories. Build without reading them and you'll re-derive things that have already been decided, or implement something inconsistent with the canonical architecture.</p>
+
+<div class="call-b"><div class="cl">Reading order for day one</div>
+<p>Read in this sequence: (1) team-kickoff — understand the product and why it exists. (2) production-bible — the KG schema and pipeline architecture. (3) algorithms-scholarly — BKT, IRT, HMAC scramble, all the algorithms you'll implement. (4) Your assigned persona spec (faculty/student/institutional). (5) The rest as needed.</p>
+</div>
+
+<table>
+<thead><tr><th>Document</th><th>Must-read sections</th><th>Who reads it</th></tr></thead>
+<tbody>
+<tr><td><strong>production-bible.html</strong></td><td>KG ontology, three-hub topology (D06), three-pipeline architecture (P1/P2/P3), evidence grade weights (G06), dual-write (G08), canonical decisions</td><td>All engineers</td></tr>
+<tr><td><strong>tech-architecture.html</strong></td><td>SQL DDL (all tables + RLS policies), API routes, Inngest event catalog, model routing (D05: Sonnet vs Haiku)</td><td>All engineers</td></tr>
+<tr><td><strong>algorithms-scholarly.html</strong></td><td>BKT full spec, IRT 3PL, Pimsleur decay, Fisher-Yates scramble, hash chain FERPA, coverage bit vector, context packet schema</td><td>All engineers</td></tr>
+<tr><td><strong>architecture-best-practices.html</strong></td><td>Atomic design §XIII, data layer contract §XIV, 17 antipatterns (AP-01 through AP-17)</td><td>Frontend/full-stack</td></tr>
+<tr><td><strong>development-system.html</strong></td><td>The 6 custom skills, context packet template (with TOC), /epic workflow, validate-seed script</td><td>All engineers</td></tr>
+<tr><td><strong>team-kickoff.html</strong></td><td>35 data sources, 6 personas, 67 features, 8 moats, sprint plan, cost model ($0.12/item)</td><td>All engineers (esp. new)</td></tr>
+<tr><td><strong>production-readiness.html</strong></td><td>All 45 findings: C01-C10 (critical — every one must ship), H01-H13 (high), M01-M10, A01-A12</td><td>All engineers</td></tr>
+<tr><td><strong>faculty-spec.html</strong></td><td>All 9 nav sections, generation modes (Quick / Topic Spotlight / Blueprint), document → course flow</td><td>Faculty feature engineers</td></tr>
+<tr><td><strong>student-spec.html</strong></td><td>BKT queue UI, IRT practice config, exam delivery (C01/C02), Why Wrong? system, USMLE readiness tracker</td><td>Student feature engineers</td></tr>
+<tr><td><strong>institutional-spec.html</strong></td><td>FERPA audit log (admin), at-risk classifier (advisor), Angoff tool (chair), LCME readiness room (dean)</td><td>Institutional feature engineers</td></tr>
+</tbody>
+</table>
+
+<h3>Repo structure — where everything lives</h3>
+<pre>
+journey-os/
+├── apps/
+│   ├── web/               <span class="c"># Next.js 14 app (App Router) — the main product</span>
+│   └── inngest/           <span class="c"># Inngest function definitions — all 14 pipeline events</span>
+├── packages/
+│   ├── ai/                <span class="c"># Claude API calls, prompts, BKT/IRT logic</span>
+│   ├── db/                <span class="c"># Supabase client, repositories, migrations, types</span>
+│   ├── neo4j/             <span class="c"># Neo4j driver, graph queries, neo4jQuery wrapper</span>
+│   ├── embeddings/        <span class="c"># OpenAI + MedCPT embedding utilities</span>
+│   └── types/             <span class="c"># Shared TypeScript types (no domain logic here)</span>
+├── sidecars/
+│   ├── pptx-renderer/     <span class="c"># python-pptx Flask service — slide text + image extraction</span>
+│   ├── pdf-renderer/      <span class="c"># pdf2image + pdfplumber service</span>
+│   └── metamap/           <span class="c"># MetaMap Java NLP service — UMLS entity linking</span>
+├── tests/
+│   ├── fixtures/          <span class="c"># ← The 10 source-of-truth HTML docs live here</span>
+│   ├── helpers/           <span class="c"># pipeline.ts, graph.ts — test utilities</span>
+│   └── E01/ E02/ E03/     <span class="c"># Epic-organized test directories</span>
+├── .claude/
+│   ├── CLAUDE.md          <span class="c"># Claude Code system prompt — read every session</span>
+│   └── skills/journey-os/ <span class="c"># 6 custom slash commands (/plan, /ship, etc.)</span>
+├── .context/
+│   ├── canonical/         <span class="c"># antipatterns.md, decisions.md, inngest-events.md</span>
+│   ├── templates/         <span class="c"># context-packet-template.md (248 lines)</span>
+│   └── epics/             <span class="c"># EPIC.md files created by bootstrap Prompt 2</span>
+└── .env.example           <span class="c"># Copy to .env.local and fill in</span>
+</pre>
+</section>
+
+<!-- PHASE 3: CLAUDE CODE -->
+<div class="phase" id="phase3">
+  <div class="phase-num">Phase 3</div>
+  <div class="phase-title">Claude Code — the development environment</div>
+  <div class="phase-time">10 min setup, then daily</div>
+</div>
+<section>
+<div class="sid">3 / The Claude Code Workflow</div>
+<h2>How we build — not an assistant, a development partner</h2>
+
+<p>Journey OS is built using Claude Code as the primary development tool. Claude Code is not a code generator you prompt ad hoc — it's a structured engineering system with six custom skills that enforce the workflow. Every feature goes through the same cycle: plan → implement → validate → QA → ship. The skills are the guardrails that keep code quality consistent across the team.</p>
+
+<h3>Starting a session</h3>
+<div class="cmd">
+  <div class="cmd-head"><span class="dir">journey-os/</span><span class="label">Daily startup</span></div>
+  <div class="cmd-body">
+<span class="c"># Always launch from repo root — CLAUDE.md is read automatically</span>
+<span class="prompt">$ </span><span class="k">claude</span> .
+
+<span class="c"># Claude Code reads CLAUDE.md (176 lines) and all .context/canonical/ files</span>
+<span class="c"># Takes ~10 seconds on first load. You'll see:</span>
+<span class="out">Reading CLAUDE.md (176 lines)...</span>
+<span class="out">Loading canonical context: decisions.md, antipatterns.md, inngest-events.md</span>
+<span class="out">Discovering skills: /plan-eng, /plan, /validate, /qa, /ship, /epic</span>
+<span class="out">Ready. Type /help for available commands or describe your task.</span>
+  </div>
+</div>
+
+<h3>The six custom skills — what each one does</h3>
+<div style="border:1px solid var(--edge);border-radius:4px;overflow:hidden;margin:12px 0">
+  <div style="background:var(--ink);padding:8px 14px;display:grid;grid-template-columns:120px 1fr 1fr;gap:12px;font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#555">
+    <span>Command</span><span>What it does</span><span>When to use it</span>
+  </div>
+  <div class="skill-row"><span class="skill-cmd">/plan-eng</span><span>Reads the story's context packet + all fixture docs. Researches referenced URLs. Plans the full implementation with file list, migration plan, and test strategy. Does NOT write code.</span><span>First thing on any story. Before writing a single line.</span></div>
+  <div class="skill-row"><span class="skill-cmd">/plan</span><span>Writes the technical plan for a specific component or problem. Faster than /plan-eng — doesn't re-read corpus. Use for sub-tasks within a story.</span><span>When /plan-eng is done and you need to plan a specific function.</span></div>
+  <div class="skill-row"><span class="skill-cmd">/validate</span><span>Runs the full validation suite: TypeScript types check, ESLint (including AP-* rules), antipattern scan, schema validation, and canonical decision conformance. Reports violations with line numbers.</span><span>Before every commit. Non-negotiable.</span></div>
+  <div class="skill-row"><span class="skill-cmd">/qa</span><span>Generates tests for the current story. Reads the AC (acceptance criteria) from the context packet. Writes Playwright tests and unit tests. Verifies they pass.</span><span>After implementation is complete. Creates tests, then fixes code to pass them.</span></div>
+  <div class="skill-row"><span class="skill-cmd">/ship</span><span>Final pre-PR checklist: validate passes, tests pass, PR description generated, CLAUDE.md reminder of architectural decisions touched, canonical check CI confirms conformance.</span><span>Once QA passes. Run /ship, then create the PR.</span></div>
+  <div class="skill-row"><span class="skill-cmd">/epic</span><span>Creates or updates an EPIC.md with dependency table, all story definitions, and generates context packets for all stories in a phase. Used in bootstrap and when adding new epics.</span><span>Once per epic (usually during bootstrap or when planning new epics).</span></div>
+</div>
+
+<h3>The daily development loop</h3>
+<div class="cmd">
+  <div class="cmd-head"><span class="dir">claude code session</span><span class="label">Standard story implementation</span></div>
+  <div class="cmd-body">
+<span class="c"># 1. Start with the context packet for your story</span>
+<span class="prompt">claude&gt; </span>I'm starting E03-S02. Context packet is at .context/epics/E03/E03-S02.md
+<span class="k">/plan-eng</span>
+<span class="out">Reading context packet...</span>
+<span class="out">Reading relevant fixtures (production-bible, tech-architecture, algorithms-scholarly)...</span>
+<span class="out">Researching RESEARCH REQUIRED URLs...</span>
+<span class="out">Plan ready. 4 phases, 12 files, 2 migrations. Estimated 4h.</span>
+
+<span class="c"># 2. Implement phase by phase — describe what you want built</span>
+<span class="prompt">claude&gt; </span>Implement Phase 1: the Supabase migration + BaseRepository for lecture_documents
+<span class="c">  [Claude implements, runs pnpm db:types, fixes type errors, runs /validate]</span>
+
+<span class="c"># 3. After each phase, validate</span>
+<span class="prompt">claude&gt; </span><span class="k">/validate</span>
+<span class="out">✓ TypeScript: 0 errors</span>
+<span class="out">✓ ESLint: 0 errors (including AP-01 through AP-17)</span>
+<span class="out">✓ Schema: dual-write pattern confirmed (neo4j_synced_at present)</span>
+<span class="out">✓ No canonical violations detected</span>
+
+<span class="c"># 4. After all phases complete, run QA</span>
+<span class="prompt">claude&gt; </span><span class="k">/qa</span>
+<span class="out">Generating tests from AC-1 through AC-5...</span>
+<span class="out">Running Playwright tests...</span>
+<span class="out">5/5 tests passing</span>
+
+<span class="c"># 5. Ship</span>
+<span class="prompt">claude&gt; </span><span class="k">/ship</span>
+<span class="out">All checks pass. PR description generated. Ready to push.</span>
+
+<span class="prompt">$ </span><span class="k">git</span> push origin feature/E03-S02-lecture-ingestion-base
+  </div>
+</div>
+
+<div class="call-gold"><div class="cl">The most important rule</div>
+<p>Never implement without running <code>/plan-eng</code> first. Never commit without running <code>/validate</code> first. Never open a PR without running <code>/ship</code> first. These are the three gates that keep the codebase consistent. Skipping any one of them is how you introduce an antipattern that another engineer has to untangle three stories later.</p>
+</div>
+</section>
+
+<!-- PHASE 4: BOOTSTRAP -->
+<div class="phase" id="phase4">
+  <div class="phase-num">Phase 4</div>
+  <div class="phase-title">Bootstrap — scaffold the entire project in two prompts</div>
+  <div class="phase-time">~2 hours (Prompt 1) + ~45 min (Prompt 2)</div>
+</div>
+<section>
+<div class="sid">4 / The Two Bootstrap Prompts</div>
+<h2>Prompt 1 creates the scaffold. Prompt 2 creates every context packet.</h2>
+
+<p>The bootstrap is a one-time event. After it runs, you never run it again — the repo has its structure, and all 80+ story context packets are generated. These two prompts are the highest-leverage actions you'll take in the project. Run them carefully, verify their output, and commit the results before any feature work starts.</p>
+
+<h3>Prompt 1 — Infrastructure scaffold (run in Claude Code)</h3>
+<div class="cmd">
+  <div class="cmd-head"><span class="dir">claude code — Prompt 1</span><span class="label">Paste this exactly</span></div>
+  <div class="cmd-body">
+<span class="out">Read all files in tests/fixtures/ carefully — start with journey-os-production-bible.html,</span>
+<span class="out">then journey-os-tech-architecture.html, then journey-os-development-system.html,</span>
+<span class="out">then journey-os-algorithms-scholarly.html, then journey-os-architecture-best-practices.html,</span>
+<span class="out">then journey-os-team-kickoff.html.</span>
+<span class="out"></span>
+<span class="out">After reading all documents, scaffold the complete Journey OS infrastructure:</span>
+<span class="out"></span>
+<span class="out">1. Create CLAUDE.md (repo root) with all 12 rules from the production bible §Architecture</span>
+<span class="out">   plus Atomic Design §XIII and Data Layer Contract §XIV from best-practices</span>
+<span class="out">2. Create all 6 custom skills in .claude/skills/journey-os/: plan.md, plan-eng.md,</span>
+<span class="out">   validate.md, qa.md, ship.md, epic.md — per the development system spec</span>
+<span class="out">3. Create .context/canonical/antipatterns.md with all 17 antipatterns AP-01 through AP-17</span>
+<span class="out">4. Create .context/canonical/decisions.md with all canonical architecture decisions</span>
+<span class="out">5. Create .context/canonical/inngest-events.md with all 14 Inngest events</span>
+<span class="out">6. Update .context/templates/context-packet-template.md to include the</span>
+<span class="out">   SCHOLARLY + DS&A CONTEXT section from algorithms-scholarly.html §IX</span>
+<span class="out">7. Create docker-compose.yml for all 3 sidecars (pptx-renderer, pdf-renderer, metamap)</span>
+<span class="out">8. Create packages/db/migrations/0001_initial_schema.sql with all tables, RLS policies,</span>
+<span class="out">   indexes, and triggers from tech-architecture.html — including the FERPA audit log</span>
+<span class="out">   hash chain trigger and the exam_answers auto-save trigger (C01)</span>
+<span class="out">9. Create all package.json files, turbo.json, pnpm-workspace.yaml</span>
+<span class="out">10. Create .github/workflows/ci.yml, canonical-check.yml, seed-validation.yml</span>
+<span class="out">11. Create .eslintrc.js with neo4j-no-raw-cypher rule and no-restricted-paths for atomic design</span>
+<span class="out"></span>
+<span class="out">Infrastructure only — no application code. After each file, run /validate to confirm</span>
+<span class="out">no violations before proceeding to the next file.</span>
+  </div>
+</div>
+
+<h3>Verify Prompt 1 output</h3>
+<ul class="checklist">
+  <li class="stop">CLAUDE.md exists at repo root and has all 12 rules</li>
+  <li class="stop">All 6 skill files exist in .claude/skills/journey-os/</li>
+  <li class="stop">antipatterns.md has AP-01 through AP-17</li>
+  <li class="stop">docker-compose.yml has pptx-renderer, pdf-renderer, metamap services</li>
+  <li class="stop">0001_initial_schema.sql has all tables from tech-architecture.html</li>
+  <li class="stop">FERPA audit trigger exists in migration (ferpa_audit_chain_hash() function)</li>
+  <li class="stop">exam_answers auto-save trigger exists (C01)</li>
+  <li class="stop"><code>pnpm validate-seed</code> passes</li>
+</ul>
+
+<h3>Apply the database migration</h3>
+<div class="cmd">
+  <div class="cmd-head"><span class="dir">journey-os/</span><span class="label">Supabase migration</span></div>
+  <div class="cmd-body">
+<span class="c"># Apply migration to Supabase (runs against your dev project)</span>
+<span class="prompt">$ </span><span class="k">npx</span> supabase db push
+<span class="out">Applying migration 0001_initial_schema.sql...</span>
+<span class="out">✓ Migration applied successfully</span>
+
+<span class="c"># Generate TypeScript types from the new schema</span>
+<span class="prompt">$ </span><span class="k">pnpm</span> db:types
+<span class="out">✓ packages/db/types/database.generated.ts written</span>
+
+<span class="c"># Verify type generation worked</span>
+<span class="prompt">$ </span><span class="k">wc</span> -l packages/db/types/database.generated.ts
+<span class="out">4221 packages/db/types/database.generated.ts   ← should be 3000+ lines</span>
+  </div>
+</div>
+
+<h3>Prompt 2 — Context packet generation (run after Prompt 1 is verified)</h3>
+<div class="cmd">
+  <div class="cmd-head"><span class="dir">claude code — Prompt 2</span><span class="label">Paste this exactly</span></div>
+  <div class="cmd-body">
+<span class="out">You are a technical project manager sub-agent. Read all files in tests/fixtures/ and</span>
+<span class="out">.context/canonical/ thoroughly.</span>
+<span class="out"></span>
+<span class="out">Spawn one sub-agent per epic (E01 through E09). Each sub-agent must:</span>
+<span class="out"></span>
+<span class="out">1. Create .context/epics/EXX/EPIC.md with:</span>
+<span class="out">   - Machine-readable dependency table (all stories, sizes, phases, dependencies)</span>
+<span class="out">   - Epic execution map with phase structure</span>
+<span class="out">   - List of all FILES OWNED per story (no overlap allowed in parallel phases)</span>
+<span class="out"></span>
+<span class="out">2. For each story in the epic, create a context packet at</span>
+<span class="out">   .context/epics/EXX/EXX-SXX.md using .context/templates/context-packet-template.md</span>
+<span class="out"></span>
+<span class="out">   Every context packet must include:</span>
+<span class="out">   - Complete TABLE OF CONTENTS (phase N of M, epic execution map, blocked by/blocking)</span>
+<span class="out">   - SCHOLARLY + DS&A CONTEXT section (from algorithms-scholarly.html §IX template)</span>
+<span class="out">   - CRITICAL flag if the story resolves a C01-C10 finding</span>
+<span class="out">   - RESEARCH REQUIRED with specific URLs for any complex/unfamiliar patterns</span>
+<span class="out">   - Runnable Playwright test code (not pseudocode) for each acceptance criterion</span>
+<span class="out">   - Complete FILES OWNED list</span>
+<span class="out"></span>
+<span class="out">Work in parallel — all 9 sub-agents should run simultaneously.</span>
+<span class="out">After all EPIC.md files are created, run /validate to confirm no format violations.</span>
+  </div>
+</div>
+
+<div class="call-v"><div class="cl">After bootstrap — the repository is ready</div>
+<p>After Prompt 2 completes, you have: 9 EPIC.md files, 80+ story context packets, all with TABLE OF CONTENTS, SCHOLARLY + DS&A sections, and runnable test code. <code>pnpm dev</code> should start cleanly. From this point, all engineering work follows the Phase 5 → Phase 11 loop for every story.</p>
+</div>
+</section>
+
+<!-- PHASE 5: EPIC EXECUTION -->
+<div class="phase" id="phase5">
+  <div class="phase-num">Phase 5</div>
+  <div class="phase-title">Epic execution — how sprints work in this system</div>
+  <div class="phase-time">Ongoing</div>
+</div>
+<section>
+<div class="sid">5 / Working Through Epics</div>
+<h2>Epics → phases → stories → parallel worktrees</h2>
+
+<h3>The 9 epics and their rough sprint allocation</h3>
+<table>
+<thead><tr><th>Epic</th><th>Name</th><th>Weeks</th><th>Stories</th><th>Key deliverable</th></tr></thead>
+<tbody>
+<tr><td class="mono">E01</td><td>Foundation</td><td>W1-2</td><td>~8</td><td>Auth, DB schema, RLS, Neo4j schema, seed data</td></tr>
+<tr><td class="mono">E02</td><td>Auth + Admin</td><td>W3-4</td><td>~10</td><td>SAML SSO, user roles, admin dashboard, FERPA log</td></tr>
+<tr><td class="mono">E03</td><td>P1 Ingestion</td><td>W5-7</td><td>~12</td><td>PPTX/PDF → chunks → embeddings → UMLS → SubConcepts</td></tr>
+<tr><td class="mono">E04</td><td>P2 Enrichment</td><td>W8</td><td>~6</td><td>LOD enrichment, Hetionet, SubConcept → SLO → USMLE edges</td></tr>
+<tr><td class="mono">E05</td><td>P3 Generation</td><td>W8-9</td><td>~8</td><td>Item generation, QA scoring, Toulmin chain, review gate</td></tr>
+<tr><td class="mono">E06</td><td>Coverage + Blueprint</td><td>W10-11</td><td>~8</td><td>Coverage heatmap, KR-20, assessment assembly</td></tr>
+<tr><td class="mono">E07</td><td>Exam Delivery</td><td>W12</td><td>~6</td><td>Timed exam, HMAC scramble (C02), auto-save (C01), submit</td></tr>
+<tr><td class="mono">E08</td><td>Mastery + Practice</td><td>W12</td><td>~8</td><td>BKT queue, IRT practice, Why Wrong?, USMLE tracker</td></tr>
+<tr><td class="mono">E09</td><td>Production Hardening</td><td>Ongoing</td><td>~14</td><td>All 45 production findings resolved</td></tr>
+</tbody>
+</table>
+
+<h3>How to start a story — exact procedure</h3>
+<div class="step-block">
+  <div class="step-n">1</div>
+  <div class="step-body">
+    <div class="step-title">Read the EPIC.md dependency table</div>
+    <div class="step-desc">Open <code>.context/epics/E0X/EPIC.md</code>. Find your story. Check its phase and dependencies. If any dependency is not marked [DONE] in the dependency table, you cannot start this story.</div>
+    <div class="cmd">
+      <div class="cmd-head"><span class="dir">journey-os/</span></div>
+      <div class="cmd-body">
+<span class="prompt">$ </span><span class="k">cat</span> .context/epics/E03/EPIC.md | head -50
+<span class="c"># Check phase structure and which stories are unblocked</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-n">2</div>
+  <div class="step-body">
+    <div class="step-title">Create a git worktree for parallel stories</div>
+    <div class="step-desc">When a phase has multiple parallel stories, use git worktrees — separate checkouts of the same repo at the same commit. Each engineer works in their own worktree. Files owned by different stories must never overlap (this is enforced by the FILES OWNED section in context packets).</div>
+    <div class="cmd">
+      <div class="cmd-head"><span class="dir">journey-os/</span></div>
+      <div class="cmd-body">
+<span class="c"># Use /epic to create worktrees for a parallel phase</span>
+<span class="prompt">claude&gt; </span><span class="k">/epic</span> E03 PHASE3
+
+<span class="c"># Or manually:</span>
+<span class="prompt">$ </span><span class="k">git</span> worktree add ../journey-os-E03-S05 -b feature/E03-S05-umls-enrichment
+<span class="prompt">$ </span><span class="k">git</span> worktree add ../journey-os-E03-S06 -b feature/E03-S06-subconcept-creation
+
+<span class="c"># Each worktree needs its own .env.local</span>
+<span class="prompt">$ </span><span class="k">cp</span> .env.local ../journey-os-E03-S05/
+<span class="prompt">$ </span><span class="k">cp</span> .env.local ../journey-os-E03-S06/
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-n">3</div>
+  <div class="step-body">
+    <div class="step-title">Use the context packet in Claude Code</div>
+    <div class="step-desc">Open Claude Code in the worktree directory. Reference the context packet at the start of every session — Claude Code reads CLAUDE.md automatically but you need to reference the story packet explicitly.</div>
+    <div class="cmd">
+      <div class="cmd-head"><span class="dir">../journey-os-E03-S05/</span></div>
+      <div class="cmd-body">
+<span class="prompt">$ </span><span class="k">claude</span> .
+<span class="prompt">claude&gt; </span>Story: E03-S05 UMLS enrichment. 
+Context packet: .context/epics/E03/E03-S05.md
+<span class="k">/plan-eng</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="step-block">
+  <div class="step-n">4</div>
+  <div class="step-body">
+    <div class="step-title">After implementation — merge back to develop</div>
+    <div class="cmd">
+      <div class="cmd-head"><span class="dir">../journey-os-E03-S05/</span></div>
+      <div class="cmd-body">
+<span class="prompt">claude&gt; </span><span class="k">/ship</span>   <span class="c"># runs validate + qa + generates PR description</span>
+<span class="prompt">$ </span><span class="k">git</span> push origin feature/E03-S05-umls-enrichment
+<span class="c"># Create PR on GitHub — must pass all CI checks before merge</span>
+
+<span class="c"># After merge, remove worktree</span>
+<span class="prompt">$ </span><span class="k">git</span> worktree remove ../journey-os-E03-S05
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- PHASE 6: CONTEXT PACKETS -->
+<div class="phase" id="phase6">
+  <div class="phase-num">Phase 6</div>
+  <div class="phase-title">Context packet discipline — how to write and maintain them</div>
+  <div class="phase-time">20-30 min per packet</div>
+</div>
+<section>
+<div class="sid">6 / Context Packet Writing</div>
+<h2>The format that makes Claude Code effective — and keeps engineers aligned</h2>
+
+<p>Context packets are the unit of work in Journey OS. Not Jira tickets, not Notion pages — context packets in <code>.context/epics/</code>. They're in git, they're versioned, they're machine-readable by Claude Code, and they contain everything an engineer needs to implement a story without asking questions. A bad context packet produces mediocre code. A great one produces excellent code in fewer iterations.</p>
+
+<div class="call-v"><div class="cl">The scholarly + DS&A section is not optional</div>
+<p>For any story that touches mastery, IRT, generation, coverage, exam delivery, analytics, or any security-critical path — the SCHOLARLY + DS&A CONTEXT section must be filled in. Copy the relevant algorithm spec verbatim from <code>journey-os-algorithms-scholarly.html</code>. An engineer implementing BKT without the exact parameter values in their context packet will use the wrong ones. This section exists to prevent that class of bug entirely.</p>
+</div>
+
+<h3>The mandatory sections — what every packet must have</h3>
+<table>
+<thead><tr><th>Section</th><th>Required for</th><th>What to write</th></tr></thead>
+<tbody>
+<tr><td><strong>TABLE OF CONTENTS</strong></td><td>All stories</td><td>Phase N of M, epic execution map with ← YOU ARE HERE, blocked by/blocking, parallel companions + FILES OWNED</td></tr>
+<tr><td><strong>CRITICAL</strong></td><td>All stories</td><td>YES if resolves C01-C10/H01-H13 finding. Reference the finding code. YES stories use /careful mode.</td></tr>
+<tr><td><strong>RESEARCH REQUIRED</strong></td><td>All stories</td><td>YES + specific URLs for any unfamiliar tech. /plan-eng reads these before planning.</td></tr>
+<tr><td><strong>SCHOLARLY + DS&A</strong></td><td>Stories touching mastery, IRT, generation, security, analytics</td><td>Algorithm blocks per §IX schema. Never leave placeholder values.</td></tr>
+<tr><td><strong>GOAL</strong></td><td>All stories</td><td>One sentence. What the user can do after this story that they couldn't before.</td></tr>
+<tr><td><strong>ACCEPTANCE CRITERIA</strong></td><td>All stories</td><td>Given/When/Then format. Each AC must be testable. 3-7 ACs per story.</td></tr>
+<tr><td><strong>TECHNICAL PLAN</strong></td><td>All stories</td><td>Phases, not steps. Each phase produces something deployable or testable.</td></tr>
+<tr><td><strong>FILES OWNED</strong></td><td>PARALLELIZABLE: YES stories</td><td>Complete list. Zero overlap with any parallel story in the same phase.</td></tr>
+<tr><td><strong>TESTS</strong></td><td>All stories</td><td>Runnable Playwright code (not pseudocode). One test block per AC.</td></tr>
+</tbody>
+</table>
+
+<h3>Example SCHOLARLY + DS&A section for an exam delivery story</h3>
+<pre>
+<span class="c">## SCHOLARLY + DS&A CONTEXT</span>
+
+<span class="c">ALGORITHM: Fisher-Yates shuffle (HMAC-SHA256 seeded)</span>
+<span class="c">  source:      journey-os-algorithms-scholarly.html §V · Fisher-Yates</span>
+<span class="c">  complexity:  O(n) time · O(n) space (in-place)</span>
+<span class="c">  security:    Deterministic (same student_id+exam_id → same order)</span>
+<span class="c">               Unpredictable (requires EXAM_SCRAMBLE_SECRET env var)</span>
+<span class="c">  parameters:  HMAC-SHA256 key = process.env.EXAM_SCRAMBLE_SECRET (32 bytes)</span>
+<span class="c">               PRNG = xorshift64 seeded from first 8 bytes of HMAC output</span>
+<span class="c">               Option scramble seed = bytes 8-16 XOR item_index</span>
+<span class="c">  invariants:</span>
+<span class="c">    - Two students with different student_ids never see same order (P(collision) &lt; 2^-248)</span>
+<span class="c">    - Student who reconnects mid-exam sees same order (idempotent)</span>
+<span class="c">    - EXAM_SCRAMBLE_SECRET stored in Supabase Vault, never in .env.local</span>
+<span class="c">    - Scrambling happens server-side ONLY — never expose shuffle logic to client</span>
+
+<span class="c">ALGORITHM: Auto-save (C01) — atomic RPC pattern</span>
+<span class="c">  source:      production-readiness.html → C01</span>
+<span class="c">  complexity:  O(1) per answer selection</span>
+<span class="c">  security:    N/A (RLS ensures student can only write own session_answers)</span>
+<span class="c">  invariants:</span>
+<span class="c">    - Every answer selection triggers immediate Supabase upsert</span>
+<span class="c">    - Exam session restore is idempotent — no duplicate answers possible</span>
+<span class="c">    - Final submission uses supabase.rpc('finalize_exam_session') — atomic (AP-17)</span>
+<span class="c">    - Trigger prevents modification of finalized sessions</span>
+</pre>
+</section>
+
+<!-- PHASE 7: DATABASE -->
+<div class="phase" id="phase7">
+  <div class="phase-num">Phase 7</div>
+  <div class="phase-title">Database operations — migrations, types, and the dual-write pattern</div>
+  <div class="phase-time">Per migration: 15 min</div>
+</div>
+<section>
+<div class="sid">7 / Database Workflow</div>
+<h2>Supabase-first, Neo4j-second — every time, no exceptions</h2>
+
+<h3>The dual-write pattern (G08) — the most critical architectural rule</h3>
+
+<div class="call-r"><div class="cl">AP-08 antipattern — never write to Neo4j before Supabase</div>
+<p>Supabase is the system of record. Neo4j is the derived read model. The pattern is always: (1) write to Supabase with <code>neo4j_sync_status = 'pending'</code>, (2) trigger the <code>journey/neo4j.sync-record</code> Inngest event, (3) the Inngest handler writes to Neo4j and updates <code>neo4j_sync_status = 'synced'</code>. If Neo4j write fails, Supabase still has the data. If you reverse the order and Neo4j succeeds but Supabase fails, your data is in Neo4j only with no Postgres backup.</p>
+</div>
+
+<pre>
+<span class="c">// Correct dual-write implementation (AP-08 compliant)</span>
+<span class="k">async function</span> <span class="n">create_subconcept</span>(data: <span class="t">NewSubConcept</span>, ctx: <span class="t">RequestContext</span>) {
+  <span class="c">// Step 1: Write to Supabase first — this is the source of truth</span>
+  <span class="k">const</span> { data: row, error } = <span class="k">await</span> supabase
+    .from(<span class="s">'subconcepts'</span>)
+    .insert({
+      ...data,
+      institution_id: ctx.institution_id,
+      neo4j_sync_status: <span class="s">'pending'</span>,   <span class="c">// always start as pending</span>
+      neo4j_synced_at: null
+    })
+    .select()
+    .single()
+
+  <span class="k">if</span> (error) <span class="k">throw</span> error   <span class="c">// if Supabase fails, stop — nothing goes to Neo4j</span>
+
+  <span class="c">// Step 2: Trigger async Neo4j sync via Inngest</span>
+  <span class="k">await</span> inngest.send({
+    name: <span class="s">'journey/neo4j.sync-record'</span>,
+    data: { record_type: <span class="s">'subconcept'</span>, record_id: row.id, institution_id: ctx.institution_id }
+  })
+
+  <span class="k">return</span> row   <span class="c">// return immediately — don't wait for Neo4j sync</span>
+}
+</pre>
+
+<h3>Migration workflow</h3>
+<div class="cmd">
+  <div class="cmd-head"><span class="dir">journey-os/</span><span class="label">Adding a new table or column</span></div>
+  <div class="cmd-body">
+<span class="c"># 1. Create numbered migration file</span>
+<span class="prompt">$ </span><span class="k">touch</span> packages/db/migrations/0002_add_angoff_ratings.sql
+
+<span class="c"># 2. Write migration (include table + RLS + indexes)</span>
+<span class="c"># Rule: every new table must have:</span>
+<span class="c">#   - institution_id UUID NOT NULL (tenant isolation)</span>
+<span class="c">#   - created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()</span>
+<span class="c">#   - id UUID PRIMARY KEY DEFAULT gen_random_uuid()</span>
+<span class="c">#   - RLS policies (at minimum: SELECT requires matching institution_id)</span>
+
+<span class="c"># 3. Apply to Supabase dev project</span>
+<span class="prompt">$ </span><span class="k">npx</span> supabase db push
+<span class="out">Applying migration 0002_add_angoff_ratings.sql...  ✓</span>
+
+<span class="c"># 4. ALWAYS regenerate types after migration — AP-16</span>
+<span class="prompt">$ </span><span class="k">pnpm</span> db:types
+<span class="out">✓ packages/db/types/database.generated.ts updated</span>
+
+<span class="c"># 5. Commit migration + generated types together in the same commit</span>
+<span class="prompt">$ </span><span class="k">git</span> add packages/db/migrations/ packages/db/types/database.generated.ts
+<span class="prompt">$ </span><span class="k">git</span> commit -m "feat(db): add angoff_ratings table with RLS"
+  </div>
+</div>
+
+<h3>The BaseRepository pattern (AP-16 + AP-17)</h3>
+<pre>
+<span class="c">// Every table gets a repository — never hand-write DB interfaces (AP-16)</span>
+<span class="k">import</span> { Database } <span class="k">from</span> <span class="s">'@journey-os/db/types/database.generated'</span>  <span class="c">// ALWAYS from generated</span>
+<span class="k">import</span> { BaseRepository } <span class="k">from</span> <span class="s">'@journey-os/db/repositories/base'</span>
+
+<span class="t">type</span> <span class="n">AngoffRatingRow</span> = <span class="t">Database</span>[<span class="s">'public'</span>][<span class="s">'Tables'</span>][<span class="s">'angoff_ratings'</span>][<span class="s">'Row'</span>]
+<span class="t">type</span> <span class="n">AngoffRatingInsert</span> = <span class="t">Database</span>[<span class="s">'public'</span>][<span class="s">'Tables'</span>][<span class="s">'angoff_ratings'</span>][<span class="s">'Insert'</span>]
+
+<span class="k">export class</span> <span class="t">AngoffRatingRepository</span> <span class="k">extends</span> <span class="t">BaseRepository</span>&lt;<span class="t">AngoffRatingRow</span>&gt; {
+  protected tableName = <span class="s">'angoff_ratings'</span>
+
+  <span class="c">// Use supabase.rpc() for multi-row atomic operations — never sequential inserts (AP-17)</span>
+  <span class="k">async</span> <span class="n">submit_panel_ratings</span>(exam_id: <span class="t">string</span>, ratings: <span class="t">AngoffRatingInsert[]</span>) {
+    <span class="k">return</span> <span class="k">await</span> <span class="k">this</span>.supabase.rpc(<span class="s">'submit_angoff_panel'</span>, { exam_id, ratings })
+  }
+}
+</pre>
+</section>
+
+<!-- PHASE 8: PIPELINES -->
+<div class="phase" id="phase8">
+  <div class="phase-num">Phase 8</div>
+  <div class="phase-title">The three pipelines — P1 ingestion, P2 enrichment, P3 generation</div>
+  <div class="phase-time">E03-E05 epics</div>
+</div>
+<section>
+<div class="sid">8 / Pipeline Architecture</div>
+<h2>Every lecture enters as bytes, exits as assessable knowledge</h2>
+
+<h3>Pipeline step-by-step</h3>
+<div class="flow" style="flex-wrap:wrap;gap:6px">
+  <div class="flow-node done">Upload<br><span style="font-size:10px">S3/Supabase Storage</span></div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-node done">Extract text<br><span style="font-size:10px">pptx/pdf sidecar</span></div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-node done">OCR check<br><span style="font-size:10px">density &lt; 0.1 → Vision</span></div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-node done">Chunk<br><span style="font-size:10px">150-250 tok, 30 overlap</span></div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-node active">Embed<br><span style="font-size:10px">MedCPT + text-3-small</span></div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-node">UMLS enrich<br><span style="font-size:10px">MetaMap → CUIs</span></div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-node">LOD enrich<br><span style="font-size:10px">Hetionet, DrugBank</span></div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-node">Neo4j sync<br><span style="font-size:10px">SubConcept nodes</span></div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-node warn">Review gate<br><span style="font-size:10px">faculty confirmation</span></div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-node">Generate<br><span style="font-size:10px">P3: Haiku batch</span></div>
+</div>
+
+<h3>Testing pipelines with the test fixtures</h3>
+<div class="cmd">
+  <div class="cmd-head"><span class="dir">journey-os/</span><span class="label">P1 pipeline integration test</span></div>
+  <div class="cmd-body">
+<span class="c"># Start Inngest dev server (separate terminal)</span>
+<span class="prompt">$ </span><span class="k">npx</span> inngest-cli@latest dev
+
+<span class="c"># Start the Next.js app (separate terminal)</span>
+<span class="prompt">$ </span><span class="k">pnpm</span> dev
+
+<span class="c"># Run P1 pipeline integration test with the test fixture</span>
+<span class="prompt">$ </span><span class="k">pnpm</span> playwright test tests/E03/p1-pipeline.spec.ts
+<span class="out">Running P1 pipeline test: test-cardiology-50-slides.pptx</span>
+<span class="out">  ✓ Upload triggers journey/lecture.uploaded event</span>
+<span class="out">  ✓ Text extracted: 2,847 characters</span>
+<span class="out">  ✓ Slide 4 OCR triggered (entity density 0.04 &lt; 0.1)</span>
+<span class="out">  ✓ Chunked into 94 chunks (avg 210 tokens)</span>
+<span class="out">  ✓ UMLS enrichment: 23 CUIs extracted</span>
+<span class="out">  ✓ SubConcepts created: 18 (5 below confidence threshold)</span>
+<span class="out">  ✓ Neo4j sync: all 18 SubConcept nodes created</span>
+<span class="out">  ✓ Pipeline status: 'awaiting_review'</span>
+
+<span class="c"># Test the security fixture (prompt injection defense)</span>
+<span class="prompt">$ </span><span class="k">pnpm</span> playwright test tests/E03/injection-defense.spec.ts
+<span class="out">  ✓ Malicious slide content sanitized by sanitizeForContext()</span>
+<span class="out">  ✓ Generated items do not reflect injected instruction</span>
+  </div>
+</div>
+
+<h3>Inngest event catalog — the 14 pipeline events</h3>
+<table>
+<thead><tr><th>Event name</th><th>Trigger</th><th>Handler location</th><th>Concurrency limit</th></tr></thead>
+<tbody>
+<tr><td class="mono">journey/lecture.uploaded</td><td>Faculty file upload</td><td>apps/inngest/functions/p1/</td><td>10 per institution</td></tr>
+<tr><td class="mono">journey/lecture.text-extracted</td><td>P1 step 1 complete</td><td>apps/inngest/functions/p1/</td><td>—</td></tr>
+<tr><td class="mono">journey/lecture.ocr-enriched</td><td>OCR complete</td><td>apps/inngest/functions/p1/</td><td>—</td></tr>
+<tr><td class="mono">journey/lecture.chunked</td><td>Chunking complete</td><td>apps/inngest/functions/p1/</td><td>—</td></tr>
+<tr><td class="mono">journey/chunks.embedded</td><td>Embedding complete</td><td>apps/inngest/functions/p1/</td><td>5 per institution</td></tr>
+<tr><td class="mono">journey/subconcepts.enrichment-requested</td><td>P2 trigger</td><td>apps/inngest/functions/p2/</td><td>3 per institution</td></tr>
+<tr><td class="mono">journey/subconcepts.lod-enriched</td><td>LOD complete</td><td>apps/inngest/functions/p2/</td><td>—</td></tr>
+<tr><td class="mono">journey/neo4j.sync-record</td><td>Any dual-write event</td><td>apps/inngest/functions/neo4j/</td><td>20 per institution</td></tr>
+<tr><td class="mono">journey/items.batch-generate</td><td>Faculty generate action</td><td>apps/inngest/functions/p3/</td><td>3 per faculty_id</td></tr>
+<tr><td class="mono">journey/items.qa-score</td><td>P3 items created</td><td>apps/inngest/functions/p3/</td><td>—</td></tr>
+<tr><td class="mono">journey/exam.session-started</td><td>Student starts exam</td><td>apps/inngest/functions/exam/</td><td>—</td></tr>
+<tr><td class="mono">journey/exam.session-finalized</td><td>Student submits exam</td><td>apps/inngest/functions/exam/</td><td>—</td></tr>
+<tr><td class="mono">journey/mastery.bkt-update</td><td>Practice/queue response</td><td>apps/inngest/functions/mastery/</td><td>—</td></tr>
+<tr><td class="mono">journey/mastery.queue-schedule</td><td>Nightly scheduled job</td><td>apps/inngest/functions/mastery/</td><td>—</td></tr>
+</tbody>
+</table>
+</section>
+
+<!-- PHASE 9: SECURITY -->
+<div class="phase" id="phase9">
+  <div class="phase-num">Phase 9</div>
+  <div class="phase-title">Security checklist — every invariant verified before merge</div>
+  <div class="phase-time">Review per PR</div>
+</div>
+<section>
+<div class="sid">9 / Security Implementation</div>
+<h2>Six invariants that must be verified by CI — not by trust</h2>
+
+<div class="sec-item">
+  <div class="si-head">Critical — Exam scrambling (C02)</div>
+  <p>EXAM_SCRAMBLE_SECRET must be 32+ bytes stored in Supabase Vault (not .env.local). The scramble function must run server-side only. The client receives scrambled items — it never receives the scramble seed or the canonical item order. Tests: two students with different IDs get different orders; student reconnect gets same order.</p>
+</div>
+
+<div class="sec-item">
+  <div class="si-head">Critical — FERPA audit log immutability</div>
+  <p>The ferpa_audit_log table must have: (1) INSERT-only via SECURITY DEFINER trigger, (2) NO UPDATE or DELETE grants to any role, (3) chain_hash computed by the trigger (not application code), (4) all reads logged to the audit log itself. Test: attempt UPDATE as service_role must fail with permission denied.</p>
+</div>
+
+<div class="sec-item">
+  <div class="si-head">Critical — RLS on all tables</div>
+  <p>Every table that contains student data must have RLS enabled and at minimum one SELECT policy that requires matching institution_id. Test each policy individually by connecting as an anon user from a different institution_id and verifying zero rows returned.</p>
+</div>
+
+<div class="sec-item">
+  <div class="si-head">Critical — Neo4j tenant isolation</div>
+  <p>Every Cypher query must go through neo4jQuery(cypher, params, ctx) which injects institution_id automatically. ESLint rule neo4j-no-raw-cypher blocks direct driver.session().run() calls. This rule must never be disabled. Test: run canonical-check.yml CI workflow.</p>
+</div>
+
+<div class="sec-item">
+  <div class="si-head">Critical — Prompt injection defense</div>
+  <p>All document content passed to Claude must go through sanitizeForContext() before inclusion in any prompt. Test: run the test-malicious-injection.pptx fixture and verify generated items don't reflect the injected instruction on slide 3.</p>
+</div>
+
+<div class="cmd">
+  <div class="cmd-head"><span class="dir">journey-os/</span><span class="label">Security tests — run before every merge to main</span></div>
+  <div class="cmd-body">
+<span class="c"># Run all security invariant tests</span>
+<span class="prompt">$ </span><span class="k">pnpm</span> playwright test tests/shared/security.spec.ts
+<span class="out">  ✓ exam scramble: two students get different orders</span>
+<span class="out">  ✓ exam scramble: reconnect gets same order</span>
+<span class="out">  ✓ FERPA log: UPDATE fails for service_role</span>
+<span class="out">  ✓ FERPA log: chain_hash consistent</span>
+<span class="out">  ✓ RLS: cross-tenant data access returns 0 rows</span>
+<span class="out">  ✓ Neo4j: ESLint blocks raw Cypher</span>
+<span class="out">  ✓ Injection: sanitizeForContext() strips injection pattern</span>
+<span class="out">7/7 tests passing</span>
+  </div>
+</div>
+</section>
+
+<!-- PHASE 10: TESTING -->
+<div class="phase" id="phase10">
+  <div class="phase-num">Phase 10</div>
+  <div class="phase-title">Testing — what to test and how to write tests that pass CI</div>
+  <div class="phase-time">Per story: after implementation</div>
+</div>
+<section>
+<div class="sid">10 / Test Strategy</div>
+<h2>Three test layers — unit, integration, E2E — and which layer owns what</h2>
+
+<div class="three">
+  <div class="card"><div class="cl">Unit tests</div><p>Pure functions only: BKT update formula, IRT probability computation, Pimsleur decay calculation, Fisher-Yates shuffle output, KR-20 formula, DIF chi-squared. These run in under 1 second. Jest or Vitest. No network, no DB.</p></div>
+  <div class="card"><div class="cl">Integration tests</div><p>Pipeline steps: test-cardiology-50-slides.pptx through full P1 pipeline. Verify: chunk count, UMLS CUIs extracted, Neo4j node creation, dual-write sync. Require real Supabase + Neo4j (dev project). Use Playwright test helpers.</p></div>
+  <div class="card"><div class="cl">E2E (Playwright)</div><p>User flows: faculty uploads a lecture, sees concepts, generates questions, approves. Student takes an exam, sees Why Wrong?, mastery updates. All security invariants. These run against a seeded test database.</p></div>
+</div>
+
+<h3>Writing tests that match acceptance criteria</h3>
+<pre>
+<span class="c">// E08 BKT update — unit test (Vitest)</span>
+<span class="k">import</span> { bkt_update, BKT_PARAMS } <span class="k">from</span> <span class="s">'@journey-os/ai/mastery/bkt'</span>
+
+describe(<span class="s">'bkt_update'</span>, () => {
+  test(<span class="s">'correct answer raises p_mastery'</span>, () => {
+    <span class="k">const</span> p_before = <span class="num">0.5</span>
+    <span class="k">const</span> p_after  = bkt_update(p_before, <span class="k">true</span>)
+    expect(p_after).toBeGreaterThan(p_before)
+  })
+
+  test(<span class="s">'p_mastery always stays in (0,1)'</span>, () => {
+    <span class="k">const</span> extremes = [<span class="num">0.001</span>, <span class="num">0.999</span>, <span class="num">0.5</span>]
+    <span class="k">for</span> (<span class="k">const</span> p <span class="k">of</span> extremes) {
+      <span class="k">const</span> after_correct   = bkt_update(p, <span class="k">true</span>)
+      <span class="k">const</span> after_incorrect = bkt_update(p, <span class="k">false</span>)
+      expect(after_correct).toBeGreaterThan(<span class="num">0</span>)
+      expect(after_correct).toBeLessThan(<span class="num">1</span>)
+      expect(after_incorrect).toBeGreaterThan(<span class="num">0</span>)
+      expect(after_incorrect).toBeLessThan(<span class="num">1</span>)
+    }
+  })
+
+  test(<span class="s">'mastery threshold: p=0.95 → is_mastered()'</span>, () => {
+    <span class="c">// Build up to mastery — 5 correct answers starting from p_init</span>
+    <span class="k">let</span> p = BKT_PARAMS.p_init
+    <span class="k">for</span> (<span class="k">let</span> i = <span class="num">0</span>; i < <span class="num">8</span>; i++) p = bkt_update(p, <span class="k">true</span>)
+    expect(p).toBeGreaterThanOrEqual(BKT_PARAMS.mastery_threshold)
+  })
+})
+</pre>
+
+<h3>The /qa skill workflow</h3>
+<div class="cmd">
+  <div class="cmd-head"><span class="dir">claude code session</span></div>
+  <div class="cmd-body">
+<span class="c"># After finishing implementation of a story, run /qa</span>
+<span class="prompt">claude&gt; </span><span class="k">/qa</span>
+
+<span class="c"># Claude reads the context packet's TESTS section and AC list</span>
+<span class="c"># Generates tests for each AC, runs them, fixes code to pass them</span>
+<span class="out">Generating tests from AC-1 through AC-5...</span>
+<span class="out">AC-1: "Faculty can upload a PPTX and see processing status" → Playwright test written</span>
+<span class="out">AC-2: "Concepts appear after P1 completion" → integration test written</span>
+<span class="out">...</span>
+<span class="out">Running tests...</span>
+<span class="out">AC-3 failing: SubConcept.umls_cui is null — fixing UMLS enrichment step...</span>
+<span class="out">AC-3: ✓ now passing</span>
+<span class="out">All 5 tests passing.</span>
+  </div>
+</div>
+</section>
+
+<!-- PHASE 11: CI/CD -->
+<div class="phase" id="phase11">
+  <div class="phase-num">Phase 11</div>
+  <div class="phase-title">CI/CD — the gates a PR must pass before merge</div>
+  <div class="phase-time">~8 min per PR</div>
+</div>
+<section>
+<div class="sid">11 / Continuous Integration</div>
+<h2>Three GitHub Actions workflows — all must pass before merge to develop</h2>
+
+<table>
+<thead><tr><th>Workflow</th><th>File</th><th>What it checks</th><th>Fails on</th></tr></thead>
+<tbody>
+<tr><td><strong>ci.yml</strong></td><td>.github/workflows/ci.yml</td><td>TypeScript compile, ESLint (all rules including AP-*), unit tests, Playwright tests against seeded DB</td><td>Type errors, ESLint violations, test failures</td></tr>
+<tr><td><strong>canonical-check.yml</strong></td><td>.github/workflows/canonical-check.yml</td><td>Verifies no canonical decisions are violated: dual-write pattern, neo4jQuery wrapper usage, atomic design layer imports, db:types freshness</td><td>Raw Cypher calls, cross-layer imports, stale generated types</td></tr>
+<tr><td><strong>seed-validation.yml</strong></td><td>.github/workflows/seed-validation.yml</td><td>Runs pnpm validate-seed — verifies the Neo4j seed data matches the schema and all required SubConcepts are present</td><td>Seed schema drift, missing required seed data</td></tr>
+</tbody>
+</table>
+
+<h3>PR checklist — run /ship to generate this automatically</h3>
+<ul class="checklist">
+  <li class="stop"><code>/validate</code> passed locally with zero violations</li>
+  <li class="stop"><code>/qa</code> passed — all AC tests passing</li>
+  <li class="stop">All three CI workflows passing in GitHub</li>
+  <li class="stop">Migration file committed alongside generated types (<code>database.generated.ts</code>)</li>
+  <li class="stop">No direct Cypher queries (ESLint: neo4j-no-raw-cypher)</li>
+  <li class="stop">No sequential inserts for multi-row atomic operations (AP-17)</li>
+  <li class="stop">No hand-written DB interfaces (AP-16)</li>
+  <li class="stop">FERPA audit log tests passing if story touches student data access</li>
+  <li class="stop">Security tests passing if story touches exam delivery or admin</li>
+  <li class="stop">Performance: no query without an index. Check with EXPLAIN ANALYZE in Supabase SQL editor.</li>
+  <li class="warn">If story adds new Inngest event: inngest-events.md updated in .context/canonical/</li>
+  <li class="warn">If story resolves a C/H finding: production-readiness.html §findings updated</li>
+</ul>
+
+<h3>Branch strategy</h3>
+<pre>
+main              <span class="c">← production — protected, requires /ship + all CI green + 1 review</span>
+  └── develop     <span class="c">← integration branch — all feature PRs target this</span>
+        ├── feature/E03-S05-umls-enrichment   <span class="c">← one branch per story</span>
+        ├── feature/E03-S06-subconcept-nodes  <span class="c">← parallel stories can exist simultaneously</span>
+        └── hotfix/...                        <span class="c">← critical bug fixes only</span>
+</pre>
+</section>
+
+<!-- PHASE 12: PRODUCTION -->
+<div class="phase" id="phase12">
+  <div class="phase-num">Phase 12</div>
+  <div class="phase-title">Production deployment — go-live checklist and operational runbook</div>
+  <div class="phase-time">First deploy: 2-4 hours</div>
+</div>
+<section>
+<div class="sid">12 / Production Deployment</div>
+<h2>From staging to live — what changes between environments</h2>
+
+<h3>Production-specific configuration</h3>
+<table>
+<thead><tr><th>Item</th><th>Dev value</th><th>Prod requirement</th></tr></thead>
+<tbody>
+<tr><td>EXAM_SCRAMBLE_SECRET</td><td>Any 32-byte string</td><td>Generated with <code>openssl rand -hex 32</code>, stored in Supabase Vault (not env var)</td></tr>
+<tr><td>Neo4j</td><td>Aura Free (1GB)</td><td>Aura Professional (10GB minimum) — 312 students × 12,000 concepts = ~3.7M nodes</td></tr>
+<tr><td>MetaMap</td><td>Local Docker</td><td>Railway.app or Fly.io deployment — ensure 4GB RAM minimum</td></tr>
+<tr><td>Sidecars</td><td>Local Docker</td><td>Railway.app containers with health checks</td></tr>
+<tr><td>Inngest</td><td>Dev mode (local)</td><td>Inngest Cloud — Platform plan for production concurrency limits</td></tr>
+<tr><td>NODE_ENV</td><td>development</td><td>production — disables debug logging, enables production optimizations</td></tr>
+<tr><td>Redis</td><td>None (local fallback)</td><td>Upstash Redis — token bucket rate limiting requires persistence</td></tr>
+</tbody>
+</table>
+
+<h3>Production go-live checklist</h3>
+<ul class="checklist">
+  <li class="stop">All 10 critical findings (C01-C10) resolved — verify in production-readiness.html</li>
+  <li class="stop">EXAM_SCRAMBLE_SECRET stored in Supabase Vault (not .env.local)</li>
+  <li class="stop">FERPA audit log chain integrity verified (admin endpoint returns consistent)</li>
+  <li class="stop">RLS policies tested against cross-tenant access (zero rows for different institution_id)</li>
+  <li class="stop">Neo4j Aura Professional provisioned with adequate RAM</li>
+  <li class="stop">All sidecars deployed and health-checked</li>
+  <li class="stop">Inngest Cloud configured with production signing key</li>
+  <li class="stop">pnpm validate-seed passes against production Neo4j instance</li>
+  <li class="stop">Exam delivery tested end-to-end with real PPTX and at least 2 test students</li>
+  <li class="stop">Admin FERPA audit log tested (access one student record, verify audit entry created)</li>
+  <li class="stop">Backup strategy: Supabase Point-in-Time Recovery enabled</li>
+  <li class="warn">Performance: P95 latency for exam load &lt;400ms (test with 30 simultaneous students)</li>
+  <li class="warn">Cost monitoring: set Anthropic budget alert at 80% of monthly limit</li>
+</ul>
+</section>
+
+<!-- TROUBLESHOOTING -->
+<div class="phase" id="troubleshoot">
+  <div class="phase-num">Appendix</div>
+  <div class="phase-title">Troubleshooting — common problems and exact fixes</div>
+</div>
+<section>
+<div class="sid">Troubleshooting Reference</div>
+<h2>Before asking — check here first</h2>
+
+<div class="trouble">
+  <div class="trouble-q">pnpm install fails with workspace errors</div>
+  <div class="trouble-a">You're using npm or yarn instead of pnpm. Run <code>npm uninstall -g yarn</code> if needed, then <code>pnpm install</code>. If node_modules is corrupt: <code>rm -rf node_modules packages/*/node_modules apps/*/node_modules &amp;&amp; pnpm install</code></div>
+</div>
+
+<div class="trouble">
+  <div class="trouble-q">Neo4j connection fails: "ServiceUnavailable: WebSocket connection failure"</div>
+  <div class="trouble-a">Check NEO4J_URI format — must be <code>neo4j+s://</code> (not <code>bolt://</code> or <code>neo4j://</code>) for Aura. Verify username is <code>neo4j</code> (not your email). Check that Aura instance is in "Running" state in the dashboard — free instances pause after inactivity.</div>
+</div>
+
+<div class="trouble">
+  <div class="trouble-q">pnpm db:types fails with "SUPABASE_PROJECT_ID not found"</div>
+  <div class="trouble-a">Set SUPABASE_PROJECT_ID in .env.local to your project ID (the random string in your Supabase URL: <code>https://[PROJECT_ID].supabase.co</code>). Also ensure Supabase CLI is installed: <code>npm install -g supabase</code></div>
+</div>
+
+<div class="trouble">
+  <div class="trouble-q">MetaMap container fails to start — out of memory</div>
+  <div class="trouble-a">MetaMap requires minimum 4GB RAM. In Docker Desktop: Settings → Resources → Memory → set to at least 6GB. MetaMap also takes 60-90 seconds to start — check logs with <code>docker compose logs metamap</code> and wait for "MetaMap server ready" message before testing.</div>
+</div>
+
+<div class="trouble">
+  <div class="trouble-q">ESLint error: "neo4j-no-raw-cypher" — cannot call driver.session().run() directly</div>
+  <div class="trouble-a">All Cypher queries must go through <code>neo4jQuery(cypher, params, ctx)</code> from <code>@journey-os/neo4j</code>. This wrapper injects institution_id for tenant isolation. Import it: <code>import { neo4jQuery } from '@journey-os/neo4j/query'</code>. Never disable this ESLint rule.</div>
+</div>
+
+<div class="trouble">
+  <div class="trouble-q">BKT p_mastery values drifting — concepts showing as mastered after 2 answers</div>
+  <div class="trouble-a">Check that BKT is only running after practice/queue responses, not during exam sessions. Also verify parameters match exactly: <code>p_init=0.10, p_transit=0.20, p_slip=0.10, p_guess=0.20</code>. Common bug: p_transit=0.50 (someone changed it trying to make learning "faster") — this makes BKT converge immediately and is wrong.</div>
+</div>
+
+<div class="trouble">
+  <div class="trouble-q">Exam scramble: student sees different order on reconnect</div>
+  <div class="trouble-a">The scramble seed must be computed from <code>HMAC-SHA256(secret, student_id + ":" + exam_id)</code>. If you're passing a timestamp or any time-varying value, the seed will differ. Check that EXAM_SCRAMBLE_SECRET is the same value in all server instances (if load balancing). The scramble must be computed server-side on every request from the same seed — never store the scrambled order, derive it.</div>
+</div>
+
+<div class="trouble">
+  <div class="trouble-q">Inngest events not triggering — functions not running</div>
+  <div class="trouble-a">For dev: verify Inngest Dev Server is running at localhost:8288 (<code>npx inngest-cli dev</code>). Check INNGEST_BASE_URL=http://localhost:8288 in .env.local. Check that the Next.js app has the Inngest route handler at <code>app/api/inngest/route.ts</code>. The Inngest Dev Server UI at http://localhost:8288 shows all events and function runs — check there first.</div>
+</div>
+
+<div class="trouble">
+  <div class="trouble-q">P3 generation cost much higher than $0.12/item</div>
+  <div class="trouble-a">Check model routing in .env: generation should use Haiku (ANTHROPIC_MODEL_HAIKU), not Sonnet. Sonnet 4 costs ~10× Haiku and is only for core generation + critique (D05). Also check GENERATION_MAX_CONCURRENT — if set too high, retries from failures multiply cost. Check the dead letter queue for failed items that are being retried at full cost.</div>
+</div>
+
+<div class="trouble">
+  <div class="trouble-q">canonical-check.yml failing: "stale database.generated.ts"</div>
+  <div class="trouble-a">A migration was committed without regenerating types. Run <code>pnpm db:types</code> and commit the updated <code>packages/db/types/database.generated.ts</code>. Always keep migration + generated types in the same commit. AP-16 exists precisely to catch this — hand-written interfaces that drift from the schema are a production bug waiting to happen.</div>
+</div>
+
+<div class="trouble">
+  <div class="trouble-q">FERPA audit log chain_hash mismatch on admin verify endpoint</div>
+  <div class="trouble-a">This means a row was modified after insertion. Run the verification query to find which row: <code>SELECT id, created_at FROM ferpa_audit_log ORDER BY created_at WHERE chain_hash != compute_expected_hash()</code>. Investigate who modified the row. Check that UPDATE and DELETE are revoked from all roles on ferpa_audit_log. If no malicious modification occurred, check if the institution_id genesis sentinel was changed.</div>
+</div>
+
+<h3>Getting help</h3>
+<p>In order: (1) Check this manual. (2) Check the production-readiness.html findings — your issue may be a known finding. (3) Check Claude Code: <code>claude&gt; This is happening: [describe]. What's wrong?</code> — Claude Code has full context from CLAUDE.md and .context/canonical/. (4) Check the Inngest dashboard at http://localhost:8288 for pipeline failures. (5) Check Supabase Logs in the dashboard. (6) Ask a teammate with the specific error message, what you've tried, and what you found in steps 1-5.</p>
+</section>
+
+<div class="footer">
+  <span>Journey OS · Complete Engineering Manual · MSM · 2025 · v3.0</span>
+  <span>Phase 0: Prerequisites → Phase 12: Production · Troubleshooting reference</span>
+</div>
+</body>
+</html>

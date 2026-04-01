@@ -1,0 +1,11 @@
+{
+  "source": "Anderson & Krathwohl (2001) Revised Bloom's Taxonomy",
+  "levels": [
+    { "level": 1, "name": "Remember", "description": "Recall facts and basic concepts", "verbs": ["define", "list", "recall", "identify", "name"] },
+    { "level": 2, "name": "Understand", "description": "Explain ideas or concepts", "verbs": ["describe", "explain", "summarize", "paraphrase", "classify"] },
+    { "level": 3, "name": "Apply", "description": "Use information in new situations", "verbs": ["use", "solve", "demonstrate", "implement", "calculate"] },
+    { "level": 4, "name": "Analyze", "description": "Draw connections among ideas", "verbs": ["differentiate", "compare", "contrast", "examine", "categorize"] },
+    { "level": 5, "name": "Evaluate", "description": "Justify a stand or decision", "verbs": ["judge", "critique", "justify", "recommend", "assess"] },
+    { "level": 6, "name": "Create", "description": "Produce new or original work", "verbs": ["design", "construct", "develop", "formulate", "compose"] }
+  ]
+}

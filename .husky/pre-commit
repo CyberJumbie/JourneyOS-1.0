@@ -1,0 +1,24 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+npx lint-staged
+
+# Warn if seed files changed
+if git diff --cached --name-only | grep -q "scripts/seeds/"; then
+  echo ""
+  echo "⚠️  SEED FILES CHANGED"
+  echo "   Run pnpm run validate-seed after commit to verify seed integrity."
+  echo "   Press Ctrl+C to abort, Enter to continue."
+  read -r
+fi
+
+# Hard block if migration files changed on wrong branch
+if git diff --cached --name-only | grep -q "migrations/"; then
+  BRANCH=$(git branch --show-current)
+  if [[ ! "$BRANCH" =~ ^(chore|migration|feat)/ ]]; then
+    echo ""
+    echo "❌ Migration changes must be on chore/, migration/, or feat/ branch"
+    echo "   Current branch: $BRANCH"
+    exit 1
+  fi
+fi

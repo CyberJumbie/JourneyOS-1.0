@@ -1,0 +1,44 @@
+{
+  "name": "journey-os",
+  "private": true,
+  "packageManager": "pnpm@9.0.0",
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
+    "test:unit": "jest --testPathPattern='*.unit.test.ts'",
+    "test:api": "playwright test --project=api",
+    "test:pipeline": "playwright test --project=pipeline",
+    "test:ui": "playwright test --project=ui",
+    "dev:seed": "tsx scripts/seeds/dev-seed.ts",
+    "validate-seed": "tsx scripts/seeds/validate-seed.ts",
+    "db:types": "supabase gen types typescript --project-id hccahmnekiammnkdijwx > packages/db/types/database.generated.ts && echo '✓ Types regenerated'",
+    "db:types:check": "supabase gen types typescript --local | diff - packages/db/types/database.generated.ts && echo '✓ Types in sync' || (echo '✗ Types out of sync — run pnpm db:types' && exit 1)",
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.0.0",
+    "@commitlint/config-conventional": "^19.0.0",
+    "@playwright/test": "^1.44.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^15.0.0",
+    "husky": "^9.0.0",
+    "jest": "^29.0.0",
+    "lint-staged": "^15.0.0",
+    "turbo": "^2.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.4.0"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix --max-warnings 0",
+      "bash -c 'tsc --noEmit'"
+    ],
+    "packages/db/migrations/*.sql": [
+      "echo '⚠️  Migration changed — ensure applied to staging before production'"
+    ]
+  }
+}

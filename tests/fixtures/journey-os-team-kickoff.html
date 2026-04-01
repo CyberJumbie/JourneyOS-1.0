@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Journey OS — Team Kickoff Briefing</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap');
+:root{
+  --ink:#0c0c0c;--paper:#f4f1eb;--edge:#ddd6c4;
+  --r:#a82828;--g:#185230;--y:#6a4c14;--b:#162450;--gold:#8a6614;
+  --teal:#0a4c4c;--violet:#482070;
+  --pre:#080d12;--prefg:#c4bfb0;
+  /* Tier colors */
+  --t1:#162450;--t1b:#ebf0f8;
+  --t2:#185230;--t2b:#eaf5ed;
+  --t3:#8a6614;--t3b:#fdf7e0;
+  --t4:#482070;--t4b:#f0eaf8;
+  --t5:#0a4c4c;--t5b:#eaf5f5;
+  /* Status */
+  --done-bg:#eaf5ed;--done-bd:#60a878;
+  --warn-bg:#fdf7e0;--warn-bd:#c09030;
+  --crit-bg:#fdf0ee;--crit-bd:#e08070;
+  --moat-bg:#0c0c0c;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);font-size:13.5px;line-height:1.8}
+
+/* COVER */
+.cover{background:var(--ink);min-height:90vh;display:flex;flex-direction:column;justify-content:space-between;padding:80px;position:relative;overflow:hidden}
+.cover-grid{position:absolute;inset:0;opacity:1;background:repeating-linear-gradient(90deg,transparent,transparent 79px,rgba(22,36,80,.18) 80px),repeating-linear-gradient(0deg,transparent,transparent 79px,rgba(22,36,80,.12) 80px)}
+.cr{position:relative;z-index:1;display:flex;flex-direction:column;justify-content:space-between;height:100%}
+.c-label{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+h1{font-family:'Fraunces',serif;font-size:80px;font-weight:300;line-height:.9;letter-spacing:-2px;color:#ede8e0;margin-bottom:14px}
+h1 em{font-style:italic;color:var(--gold)}
+.c-sub{font-family:'Fraunces',serif;font-style:italic;font-size:22px;color:#666;max-width:680px;margin-bottom:0}
+.c-bottom{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:20px;margin-top:auto;padding-top:40px}
+.c-stat-row{display:flex;gap:1px;background:rgba(255,255,255,.05)}
+.c-stat{padding:12px 20px;text-align:center}
+.c-stat-n{font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:600;display:block;line-height:1}
+.c-stat-l{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.08em;color:#555;margin-top:3px}
+.c-stat-n.gold{color:var(--gold)}.c-stat-n.r{color:#e08070}.c-stat-n.g{color:#70b888}.c-stat-n.b{color:#7090d0}
+.c-chips{display:flex;gap:4px;flex-wrap:wrap}
+.c-chip{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.04em;padding:4px 10px;border:1px solid #1c1c1c;color:#555}
+.c-chip.done{border-color:#1c301c;color:#406040}
+
+/* NAV */
+.nav{background:#080d12;border-bottom:1px solid #141a20;padding:0 80px;display:flex;overflow-x:auto}
+.ni{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:#444;padding:10px 14px;border-right:1px solid #141a20;white-space:nowrap;text-decoration:none;flex-shrink:0}
+.ni:hover{color:var(--gold)}
+
+/* SECTIONS */
+section{padding:56px 80px;border-bottom:1px solid var(--edge)}
+.sid{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--r);margin-bottom:10px}
+h2{font-family:'Fraunces',serif;font-size:38px;font-weight:300;line-height:1.05;margin-bottom:20px}
+h3{font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#999;margin:28px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--edge)}
+h4{font-family:'Fraunces',serif;font-size:18px;font-weight:400;margin:14px 0 6px}
+p{margin-bottom:11px;max-width:840px;line-height:1.75}
+code{font-family:'JetBrains Mono',monospace;font-size:11px;background:#e8e2d4;padding:1px 5px;border-radius:2px}
+
+/* LAYOUT */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:14px 0}
+.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin:14px 0}
+.four{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px;margin:14px 0}
+.card{border:1px solid var(--edge);padding:17px;background:#fff}
+.card-lbl{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:#bbb;margin-bottom:5px}
+.card-ttl{font-family:'Fraunces',serif;font-size:16px;font-weight:400;margin-bottom:6px}
+.card p{font-size:12.5px;color:#666;margin:0;line-height:1.7}
+
+/* TABLES */
+table{width:100%;border-collapse:collapse;font-size:12px;margin:10px 0 18px}
+th{background:var(--ink);color:var(--paper);padding:8px 12px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
+td{padding:7px 12px;border-bottom:1px solid var(--edge);vertical-align:top}
+tr:nth-child(even) td{background:#faf7f0}
+tr:hover td{background:#f5f2e8}
+.mono{font-family:'JetBrains Mono',monospace;font-size:10.5px}
+.small{font-size:11px;color:#888}
+
+/* PILLS */
+.pill{display:inline-block;padding:2px 7px;border-radius:2px;font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:600;vertical-align:middle;white-space:nowrap}
+.p-r{background:#fce6e6;color:var(--r)}.p-y{background:var(--warn-bg);color:var(--y)}
+.p-g{background:var(--done-bg);color:var(--g)}.p-b{background:var(--t1b);color:var(--t1)}
+.p-t1{background:var(--t1b);color:var(--t1)}.p-t2{background:var(--t2b);color:var(--t2)}
+.p-t3{background:var(--t3b);color:var(--t3)}.p-t4{background:var(--t4b);color:var(--t4)}
+.p-t5{background:var(--t5b);color:var(--t5)}.p-dk{background:var(--ink);color:#bbb}
+.p-mvp{background:#0c0c0c;color:#c0b878}.p-no{background:#f2f0ec;color:#aaa}
+.p-moat{background:#2a0050;color:#c0a0f0}
+
+/* CHECKLIST */
+.chk{padding:10px 16px;border-left:3px solid var(--edge);margin:5px 0;display:flex;align-items:flex-start;gap:12px;background:#fff}
+.chk.done{border-color:var(--g);background:var(--done-bg)}
+.chk.warn{border-color:var(--y);background:var(--warn-bg)}
+.chk.todo{border-color:#bbb;background:#faf7f0}
+.chk-icon{font-size:14px;flex-shrink:0;margin-top:1px;font-family:'JetBrains Mono',monospace}
+.chk-body{flex:1}
+.chk-title{font-weight:500;font-size:13px}
+.chk-detail{font-size:12px;color:#777;margin-top:2px}
+
+/* MOAT CARDS */
+.moat-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--ink);border:1px solid var(--ink);margin:16px 0}
+.moat-cell{background:#0e0e0e;padding:22px;position:relative;overflow:hidden}
+.moat-n{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:#333;margin-bottom:10px}
+.moat-title{font-family:'Fraunces',serif;font-size:20px;font-weight:300;color:#ede8e0;margin-bottom:8px;line-height:1.2}
+.moat-body{font-size:12.5px;color:#888;line-height:1.75}
+.moat-cell::after{content:'';position:absolute;top:-30px;right:-30px;width:80px;height:80px;background:radial-gradient(circle,rgba(138,102,20,.08) 0%,transparent 70%)}
+.moat-title em{font-style:italic;color:var(--gold)}
+.moat-tech{font-family:'JetBrains Mono',monospace;font-size:9px;color:#3a3a3a;margin-top:9px;border-top:1px solid #1e1e1e;padding-top:9px;line-height:1.6}
+
+/* SPRINT TIMELINE */
+.sprint{border:1px solid var(--edge);margin:10px 0;overflow:hidden}
+.sprint-head{padding:12px 18px;display:grid;grid-template-columns:80px 1fr auto;gap:14px;align-items:center;border-bottom:1px solid var(--edge)}
+.sprint-wk{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;color:var(--r)}
+.sprint-title{font-family:'Fraunces',serif;font-size:16px;font-weight:400}
+.sprint-out{font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 8px;border-radius:2px}
+.sprint-body{padding:11px 18px;display:grid;grid-template-columns:1fr 1fr;gap:16px;font-size:12.5px;line-height:1.8;color:#555}
+.sprint-role{font-weight:600;font-family:'JetBrains Mono',monospace;font-size:9px;text-transform:uppercase;color:#aaa;margin-bottom:4px}
+
+/* DATA SOURCE TABLE styling */
+.ds-tier{width:6px;padding:0!important}
+.t1-bar{background:var(--t1)}.t2-bar{background:var(--t2)}.t3-bar{background:var(--t3)}.t4-bar{background:var(--t4)}.t5-bar{background:var(--t5)}
+
+/* RISK */
+.risk{border:1px solid var(--edge);padding:14px 16px;margin:8px 0;display:grid;grid-template-columns:48px 1fr 120px;gap:14px;align-items:start}
+.risk-sev{width:40px;height:40px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;flex-shrink:0}
+.risk-sev.crit{background:var(--crit-bg);color:var(--r)}.risk-sev.high{background:var(--warn-bg);color:var(--y)}.risk-sev.med{background:var(--done-bg);color:var(--g)}
+.risk-title{font-weight:500;margin-bottom:3px}
+.risk-detail{font-size:12px;color:#777}
+.risk-mit{font-size:11.5px;text-align:right;color:#999}
+
+/* COST TABLE */
+.cost-row-header{background:#f0ece4;font-weight:600}
+
+/* METRIC CARDS */
+.metric{border:1px solid var(--edge);padding:16px;background:#fff}
+.metric-lbl{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:#ccc;margin-bottom:3px}
+.metric-val{font-family:'Fraunces',serif;font-size:28px;font-weight:300;color:var(--g);line-height:1;margin-bottom:4px}
+.metric-desc{font-size:12px;color:#888;line-height:1.6}
+
+/* MISC */
+ul.t{list-style:none;margin:6px 0}
+ul.t li{padding:3px 0 3px 16px;position:relative;font-size:12.5px}
+ul.t li::before{content:'→';position:absolute;left:0;color:var(--r);font-family:'JetBrains Mono',monospace;font-size:9px;top:5px}
+.callout{border-left:3px solid var(--b);background:var(--t1b);padding:12px 16px;margin:12px 0;border-radius:0 2px 2px 0}
+.callout .cl{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--b);margin-bottom:4px}
+.callout p{font-size:13px;margin:0;max-width:none}
+.gold-callout{border-left:3px solid var(--gold);background:var(--t3b);padding:12px 16px;margin:12px 0}
+.gold-callout .cl{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
+.gold-callout p{font-size:13px;margin:0;max-width:none;font-style:italic}
+.footer{background:var(--ink);padding:28px 80px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-family:'JetBrains Mono',monospace;font-size:9.5px;color:#444}
+@media(max-width:960px){.cover,.nav,.footer,section{padding-left:24px;padding-right:24px}.two,.three,.four,.moat-grid,.c-stat-row{grid-template-columns:1fr}h1{font-size:48px}h2{font-size:28px}.sprint-body,.sprint-head{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- ══ COVER ══ -->
+<div class="cover">
+<div class="cover-grid"></div>
+<div class="cr">
+<div>
+  <div class="c-label">Journey OS · Team Kickoff Briefing · Morehouse School of Medicine</div>
+  <h1>Everything<br>Your Team<br>Needs to<br><em>Build This</em></h1>
+  <div class="c-sub">Data sources, feature map, competitive moats, sprint plan, team structure, infrastructure costs, risk matrix, and success metrics — the complete briefing for engineering and product teams</div>
+</div>
+<div class="c-bottom">
+  <div class="c-stat-row">
+    <div class="c-stat"><span class="c-stat-n gold">35</span><div class="c-stat-l">Data Sources</div></div>
+    <div class="c-stat"><span class="c-stat-n g">6</span><div class="c-stat-l">Personas</div></div>
+    <div class="c-stat"><span class="c-stat-n b">67</span><div class="c-stat-l">Features</div></div>
+    <div class="c-stat"><span class="c-stat-n r">8</span><div class="c-stat-l">Moats</div></div>
+    <div class="c-stat"><span class="c-stat-n gold">12</span><div class="c-stat-l">Weeks to MVP</div></div>
+    <div class="c-stat"><span class="c-stat-n g">~$650</span><div class="c-stat-l">Monthly infra (MVP)</div></div>
+  </div>
+  <div class="c-chips">
+    <span class="c-chip done">✓ Production bible complete</span>
+    <span class="c-chip done">✓ Tech architecture complete</span>
+    <span class="c-chip done">✓ 45 production gaps resolved</span>
+    <span class="c-chip done">✓ All SQL + API + prompt specs ready</span>
+    <span class="c-chip">Needs: 4-person engineering team</span>
+    <span class="c-chip">Needs: UMLS API key + Neo4j Aura account</span>
+  </div>
+</div>
+</div>
+</div>
+
+<div class="nav">
+  <a class="ni" href="#ready">I · Build Readiness</a>
+  <a class="ni" href="#sources">II · Data Sources</a>
+  <a class="ni" href="#features">III · Feature Map</a>
+  <a class="ni" href="#moats">IV · Moats</a>
+  <a class="ni" href="#philosophy">V · Architecture Why</a>
+  <a class="ni" href="#arch-standards">V-B · Arch Standards</a><a class="ni" href="#sprints">VI · Sprint Plan</a>
+  <a class="ni" href="#team">VII · Team</a>
+  <a class="ni" href="#costs">VIII · Costs</a>
+  <a class="ni" href="#risks">IX · Risks</a>
+  <a class="ni" href="#metrics">X · Metrics</a>
+</div>
+
+<!-- ══ I: BUILD READINESS ══ -->
+<section id="ready">
+<div class="sid">I / Build Readiness Checklist</div>
+<h2>What you need before writing line 1</h2>
+
+<p>The architecture is fully specified. Every schema, prompt, pipeline step, and API route is documented. The remaining pre-build work is procurement and environment setup — none of it takes more than 2 business days. Items marked <span style="color:var(--g);font-weight:600">done</span> exist in the current documentation set.</p>
+
+<h3>Documentation — complete</h3>
+<div class="chk done"><span class="chk-icon">✓</span><div class="chk-body"><div class="chk-title">Production Bible (Parts I–X)</div><div class="chk-detail">All 79 node types, 110 edges, 3 pipelines, ECD framework, seed catalogue, 44 citations, 45 production findings resolved. journey-os-production-bible.html</div></div></div>
+<div class="chk done"><span class="chk-icon">✓</span><div class="chk-body"><div class="chk-title">Technical Architecture (Sections I–IX)</div><div class="chk-detail">Complete SQL DDL (4 migrations), all API routes, Inngest event registry, P1/P2/P3 TypeScript scaffolds, BKT/IRT code, production hardening. journey-os-tech-architecture.html</div></div></div>
+<div class="chk done"><span class="chk-icon">✓</span><div class="chk-body"><div class="chk-title">Complete generation prompts</div><div class="chk-detail">Full NBME system prompt, critique gate prompt, distractor prompt, LCME classifier prompt, LOD brief prompt, QA scoring algorithm — all production-ready.</div></div></div>
+<div class="chk done"><span class="chk-icon">✓</span><div class="chk-body"><div class="chk-title">Seed data — all defined</div><div class="chk-detail">15 MisconceptionCategory nodes (Cypher), 12 TaskShell templates (Cypher), 22 MSM courses (Cypher), 5 few-shot text2Cypher examples, IPEC + CarePhase + PNS/ANS anatomy — all in production bible §III.</div></div></div>
+<div class="chk done"><span class="chk-icon">✓</span><div class="chk-body"><div class="chk-title">USMLE content taxonomy</div><div class="chk-detail">18 USMLE systems with SNOMED roots, ICD-10, Hetionet paths, key leaf entities. PathologyCategory bridge layer (6 nodes). Physician Tasks × 7 domains → TaskShell + Bloom mapping.</div></div></div>
+<div class="chk done"><span class="chk-icon">✓</span><div class="chk-body"><div class="chk-title">Feature specifications F1–F10</div><div class="chk-detail">Lecture upload, review dashboard, coverage heatmap, generation UI, approval queue, blueprint + exam assembly, mastery dashboard, Why Wrong?, LCME Readiness Room, Agentic RAG — all with route designs and API contracts.</div></div></div>
+
+<h3>Procurement — action required</h3>
+<div class="chk todo"><span class="chk-icon">○</span><div class="chk-body"><div class="chk-title">UMLS API key</div><div class="chk-detail">Free from <strong>uts.nlm.nih.gov</strong> — register with institutional email. Required before P1 and P2 pipelines can run. Approval is instant for academic institutions. Also download the current UMLS Metathesaurus release (UMLS Full Release, ~5GB zipped).</div></div></div>
+<div class="chk todo"><span class="chk-icon">○</span><div class="chk-body"><div class="chk-title">Neo4j Aura Professional account</div><div class="chk-detail">Create at <strong>neo4j.io/cloud</strong>. For development: Aura Free tier works (but 200K node limit — switch before seeding full SNOMED). Production: AuraDB Professional ($65/month). Select us-east-1 to match Supabase region for lower latency writes.</div></div></div>
+<div class="chk todo"><span class="chk-icon">○</span><div class="chk-body"><div class="chk-title">Supabase project</div><div class="chk-detail">Create two projects at <strong>supabase.com</strong>: journey-production and journey-staging. Enable pgvector extension, Supabase Pooler (Supavisor), and Point-in-Time Recovery on both. Enable Realtime for the lectures and mastery_snapshots tables.</div></div></div>
+<div class="chk todo"><span class="chk-icon">○</span><div class="chk-body"><div class="chk-title">Anthropic API key</div><div class="chk-detail">Apply for production API access at <strong>console.anthropic.com</strong>. Request increased rate limits for Sonnet 4 (generation pipeline) and Haiku 4.5 (classification + enrichment). Medical education generation can hit 100K tokens/minute during batch generation — confirm limits before first faculty demo.</div></div></div>
+<div class="chk todo"><span class="chk-icon">○</span><div class="chk-body"><div class="chk-title">Hetionet data</div><div class="chk-detail">Download from <strong>github.com/hetio/hetionet</strong> — hetionet-v1.0-edges.sif.gz and hetionet-v1.0-nodes.tsv (~60MB). Load into a Supabase schema named <code>hetionet</code> using the provided import scripts. No license required — CC0 public domain.</div></div></div>
+<div class="chk todo"><span class="chk-icon">○</span><div class="chk-body"><div class="chk-title">DrugBank academic license</div><div class="chk-detail">Apply at <strong>drugbank.ca/releases/latest</strong> — Academic license is free for non-commercial use at accredited institutions. Download XML (~1.5GB). Required for drug mechanism enrichment in P2. Processing: 2-3 days for approval.</div></div></div>
+<div class="chk todo"><span class="chk-icon">○</span><div class="chk-body"><div class="chk-title">MedCPT model</div><div class="chk-detail">Download from <strong>huggingface.co/ncats/MedCPT-Query-Encoder</strong>. Set up inference endpoint on Railway or Fly.io (Python, ~500MB model). Or use Replicate: <code>ncats/medcpt</code>. Needed before P1 embedding step. Test with a medical text query before connecting to pipeline.</div></div></div>
+<div class="chk todo"><span class="chk-icon">○</span><div class="chk-body"><div class="chk-title">Inngest account</div><div class="chk-detail">Create at <strong>inngest.com</strong>. Start with the free tier for development (50K function runs/month). Production: Team plan (~$50/month) for concurrent function limits and 7-day log retention. Configure event signing keys for P1, P2, P3 and the weekly crons.</div></div></div>
+
+<h3>Codebase setup — first day</h3>
+<div class="chk todo"><span class="chk-icon">○</span><div class="chk-body"><div class="chk-title">Repository structure</div><div class="chk-detail"><code>apps/web</code> (Next.js 15), <code>apps/inngest</code> (pipeline functions), <code>packages/db</code> (Supabase client + migrations), <code>packages/neo4j</code> (driver + query wrapper), <code>packages/ai</code> (Anthropic client + prompts), <code>packages/embeddings</code> (MedCPT + OpenAI), <code>scripts/seeds</code> (all 14 seed scripts in execution order). Monorepo with <code>turbo</code>.</div></div></div>
+<div class="chk todo"><span class="chk-icon">○</span><div class="chk-body"><div class="chk-title">.env.example from tech arch §VIII</div><div class="chk-detail">All 30+ environment variables are defined in the tech architecture document Infrastructure section. Copy them into <code>.env.example</code> and share with the team through your secrets manager (Doppler or Vercel environment variables). Never commit actual keys.</div></div></div>
+<div class="chk warn"><span class="chk-icon">!</span><div class="chk-body"><div class="chk-title">MetaMap setup is slow — start early</div><div class="chk-detail">MetaMap (Java NLP service) requires a local installation or a Dockerized sidecar. The setup takes 4-6 hours including downloading the UMLS data files it depends on. This is the most painful dependency. Alternative for early development: use the UMLS API directly (slower but no local setup) and swap to MetaMap before production. Do this in Week 1.</div></div></div>
+<div class="chk warn"><span class="chk-icon">!</span><div class="chk-body"><div class="chk-title">SAML/SSO configuration requires MSM IT coordination</div><div class="chk-detail">Shibboleth configuration requires MSM's IT department to register Journey OS as a Service Provider in their Identity Provider. This can take 2-4 weeks for approvals. Start this conversation in Week 1 even if the feature isn't needed until Week 8. Required before any real faculty or student accounts can be created.</div></div></div>
+</section>
+
+<!-- ══ II: DATA SOURCES ══ -->
+<section id="sources">
+<div class="sid">II / Data Sources</div>
+<h2>Every source of truth — what it provides, where it comes from, when you need it</h2>
+
+<div class="callout"><div class="cl">Reading this table</div>
+<p><span class="pill p-t1">MVP</span> = required before first faculty demo. <span class="pill p-t2">T2</span>/<span class="pill p-t3">T3</span> = needed at that tier. <span class="pill p-t4">T4+</span> = future tiers. "Pipeline" = which Journey OS pipeline uses this source. "Hosting" = where the data lives in production.</p>
+</div>
+
+<h3>Primary knowledge sources — foundation of the KG</h3>
+<table>
+<thead><tr><th></th><th>Source</th><th>What it provides</th><th>Access</th><th>License</th><th>Hosting</th><th>Pipeline</th><th>Tier</th></tr></thead>
+<tbody>
+<tr><td class="ds-tier t1-bar"></td>
+<td><strong>UMLS Metathesaurus</strong><br><span class="small">nlm.nih.gov/research/umls</span></td>
+<td>CUI resolution, cross-ontology mapping, semantic types, preferred terms, definitions. The backbone of all concept normalization.</td>
+<td>Free API + bulk download. Requires UTS registration (institutional email).</td>
+<td>Free for research/education via UMLS license</td>
+<td>API calls in P1/P2. Full release (~5GB) optional for self-hosting.</td>
+<td>P1 Step 05 (NER), P2 Step 01 (full resolution)</td>
+<td><span class="pill p-mvp">MVP</span></td></tr>
+
+<tr><td class="ds-tier t1-bar"></td>
+<td><strong>Hetionet v1.0</strong><br><span class="small">github.com/hetio/hetionet</span></td>
+<td>Disease-gene-drug-pathway network. 47K nodes, 2.25M edges. Drug treatments, gene associations, side effects, biological pathways.</td>
+<td>Free download (~60MB). CC0 public domain.</td>
+<td>CC0 — no restrictions</td>
+<td>Self-hosted in Supabase schema <code>hetionet.*</code></td>
+<td>P2 Step 03 (2-hop import)</td>
+<td><span class="pill p-mvp">MVP</span></td></tr>
+
+<tr><td class="ds-tier t1-bar"></td>
+<td><strong>MeSH (Medical Subject Headings)</strong><br><span class="small">nlm.nih.gov/mesh</span></td>
+<td>Anatomical hierarchy (A-tree), disease classification, drug descriptors. The vocabulary anchor for anatomy nodes.</td>
+<td>Free annual release XML download.</td>
+<td>Free, NLM</td>
+<td>Seeded into Neo4j :Reference nodes via Phase 0 script</td>
+<td>P2 Step 02 (anatomy/disease routing)</td>
+<td><span class="pill p-mvp">MVP</span></td></tr>
+
+<tr><td class="ds-tier t1-bar"></td>
+<td><strong>DrugBank 5.x</strong><br><span class="small">drugbank.ca</span></td>
+<td>Drug mechanisms, indications, interactions, pharmacokinetics, adverse effects. The authoritative drug data source for USMLE pharmacology.</td>
+<td>Academic license (free, 2-3 day approval). XML download ~1.5GB.</td>
+<td>Academic/non-commercial free license</td>
+<td>Seeded into Neo4j :Compound nodes via Phase 0 script</td>
+<td>P2 Step 03 (drug enrichment)</td>
+<td><span class="pill p-mvp">MVP</span></td></tr>
+
+<tr><td class="ds-tier t2-bar"></td>
+<td><strong>SNOMED CT</strong><br><span class="small">snomed.org</span></td>
+<td>Clinical terminology, body structure hierarchy, finding-disorder relationships, procedure classification. Full hierarchy for anatomy-disease linking.</td>
+<td>Free for US users via NLM (included in UMLS license). IHTSDO license for other regions.</td>
+<td>SNOMED International RF2 — free via UMLS</td>
+<td>Selective Neo4j import via UMLS. Full hierarchy in Supabase optional.</td>
+<td>P2 (semantic linking)</td>
+<td><span class="pill p-t2">T2</span></td></tr>
+
+<tr><td class="ds-tier t2-bar"></td>
+<td><strong>LOINC</strong><br><span class="small">loinc.org</span></td>
+<td>Laboratory test codes, reference ranges, units, specimen types. Enables diagnostic test enrichment for lab-result questions.</td>
+<td>Free registration at Regenstrief Institute.</td>
+<td>Free with attribution</td>
+<td>Seeded into :DiagnosticMarker nodes</td>
+<td>P2 Step 02 (T059 semantic type routing)</td>
+<td><span class="pill p-t2">T2</span></td></tr>
+
+<tr><td class="ds-tier t2-bar"></td>
+<td><strong>RxNorm / RxClass</strong><br><span class="small">nlm.nih.gov/research/umls/rxnorm</span></td>
+<td>Drug name normalization, drug class hierarchy, therapeutic categories. Enables drug-class level distractor generation.</td>
+<td>Free NLM API (no key required for basic use).</td>
+<td>Free, public domain</td>
+<td>API enrichment in P2. Drug class hierarchy seeded.</td>
+<td>P2 drug enrichment</td>
+<td><span class="pill p-t2">T2</span></td></tr>
+
+<tr><td class="ds-tier t2-bar"></td>
+<td><strong>Mondo Disease Ontology</strong><br><span class="small">mondo.monarchinitiative.org</span></td>
+<td>Cross-ontology disease harmonization. Merges OMIM, Orphanet, SNOMED, ICD-10 disease concepts into a unified namespace.</td>
+<td>Free OWL download on GitHub. No registration.</td>
+<td>CC BY 4.0</td>
+<td>Selective Neo4j import for rare disease topics</td>
+<td>P2 (disease enrichment)</td>
+<td><span class="pill p-t2">T2</span></td></tr>
+
+<tr><td class="ds-tier t4-bar"></td>
+<td><strong>Reactome</strong><br><span class="small">reactome.org</span></td>
+<td>Curated biological pathways: metabolic, signaling, immune, DNA repair. Enables mechanism-level enrichment for biochemistry questions.</td>
+<td>Free REST API + PostgreSQL dump download.</td>
+<td>Creative Commons, free for any use</td>
+<td>API calls in P2 (T116/T028 semantic type routing)</td>
+<td>P2 pathway enrichment</td>
+<td><span class="pill p-t4">T4+</span></td></tr>
+
+<tr><td class="ds-tier t4-bar"></td>
+<td><strong>OMIM</strong><br><span class="small">omim.org</span></td>
+<td>Genetic disease database. Gene-disease associations, phenotype-genotype correlations. Critical for genetics and molecular biology questions.</td>
+<td>Free API for educational/research use. API key required.</td>
+<td>OMIM commercial license (educational use free)</td>
+<td>API enrichment for genetic SubConcepts</td>
+<td>P2 (T028 gene semantic type)</td>
+<td><span class="pill p-t4">T4+</span></td></tr>
+
+<tr><td class="ds-tier t4-bar"></td>
+<td><strong>HPO (Human Phenotype Ontology)</strong><br><span class="small">hpo.jax.org</span></td>
+<td>Standardized vocabulary for clinical phenotypes. Enables phenotype-disease association enrichment. Critical for genetics and rare disease questions.</td>
+<td>Free OWL download. No registration.</td>
+<td>BSD 3-clause</td>
+<td>Selective Neo4j import for rare disease SubConcepts</td>
+<td>P2 (rare disease enrichment)</td>
+<td><span class="pill p-t4">T4+</span></td></tr>
+
+<tr><td class="ds-tier t4-bar"></td>
+<td><strong>PharmGKB</strong><br><span class="small">pharmgkb.org</span></td>
+<td>Pharmacogenomics: drug-gene interactions, dosing guidelines, clinical annotations. Enables pharmacogenomics questions (precision medicine tier).</td>
+<td>Free download. CC BY 4.0. No registration.</td>
+<td>CC BY 4.0</td>
+<td>Selective import for pharmacogenomics SubConcepts</td>
+<td>P2 (T121 drug + T028 gene)</td>
+<td><span class="pill p-t4">T4+</span></td></tr>
+
+<tr><td class="ds-tier t4-bar"></td>
+<td><strong>ClinVar</strong><br><span class="small">ncbi.nlm.nih.gov/clinvar</span></td>
+<td>Variant-disease associations, clinical significance classifications. For clinical genomics and molecular pathology questions.</td>
+<td>Free FTP download. NCBI API key for high-volume.</td>
+<td>Public domain (NIH)</td>
+<td>Selective import for genomics SubConcepts</td>
+<td>P2 (T028 gene type)</td>
+<td><span class="pill p-t4">T4+</span></td></tr>
+
+<tr><td class="ds-tier t5-bar"></td>
+<td><strong>First Aid USMLE</strong><br><span class="small">McGraw-Hill</span></td>
+<td>High-yield USMLE fact repository. Enables "yield score" on SubConcepts and First Aid oracle feature for gap analysis.</td>
+<td>Licensing negotiation required with McGraw-Hill. Academic partnership or licensing fee.</td>
+<td>Commercial — requires license agreement</td>
+<td>Seeded as :ReferenceSource with COVERED_BY edges</td>
+<td>P2 yield scoring (T4+)</td>
+<td><span class="pill p-t5">T5</span></td></tr>
+</tbody>
+</table>
+
+<h3>Framework & classification sources — seeded at Phase 0</h3>
+<table>
+<thead><tr><th></th><th>Source</th><th>What it provides</th><th>How obtained</th><th>Format</th></tr></thead>
+<tbody>
+<tr><td class="ds-tier t1-bar"></td>
+<td><strong>USMLE Content Outline</strong><br><span class="small">usmle.org (2025 edition)</span></td>
+<td>18 systems × topics × subtopics taxonomy. Blueprint weights per system. The assessment backbone. Already manually transcribed into the 18-system canonical table in production bible §7.</td>
+<td>Public PDF from USMLE.org. Already transcribed.</td><td>Pre-seeded Cypher — 18 USMLE_System + ~100 USMLE_Topic + ~400 USMLE_Subtopic nodes</td></tr>
+<tr><td class="ds-tier t1-bar"></td>
+<td><strong>LCME Standards (May 2025, eff. July 2026)</strong><br><span class="small">lcme.org</span></td>
+<td>58 accreditation elements across 12 standards. The compliance backbone. The 20 content domains from Standard 7. Already defined as seed data.</td>
+<td>Public PDF from LCME.org. Already transcribed.</td><td>Pre-seeded — 58 :LCME_Standard + 20 :LCMEContentDomain nodes</td></tr>
+<tr><td class="ds-tier t1-bar"></td>
+<td><strong>ACGME Core Competencies + Milestones</strong><br><span class="small">acgme.org</span></td>
+<td>6 competency domains. Milestone descriptors for EPA entrustment (T5). Institutional reporting requirements.</td>
+<td>Public from ACGME.org. Common Program Requirements document.</td><td>Pre-seeded — 6 :ACGME_Competency nodes + milestone nodes</td></tr>
+<tr><td class="ds-tier t1-bar"></td>
+<td><strong>EPA List (13 Core EPAs)</strong><br><span class="small">AAMC, 2014 + 2022 update</span></td>
+<td>13 Entrustable Professional Activities. Maps to ACGME competencies and Miller's pyramid level 4. Wisdom layer output (T5).</td>
+<td>Public from AAMC. Core EPAs for Entering Residency document.</td><td>Pre-seeded — 13 :EPA nodes</td></tr>
+<tr><td class="ds-tier t1-bar"></td>
+<td><strong>IPEC Core Competencies (2016)</strong><br><span class="small">ipecollaborative.org</span></td>
+<td>4 interprofessional competency domains (VE, RR, CC, TT). Maps to LCME Standard 7.9. Already seeded as G09 fix.</td>
+<td>Public from IPEC. Already transcribed.</td><td>Pre-seeded — 4 :IPECCompetency nodes</td></tr>
+<tr><td class="ds-tier t1-bar"></td>
+<td><strong>Bloom's Taxonomy (Anderson & Krathwohl, 2001)</strong></td>
+<td>6-level cognitive taxonomy. All item generation, ECD task model, blueprint distribution.</td>
+<td>Published taxonomy. Already defined.</td><td>Pre-seeded — 6 :BloomLevel nodes with verb examples</td></tr>
+<tr><td class="ds-tier t1-bar"></td>
+<td><strong>Miller's Pyramid (Miller, 1990)</strong></td>
+<td>4 levels (Knows, Knows How, Shows How, Does). SLO classification, EPA entrustment framing.</td>
+<td>Published taxonomy. Already defined.</td><td>Pre-seeded — 4 :MillerLevel nodes</td></tr>
+<tr><td class="ds-tier t1-bar"></td>
+<td><strong>MSM Course Catalog</strong><br><span class="small">Internal — MSM curriculum office</span></td>
+<td>22 course codes, titles, years, USMLE targets. The institutional backbone. Already seeded as 22 :CatalogCourse nodes (MEDI-501 through ELEC-901).</td>
+<td>Internal MSM document. Already transcribed.</td><td>Pre-seeded — 22 :CatalogCourse nodes</td></tr>
+</tbody>
+</table>
+
+<h3>Content sources — generated and uploaded by users</h3>
+<table>
+<thead><tr><th></th><th>Source</th><th>What it provides</th><th>Storage</th><th>Generated by</th></tr></thead>
+<tbody>
+<tr><td class="ds-tier t1-bar"></td>
+<td><strong>Faculty lecture files (PPTX, PDF)</strong></td>
+<td>The primary content of the system. Everything flows downstream from these. LectureSections, ContentChunks, SubConcepts — all traced to lecture files.</td>
+<td>Supabase Storage: <code>lectures/{institution_id}/{course_id}/{file_hash}.{ext}</code></td>
+<td>Faculty upload via UI</td></tr>
+<tr><td class="ds-tier t1-bar"></td>
+<td><strong>Syllabus documents (PDF, DOCX)</strong></td>
+<td>SLOs, week structure, declared topics. The curriculum intent layer. Separate pipeline from lectures.</td>
+<td>Supabase Storage: <code>syllabi/{institution_id}/{course_id}/</code></td>
+<td>Faculty upload via UI</td></tr>
+<tr><td class="ds-tier t1-bar"></td>
+<td><strong>Generated assessment items</strong></td>
+<td>The product. Stems, correct answers, distractors, rationale, Toulmin chains. Primary content in Supabase, skinny pointer in Neo4j.</td>
+<td>Supabase: <code>assessment_items</code> + <code>distractors</code>. Neo4j: :AssessmentItem node (skinny).</td>
+<td>P3 pipeline (Claude Sonnet 4)</td></tr>
+<tr><td class="ds-tier t1-bar"></td>
+<td><strong>LOD briefs (pre-computed)</strong></td>
+<td>~200-token clinical summaries per SubConcept. Assembled from UMLS + Hetionet + DrugBank + MeSH. Used as generation context.</td>
+<td>Supabase: <code>subconcept_lod_briefs</code></td>
+<td>P2 Step 04 (Claude Haiku 4.5)</td></tr>
+<tr><td class="ds-tier t3-bar"></td>
+<td><strong>Student attempt records</strong></td>
+<td>Immutable response history. The empirical data that drives IRT calibration, BKT updates, and misconception frequency tracking.</td>
+<td>Supabase: <code>attempts</code> (immutable — no UPDATE rule)</td>
+<td>Student exam and practice sessions</td></tr>
+<tr><td class="ds-tier t4-bar"></td>
+<td><strong>GNN-predicted TEACHES edges</strong></td>
+<td>HeteroSAGE link predictions for chunk-to-concept relationships not caught by NER. Evidence grade B (weight 0.82). Upgrades SubConcept.embedding_source to 'full_gnn'.</td>
+<td>Neo4j: TEACHES edges with <code>method:'gnn', evidence_grade:'B'</code></td>
+<td>HeteroSAGE weekly retrain (T4+)</td></tr>
+<tr><td class="ds-tier t4-bar"></td>
+<td><strong>Louvain ConceptCluster communities</strong></td>
+<td>Community detection output — groups of topically related SubConcepts. Powers global agentic RAG at T4+. LLM-generated cluster summaries.</td>
+<td>Neo4j: :ConceptCluster nodes with BELONGS_TO_CLUSTER edges</td>
+<td>Neo4j GDS Louvain (T4+, one-time then incremental)</td></tr>
+</tbody>
+</table>
+</section>
+
+<!-- ══ III: FEATURE MAP BY PERSONA ══ -->
+<section id="features">
+<div class="sid">III / Feature Map by Persona</div>
+<h2>Who gets what — all 67 features across 6 personas and 6 tiers</h2>
+
+<div class="gold-callout"><div class="cl">MVP definition</div>
+<p>MVP = Tier 1 + Tier 2 + Tier 3 core. Three personas in MVP: Faculty, Admin, Student. The MVP closes one complete loop: content in → items generated → exam deployed → students assessed → mastery visible. Everything beyond that makes the loop better, not possible.</p>
+</div>
+
+<h3>Faculty (Course Director / Item Writer) — 22 features</h3>
+<table>
+<thead><tr><th style="width:24%">Feature</th><th>Description</th><th style="width:8%">Tier</th><th style="width:7%">MVP?</th><th style="width:7%">Moat?</th></tr></thead>
+<tbody>
+<tr><td><strong>Syllabus Upload & Auto-Parse</strong></td><td>PDF/DOCX/PPTX → weeks, sessions, SLOs extracted. OCR fallback for scanned syllabi.</td><td><span class="pill p-t1">T1</span></td><td><span class="pill p-mvp">YES</span></td><td></td></tr>
+<tr><td><strong>Lecture Upload & OCR Processing</strong></td><td>PPTX/PDF → entity-boundary chunks (150-250 tokens) + Claude Haiku Vision OCR for image slides + speaker notes processing.</td><td><span class="pill p-t1">T1</span></td><td><span class="pill p-mvp">YES</span></td><td><span class="pill p-moat">MOAT</span></td></tr>
+<tr><td><strong>SubConcept Extraction & Review</strong></td><td>AI extracts knowledge concepts → faculty approve/reject/merge. TEACHES edges with evidence grades.</td><td><span class="pill p-t1">T1</span></td><td><span class="pill p-mvp">YES</span></td><td><span class="pill p-moat">MOAT</span></td></tr>
+<tr><td><strong>LOD Enrichment (automatic)</strong></td><td>UMLS + Hetionet + DrugBank + MeSH auto-enrichment of every SubConcept. No faculty action required.</td><td><span class="pill p-t1">T1</span></td><td><span class="pill p-mvp">YES</span></td><td><span class="pill p-moat">MOAT</span></td></tr>
+<tr><td><strong>Quick Spec Wizard</strong></td><td>Natural language → structured generation spec. Coverage-aware defaults (targets gaps first). Max 10 turns.</td><td><span class="pill p-t1">T1</span></td><td><span class="pill p-mvp">YES</span></td><td></td></tr>
+<tr><td><strong>ECD-Wired Item Generation</strong></td><td>ECD Stages 1-3 → HyDE → Sonnet core → Sonnet critique → Haiku distractors (MisconceptionCategory-grounded) → Toulmin chain. $0.12/item.</td><td><span class="pill p-t1">T1</span></td><td><span class="pill p-mvp">YES</span></td><td><span class="pill p-moat">MOAT</span></td></tr>
+<tr><td><strong>Item Review & Component Editing</strong></td><td>Approve/refine/reject. Fix stem, distractors, or rationale independently. Toulmin validity chain visible.</td><td><span class="pill p-t1">T1</span></td><td><span class="pill p-mvp">YES</span></td><td></td></tr>
+<tr><td><strong>LCME Domain Classification</strong></td><td>Haiku auto-classifies every ContentChunk against 20 LCMEContentDomain nodes. COVERS_LCME_DOMAIN edges created.</td><td><span class="pill p-t1">T1</span></td><td><span class="pill p-mvp">YES</span></td><td><span class="pill p-moat">MOAT</span></td></tr>
+<tr><td><strong>Idea Generation & Brainstorm</strong></td><td>Haiku brainstorms N item concepts → faculty approves subset → full items generated from approved concepts only.</td><td><span class="pill p-t1">T1</span></td><td><span class="pill p-mvp">YES</span></td><td></td></tr>
+<tr><td><strong>USMLE Coverage Heatmap</strong></td><td>18 systems × 6 Bloom levels. Three states: declared / delivered / confirmed. Real-time graph traversal. Click cell → generate.</td><td><span class="pill p-t2">T2</span></td><td><span class="pill p-mvp">YES</span></td><td><span class="pill p-moat">MOAT</span></td></tr>
+<tr><td><strong>Blueprint Construction</strong></td><td>Bloom distribution, USMLE system proportions, difficulty mix, equity targets (min 15% LCME 7.6). Angoff simulation.</td><td><span class="pill p-t2">T2</span></td><td><span class="pill p-mvp">YES</span></td><td></td></tr>
+<tr><td><strong>Exam Assembly</strong></td><td>Auto-fill blueprint gaps → item proximity constraint (no duplicate SubConcepts in 3 consecutive questions) → validate → deploy.</td><td><span class="pill p-t2">T2</span></td><td><span class="pill p-mvp">YES</span></td><td></td></tr>
+<tr><td><strong>Question Remixing</strong></td><td>Generate variants from approved items: same concept, different clinical scenario or Bloom level. Shares source chunks.</td><td><span class="pill p-t2">T2</span></td><td><span class="pill p-mvp">YES</span></td><td></td></tr>
+<tr><td><strong>Agentic RAG (LOCAL+STRUCTURED)</strong></td><td>"What concepts are we under-testing in Renal?" RetrieverRouter → Text2Cypher → AnswerCritic. Faculty natural language queries.</td><td><span class="pill p-t2">T2</span></td><td><span class="pill p-no">No</span></td><td><span class="pill p-moat">MOAT</span></td></tr>
+<tr><td><strong>Item Search & Bank Management</strong></td><td>Hybrid semantic + fulltext + structured filter. Find items by concept, system, Bloom, QA score, date, generation batch.</td><td><span class="pill p-t2">T2</span></td><td><span class="pill p-no">No</span></td><td></td></tr>
+<tr><td><strong>QTI / ExamSoft Export</strong></td><td>QTI 2.1 XML export per item and per exam. Enables import into ExamSoft, Aquifer, Canvas.</td><td><span class="pill p-t2">T2</span></td><td><span class="pill p-no">No</span></td><td></td></tr>
+<tr><td><strong>Retired Exam Import</strong></td><td>Upload old exams → auto-parse → NBME format conversion → merge into item bank. Evidence grade D initially.</td><td><span class="pill p-t2">T2</span></td><td><span class="pill p-no">No</span></td><td></td></tr>
+<tr><td><strong>Post-Exam Item Analytics</strong></td><td>p-values, discrimination, distractor analysis, KR-20. Low-discrimination items flag source ContentChunks for review.</td><td><span class="pill p-t3">T3</span></td><td><span class="pill p-no">No</span></td><td></td></tr>
+<tr><td><strong>TEACHES Bulk Verification</strong></td><td>Bulk-verify that lectures actually teach the concepts they claim. Surface TEACHES edges with confidence C (unreviewed).</td><td><span class="pill p-t3">T3</span></td><td><span class="pill p-no">No</span></td><td></td></tr>
+<tr><td><strong>ILO/SLO Mapping Review</strong></td><td>Map course SLOs to ILOs. Review and approve SLO → CONTRIBUTES_TO → ILO mapping assertions.</td><td><span class="pill p-t2">T2</span></td><td><span class="pill p-no">No</span></td><td></td></tr>
+<tr><td><strong>Agentic RAG (GLOBAL — ConceptCluster)</strong></td><td>"What are the dominant themes in M1 curriculum?" Uses Louvain cluster summaries. Only available after T4 ConceptCluster seeding.</td><td><span class="pill p-t4">T4</span></td><td><span class="pill p-no">No</span></td><td><span class="pill p-moat">MOAT</span></td></tr>
+<tr><td><strong>First Aid Yield Oracle</strong></td><td>"MSM covers X% of high-yield Step 1 concepts." COVERED_BY edges with yield_weight. Requires First Aid licensing.</td><td><span class="pill p-t4">T4</span></td><td><span class="pill p-no">No</span></td><td></td></tr>
+</tbody>
+</table>
+
+<h3>Student (M1–M4) — 15 features</h3>
+<table>
+<thead><tr><th style="width:24%">Feature</th><th>Description</th><th style="width:8%">Tier</th><th style="width:7%">MVP?</th><th style="width:7%">Moat?</th></tr></thead>
+<tbody>
+<tr><td><strong>Standardized Exam Mode</strong></td><td>Timed, per-student scrambled items and options (seeded shuffle), flagging, navigation panel, auto-save every answer, ADA time accommodations.</td><td><span class="pill p-t3">T3</span></td><td><span class="pill p-mvp">YES</span></td><td></td></tr>
+<tr><td><strong>Formative Results + "Why Wrong?"</strong></td><td>Full item review post-exam. MisconceptionCategory-grounded distractor explanations. AI-generated 3-sentence "Why Wrong?" per incorrect answer.</td><td><span class="pill p-t3">T3</span></td><td><span class="pill p-mvp">YES</span></td><td><span class="pill p-moat">MOAT</span></td></tr>
+<tr><td><strong>Mastery Dashboard</strong></td><td>Radar chart by USMLE system. BKT p_mastery per SubConcept. Ordered by clinical consequence × (1-mastery). Real-time BKT updates.</td><td><span class="pill p-t3">T3</span></td><td><span class="pill p-mvp">YES</span></td><td><span class="pill p-moat">MOAT</span></td></tr>
+<tr><td><strong>Practice Sessions</strong></td><td>Self-directed: pick topics, set difficulty, choose session length 5-50 questions. IRT information maximization for item selection.</td><td><span class="pill p-t3">T3</span></td><td><span class="pill p-mvp">YES</span></td><td></td></tr>
+<tr><td><strong>Weak Areas & One-Click Drill</strong></td><td>Auto-identified weak SubConcepts (p_mastery &lt; 0.5) with direct drill buttons. Ordered by clinical consequence score.</td><td><span class="pill p-t3">T3</span></td><td><span class="pill p-mvp">YES</span></td><td></td></tr>
+<tr><td><strong>Mastery Timeline & Streak</strong></td><td>Weekly mastery trajectory per SLO. Day streak. Daily goal tracking. Forgetting curve visualization (Pimsleur decay).</td><td><span class="pill p-t3">T3</span></td><td><span class="pill p-mvp">YES</span></td><td></td></tr>
+<tr><td><strong>StudyQueue (Spaced Retrieval)</strong></td><td>BKT decay + IRT information maximization selects next 5 items. RecommendationEvent logged. Daily 8am queue generation.</td><td><span class="pill p-t3">T3</span></td><td><span class="pill p-no">No</span></td><td><span class="pill p-moat">MOAT</span></td></tr>
+<tr><td><strong>Summative Score + Domain Breakdown</strong></td><td>Overall score + system breakdown (no item-level access for summative). Results released at faculty-defined timestamp.</td><td><span class="pill p-t3">T3</span></td><td><span class="pill p-no">No</span></td><td></td></tr>
+<tr><td><strong>Adaptive Assessment (CAT-lite)</strong></td><td>IRT-driven item selection targeting θ+1σ. Requires ≥200 calibrated items per system. Not full CAT.</td><td><span class="pill p-t4">T4</span></td><td><span class="pill p-no">No</span></td><td></td></tr>
+<tr><td><strong>Step Exam Readiness Benchmarking</strong></td><td>Percentile estimates against NBME/USMLE population norms. Requires longitudinal IRT calibration data.</td><td><span class="pill p-t4">T4</span></td><td><span class="pill p-no">No</span></td><td></td></tr>
+<tr><td><strong>WisdomPath (Learning Trajectory)</strong></td><td>Personalized concept learning order based on PREREQUISITE_FOR edges and current p_mastery. "Learn X before Y."</td><td><span class="pill p-t5">T5</span></td><td><span class="pill p-no">No</span></td><td></td></tr>
+<tr><td><strong>Equity Competency Tracking</strong></td><td>Progress on health equity and SDOH knowledge domains (LONG-801). Maps to LCME Standard 7 content domains.</td><td><span class="pill p-t5">T5</span></td><td><span class="pill p-no">No</span></td><td></td></tr>
+</tbody>
+</table>
+
+<h3>Admin, Advisor, Chair, Dean — 30 features</h3>
+<div class="two">
+<div>
+<h4 style="font-family:'Fraunces',serif;font-size:17px;font-weight:400;margin-bottom:10px">Admin (Institutional Administrator)</h4>
+<table>
+<thead><tr><th>Feature</th><th>T</th><th>MVP</th></tr></thead>
+<tbody>
+<tr><td>Institution & course hierarchy setup</td><td><span class="pill p-t1">T1</span></td><td><span class="pill p-mvp">YES</span></td></tr>
+<tr><td>Framework seeding (one-click LCME/USMLE)</td><td><span class="pill p-t1">T1</span></td><td><span class="pill p-mvp">YES</span></td></tr>
+<tr><td>Faculty invitation & bulk onboarding</td><td><span class="pill p-t1">T1</span></td><td><span class="pill p-mvp">YES</span></td></tr>
+<tr><td>Admin dashboard (stats + pipeline health)</td><td><span class="pill p-t1">T1</span></td><td><span class="pill p-mvp">YES</span></td></tr>
+<tr><td>Action queue (severity-scored)</td><td><span class="pill p-t1">T1</span></td><td><span class="pill p-mvp">YES</span></td></tr>
+<tr><td>FERPA audit log (full activity trail)</td><td><span class="pill p-t1">T1</span></td><td><span class="pill p-mvp">YES</span></td></tr>
+<tr><td>Student approval workflow</td><td><span class="pill p-t3">T3</span></td><td><span class="pill p-mvp">YES</span></td></tr>
+<tr><td>Coverage heatmap (Admin view)</td><td><span class="pill p-t2">T2</span></td><td><span class="pill p-mvp">YES</span></td></tr>
+<tr><td>Dead letter queue + manual retry</td><td><span class="pill p-t1">T1</span></td><td><span class="pill p-mvp">YES</span></td></tr>
+<tr><td>LCME Readiness Room</td><td><span class="pill p-t4">T4</span></td><td><span class="pill p-no">No</span></td></tr>
+<tr><td>Data integrity checks (orphan detection)</td><td><span class="pill p-t2">T2</span></td><td><span class="pill p-no">No</span></td></tr>
+<tr><td>Neo4j↔Supabase reconciliation monitor</td><td><span class="pill p-t2">T2</span></td><td><span class="pill p-no">No</span></td></tr>
+<tr><td>BKT parameter calibration</td><td><span class="pill p-t4">T4</span></td><td><span class="pill p-no">No</span></td></tr>
+<tr><td>Institutional maturity model (5-level)</td><td><span class="pill p-t5">T5</span></td><td><span class="pill p-no">No</span></td></tr>
+</tbody>
+</table>
+</div>
+<div>
+<h4 style="font-family:'Fraunces',serif;font-size:17px;font-weight:400;margin-bottom:10px">Advisor · Chair · Dean</h4>
+<table>
+<thead><tr><th>Feature</th><th>Persona</th><th>T</th></tr></thead>
+<tbody>
+<tr><td>At-risk student alerts (BKT &lt; 0.65)</td><td>Advisor</td><td><span class="pill p-t5">T5</span></td></tr>
+<tr><td>Mastery gap interpretation (isolated vs. cluster vs. systemic)</td><td>Advisor</td><td><span class="pill p-t5">T5</span></td></tr>
+<tr><td>Remediation recommendation engine</td><td>Advisor</td><td><span class="pill p-t5">T5</span></td></tr>
+<tr><td>Borderline student review (1 SEM of cut)</td><td>Advisor + Dean</td><td><span class="pill p-t5">T5</span></td></tr>
+<tr><td>Longitudinal student tracking (multi-semester)</td><td>Advisor</td><td><span class="pill p-t5">T5</span></td></tr>
+<tr><td>Blueprint literacy onboarding (USMLE exercise)</td><td>Chair</td><td><span class="pill p-t2">T2</span></td></tr>
+<tr><td>Angoff standard-setting simulation</td><td>Chair</td><td><span class="pill p-t2">T2</span></td></tr>
+<tr><td>KR-20 reliability interpretation</td><td>Chair</td><td><span class="pill p-t2">T2</span></td></tr>
+<tr><td>Aggregate faculty assessment literacy</td><td>Chair</td><td><span class="pill p-t5">T5</span></td></tr>
+<tr><td>Equity gap analysis (DIF + Cohen's d by URM/gender)</td><td>Dean</td><td><span class="pill p-t5">T5</span></td></tr>
+<tr><td>LCME compliance snapshot (one-page)</td><td>Dean</td><td><span class="pill p-t2">T2</span></td></tr>
+<tr><td>Demo dashboard (board presentations)</td><td>Dean</td><td><span class="pill p-t5">T5</span></td></tr>
+<tr><td>EPA entrustment tracking</td><td>Dean + Chair</td><td><span class="pill p-t5">T5</span></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+
+<!-- ══ IV: MOATS ══ -->
+<section id="moats">
+<div class="sid">IV / Competitive Moats</div>
+<h2>What makes this hard to replicate — the 8 defensible advantages</h2>
+
+<p>These are not features. Features can be copied in a sprint. These are compounding structural advantages — each one is harder to replicate the longer Journey OS operates, because they improve with data and use.</p>
+
+<div class="moat-grid">
+
+<div class="moat-cell">
+  <div class="moat-n">Moat 01 — Knowledge Graph</div>
+  <div class="moat-title">The <em>curriculum as a graph</em> — not a database</div>
+  <div class="moat-body">Once MSM's 22 courses are in the graph, the system knows: which concepts are taught together, which concepts precede others, which concepts have the most downstream dependencies, and which concepts are never assessed. This is a proprietary enriched medical knowledge graph for one institution's curriculum. Competitors who store items in relational databases can never ask "what concepts does this lecture teach that no exam currently covers?" Journey OS answers this in a single Cypher query.</div>
+  <div class="moat-tech">SubConcept (77K+ nodes at full MSM) · TEACHES edges with evidence grades · LOD-verified via UMLS + Hetionet · Compounds over time — more lectures = richer graph</div>
+</div>
+
+<div class="moat-cell">
+  <div class="moat-n">Moat 02 — Provenance Chain</div>
+  <div class="moat-title">Every item <em>traces to a slide</em></div>
+  <div class="moat-body">SOURCED_FROM edge: AssessmentItem → ContentChunk → LectureSection → Lecture → CatalogCourse. The complete provenance chain is traversable. A faculty member can ask "which lecture slide did this question come from?" and get the exact slide number. This is the LCME validity argument: assessment items are demonstrably grounded in curriculum content. No competitor can make this claim because no competitor stores this chain. It's also a legal defense: if a student challenges an item, faculty can show exactly what curriculum content supports it.</div>
+  <div class="moat-tech">SOURCED_FROM · HAS_CHUNK · HAS_SECTION edges · source_chunk_uuids[] on every item · Toulmin chain includes lecture citation</div>
+</div>
+
+<div class="moat-cell">
+  <div class="moat-n">Moat 03 — ECD-Grounded Generation</div>
+  <div class="moat-title"><em>Defensible assessments</em>, not just questions</div>
+  <div class="moat-body">Every item has a validity argument before it's written: ProficiencyVariable (what mastery means), evidence rules (what correct selection proves), TaskShell selection (what situation elicits evidence), MisconceptionCategory-grounded distractors (what wrong selection reveals). The Toulmin chain stores the full argument. Competitors generate questions from prompts. Journey OS generates measurement instruments grounded in 50 years of assessment science (Mislevy ECD, Kane validity, Haladyna 22 rules). An LCME reviewer who asks "how do you know these items are valid?" gets a documented answer. Competitors don't have that answer.</div>
+  <div class="moat-tech">ProficiencyVariable · TaskShell · MisconceptionCategory · Toulmin JSONB · Evidence rules per distractor · CLAIMS_ABOUT → ProficiencyVariable</div>
+</div>
+
+<div class="moat-cell">
+  <div class="moat-n">Moat 04 — Self-Improving Distractor Loop</div>
+  <div class="moat-title">Distractors get <em>better with every wrong answer</em></div>
+  <div class="moat-body">When a student selects the wrong answer, the Attempt record updates MisconceptionCategory.empirical_frequency. The next time P3 generates a distractor for that USMLE system, it queries misconceptions ordered by empirical_frequency DESC — the most commonly confused concepts become the most likely distractors. The item bank self-calibrates. After one academic year, the misconception frequency data reflects the actual cognitive errors of MSM students specifically — not generic medical student population norms. This is proprietary data that makes the assessment increasingly precise for MSM students over time.</div>
+  <div class="moat-tech">TARGETS_MISCONCEPTION · MisconceptionCategory.empirical_frequency · BKT slip detection · Distractor selection query ordered by empirical frequency</div>
+</div>
+
+<div class="moat-cell">
+  <div class="moat-n">Moat 05 — LOD-Enriched Context</div>
+  <div class="moat-title">Generation grounded in <em>real medical ontologies</em>, not LLM memory</div>
+  <div class="moat-body">Every generated item has access to a 200-token LOD brief assembled from UMLS + Hetionet + DrugBank + MeSH at generation time. The LLM doesn't need to remember drug mechanisms — it has the current authoritative data. Competitors using direct LLM prompting generate from training data that may be years out of date. Journey OS can generate items about a drug approved in 2025 with accurate mechanism data the moment the DrugBank release is updated. The knowledge base is maintained, not baked into model weights.</div>
+  <div class="moat-tech">subconcept_lod_briefs Supabase table · LOD brief always included in generation context (D10) · Quarterly expiry and regen · UMLS, Hetionet, DrugBank, MeSH sourced</div>
+</div>
+
+<div class="moat-cell">
+  <div class="moat-n">Moat 06 — LCME Accreditation Evidence Chain</div>
+  <div class="moat-title">LCME compliance evidence <em>generated automatically</em></div>
+  <div class="moat-body">COVERS_LCME_DOMAIN edges mean every ContentChunk is classified against LCME Standards 7.1–7.9. The coverage chain: CatalogCourse → Lecture → ContentChunk -[COVERS_LCME_DOMAIN]→ LCMEContentDomain → LCME_Standard. The LCME Readiness Room can generate a one-click DCI evidence package showing which lectures cover which standards with what confidence. Medical schools currently spend months manually gathering this evidence for site visits. Journey OS generates it in seconds. This is a category-defining value proposition for the compliance-obsessed medical education administrator.</div>
+  <div class="moat-tech">COVERS_LCME_DOMAIN edges · LCMEContentDomain · LCME_Standard · ADDRESSES_STANDARD edges · LCMEDomainClassifier in P1 Step 04</div>
+</div>
+
+<div class="moat-cell">
+  <div class="moat-n">Moat 07 — Living Student Mastery Model</div>
+  <div class="moat-title">Not a score — a <em>continuously updated knowledge map</em></div>
+  <div class="moat-body">BKT updates in real-time on every attempt. Pimsleur decay models forgetting over time. IRT provides item-level difficulty calibration. The result is a living model: p_mastery = 0.73 today doesn't mean 0.73 tomorrow if the student hasn't reviewed in 30 days. The StudyQueue recommendation algorithm surfaces the items with highest information value at the moment the student is most likely to have forgotten them. Competitors offer quiz scores and percentile ranks. Journey OS offers a continuous, personalized, clinically-weighted map of what each student knows right now — and will schedule the right review before they forget.</div>
+  <div class="moat-tech">BKT 4-parameter model · Pimsleur decay (2.5%/day) · IRT 3PL information function · clinical_consequence_score priority ordering · spaced_retrieval_v1 algorithm</div>
+</div>
+
+<div class="moat-cell">
+  <div class="moat-n">Moat 08 — M1–M4 Longitudinal Continuity</div>
+  <div class="moat-title">The only platform that spans <em>entire medical school</em></div>
+  <div class="moat-body">Most competitors own one segment: pre-clerkship (UWorld for self-study, ExamMaster for faculty), or clerkship (NBME Customized Assessment), or residency (ACGME milestones). Journey OS spans all four years on a single traversable graph. An M3 clerkship item can be EXPLAINS_SAME_CONCEPT linked to an M1 basic science chunk. A student's BKT mastery from Cardiovascular in M1 informs their clinical clerkship readiness assessment in M3. The longitudinal graph is a data asset that no competitor can replicate quickly — it requires years of continuous use to build the prerequisite chain, mastery trajectory data, and cross-year concept linkages that make the Wisdom layer possible.</div>
+  <div class="moat-tech">EXPLAINS_SAME_CONCEPT cross-lecture · PREREQUISITE_FOR edges · WisdomPath trajectory · BKT history across semesters · EPA entrustment tied to mastery + clinical experience</div>
+</div>
+
+</div>
+</section>
+
+<!-- ══ V: ARCHITECTURE PHILOSOPHY ══ -->
+<section id="philosophy">
+<div class="sid">V / Architecture Philosophy</div>
+<h2>The reasoning your team needs to internalize — not just the decisions</h2>
+
+<p>Every major architectural decision has a reason. When your team encounters the temptation to deviate from these, understanding the original reasoning is the best defense against drift.</p>
+
+<div class="three">
+
+<div class="card">
+  <div class="card-lbl">Why Neo4j + Supabase, not one system</div>
+  <div class="card-ttl">The query shapes are fundamentally different</div>
+  <p>Coverage heatmap: traverse 18 USMLE_System → ~100 USMLE_Topic → ~400 USMLE_Subtopic → SubConcepts → ContentChunks → Lectures → CatalogCourses — all in one Cypher pattern. This is a 7-hop traversal. In PostgreSQL: a 6-table JOIN that requires materialized views to be performant, loses the ability to query ad-hoc relationship paths, and breaks entirely when you want to add a new edge type. In Neo4j: a single MATCH statement. But pgvector, RLS, JSONB, and auth are PostgreSQL's strengths. The dual-store pattern pays for itself in the first week of query writing.</p>
+</div>
+
+<div class="card">
+  <div class="card-lbl">Why Inngest, not cron jobs or Kafka</div>
+  <div class="card-ttl">Human approval gates require durable execution</div>
+  <p><code>step.waitForEvent()</code> for 7 days (faculty review) or 30 days (item approval) is architecturally trivial in Inngest — one line of code. In Lambda + SQS: you need a separate state machine, a checkpoint database, a poll loop, and careful timeout handling. Kafka was considered for the event bus but removed: MSM doesn't need Kafka's throughput (1,000+ events/second). Inngest handles the actual scale (10 concurrent lectures, 3 concurrent generation batches, 100 concurrent BKT updates) with observable, retryable, step-level execution that makes debugging production failures possible.</p>
+</div>
+
+<div class="card">
+  <div class="card-lbl">Why Sonnet + Haiku routing, not one model</div>
+  <div class="card-ttl">$0.12/item target requires model-task matching</div>
+  <p>Sonnet for core generation and critique: clinical reasoning, multi-step judgment, NBME format evaluation. $0.027/item for two Sonnet calls. Haiku for everything else: classification tasks, distractor writing, rationale, QA scoring, LOD briefs, HyDE vignettes. $0.093/item for three Haiku calls. Total: $0.12/item. Opus for all calls: $0.45/item — 3.75× over budget. A single model for all tasks either over-spends on simple tasks (Sonnet for distractor writing) or under-performs on complex ones (Haiku for clinical reasoning). Model routing is a cost discipline, not a capability compromise.</p>
+</div>
+
+<div class="card">
+  <div class="card-lbl">Why LOD briefs are pre-computed, not live</div>
+  <div class="card-ttl">Context assembly latency: 4,000ms → 450ms</div>
+  <p>Without pre-computed LOD briefs, P3 context assembly requires: (1) UMLS API call for concept definition (~800ms), (2) Hetionet traversal for drugs/genes (~600ms), (3) MeSH lookup (~400ms). Total: ~1,800ms of synchronous API calls per item, before even calling Claude. With pre-computed lod_briefs in Supabase: single key lookup in ~5ms. For a 30-item batch: the difference is 90 seconds of API latency vs. 150ms. The trade-off is LOD brief staleness (addressed by 180-day expiry and quarterly regen) for a 600× improvement in context assembly speed.</p>
+</div>
+
+<div class="card">
+  <div class="card-lbl">Why FERPA at the database level, not application level</div>
+  <div class="card-ttl">The only guarantee that survives future bugs</div>
+  <p>Application-level access control means every new route, every future developer, every code change must remember to add <code>WHERE student_id = auth.uid()</code>. One forgotten filter = FERPA breach. PostgreSQL Row-Level Security enforces the policy at the database engine: even if application code is entirely wrong, the database refuses to return rows that violate the policy. This is why "FERPA-first" is an architecture decision, not a feature. The RLS policy is the last line of defense that doesn't depend on any developer doing the right thing.</p>
+</div>
+
+<div class="card">
+  <div class="card-lbl">Why evidence grades on every edge</div>
+  <div class="card-ttl">Path confidence enables the Wisdom layer</div>
+  <p>Without evidence grades, all edges are equal. With evidence grades (A=1.00, B=0.82, C=0.65, D=0.45), path confidence is the product of edge weights along any chain. An item backed by grade-A TEACHES → grade-B ALIGNS_TO has path confidence 0.82. The WisdomPath algorithm can surface curriculum recommendations based on chains of evidence — "this lecture improves coverage of concepts that are on 6 high-consequence items, via 3 grade-A TEACHES edges." Without evidence grades, this is just a graph traversal that returns irrelevant results. With them, it's a weighted evidence reasoning system.</p>
+</div>
+
+</div>
+</section>
+
+
+<!-- ══ V-B: ARCHITECTURE STANDARDS ══ -->
+<section id="arch-standards">
+<div class="sid">V-B / Architecture Standards</div>
+<h2>What makes Journey OS different from a typical Next.js app — and why it matters for hiring and onboarding</h2>
+
+<p>Journey OS is not a CRUD app with a medical theme. It spans a knowledge graph, three AI pipelines, a real-time exam engine, a living mastery model, and an LCME compliance chain — across four user personas, nine epics, and 80+ stories. The architecture decisions below exist to make it possible for a 4-person team to ship this without the system becoming unmaintainable. Every engineer on this project must internalize these decisions before writing a line of code.</p>
+
+<div class="callout call-b"><div class="cl">The core principle</div>
+<p>Each thing does one thing and knows only what it needs to know. A database atom knows about Tailwind classes. A service knows about business rules. A repository knows about data access. A route handler knows about HTTP. No level imports from a level above it. No component does more than one job. This discipline is what keeps 9 epics from tangling into each other.</p>
+</div>
+
+<h3>The five architectural layers every engineer works in</h3>
+<table>
+<thead><tr><th>Layer</th><th>Location</th><th>Knows about</th><th>Doesn't know about</th><th>Test approach</th></tr></thead>
+<tbody>
+<tr><td><strong>Atoms</strong></td><td><code>shared/components/ui/atoms/</code></td><td>Tailwind, Radix, accessibility</td><td>Domain, hooks, services</td><td>Storybook / static props</td></tr>
+<tr><td><strong>Molecules</strong></td><td><code>shared/components/ui/molecules/</code><br><code>features/*/components/molecules/</code></td><td>Atoms + domain value types</td><td>Hooks, services, repositories</td><td>Static domain-typed props</td></tr>
+<tr><td><strong>Organisms</strong></td><td><code>features/*/components/</code></td><td>Molecules, atoms, hooks, domain types</td><td>Other features' internals</td><td>Hook mocked, static organism props</td></tr>
+<tr><td><strong>Services</strong></td><td><code>features/*/services/</code></td><td>Domain entities, repositories, events</td><td>React, HTTP, SQL</td><td>Repository mocked</td></tr>
+<tr><td><strong>Repositories</strong></td><td><code>features/*/repositories/</code></td><td>Generated Supabase types, Neo4j wrapper</td><td>Business logic, React</td><td>Integration test vs local DB</td></tr>
+</tbody>
+</table>
+
+<h3>Atomic Design — 5 levels, hard dependency rule</h3>
+<div class="three">
+<div class="card">
+  <div class="card-l">Atoms</div>
+  <div class="card-t">Button, Badge, Input, Spinner, Icon, Label</div>
+  <p>Zero domain imports. Pure Tailwind + Radix. Reusable outside this project entirely. Any engineer can write these in Week 1 without reading the production bible.</p>
+</div>
+<div class="card">
+  <div class="card-l">Molecules</div>
+  <div class="card-t">BloomBadge, EvidenceGradeIndicator, QaScoreMeter, ClinicalConfidenceBadge, UsmleSystemChip, PipelineStatusBadge</div>
+  <p>Compositions of atoms with domain-typed props. <code>BloomBadge</code> accepts <code>BloomLevelCode</code>. <code>EvidenceGradeIndicator</code> accepts an <code>EvidenceGrade</code> value object. No hooks. No services. Test with static domain data.</p>
+</div>
+<div class="card">
+  <div class="card-l">Organisms</div>
+  <div class="card-t">ItemCard, CoverageHeatmapGrid, SubConceptReviewCard, ExamTimerBar, MasteryRadarChart, ApprovalQueueTable</div>
+  <p>Feature UI sections. Use molecules + atoms. Can use hooks for local UI state. Follow Container/Presenter split: organism = presenter, receives data as props. Container wraps it, provides data.</p>
+</div>
+<div class="card">
+  <div class="card-l">Templates</div>
+  <div class="card-t">FacultyLayout, StudentExamLayout, AdminDashboardLayout</div>
+  <p>Structural shells with named content slots. No data fetching. Accept organisms as <code>children</code> or named props. The exam layout defines the fixed header + question area + nav panel structure.</p>
+</div>
+<div class="card">
+  <div class="card-l">Pages</div>
+  <div class="card-t">Next.js app/*/page.tsx — under 30 lines</div>
+  <p>Reads route params, passes to container organisms, wraps in a template. No business logic. No data fetching. A page that grows beyond 30 lines has logic that belongs in a container or service.</p>
+</div>
+<div class="card">
+  <div class="card-l">The Rule</div>
+  <div class="card-t">Dependencies flow DOWN only</div>
+  <p>Atoms → nothing. Molecules → atoms. Organisms → molecules + atoms. Templates → nothing domain-specific. Pages → templates + organisms. Features never import each other's internals — only public <code>index.ts</code> APIs. ESLint enforces this in CI.</p>
+</div>
+</div>
+
+<h3>Feature-slice directory — not layer-based</h3>
+<div class="two">
+<div>
+<p>Each feature is a vertical slice: components, hooks, services, repositories, types, and tests all live inside one directory. <code>features/item-generation/</code> contains everything needed to generate, review, and approve assessment items. Changing the generation flow means touching one directory, not eight.</p>
+<p>The <code>shared/</code> directory earns its place by requiring code to be used by 3+ features before moving there. The <code>domain/</code> directory contains domain entities, value objects, and domain errors — entirely independent of React, Next.js, or Supabase.</p>
+</div>
+<div>
+<pre style="background:#0c0c0c;color:#c4bfb0;padding:12px 14px;font-family:'JetBrains Mono',monospace;font-size:10px;line-height:1.9;border-radius:2px"><span style="color:#b8c8a0">features/</span>
+  <span style="color:#7ab0e8">lecture-ingestion/</span>   <span style="color:#484840">← vertical slice</span>
+    components/       <span style="color:#484840">← organisms only</span>
+    hooks/            <span style="color:#484840">← controllers</span>
+    services/         <span style="color:#484840">← use cases</span>
+    repositories/     <span style="color:#484840">← data access</span>
+    types.ts          <span style="color:#484840">← feature types</span>
+    index.ts          <span style="color:#484840">← public API only</span>
+<span style="color:#b8c8a0">shared/components/</span>
+  ui/atoms/           <span style="color:#484840">← zero domain</span>
+  ui/molecules/       <span style="color:#484840">← domain-typed</span>
+  layouts/            <span style="color:#484840">← templates</span>
+<span style="color:#b8c8a0">domain/</span>
+  entities/           <span style="color:#484840">← rich models</span>
+  value-objects/      <span style="color:#484840">← EvidenceGrade etc</span>
+  errors/             <span style="color:#484840">← typed domain errors</span></pre>
+</div>
+</div>
+
+<h3>Data layer contract — type-safe from schema to UI</h3>
+<p>The Supabase schema is the source of truth for TypeScript types. After every migration, run <code>pnpm db:types</code> to regenerate <code>database.generated.ts</code>. Every repository, service, and component that touches data uses these generated types — never hand-written interfaces. When the schema changes, TypeScript catches every broken call site automatically.</p>
+
+<div class="two">
+<div class="card">
+  <div class="card-l">The typed client pattern</div>
+  <div class="card-t">createServerClient vs createBrowserClient</div>
+  <p><code>createServerClient()</code> uses the <strong>service_role key</strong> and bypasses RLS — only in API routes and React Server Components, never in browser code. <code>createBrowserClient()</code> uses the <strong>anon key</strong> and is fully RLS-enforced — for client components and the student exam UI. Wrong choice = either security hole (service_role in browser) or unnecessary auth friction (anon key in server).</p>
+</div>
+<div class="card">
+  <div class="card-l">Transaction boundaries</div>
+  <div class="card-t">RPC for multi-table atomic operations</div>
+  <p>Sequential <code>.insert()</code> calls are NOT atomic. If the first succeeds and the second fails, you get partial state. Exam session creation (<code>sessions</code> + <code>session_items</code>) must be atomic — use <code>supabase.rpc('create_exam_session')</code> which wraps both inserts in a Postgres transaction. Any operation touching 2+ tables uses RPC. One-table operations use direct client calls.</p>
+</div>
+<div class="card">
+  <div class="card-l">Dual-write pattern</div>
+  <div class="card-t">Supabase first, Neo4j second, never block on Neo4j</div>
+  <p>Every write to the knowledge graph follows: (1) Insert to Supabase with <code>neo4j_sync_status: 'pending'</code>. (2) Write to Neo4j. (3) Update sync status to <code>'synced'</code> or <code>'failed'</code> on catch. Neo4j failures never throw — they mark sync status and the weekly reconciliation job retries. This is enforced by the <code>BaseRepository</code> class.</p>
+</div>
+<div class="card">
+  <div class="card-l">RLS is the floor</div>
+  <div class="card-t">Application-level filters are extra, not sufficient</div>
+  <p>Row-Level Security policies on every user table are the authoritative access control — not <code>WHERE institution_id = ?</code> in application code. Application filters can be bypassed by bugs. RLS cannot. For FERPA compliance, this distinction matters: student data is inaccessible via RLS regardless of application logic. If it's not in RLS, it's not a security control.</p>
+</div>
+</div>
+
+<h3>OOP for domain, functions for utilities</h3>
+<p>Journey OS uses OOP where it adds value: domain entities (<code>AssessmentItem</code>, <code>SubConcept</code>, <code>ExamSession</code>) are classes with behavior that enforces invariants. Value objects (<code>EvidenceGrade</code>, <code>QAScore</code>, <code>BloomLevel</code>) are immutable classes validated at construction. The three-hub invariant is enforced in <code>AssessmentItem.fromGeneration()</code> — it's impossible to construct an item without all three hub connections. Utilities (RRF scoring, path confidence, Pimsleur decay) are pure functions.</p>
+
+<h3>Engineering onboarding sequence (first 3 days)</h3>
+<table>
+<thead><tr><th>Day</th><th>Read</th><th>Build</th><th>Goal</th></tr></thead>
+<tbody>
+<tr><td>Day 1</td><td>CLAUDE.md (root) · Production Bible §I-III · antipatterns.md</td><td>Day 1 setup from dev system doc · pnpm dev:seed · validate-seed ✓</td><td>Understand canonical decisions + have system running locally</td></tr>
+<tr><td>Day 2</td><td>Architecture Best Practices §I-VIII (philosophy through hooks) · Domain entities</td><td>Write one atom + one molecule · Write a simple repository using BaseRepository</td><td>Understand feature-slice + atomic design + repository pattern</td></tr>
+<tr><td>Day 3</td><td>Context packet for first assigned story · EPIC.md for the epic</td><td>Run /plan-eng → /plan on the context packet · Get plan approved</td><td>Understand the workflow + have an approved implementation plan</td></tr>
+</tbody>
+</table>
+</section>
+
+
+<!-- ══ VI: SPRINT PLAN ══ -->
+<section id="sprints">
+<div class="sid">VI / Sprint Plan — First 12 Weeks</div>
+<h2>What gets built, in what order, with what outcome</h2>
+
+<div class="callout"><div class="cl">Dependency rule</div>
+<p>The seed scripts must pass validation before ANY pipeline testing. Phase 0 is not optional. A failing seed creates silent runtime errors that are nearly impossible to diagnose during pipeline development. Run <code>npm run validate-seed</code> after every seed script and fix failures immediately.</p>
+</div>
+
+<div class="sprint">
+  <div class="sprint-head"><div class="sprint-wk">W1–2</div><div class="sprint-title">Phase 0 — Foundation & Environment</div><span class="sprint-out" style="background:var(--t1);color:#fff">Deliverable: seeded graph, running locally</span></div>
+  <div class="sprint-body">
+    <div><div class="sprint-role">All engineers</div>
+      Set up monorepo (turbo), Supabase projects (prod + staging), Neo4j Aura, Inngest account, environment variables from .env.example. Install MetaMap Docker. Register for UMLS API key. Download Hetionet data. Apply all 4 SQL migrations in order. Run Phase 0 seed scripts 01-14 in canonical order.</div>
+    <div><div class="sprint-role">Validation gates (must pass before W3)</div>
+      <code>npm run validate-seed</code>: ✓ 79 node types · ✓ 15 MisconceptionCategory · ✓ 12 TaskShell · ✓ 22 MSM courses · ✓ 5 few-shot examples · ✓ PNS/ANS anatomy · ✓ neo4j_sync_status columns on all tables · ✓ HNSW indexes created · ✓ RLS policies active</div>
+  </div>
+</div>
+
+<div class="sprint">
+  <div class="sprint-head"><div class="sprint-wk">W3–4</div><div class="sprint-title">Auth, Admin UI & Institution Setup</div><span class="sprint-out" style="background:var(--t1);color:#fff">Deliverable: admin can create institution + invite faculty</span></div>
+  <div class="sprint-body">
+    <div><div class="sprint-role">Full-stack</div>Supabase Auth + magic link. Faculty invitation flow. Institution setup wizard. Admin dashboard (stat cards + pipeline health monitor). Action queue. Audit log viewer. FERPA: validate RLS policies against test accounts across roles.</div>
+    <div><div class="sprint-role">Backend</div>All API routes under <code>/app/api/admin/</code>. Neo4j tenant wrapper (<code>neo4jQuery</code>) — ESLint rule active from day 1. Dead letter queue + pipeline_runs table. Email (Resend) for magic link invitations.</div>
+  </div>
+</div>
+
+<div class="sprint">
+  <div class="sprint-head"><div class="sprint-wk">W5–7</div><div class="sprint-title">P1 Ingestion Pipeline</div><span class="sprint-out" style="background:var(--t1);color:#fff">Deliverable: upload lecture → SubConcepts in graph in &lt;5 min</span></div>
+  <div class="sprint-body">
+    <div><div class="sprint-role">Backend (pipeline)</div>P1 Inngest function: parse-scaffold → OCR enrichment (Haiku Vision + tesseract) → speaker notes processing → graph-aware-chunk (150-250 tokens) → multi-embed (MedCPT + OpenAI) → extract-entities (MetaMap + UMLS batch) → LCME-classify (Haiku) → TEACHES edges (RRF k=60) → faculty-review-gate (waitForEvent 7d) → fan-out.</div>
+    <div><div class="sprint-role">Full-stack</div>Lecture upload UI. Real-time status (Supabase Realtime + polling fallback). SubConcept review dashboard (single batch Cypher — H07 fix). Faculty approval flow → unblocks waitForEvent. pptx-renderer + pdf-renderer sidecars deployed on Railway.</div>
+  </div>
+</div>
+
+<div class="sprint">
+  <div class="sprint-head"><div class="sprint-wk">W8–9</div><div class="sprint-title">P2 Enrichment + P3 Generation Pipelines</div><span class="sprint-out" style="background:var(--t2);color:#fff">Deliverable: approved SubConcept → 30 items for $3 in 3 min</span></div>
+  <div class="sprint-body">
+    <div><div class="sprint-role">Backend (pipeline)</div>P2: UMLS full resolution → anatomy routing → Hetionet 2-hop → lod_brief → Supabase (G05 fix) → ProficiencyVariable creation → cross-lecture links. P3: ECD Stages 1-3 → HyDE (Haiku) → parallel 4-source context → Sonnet core → Sonnet critique → Haiku distractors → Haiku rationale/QA/Toulmin → dual-write → waitForEvent approval gate. safeJsonParse + Promise.allSettled throughout.</div>
+    <div><div class="sprint-role">Full-stack</div>Quick Spec Wizard (chat UI → generation spec). Generation status tracking. Item approval queue. Component-targeted item editor (stem / distractors / rationale independently). Toulmin panel in review. Generation completion email notification (H09 fix). Cost estimate confirmation before batch submit (C10 fix).</div>
+  </div>
+</div>
+
+<div class="sprint">
+  <div class="sprint-head"><div class="sprint-wk">W10–11</div><div class="sprint-title">Coverage, Blueprint & Exam Assembly</div><span class="sprint-out" style="background:var(--t2);color:#fff">Deliverable: faculty can build and deploy an exam</span></div>
+  <div class="sprint-body">
+    <div><div class="sprint-role">Full-stack</div>USMLE coverage heatmap (18 systems × Bloom — three states: gap/partial/confirmed). Blueprint editor with equity target enforcement (min 15%). Exam assembly (greedy bin-pack + proximity constraint). Exam deploy. QTI export endpoint. Item search (hybrid semantic + fulltext + structured filters — H01 fix). Item version history (H02 fix).</div>
+    <div><div class="sprint-role">Backend</div>Coverage heatmap API (single batch Cypher). Blueprint feasibility check. Assembly algorithm. session_items scramble generation (H05 fix). session_answers auto-save (C01 fix). Time-windowed RLS on assessment_items (C02 fix). Student accommodations handling.</div>
+  </div>
+</div>
+
+<div class="sprint">
+  <div class="sprint-head"><div class="sprint-wk">W12</div><div class="sprint-title">Student Layer & MVP Loop Closure</div><span class="sprint-out" style="background:var(--t3);color:#fff">Deliverable: student takes exam, sees mastery, practices weak areas</span></div>
+  <div class="sprint-body">
+    <div><div class="sprint-role">Full-stack</div>Student registration + admin approval. Standardized exam mode (timed, flagging, nav panel, per-student scramble). Formative results + "Why Wrong?" (Haiku, MisconceptionCategory-grounded). Mastery dashboard (BKT radar + weekly timeline). Practice session builder. Weak areas + one-click drill.</div>
+    <div><div class="sprint-role">Backend</div>BKT update Inngest function (real-time, priority: high). IRT 3PL initial AI estimation. Mastery Supabase realtime subscription. Supabase Pooler enabled (H13 fix). Weekly calibration + reconciliation crons. MedCPT keep-warm cron (H08 fix). <strong>MVP LOOP CLOSED.</strong></div>
+  </div>
+</div>
+</section>
+
+<!-- ══ VII: TEAM ══ -->
+<section id="team">
+<div class="sid">VII / Team Structure</div>
+<h2>What roles you need and what skills matter most</h2>
+
+<div class="four">
+<div class="card">
+  <div class="card-lbl">Full-Stack Engineer · 2 roles</div>
+  <div class="card-ttl">Core product builders</div>
+  <p>Strong in Next.js App Router, TypeScript, Supabase. Can build both UI and API routes. One focuses on faculty-facing features (upload, review, generation, blueprint). One focuses on student-facing features (exam mode, mastery dashboard, practice). Both need comfort with Cypher for KG query work.</p>
+</div>
+<div class="card">
+  <div class="card-lbl">Backend/Pipeline Engineer · 1 role</div>
+  <div class="card-ttl">Pipeline + graph specialist</div>
+  <p>Deep in Inngest, Neo4j, Python sidecars. Owns P1, P2, P3 pipeline functions. Comfortable with NLP tooling (MetaMap, UMLS API). Writes and optimizes Cypher. Sets up MedCPT + pptx-renderer sidecars. Handles weekly crons and reconciliation. Should have previous experience with ETL pipelines or data engineering.</p>
+</div>
+<div class="card">
+  <div class="card-lbl">AI/ML Engineer · 1 role</div>
+  <div class="card-ttl">Generation quality + measurement</div>
+  <p>Owns prompt engineering for all Claude calls. Maintains evaluation harness (RAG eval, prompt regression tests). Implements BKT update + IRT calibration logic. Handles HyDE retrieval optimization. At T4: GNN training, Louvain community detection. Should understand psychometrics at least conceptually — these algorithms are grounded in measurement science.</p>
+</div>
+<div class="card">
+  <div class="card-lbl">Medical Education Advisor · 1 role</div>
+  <div class="card-ttl">Domain expertise (part-time)</div>
+  <p>Not an engineer. A faculty member or curriculum specialist who can validate: are generated items clinically accurate? Are TaskShell templates pedagogically sound? Is the Physician Task → Question Type mapping correct? Reviews the misconception categories against real student errors. Doesn't need to write code. Needs 4-8 hours/week during development. Critical for clinical confidence tier peer review.</p>
+</div>
+</div>
+
+<h3>Critical skills across all engineers</h3>
+<div class="two">
+<ul class="t">
+  <li><strong>Cypher fluency</strong> — the coverage heatmap, StudyQueue, and ECD queries are all complex Cypher. Everyone writes graph queries.</li>
+  <li><strong>Inngest patterns</strong> — step.run(), step.waitForEvent(), step.sendEvent(), onFailure. The pipeline architecture depends on understanding durable execution.</li>
+  <li><strong>Supabase RLS</strong> — every table change requires a RLS policy decision. FERPA compliance depends on every engineer understanding this.</li>
+  <li><strong>Evidence grades</strong> — all engineers must understand A/B/C/D grades and evidence_weight. These are used everywhere; getting them wrong silently corrupts coverage calculations.</li>
+</ul>
+<ul class="t">
+  <li><strong>Dual-write discipline</strong> — Supabase first, Neo4j second, always. Neo4j failures never block the user. neo4j_sync_status columns on every relevant table.</li>
+  <li><strong>Three-hub invariant</strong> — every AssessmentItem must connect SubConcept + SLO + USMLE_Subtopic before entering the practice pool. This check should be in the post-approval step.</li>
+  <li><strong>safeJsonParse everywhere</strong> — never raw JSON.parse on Claude responses. This is a team-wide convention enforced by linting.</li>
+  <li><strong>neo4jQuery wrapper</strong> — never raw neo4j-driver. The ESLint rule catches violations at commit time. The wrapper is not optional.</li>
+</ul>
+</div>
+</section>
+
+<!-- ══ VIII: COSTS ══ -->
+<section id="costs">
+<div class="sid">VIII / Infrastructure Costs</div>
+<h2>Monthly spend by tier — what you're buying and why</h2>
+
+<table>
+<thead><tr><th>Service</th><th>MVP (T1-T3)<br>Weeks 1-36</th><th>Growth (T4)<br>Month 9-12</th><th>Scale (T5+)<br>Month 13+</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td class="cost-row-header" colspan="5">Fixed Infrastructure</td></tr>
+<tr><td>Vercel (hosting)</td><td>$20/mo (Pro)</td><td>$20/mo</td><td>$20-200/mo</td><td>Next.js deployment. Scales with traffic.</td></tr>
+<tr><td>Supabase</td><td>$25/mo (Pro)</td><td>$25/mo</td><td>$25-200/mo</td><td>Pro includes 8GB DB, 100GB storage, PITR, Realtime. Enable Pooler (free on Pro).</td></tr>
+<tr><td>Neo4j Aura Professional</td><td>$65/mo</td><td>$65/mo</td><td>$65-400/mo</td><td>AuraDB Professional. GDS included. ~20GB graph at MSM scale.</td></tr>
+<tr><td>Inngest</td><td>$50/mo (Team)</td><td>$50/mo</td><td>$100-500/mo</td><td>Team plan: 5M events/mo, extended log retention. Sufficient for full MSM.</td></tr>
+<tr><td>Railway (sidecars)</td><td>$30/mo</td><td>$50/mo</td><td>$100/mo</td><td>MedCPT (always-on, ~$15/mo), pptx-renderer, pdf-renderer, MetaMap. Always-on = no cold starts.</td></tr>
+<tr><td><strong>Fixed total</strong></td><td><strong>~$190/mo</strong></td><td><strong>~$210/mo</strong></td><td><strong>~$300-1400/mo</strong></td><td></td></tr>
+<tr><td class="cost-row-header" colspan="5">Variable — API usage (estimated at full MSM utilization)</td></tr>
+<tr><td>Anthropic (generation)</td><td>$50-200/mo</td><td>$100-400/mo</td><td>$300-1000/mo</td><td>~$0.12/item × 30 items/faculty/week × 10 active faculty. BKT update calls negligible (Haiku).</td></tr>
+<tr><td>OpenAI (embeddings only)</td><td>$5-15/mo</td><td>$10-30/mo</td><td>$20-60/mo</td><td>text-embedding-3-small at $0.02/1M tokens. 50-slide lecture ≈ 15K tokens.</td></tr>
+<tr><td>UMLS API</td><td>$0</td><td>$0</td><td>$0</td><td>Free for academic use. Rate limited to 20 req/sec — Inngest throttle handles this.</td></tr>
+<tr><td>Resend (email)</td><td>$0-5/mo</td><td>$0-10/mo</td><td>$0-20/mo</td><td>Notification emails. Free tier covers 100 emails/day.</td></tr>
+<tr><td><strong>Variable total (typical)</strong></td><td><strong>~$60-220/mo</strong></td><td><strong>~$115-440/mo</strong></td><td><strong>~$320-1080/mo</strong></td><td></td></tr>
+<tr><td class="cost-row-header" colspan="5">Total</td></tr>
+<tr><td><strong>TOTAL MONTHLY</strong></td><td><strong>~$250-410/mo</strong></td><td><strong>~$325-650/mo</strong></td><td><strong>~$620-2480/mo</strong></td><td>Well within range for institutional licensing at $50-100/student/year</td></tr>
+</tbody>
+</table>
+
+<div class="two">
+<div class="card"><div class="card-lbl">Per-item generation cost breakdown</div><div class="card-ttl">$0.12/item — fully loaded</div>
+<p>2× Sonnet calls (core + critique): ~$0.037. 3× Haiku calls (HyDE + distractors + rationale+QA): ~$0.007. Embeddings: ~$0.0002. LOD brief (amortized from P2): ~$0.0002. Overhead + retries (×1.5): ~$0.067 total. 30-item faculty batch: ~$3.60. A medical school writing 100 exams/year × 40 items/exam = 4,000 items/year = ~$480/year in generation costs. That's ~$12/exam for the entire item generation cost — less than a faculty member's hourly rate for writing one item manually.</p>
+</div>
+<div class="card"><div class="card-lbl">Cost controls built in</div><div class="card-ttl">Three-layer generation rate limiting</div>
+<p>C10 resolution: (1) 3 concurrent P3 runs max per faculty, (2) confirmation required for &gt;10 items with cost estimate displayed, (3) 100 items/day/faculty cap in <code>generation_daily_usage</code>. Plus: monthly budget alert at 80% of institution limit via <code>institution_generation_limits</code> table. The budget ceiling is configurable per institution — an institution can set $200/month as their cap and receive Slack alerts at $160.</p>
+</div>
+</div>
+</section>
+
+<!-- ══ IX: RISKS ══ -->
+<section id="risks">
+<div class="sid">IX / Risk Matrix</div>
+<h2>What could hurt the project — and the specific mitigation for each</h2>
+
+<div class="risk">
+  <div class="risk-sev crit">C</div>
+  <div>
+    <div class="risk-title">Faculty adoption friction — "I don't trust AI-generated questions"</div>
+    <div class="risk-detail">Medical faculty are deeply skeptical of AI content. If the first batch of generated items has clinical errors, adoption stalls permanently. The critique gate and QA scoring are good but not perfect.</div>
+  </div>
+  <div class="risk-mit">Mitigation: Start with a "showcase" faculty member who has high tolerance for imperfect AI output. Emphasize: AI drafts, faculty decides. Every item requires faculty approval. The component-targeted editor makes refining easier than rewriting from scratch. Clinical confidence tier (H11) gives faculty language to explain review depth to colleagues.</div>
+</div>
+
+<div class="risk">
+  <div class="risk-sev crit">C</div>
+  <div>
+    <div class="risk-title">UMLS API rate limits during P2 enrichment surge</div>
+    <div class="risk-detail">If 10 faculty upload lectures simultaneously and all fan-out to P2, the 20 req/sec UMLS throttle will cause P2 to run for hours. Faculty won't see LOD enrichment results and may think the system is broken.</div>
+  </div>
+  <div class="risk-mit">Mitigation: Inngest throttle for P2 (20 UMLS req/sec) is already configured. P2 is background/non-blocking — faculty don't need to wait for it. UI clearly labels P2 as "enriching in background" vs. P1 "processing." Consider self-hosting UMLS full release in Supabase for T2+ to remove API dependency entirely.</div>
+</div>
+
+<div class="risk">
+  <div class="risk-sev crit">C</div>
+  <div>
+    <div class="risk-title">MSM IT delays SAML/SSO configuration</div>
+    <div class="risk-detail">Real faculty and students use institutional SSO. Magic links work for testing but faculty expect to log in with their MSM credentials. IT approval processes at medical schools are notoriously slow.</div>
+  </div>
+  <div class="risk-mit">Mitigation: Start SAML configuration request in Week 1. Run in parallel with development — doesn't block MVP. Use magic links for the first demo cohort. Have a clear fallback plan (institutional email + magic link) in writing before the first real faculty invite.</div>
+</div>
+
+<div class="risk">
+  <div class="risk-sev high">H</div>
+  <div>
+    <div class="risk-title">DrugBank license takes longer than expected</div>
+    <div class="risk-detail">DrugBank academic license typically takes 2-3 days but can take 2 weeks if the institution review team is slow. Without it, pharmacology SubConcept enrichment is incomplete and drug mechanism items will be lower quality.</div>
+  </div>
+  <div class="risk-mit">Mitigation: Apply in Week 1 as a parallel action. P1 and P2 work without DrugBank (fall back to UMLS drug data). Flag pharmacology SubConcepts as "partial enrichment" until DrugBank is seeded. No critical path block — but note to faculty that pharmacology items may be lower quality in the first 2 weeks.</div>
+</div>
+
+<div class="risk">
+  <div class="risk-sev high">H</div>
+  <div>
+    <div class="risk-title">MetaMap Java service is fragile in containerized environments</div>
+    <div class="risk-detail">MetaMap's Java server has known issues with Docker networking, memory management, and cold starts. Medical NLP setup is the most painful part of the build based on prior experience.</div>
+  </div>
+  <div class="risk-mit">Mitigation: Allocate 2 days in Week 1 specifically for MetaMap setup. Use the medcat-service Docker image as an alternative (Python-based, better containerized). For early development: use UMLS API direct with simple keyword matching as a temporary NER fallback — switch to MetaMap before production. Have a fully documented "MetaMap works on this exact Docker image" reference before scaling the team.</div>
+</div>
+
+<div class="risk">
+  <div class="risk-sev high">H</div>
+  <div>
+    <div class="risk-title">Generated item clinical quality insufficient for summative exams</div>
+    <div class="risk-detail">The critique gate catches format issues well. It does not catch subtle clinical errors — inverted causality, outdated dosing, wrong drug class for a specific patient profile. Faculty may approve items that contain errors they didn't catch in batch review.</div>
+  </div>
+  <div class="risk-mit">Mitigation: Clinical confidence tier (H11) — high-consequence items require peer review before entering summative exams. Limit summative exam use to items that are 'peer_reviewed' until the second semester when faculty are more calibrated on item quality. Medical education advisor reviews the first 100 items from each course for patterns. Set expectation: Journey OS is for formative assessment quality in Year 1; summative quality requires 1-2 semesters of calibration.</div>
+</div>
+
+<div class="risk">
+  <div class="risk-sev med">M</div>
+  <div>
+    <div class="risk-title">Neo4j Aura outage during exam delivery</div>
+    <div class="risk-detail">AuraDB has a 99.9% SLA but outages happen. Student exam delivery doesn't need Neo4j — items are in Supabase. But the attempt recording and BKT update calls will timeout.</div>
+  </div>
+  <div class="risk-mit">Mitigation: Graceful degradation pattern (neo4jQuery wrapper with fallback values). Attempt recording goes to Supabase immediately (source of truth). BKT update is queued in Inngest and retried when Neo4j recovers. Students see a "mastery updating..." message rather than an error. Exam delivery is never blocked by Neo4j availability.</div>
+</div>
+</section>
+
+<!-- ══ X: METRICS ══ -->
+<section id="metrics">
+<div class="sid">X / Metrics That Matter</div>
+<h2>How you'll know if it's working — the numbers that tell the truth</h2>
+
+<div class="four">
+<div class="metric"><div class="metric-lbl">Pipeline Health</div><div class="metric-val" style="color:var(--b)">≤5 min</div><div class="metric-desc">P1 SLA for a 60-slide PPTX. Alert if any lecture stays in 'parsing' &gt;10 minutes. This is the first metric faculty will notice.</div></div>
+<div class="metric"><div class="metric-lbl">Item Cost</div><div class="metric-val" style="color:var(--g)">$0.12</div><div class="metric-desc">Target cost per complete NBME vignette. If rolling average &gt;$0.20, audit model routing — Sonnet is being used where Haiku should be.</div></div>
+<div class="metric"><div class="metric-lbl">Faculty Approval Rate</div><div class="metric-val" style="color:var(--g)">≥75%</div><div class="metric-desc">Percent of generated items approved without major edits. Below 60% means the generation quality or context quality is insufficient. Diagnose by checking critique severity distribution.</div></div>
+<div class="metric"><div class="metric-lbl">QA Score (avg)</div><div class="metric-val" style="color:var(--g)">≥0.75</div><div class="metric-desc">Average QA score across approved items. Items scoring 0.65-0.75 are borderline — review the distractor homogeneity and lead-in type components specifically.</div></div>
+<div class="metric"><div class="metric-lbl">Coverage Velocity</div><div class="metric-val" style="color:var(--b)">+2%/week</div><div class="metric-desc">Increase in confirmed CoverageRecord count per course per week. Tracks whether generation is keeping pace with curriculum upload. Plateau = faculty bottleneck in review pipeline.</div></div>
+<div class="metric"><div class="metric-lbl">Mastery Growth</div><div class="metric-val" style="color:var(--g)">+0.05/week</div><div class="metric-desc">Average p_mastery increase per student per week of active use. Below 0.03 = either items are too hard (check p-values), items are too few (check coverage), or students aren't practicing (check session frequency).</div></div>
+<div class="metric"><div class="metric-lbl">BKT Update Lag</div><div class="metric-val" style="color:var(--b)">≤2 sec</div><div class="metric-desc">Time from attempt submission to mastery dashboard update. This is the real-time feel of the platform. Degrade &gt;5 seconds = investigate Inngest queue depth or Neo4j write latency.</div></div>
+<div class="metric"><div class="metric-lbl">Dead Letter Rate</div><div class="metric-val" style="color:var(--g)">≤1%</div><div class="metric-desc">Percent of pipeline runs ending in dead letter queue. &gt;2% = systematic failure in one pipeline step. Diagnose by checking pipeline_dead_letters.step_name distribution.</div></div>
+</div>
+
+<h3>PostHog events to instrument from day 1</h3>
+<table>
+<thead><tr><th>Event</th><th>Properties</th><th>What it tells you</th></tr></thead>
+<tbody>
+<tr><td class="mono">p1_lecture_processed</td><td>duration_ms, slide_count, subconcepts_created, ocr_used</td><td>P1 SLA health. OCR usage rate. SubConcept yield per lecture (low yield = chunking or NER issue).</td></tr>
+<tr><td class="mono">p3_item_generated</td><td>cost_usd, critique_severity, qa_score, bloom_level, usmle_system</td><td>Generation cost trend. Quality distribution. Bloom level distribution (are we generating only easy items?).</td></tr>
+<tr><td class="mono">faculty_review_decision</td><td>action, time_to_review_ms, subconcept_id, lecture_id</td><td>Approval rate. Time in review (high = UI friction). Rejection rate (high = generation quality issue).</td></tr>
+<tr><td class="mono">student_attempt</td><td>is_correct, time_on_task_ms, distractor_index, bloom_level, usmle_system</td><td>Item p-values (correctness rate). Time pressure (fast wrong answers = guessing). Distractor selection patterns (feeds misconception frequency).</td></tr>
+<tr><td class="mono">mastery_updated</td><td>delta, p_mastery, subconcept_id, student_cohort</td><td>Mastery velocity by cohort. Identifies concepts where mastery is declining (possible item quality issue or genuine knowledge gap).</td></tr>
+<tr><td class="mono">coverage_gap_generated</td><td>usmle_system, bloom_level, item_count_before</td><td>Which gaps faculty are choosing to fill. Helps prioritize which USMLE systems need more seed content.</td></tr>
+</tbody>
+</table>
+</section>
+
+<div class="footer">
+  <span>Journey OS · Team Kickoff Briefing · Morehouse School of Medicine · March 2026</span>
+  <span>35 data sources · 6 personas · 67 features · 8 moats · 12-week MVP · ~$400/mo infra</span>
+</div>
+</body>
+</html>

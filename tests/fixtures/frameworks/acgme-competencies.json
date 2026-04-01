@@ -1,0 +1,36 @@
+{
+  "source": "ACGME Common Program Requirements (2023)",
+  "source_url": "https://www.acgme.org/what-we-do/accreditation/common-program-requirements/",
+  "competencies": [
+    {
+      "code": "PC",
+      "name": "Patient Care",
+      "description": "Provide patient care that is compassionate, appropriate, and effective for the treatment of health problems and the promotion of health."
+    },
+    {
+      "code": "MK",
+      "name": "Medical Knowledge",
+      "description": "Demonstrate knowledge of established and evolving biomedical, clinical, epidemiological, and social-behavioral sciences, and apply this knowledge to patient care."
+    },
+    {
+      "code": "PBLI",
+      "name": "Practice-Based Learning and Improvement",
+      "description": "Demonstrate the ability to investigate and evaluate care of patients, appraise and assimilate scientific evidence, and continuously improve patient care based on constant self-evaluation and lifelong learning."
+    },
+    {
+      "code": "ICS",
+      "name": "Interpersonal and Communication Skills",
+      "description": "Demonstrate interpersonal and communication skills that result in the effective exchange of information and collaboration with patients, their families, and health professionals."
+    },
+    {
+      "code": "PROF",
+      "name": "Professionalism",
+      "description": "Demonstrate a commitment to carrying out professional responsibilities and an adherence to ethical principles."
+    },
+    {
+      "code": "SBP",
+      "name": "Systems-Based Practice",
+      "description": "Demonstrate an awareness of and responsiveness to the larger context and system of health care, and the ability to call effectively on other resources in the system to provide optimal health care."
+    }
+  ]
+}

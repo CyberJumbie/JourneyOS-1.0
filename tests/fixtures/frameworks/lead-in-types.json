@@ -1,0 +1,12 @@
+{
+  "source": "NBME item-writing guidelines — standard clinical vignette lead-in stems",
+  "types": [
+    { "name": "Most likely diagnosis", "description": "Which of the following is the most likely diagnosis?" },
+    { "name": "Most appropriate next step in management", "description": "Which of the following is the most appropriate next step in management?" },
+    { "name": "Most likely mechanism", "description": "Which of the following mechanisms most likely explains this finding?" },
+    { "name": "Most appropriate pharmacotherapy", "description": "Which of the following is the most appropriate pharmacotherapy?" },
+    { "name": "Most likely cause", "description": "Which of the following is the most likely cause?" },
+    { "name": "Best initial diagnostic test", "description": "Which of the following is the best initial diagnostic test?" },
+    { "name": "Most likely finding on examination", "description": "Which of the following is the most likely finding on physical examination?" }
+  ]
+}

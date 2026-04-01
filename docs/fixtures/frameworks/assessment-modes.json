@@ -1,0 +1,8 @@
+{
+  "source": "MSM Quest internal definition — three assessment modalities per spec §7.2",
+  "modes": [
+    { "name": "Standardized Exam", "stakes": "high", "scoring_model": "classical", "contributes_to_grade": true, "contributes_to_mastery": false },
+    { "name": "Adaptive Practice", "stakes": "medium", "scoring_model": "irt", "contributes_to_grade": false, "contributes_to_mastery": true },
+    { "name": "Custom Practice", "stakes": "low", "scoring_model": "formative", "contributes_to_grade": false, "contributes_to_mastery": true }
+  ]
+}

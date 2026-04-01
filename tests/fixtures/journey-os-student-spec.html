@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Journey OS — Student Persona Product Specification</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap');
+:root{
+  --ink:#0c0c0c;--paper:#f4f1eb;--edge:#ddd6c4;
+  --r:#a82828;--g:#185230;--y:#6a4c14;--b:#162450;--gold:#8a6614;
+  --pre:#080d12;--prefg:#c4bfb0;--tag:#e8e2d4;
+  --blue-50:#e6f1fb;--blue-800:#0c447c;
+  --teal-50:#e1f5ee;--teal-800:#085041;
+  --amber-50:#faeeda;--amber-800:#633806;
+  --purple-50:#eeedfe;--purple-800:#3c3489;
+  --green-50:#eaf3de;--green-800:#27500a;
+  --red-50:#fcebeb;--red-800:#791f1f;
+  --gray-50:#f1efe8;--gray-800:#444441;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);font-size:13.5px;line-height:1.8}
+.cover{background:var(--ink);min-height:80vh;padding:80px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+.cg{position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent,transparent 79px,rgba(93,202,165,.04) 80px),repeating-linear-gradient(0deg,transparent,transparent 79px,rgba(93,202,165,.03) 80px)}
+.cr{position:relative;z-index:1}
+.eye{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:#5dcaa5;margin-bottom:16px}
+h1{font-family:'Fraunces',serif;font-size:68px;font-weight:300;line-height:.9;letter-spacing:-2px;color:#ede8e0;margin-bottom:12px}
+h1 em{font-style:italic;color:#ef9f27}
+.c-sub{font-family:'Fraunces',serif;font-style:italic;font-size:19px;color:#555;max-width:680px;margin-bottom:28px}
+.stat-row{display:flex;gap:1px;background:rgba(255,255,255,.05);margin-bottom:20px}
+.stat{padding:12px 20px}
+.stat-n{font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:600;display:block;line-height:1;color:#ef9f27}
+.stat-l{font-size:9px;color:#444;font-family:'JetBrains Mono',monospace;letter-spacing:.04em;margin-top:3px}
+.chips{display:flex;gap:4px;flex-wrap:wrap}
+.c-chip{font-family:'JetBrains Mono',monospace;font-size:8px;padding:4px 10px;border:1px solid #1c1c1c;color:#555}
+.c-chip.ok{border-color:#2a3a1a;color:#5dcaa5}
+.nav{background:#060606;border-bottom:1px solid #111;padding:0 80px;display:flex;overflow-x:auto}
+.ni{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:#333;padding:10px 13px;border-right:1px solid #111;white-space:nowrap;text-decoration:none;flex-shrink:0}
+.ni:hover{color:#ef9f27}
+section{padding:52px 80px;border-bottom:1px solid var(--edge)}
+.sid{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:#ef9f27;margin-bottom:10px}
+h2{font-family:'Fraunces',serif;font-size:34px;font-weight:300;line-height:1.07;margin-bottom:18px}
+h3{font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#999;margin:26px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--edge)}
+h4{font-family:'Fraunces',serif;font-size:17px;font-weight:400;margin:12px 0 5px}
+p{margin-bottom:10px;max-width:840px;line-height:1.75}
+code{font-family:'JetBrains Mono',monospace;font-size:11px;background:var(--tag);padding:1px 5px;border-radius:2px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:12px 0}
+.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:12px 0}
+.four{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin:12px 0}
+.card{border:1px solid var(--edge);padding:14px 16px;background:#fff;border-radius:4px}
+.card .card-l{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#bbb;margin-bottom:3px}
+.card .card-t{font-family:'Fraunces',serif;font-size:15px;font-weight:400;margin-bottom:5px}
+.card p{font-size:12px;color:#666;margin:0;line-height:1.65}
+.call{padding:11px 15px;margin:10px 0;border-radius:0 2px 2px 0}
+.call .cl{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;margin-bottom:4px}
+.call p{font-size:12.5px;margin:0;max-width:none}
+.call-b{border-left:3px solid var(--b);background:var(--blue-50)}.call-b .cl{color:var(--b)}
+.call-g{border-left:3px solid var(--g);background:var(--green-50)}.call-g .cl{color:var(--g)}
+.call-gold{border-left:3px solid var(--gold);background:var(--amber-50)}.call-gold .cl{color:var(--gold)}
+.call-r{border-left:3px solid var(--r);background:var(--red-50)}.call-r .cl{color:var(--r)}
+.call-v{border-left:3px solid #534ab7;background:var(--purple-50)}.call-v .cl{color:#534ab7}
+.pill{display:inline-block;padding:2px 7px;border-radius:2px;font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:600;vertical-align:middle;white-space:nowrap}
+.p-b{background:var(--blue-50);color:var(--blue-800)}.p-g{background:var(--green-50);color:var(--green-800)}
+.p-t{background:var(--teal-50);color:var(--teal-800)}.p-gold{background:var(--amber-50);color:var(--amber-800)}
+.p-v{background:var(--purple-50);color:var(--purple-800)}.p-r{background:var(--red-50);color:var(--red-800)}
+.p-gray{background:var(--gray-50);color:var(--gray-800)}.p-ink{background:var(--ink);color:#bbb}
+.screen{border:1px solid var(--edge);background:#fff;overflow:hidden;margin:14px 0;border-radius:4px}
+.screen-bar{background:var(--gray-50);padding:8px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--edge)}
+.screen-dots{display:flex;gap:5px}
+.screen-dot{width:10px;height:10px;border-radius:50%;background:var(--edge)}
+.screen-title{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.05em;color:#aaa;margin-left:8px}
+.mock-shell{display:grid;grid-template-columns:188px 1fr;min-height:420px}
+.mock-nav{background:var(--ink);padding:16px 0}
+.mock-logo{padding:12px 16px 16px;font-family:'Fraunces',serif;font-size:15px;font-style:italic;color:#ede8e0;border-bottom:1px solid #1a1a1a;margin-bottom:8px}
+.mock-nav-item{padding:7px 16px;font-size:12px;color:#666;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.mock-nav-item:hover{background:#111;color:#aaa}
+.mock-nav-item.active{background:#1a1a1a;color:#ef9f27}
+.mock-nav-item .dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
+.mock-nav-section{padding:12px 16px 4px;font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#2a2a2a}
+.mock-main{padding:20px;background:#faf8f4;overflow:auto}
+.stat-card{border:1px solid var(--edge);padding:14px 16px;background:#fff;border-radius:4px}
+.stat-card .label{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#bbb;margin-bottom:3px}
+.stat-card .value{font-family:'Fraunces',serif;font-size:28px;font-weight:300;line-height:1;color:var(--ink)}
+.stat-card .sub{font-size:11px;color:#aaa;margin-top:2px}
+.tab-bar{display:flex;border-bottom:1px solid var(--edge);background:#fff;overflow-x:auto}
+.tab{padding:8px 16px;font-size:12px;color:#888;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;flex-shrink:0}
+.tab.active{color:var(--b);border-bottom-color:var(--b);font-weight:500}
+.tab:hover:not(.active){color:var(--ink);background:var(--gray-50)}
+.qa-row{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.qa-btn{padding:6px 13px;border:1px solid var(--edge);background:#fff;font-size:12px;cursor:pointer;border-radius:2px;color:var(--ink)}
+.qa-btn:hover{background:var(--gray-50)}
+.qa-btn.primary{background:var(--ink);color:#ede8e0;border-color:var(--ink)}
+.qa-btn.amber{background:#ef9f27;color:#fff;border-color:#ef9f27}
+table{width:100%;border-collapse:collapse;font-size:12px;margin:8px 0 14px}
+th{background:var(--ink);color:var(--paper);padding:7px 11px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase}
+td{padding:7px 11px;border-bottom:1px solid var(--edge);vertical-align:top}
+tr:nth-child(even) td{background:#faf7f0}
+.mono{font-family:'JetBrains Mono',monospace;font-size:10.5px}
+/* BKT mastery cells */
+.bkt-cell{padding:8px 4px;text-align:center;border-radius:2px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:9px}
+.bkt-0{background:#fcebeb;color:#791f1f}.bkt-1{background:#faeeda;color:#633806}.bkt-2{background:#fdf7e0;color:#854f0b}.bkt-3{background:#eaf3de;color:#3b6d11}.bkt-4{background:#1d9e75;color:#fff}
+/* Question card */
+.q-stem{font-size:13px;line-height:1.85;color:#222;margin-bottom:16px;padding:14px;background:#fff;border:1px solid var(--edge);border-radius:4px}
+.q-option{padding:9px 13px;margin-bottom:5px;border:1px solid var(--edge);border-radius:4px;font-size:12.5px;cursor:pointer;background:#fff}
+.q-option:hover{border-color:#888;background:var(--gray-50)}
+.q-option.selected{border-color:var(--b);background:var(--blue-50)}
+.q-option.correct{border-color:var(--g);background:var(--green-50)}
+.q-option.wrong{border-color:var(--r);background:var(--red-50)}
+/* Streak */
+.streak-day{width:28px;height:28px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10px;font-family:'JetBrains Mono',monospace}
+.streak-done{background:#1d9e75;color:#fff}
+.streak-today{background:#ef9f27;color:#fff}
+.streak-missed{background:var(--red-50);color:#791f1f}
+.streak-future{background:var(--edge);color:#aaa}
+/* Why Wrong explainer */
+.why-wrong{border:1px solid var(--purple-50);background:var(--purple-50);padding:14px;border-radius:4px;margin:10px 0}
+.why-wrong .ww-head{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:#534ab7;margin-bottom:8px}
+.why-wrong p{font-size:12.5px;line-height:1.75;color:#3c3489;margin:0}
+/* Decay bar */
+.decay-bar{height:6px;background:var(--edge);border-radius:3px;overflow:hidden;margin-bottom:2px}
+.decay-fill{height:100%;border-radius:3px;transition:width .3s}
+/* Onboard step */
+.onboard-step{display:flex;gap:14px;padding:12px 0;border-bottom:1px solid var(--edge)}
+.onboard-step:last-child{border:none}
+.step-num{width:28px;height:28px;border-radius:50%;background:var(--y);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:11px;flex-shrink:0;margin-top:1px}
+.step-num.done{background:var(--g)}
+.step-body{flex:1}
+.step-title{font-weight:500;font-size:13px}
+.step-desc{font-size:12px;color:#888;margin-top:2px}
+.feed-item{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--edge);align-items:flex-start}
+.feed-item:last-child{border:none}
+.feed-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.feed-body{flex:1}
+.feed-text{font-size:12.5px}
+.feed-time{font-family:'JetBrains Mono',monospace;font-size:10px;color:#bbb;margin-top:1px}
+.concept-tag{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;background:var(--teal-50);color:var(--teal-800);border-radius:12px;font-size:11px}
+.concept-tag .cui{font-family:'JetBrains Mono',monospace;font-size:9px;opacity:.7}
+.footer{background:var(--ink);padding:24px 80px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-family:'JetBrains Mono',monospace;font-size:9px;color:#333}
+@media(max-width:900px){.cover,.nav,.footer,section{padding-left:24px;padding-right:24px}.two,.three,.four{grid-template-columns:1fr}h1{font-size:44px}.mock-shell{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="cover">
+<div class="cg"></div>
+<div class="cr">
+  <div>
+    <div class="eye">Journey OS · Student Persona (M1–M4) · Complete Product Specification</div>
+    <h1>The Student<br>Learning<br><em>Experience</em></h1>
+    <div class="c-sub">From first day of M1 to USMLE Step 2 readiness — the complete screen-by-screen specification for every interaction in the student persona, including BKT mastery, IRT practice, Why Wrong? AI explanations, and the USMLE readiness tracker</div>
+  </div>
+  <div>
+    <div class="stat-row">
+      <div class="stat"><span class="stat-n">8</span><div class="stat-l">Nav sections</div></div>
+      <div class="stat"><span class="stat-n">BKT</span><div class="stat-l">Mastery model</div></div>
+      <div class="stat"><span class="stat-n">IRT</span><div class="stat-l">Question selection</div></div>
+      <div class="stat"><span class="stat-n">Why<br>Wrong</span><div class="stat-l">AI explanations</div></div>
+      <div class="stat"><span class="stat-n">Step<br>1+2</span><div class="stat-l">USMLE readiness</div></div>
+    </div>
+    <div class="chips">
+      <span class="c-chip ok">✓ BKT-driven study queue</span>
+      <span class="c-chip ok">✓ IRT item selection in practice</span>
+      <span class="c-chip ok">✓ Why Wrong? misconception AI</span>
+      <span class="c-chip ok">✓ Pimsleur decay visualization</span>
+      <span class="c-chip ok">✓ USMLE Step 1/2 coverage map</span>
+      <span class="c-chip ok">✓ Per-student item scrambling (C01)</span>
+      <span class="c-chip ok">✓ Clinical consequence ordering</span>
+      <span class="c-chip ok">✓ Streak + engagement model</span>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="nav">
+  <a class="ni" href="#nav">I · Nav Architecture</a>
+  <a class="ni" href="#onboard">II · Onboarding</a>
+  <a class="ni" href="#home">III · Home</a>
+  <a class="ni" href="#queue">IV · Study Queue</a>
+  <a class="ni" href="#practice">V · Practice</a>
+  <a class="ni" href="#exams">VI · Exams</a>
+  <a class="ni" href="#results">VII · Results + Why Wrong</a>
+  <a class="ni" href="#mastery">VIII · Mastery</a>
+  <a class="ni" href="#usmle">IX · USMLE Readiness</a>
+  <a class="ni" href="#history">X · History</a>
+</div>
+
+<!-- I: NAV -->
+<section id="nav">
+<div class="sid">I / Navigation Architecture</div>
+<h2>The student's map of their own learning — progress visible at every level</h2>
+
+<p>The student sidebar is architected around the lifecycle of a learning interaction: you review what you need to study (Home), you work through it (Study Queue, Practice, Exams), you understand what went wrong (Results), you see your long-term progress (Mastery, USMLE Readiness), and you track your history (History). Every nav item serves a different time horizon — from today's queue to semester-long Step 1 readiness.</p>
+
+<div class="screen">
+  <div class="screen-bar"><div class="screen-dots"><div class="screen-dot"></div><div class="screen-dot"></div><div class="screen-dot"></div></div><span class="screen-title">journey os — student view (M2)</span></div>
+  <div class="mock-shell">
+    <div class="mock-nav">
+      <div class="mock-logo">Journey OS</div>
+      <div class="mock-nav-section">Daily</div>
+      <div class="mock-nav-item active"><span class="dot"></span> Home <span class="pill p-gold" style="font-size:8px;padding:1px 5px">5 due</span></div>
+      <div class="mock-nav-item"><span class="dot"></span> Study Queue <span class="pill p-r" style="font-size:8px;padding:1px 5px">12</span></div>
+      <div class="mock-nav-section">Assess</div>
+      <div class="mock-nav-item"><span class="dot"></span> Practice</div>
+      <div class="mock-nav-item"><span class="dot"></span> Exams <span class="pill p-b" style="font-size:8px;padding:1px 5px">1 open</span></div>
+      <div class="mock-nav-section">Progress</div>
+      <div class="mock-nav-item"><span class="dot"></span> Results</div>
+      <div class="mock-nav-item"><span class="dot"></span> Mastery</div>
+      <div class="mock-nav-item"><span class="dot"></span> USMLE Readiness</div>
+      <div class="mock-nav-item"><span class="dot"></span> History</div>
+    </div>
+    <div class="mock-main">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">
+        <div class="stat-card"><div class="label">Due today</div><div class="value" style="color:#ef9f27">12</div><div class="sub">Spaced retrieval queue</div></div>
+        <div class="stat-card"><div class="label">Mastered concepts</div><div class="value">84</div><div class="sub">p_mastery ≥ 0.95</div></div>
+        <div class="stat-card"><div class="label">USMLE coverage</div><div class="value">38%</div><div class="sub">Step 1 (M2 year)</div></div>
+        <div class="stat-card"><div class="label">Streak</div><div class="value" style="color:#ef9f27">11 days</div><div class="sub">Personal best: 23</div></div>
+      </div>
+      <p style="font-size:12px;color:#aaa;font-style:italic">← Full home dashboard in §III</p>
+    </div>
+  </div>
+</div>
+
+<h3>Navigation design decisions</h3>
+<table>
+<thead><tr><th>Tab</th><th>Primary content</th><th>Badge</th><th>Time horizon</th><th>Key action</th></tr></thead>
+<tbody>
+<tr><td><strong>Home</strong></td><td>Daily briefing: queue due, upcoming exams, mastery snapshot, streak</td><td>Items due today</td><td>Today</td><td>Start study queue</td></tr>
+<tr><td><strong>Study Queue</strong></td><td>BKT-prioritized spaced retrieval cards — concepts due for review</td><td>Due count (red)</td><td>Today + next 3 days</td><td>Start session</td></tr>
+<tr><td><strong>Practice</strong></td><td>IRT-selected free practice — configurable topic/Bloom/system filter</td><td>—</td><td>On-demand</td><td>Start practice</td></tr>
+<tr><td><strong>Exams</strong></td><td>Scheduled/assigned exams — timed, scrambled, auto-saved</td><td>Open exam count</td><td>Upcoming + past</td><td>Start exam</td></tr>
+<tr><td><strong>Results</strong></td><td>Post-exam / post-session review with Why Wrong? AI explanations</td><td>—</td><td>Recent sessions</td><td>Review wrong answers</td></tr>
+<tr><td><strong>Mastery</strong></td><td>BKT p_mastery per concept, decay visualization, Pimsleur scheduling</td><td>—</td><td>Semester</td><td>Identify weak concepts</td></tr>
+<tr><td><strong>USMLE Readiness</strong></td><td>Step 1/2 coverage by question response history</td><td>—</td><td>Step exam date</td><td>View gap analysis</td></tr>
+<tr><td><strong>History</strong></td><td>All practice + exam attempts, performance trends over time</td><td>—</td><td>Full enrollment</td><td>Review any session</td></tr>
+</tbody>
+</table>
+
+<h3>M1–M4 phased experience</h3>
+<div class="four">
+  <div class="card"><div class="card-l">M1 — Year 1</div><div class="card-t">Foundation</div><p>Study Queue is primary. Practice unlocked. No exams yet (first semester). USMLE Readiness shows Basic Science coverage. Mastery starts building from lecture concepts. Streak and daily queue are the main engagement loops.</p></div>
+  <div class="card"><div class="card-l">M2 — Year 2</div><div class="card-t">Integration</div><p>All 8 tabs active. Formal exams deployed. USMLE Step 1 readiness tracker becomes prominent. Why Wrong? explanations begin forming mental models. BKT data is rich enough to show real decay patterns.</p></div>
+  <div class="card"><div class="card-l">M3 — Clerkship</div><div class="card-t">Clinical application</div><p>Practice mode emphasizes Bloom 4-6 (clinical reasoning). Step 2 readiness tracker activates. Self-test mode prominent for shelf exam prep. Mastery view shows clinical consequence ordering — highest-stakes gaps first.</p></div>
+  <div class="card"><div class="card-l">M4 — Advanced</div><div class="card-t">Readiness</div><p>USMLE Step 2 CK coverage tracking dominates. Historical analytics show 4-year mastery arc. Practice mode allows NBME simulation (timed, full-length). Residency application readiness estimate from coverage data.</p></div>
+</div>
+</section>
+
+<!-- II: ONBOARDING -->
+<section id="onboard">
+<div class="sid">II / Student Onboarding</div>
+<h2>From enrollment to first study session — 5 steps, under 8 minutes</h2>
+
+<p>Student onboarding is the opposite of faculty onboarding. Faculty create content; students consume it. The student onboarding goal is: (1) set their USMLE target date so the readiness tracker is calibrated, (2) connect them to their enrolled courses so their queue populates immediately, (3) give them a first taste of the study queue before they can leave. The product should feel like it already knows what they need to study on day one.</p>
+
+<div class="onboard-step">
+  <div class="step-num done">1</div>
+  <div class="step-body">
+    <div class="step-title">Account creation — MSM SSO or magic link</div>
+    <div class="step-desc">MSM email verified via SAML SSO (preferred) or magic link. No password creation — reduces friction. First name, last name, graduating year (M1/M2/M3/M4), and student ID. The graduating year determines which USMLE readiness tracker activates (Step 1 for M1-M2, Step 2 for M3-M4) and which phase of content is shown first.</div>
+  </div>
+</div>
+<div class="onboard-step">
+  <div class="step-num">2</div>
+  <div class="step-body">
+    <div class="step-title">Confirm enrolled courses — auto-populated from SIS integration</div>
+    <div class="step-desc">If SIS (Student Information System) integration is configured, enrolled courses appear automatically. Student confirms: "Is this your current schedule?" One tap to confirm. If SIS isn't integrated: manual course code entry (e.g., MEDI-601). Joining a course immediately gives access to faculty-approved assessment items for that course. The course connection is what populates the study queue and practice bank.</div>
+  </div>
+</div>
+<div class="onboard-step">
+  <div class="step-num">3</div>
+  <div class="step-body">
+    <div class="step-title">Set USMLE target date — calibrates the readiness tracker</div>
+    <div class="step-desc">Calendar picker for expected Step 1 and/or Step 2 exam date. System immediately shows: "Based on your target date, you have 14 months to cover 987 Step 1 topics. At your current course load, your expected coverage by exam day is 68%." This creates urgency and context for the coverage gap view. The target date can be updated at any time in settings.</div>
+  </div>
+</div>
+<div class="onboard-step">
+  <div class="step-num">4</div>
+  <div class="step-body">
+    <div class="step-title">Set daily study goal — drives streak and queue scheduling</div>
+    <div class="step-desc">Three presets: Focused (15 min/day — 5 cards), Balanced (30 min/day — 12 cards), Intensive (45 min/day — 20 cards). Custom option for specific card count. This setting directly controls the BKT queue depth shown daily. Students can change it at any time. The system also learns from actual completion rates over the first two weeks and may suggest adjusting the goal up or down.</div>
+  </div>
+</div>
+<div class="onboard-step">
+  <div class="step-num">5</div>
+  <div class="step-body">
+    <div class="step-title">Do your first 3 cards — immediate engagement before leaving onboarding</div>
+    <div class="step-desc">Three pre-selected cards from the first week of their enrolled course. Short, confidence-appropriate (Bloom 1-2). The goal is to get a successful first session: answer 3 questions, see the feedback, see the mastery bar move. Completion shows: "3 questions answered · 2 correct · First study streak started." This guarantees every student has a non-zero streak from day one. Onboarding completes and lands them on the full Home dashboard.</div>
+  </div>
+</div>
+</section>
+
+<!-- III: HOME -->
+<section id="home">
+<div class="sid">III / Home Dashboard</div>
+<h2>The daily briefing — what to study, what's coming, where you stand</h2>
+
+<p>The student home is not a dashboard in the enterprise sense. It's a morning briefing. The primary question it answers: "What should I do right now?" The secondary question: "Am I on track?" Everything else — exams, streaks, mastery — is context that supports those two questions. The layout is intentionally mobile-first because students study on their phones.</p>
+
+<div class="screen">
+  <div class="screen-bar"><div class="screen-dots"><div class="screen-dot"></div><div class="screen-dot"></div><div class="screen-dot"></div></div><span class="screen-title">home — Marcus Johnson, M2</span></div>
+  <div class="mock-main" style="padding:16px">
+
+    <!-- Greeting + streak row -->
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px">
+      <div>
+        <div style="font-family:'Fraunces',serif;font-size:20px">Good morning, Marcus</div>
+        <div style="font-size:12px;color:#888;margin-top:1px">Tuesday, Feb 4 · M2, Spring Semester</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;color:#ef9f27">11</div>
+        <div style="font-size:10px;color:#aaa;font-family:'JetBrains Mono',monospace">day streak</div>
+      </div>
+    </div>
+
+    <!-- Streak calendar (last 7 days) -->
+    <div style="display:flex;gap:5px;margin-bottom:14px">
+      <div class="streak-day streak-done">W</div>
+      <div class="streak-day streak-done">Th</div>
+      <div class="streak-day streak-done">F</div>
+      <div class="streak-day streak-done">Sa</div>
+      <div class="streak-day streak-done">Su</div>
+      <div class="streak-day streak-done">M</div>
+      <div class="streak-day streak-today">T</div>
+      <div class="streak-day streak-future">W</div>
+      <div class="streak-day streak-future">Th</div>
+    </div>
+
+    <!-- Primary CTA — study queue -->
+    <div style="border:2px solid #ef9f27;padding:14px;border-radius:4px;background:#fff;margin-bottom:14px;cursor:pointer">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#ef9f27">Today's study queue</div>
+          <div style="font-size:16px;font-weight:500;margin-top:2px">12 cards due for review</div>
+          <div style="font-size:12px;color:#888;margin-top:1px">Estimated 22 min · Balanced goal</div>
+        </div>
+        <button class="qa-btn amber" style="font-size:13px;padding:10px 18px;flex-shrink:0">Start now</button>
+      </div>
+      <div style="margin-top:10px;display:flex;gap:4px;flex-wrap:wrap">
+        <span class="pill p-gold">5 Cardiovascular</span>
+        <span class="pill p-b">4 Pharmacology</span>
+        <span class="pill p-v">3 Renal</span>
+        <span class="pill p-gray">All spaced for today by BKT</span>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div>
+        <!-- Upcoming exams -->
+        <div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#999;margin-bottom:8px">Upcoming exams</div>
+        <div style="border:1px solid var(--edge);background:#fff;border-radius:4px;overflow:hidden;margin-bottom:12px">
+          <div style="padding:10px 12px;border-bottom:1px solid var(--edge)">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div>
+                <div style="font-size:12.5px;font-weight:500">MEDI-601 · Cardio Midterm</div>
+                <div style="font-size:11px;color:#888">Friday, Feb 7 · 40 questions · 50 min</div>
+              </div>
+              <span class="pill p-r">3 days</span>
+            </div>
+            <div style="margin-top:8px;background:var(--gray-50);border-radius:3px;padding:8px;font-size:11.5px">
+              <div style="color:#888;margin-bottom:4px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase">Readiness check</div>
+              <div style="display:flex;flex-direction:column;gap:3px">
+                <div style="display:flex;justify-content:space-between"><span>Heart failure pathophysiology</span><span class="pill p-g" style="font-size:8px">Strong</span></div>
+                <div style="display:flex;justify-content:space-between"><span>Diuretic mechanisms</span><span class="pill p-gold" style="font-size:8px">Review</span></div>
+                <div style="display:flex;justify-content:space-between"><span>NYHA classification</span><span class="pill p-r" style="font-size:8px">Weak</span></div>
+              </div>
+              <button class="qa-btn primary" style="width:100%;margin-top:8px;font-size:11px;padding:5px">Study weak topics now</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mastery snapshot -->
+        <div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#999;margin-bottom:8px">Mastery snapshot</div>
+        <div style="border:1px solid var(--edge);background:#fff;border-radius:4px;padding:12px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+            <span style="font-size:12px">84 concepts mastered of 247 seen</span>
+            <span class="pill p-b">34%</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:5px">
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:11px">Cardiovascular</span><span style="font-size:11px;font-family:'JetBrains Mono',monospace">62%</span></div>
+              <div style="height:5px;background:var(--edge);border-radius:3px"><div style="width:62%;height:100%;background:#1d9e75;border-radius:3px"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:11px">Pharmacology</span><span style="font-size:11px;font-family:'JetBrains Mono',monospace">48%</span></div>
+              <div style="height:5px;background:var(--edge);border-radius:3px"><div style="width:48%;height:100%;background:#1d9e75;border-radius:3px"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:11px">Renal</span><span style="font-size:11px;font-family:'JetBrains Mono',monospace;color:#a82828">14%</span></div>
+              <div style="height:5px;background:var(--edge);border-radius:3px"><div style="width:14%;height:100%;background:#a82828;border-radius:3px"></div></div>
+            </div>
+          </div>
+          <a style="font-size:11px;color:var(--b);display:block;margin-top:8px;text-decoration:none">View full mastery map →</a>
+        </div>
+      </div>
+
+      <div>
+        <!-- Recent results -->
+        <div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#999;margin-bottom:8px">Recent activity</div>
+        <div style="border:1px solid var(--edge);background:#fff;border-radius:4px;padding:10px 12px;margin-bottom:12px">
+          <div class="feed-item"><div class="feed-dot" style="background:#1d9e75"></div><div class="feed-body"><div class="feed-text">Completed 12-card queue session · <strong>10/12 correct</strong></div><div class="feed-time">Yesterday · Study queue</div></div></div>
+          <div class="feed-item"><div class="feed-dot" style="background:#185fa5"></div><div class="feed-body"><div class="feed-text">Pharmacology Quiz 1 returned · Score: <strong>91%</strong></div><div class="feed-time">2 days ago · Exam</div></div></div>
+          <div class="feed-item"><div class="feed-dot" style="background:#ef9f27"></div><div class="feed-body"><div class="feed-text">3 new Why Wrong? explanations available for review</div><div class="feed-time">2 days ago · Results</div></div></div>
+          <div class="feed-item"><div class="feed-dot" style="background:#a82828"></div><div class="feed-body"><div class="feed-text">NYHA classification decaying — study soon to avoid forgetting</div><div class="feed-time">3 days ago · Mastery alert</div></div></div>
+        </div>
+
+        <!-- USMLE mini-tracker -->
+        <div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#999;margin-bottom:8px">USMLE Step 1 readiness</div>
+        <div style="border:1px solid var(--edge);background:#fff;border-radius:4px;padding:12px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+            <div>
+              <div style="font-size:18px;font-weight:500">38%</div>
+              <div style="font-size:11px;color:#888">of Step 1 topics assessed</div>
+            </div>
+            <div style="text-align:right">
+              <div style="font-size:11px;color:#888">Target date</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:12px">Jun 2026</div>
+              <div style="font-size:11px;color:#888">16 months away</div>
+            </div>
+          </div>
+          <div style="font-size:11px;color:#888;background:var(--gray-50);padding:8px;border-radius:3px">At your current pace (12 cards/day, 3 sessions/week), projected Step 1 coverage by target date: <strong style="color:var(--ink)">71%</strong></div>
+          <a style="font-size:11px;color:var(--b);display:block;margin-top:8px;text-decoration:none">View full USMLE readiness →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- IV: STUDY QUEUE -->
+<section id="queue">
+<div class="sid">IV / Study Queue</div>
+<h2>BKT-driven spaced retrieval — the right concept at the right time</h2>
+
+<div class="call-gold"><div class="cl">The BKT mastery model</div>
+<p>Bayesian Knowledge Tracing models each concept as a hidden state: either the student "knows" it or "doesn't know" it. After each response, the model updates: a correct answer raises p_mastery, an incorrect answer lowers it, and both correct and incorrect answers are discounted for guessing and slipping probabilities. Critically, even correctly-answered concepts decay over time following a modified Pimsleur curve — concepts answered correctly 3+ times still re-appear, just less frequently. The study queue is the BKT scheduler's output: these are the specific concepts that need review today to maintain mastery above the p_mastery ≥ 0.95 threshold.</p>
+</div>
+
+<div class="screen">
+  <div class="screen-bar"><div class="screen-dots"><div class="screen-dot"></div><div class="screen-dot"></div><div class="screen-dot"></div></div><span class="screen-title">study queue — 12 cards due</span></div>
+  <div class="mock-main" style="padding:16px">
+    <!-- Queue header -->
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div>
+        <div style="font-family:'Fraunces',serif;font-size:20px">Today's queue</div>
+        <div style="font-size:12px;color:#888">12 cards · ~22 min · Sorted by urgency</div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <span class="pill p-gray">3 new · 9 review</span>
+        <button class="qa-btn amber">Start session</button>
+      </div>
+    </div>
+
+    <!-- Queue cards -->
+    <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:14px">
+      <div style="border:1px solid #a82828;padding:10px 12px;border-radius:4px;background:var(--red-50);cursor:pointer">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div>
+            <div style="font-size:12.5px;font-weight:500;color:var(--red-800)">NYHA Heart Failure Classification</div>
+            <div style="font-size:11px;color:#a82828;margin-top:2px">Cardiovascular · Bloom 2 · MEDI-601 Week 4</div>
+          </div>
+          <span class="pill p-r">Decaying · p=0.61</span>
+        </div>
+        <div style="margin-top:6px">
+          <div style="font-size:11px;color:#888">Last seen: 8 days ago · Correct 2/4 times · Decay rate: fast</div>
+          <div style="margin-top:4px">
+            <div class="decay-bar"><div class="decay-fill" style="width:61%;background:#e24b4a"></div></div>
+            <div style="font-size:10px;color:#a82828;font-family:'JetBrains Mono',monospace">p_mastery: 0.61 → needs review</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="border:1px solid #ba7517;padding:10px 12px;border-radius:4px;background:var(--amber-50);cursor:pointer">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div>
+            <div style="font-size:12.5px;font-weight:500;color:var(--amber-800)">Loop diuretic mechanism — thick ascending limb</div>
+            <div style="font-size:11px;color:#ba7517;margin-top:2px">Pharmacology · Bloom 3 · PHRM-701 Week 3</div>
+          </div>
+          <span class="pill p-gold">Review · p=0.74</span>
+        </div>
+        <div style="margin-top:6px">
+          <div class="decay-bar"><div class="decay-fill" style="width:74%;background:#ba7517"></div></div>
+          <div style="font-size:10px;color:#ba7517;font-family:'JetBrains Mono',monospace">p_mastery: 0.74 → below threshold</div>
+        </div>
+      </div>
+
+      <div style="border:1px solid var(--edge);padding:10px 12px;border-radius:4px;background:#fff;cursor:pointer">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div>
+            <div style="font-size:12.5px;font-weight:500">ACE inhibitor adverse effects — dry cough mechanism</div>
+            <div style="font-size:11px;color:#888;margin-top:2px">Pharmacology · Bloom 2 · PHRM-701 Week 3</div>
+          </div>
+          <span class="pill p-b">New</span>
+        </div>
+        <div style="margin-top:6px">
+          <div style="font-size:11px;color:#888">First encounter · No prior exposure</div>
+        </div>
+      </div>
+
+      <div style="border:1px solid var(--edge);padding:10px 12px;border-radius:4px;background:#fff;cursor:pointer;opacity:.7">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div>
+            <div style="font-size:12.5px;font-weight:500">Starling curve — preload vs. contractility</div>
+            <div style="font-size:11px;color:#888;margin-top:2px">Cardiovascular · Bloom 4 · MEDI-601 Week 4</div>
+          </div>
+          <span class="pill p-gray">Scheduled · p=0.88</span>
+        </div>
+      </div>
+
+      <div style="padding:8px 12px;text-align:center;color:#888;font-size:12px;border:1px dashed var(--edge);border-radius:4px">+ 8 more cards in today's queue</div>
+    </div>
+
+    <!-- Active question card (when session is running) -->
+    <div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#999;margin-bottom:8px">Session in progress — card 3 of 12</div>
+    <div style="background:#fff;border:1px solid var(--edge);border-radius:4px;overflow:hidden">
+      <div style="background:var(--gray-50);padding:8px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--edge)">
+        <span class="pill p-b">Cardiovascular</span>
+        <span style="font-size:11px;color:#888">Card 3 of 12 · p_mastery: 0.61</span>
+        <span class="pill p-gold">Bloom 2</span>
+      </div>
+      <div style="padding:14px">
+        <div class="q-stem">A patient with Class III NYHA heart failure presents with dyspnea at rest and bilateral pulmonary rales. Which of the following clinical findings would be most consistent with this NYHA classification?</div>
+        <div class="q-option">A. Dyspnea only with vigorous exertion (climbing stairs)</div>
+        <div class="q-option selected">B. Dyspnea at rest and with minimal exertion</div>
+        <div class="q-option">C. Symptoms only with maximal exertion (competitive sports)</div>
+        <div class="q-option">D. Asymptomatic with normal activity</div>
+        <div class="q-option">E. Orthopnea requiring 3 pillows but no exertional symptoms</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
+          <span style="font-size:11px;color:#aaa">Tap your answer to proceed</span>
+          <button class="qa-btn" style="font-size:11px">Flag for review</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h3>BKT scheduling algorithm — parameters</h3>
+<table>
+<thead><tr><th>Parameter</th><th>Value</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td><code>p_init</code></td><td>0.10</td><td>Prior probability of knowing a concept before any exposure</td></tr>
+<tr><td><code>p_transit</code></td><td>0.20</td><td>Probability of learning a concept from a wrong answer</td></tr>
+<tr><td><code>p_slip</code></td><td>0.10</td><td>Probability of answering incorrectly despite knowing (slip)</td></tr>
+<tr><td><code>p_guess</code></td><td>0.20</td><td>Probability of answering correctly without knowing (guess)</td></tr>
+<tr><td>Mastery threshold</td><td>0.95</td><td>p_mastery ≥ 0.95 = "mastered" (concept exits daily queue)</td></tr>
+<tr><td>Decay model</td><td>Pimsleur-modified exponential</td><td>Even mastered concepts decay — requeue interval: 1d → 3d → 7d → 14d → 30d</td></tr>
+<tr><td>Queue depth</td><td>Based on daily goal setting</td><td>Balanced=12, Focused=5, Intensive=20 (adjustable in settings)</td></tr>
+<tr><td>Clinical ordering</td><td>High-consequence first</td><td>Within same p_mastery tier, topics with high clinical consequence (fatality risk) appear before low-consequence topics</td></tr>
+</tbody>
+</table>
+</section>
+
+<!-- V: PRACTICE -->
+<section id="practice">
+<div class="sid">V / Practice Mode</div>
+<h2>IRT-powered free practice — student-configured, algorithmically selected</h2>
+
+<div class="call-b"><div class="cl">IRT item selection</div>
+<p>Practice mode uses 3-parameter logistic Item Response Theory (3PL-IRT) to select items that match the student's current estimated ability (theta). The system maintains a running theta estimate per USMLE system domain based on all historical responses. Practice items are selected from the pool where difficulty parameter (b) ≈ theta ± 0.5, avoiding questions that are too easy (boring) or too hard (demoralizing). As the session progresses and the student answers correctly or incorrectly, theta updates in real time and the next item is selected accordingly. This is adaptive testing at the practice level — each session is automatically calibrated to challenge the student appropriately.</p>
+</div>
+
+<div class="screen">
+  <div class="screen-bar"><div class="screen-dots"><div class="screen-dot"></div><div class="screen-dot"></div><div class="screen-dot"></div></div><span class="screen-title">practice — configure session</span></div>
+  <div class="mock-main" style="padding:16px">
+    <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:16px">
+      <div>
+        <div style="font-family:'Fraunces',serif;font-size:18px;margin-bottom:4px">Practice configuration</div>
+        <div style="font-size:12px;color:#888;margin-bottom:14px">Build a custom practice session or use Adaptive (recommended)</div>
+
+        <div style="margin-bottom:12px">
+          <div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#999;margin-bottom:6px">Topic filter</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px">
+            <div style="border:1px solid var(--b);padding:7px 10px;border-radius:3px;background:var(--blue-50);font-size:12px;cursor:pointer;color:var(--blue-800)">Cardiovascular ✓</div>
+            <div style="border:1px solid var(--b);padding:7px 10px;border-radius:3px;background:var(--blue-50);font-size:12px;cursor:pointer;color:var(--blue-800)">Pharmacology ✓</div>
+            <div style="border:1px solid var(--edge);padding:7px 10px;border-radius:3px;background:#fff;font-size:12px;cursor:pointer;color:#888">Renal</div>
+            <div style="border:1px solid var(--edge);padding:7px 10px;border-radius:3px;background:#fff;font-size:12px;cursor:pointer;color:#888">Pulmonary</div>
+            <div style="border:1px solid var(--edge);padding:7px 10px;border-radius:3px;background:#fff;font-size:12px;cursor:pointer;color:#888">Neurology</div>
+            <div style="border:1px solid var(--edge);padding:7px 10px;border-radius:3px;background:#fff;font-size:12px;cursor:pointer;color:#888">Endocrine</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+          <div>
+            <div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#999;margin-bottom:6px">Question count</div>
+            <select style="width:100%;padding:7px;border:1px solid var(--edge);border-radius:3px;font-size:12px">
+              <option>10 questions</option>
+              <option>20 questions</option>
+              <option selected>30 questions</option>
+              <option>40 questions</option>
+            </select>
+          </div>
+          <div>
+            <div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#999;margin-bottom:6px">Bloom level</div>
+            <select style="width:100%;padding:7px;border:1px solid var(--edge);border-radius:3px;font-size:12px">
+              <option>Mixed (adaptive)</option>
+              <option>Recall (1-2)</option>
+              <option selected>Apply/Analyze (3-4)</option>
+              <option>Evaluate/Create (5-6)</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="margin-bottom:12px">
+          <div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#999;margin-bottom:6px">Mode</div>
+          <div style="display:flex;gap:8px">
+            <div style="border:2px solid var(--b);padding:8px 12px;border-radius:3px;background:var(--blue-50);font-size:12px;cursor:pointer;color:var(--blue-800)">Tutor mode (immediate feedback)</div>
+            <div style="border:1px solid var(--edge);padding:8px 12px;border-radius:3px;background:#fff;font-size:12px;cursor:pointer;color:#888">Exam mode (end feedback)</div>
+          </div>
+        </div>
+
+        <button class="qa-btn primary" style="width:100%;padding:12px;font-size:13px;justify-content:center">Start 30-question practice session</button>
+        <button class="qa-btn amber" style="width:100%;padding:10px;font-size:12px;justify-content:center;margin-top:6px">Adaptive practice — let IRT choose everything (recommended)</button>
+      </div>
+
+      <div>
+        <div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#999;margin-bottom:8px">Your ability profile (theta)</div>
+        <div style="border:1px solid var(--edge);background:#fff;border-radius:4px;padding:12px;margin-bottom:10px">
+          <div style="font-size:11px;color:#888;margin-bottom:8px">IRT theta estimate per system — based on all historical responses</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <span style="font-size:12px">Cardiovascular</span>
+              <div style="display:flex;align-items:center;gap:6px">
+                <div style="width:80px;height:5px;background:var(--edge);border-radius:3px"><div style="width:72%;height:100%;background:#1d9e75;border-radius:3px"></div></div>
+                <span style="font-size:11px;font-family:'JetBrains Mono',monospace">θ +0.8</span>
+              </div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <span style="font-size:12px">Pharmacology</span>
+              <div style="display:flex;align-items:center;gap:6px">
+                <div style="width:80px;height:5px;background:var(--edge);border-radius:3px"><div style="width:60%;height:100%;background:#1d9e75;border-radius:3px"></div></div>
+                <span style="font-size:11px;font-family:'JetBrains Mono',monospace">θ +0.4</span>
+              </div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <span style="font-size:12px">Renal</span>
+              <div style="display:flex;align-items:center;gap:6px">
+                <div style="width:80px;height:5px;background:var(--edge);border-radius:3px"><div style="width:20%;height:100%;background:#a82828;border-radius:3px"></div></div>
+                <span style="font-size:11px;font-family:'JetBrains Mono',monospace;color:#a82828">θ −0.6</span>
+              </div>
+            </div>
+          </div>
+          <div style="font-size:11px;color:#888;margin-top:8px;padding-top:8px;border-top:1px solid var(--edge)">IRT selects items where difficulty ≈ your theta ±0.5 — challenging but achievable</div>
+        </div>
+
+        <div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#999;margin-bottom:8px">Item pool available</div>
+        <div style="border:1px solid var(--edge);background:#fff;border-radius:4px;padding:12px">
+          <div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;border-bottom:1px solid var(--gray-50)"><span>Cardiovascular</span><span class="mono" style="font-size:11px">87 items</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;border-bottom:1px solid var(--gray-50)"><span>Pharmacology</span><span class="mono" style="font-size:11px">64 items</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0"><span>Total (all systems)</span><span class="mono" style="font-size:11px">312 items</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- VI: EXAMS -->
+<section id="exams">
+<div class="sid">VI / Exam Delivery</div>
+<h2>Timed, scrambled, auto-saved — the full exam experience</h2>
+
+<div class="call-r"><div class="cl">C01 — Exam auto-save is a production requirement</div>
+<p>Every answer selection is auto-saved immediately to <code>session_answers</code> in Supabase. If a student loses connectivity, closes the browser, or their device crashes mid-exam, every answer they selected persists. When they re-open the exam, they see exactly the state they left. There is no "submit" behavior where in-progress answers can be lost. The final submission converts <code>session_answers</code> into an immutable <code>exam_attempts</code> record via an atomic Postgres RPC call.</p>
+</div>
+
+<div class="screen">
+  <div class="screen-bar"><div class="screen-dots"><div class="screen-dot"></div><div class="screen-dot"></div><div class="screen-dot"></div></div><span class="screen-title">MEDI-601 · Cardio Midterm · Question 12 of 40</span></div>
+  <div style="background:#faf8f4">
+    <!-- Exam header bar -->
+    <div style="background:var(--ink);padding:10px 20px;display:flex;justify-content:space-between;align-items:center">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#555">MEDI-601 · Cardio Midterm</div>
+      <div style="display:flex;align-items:center;gap:16px">
+        <div style="text-align:center">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:600;color:#ef9f27">38:14</div>
+          <div style="font-size:9px;color:#555;font-family:'JetBrains Mono',monospace">remaining</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:14px;color:#ede8e0">12 / 40</div>
+          <div style="font-size:9px;color:#555;font-family:'JetBrains Mono',monospace">question</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button style="padding:5px 10px;background:transparent;border:1px solid #333;color:#888;font-size:11px;border-radius:2px;cursor:pointer">Flag</button>
+        <button style="padding:5px 10px;background:transparent;border:1px solid #333;color:#888;font-size:11px;border-radius:2px;cursor:pointer">Calculator</button>
+        <button style="padding:5px 10px;background:#a82828;border:none;color:#fff;font-size:11px;border-radius:2px;cursor:pointer">Submit exam</button>
+      </div>
+    </div>
+
+    <!-- Progress bar -->
+    <div style="height:3px;background:#1a1a1a"><div style="width:30%;height:100%;background:#5dcaa5"></div></div>
+
+    <!-- Main exam area -->
+    <div style="display:grid;grid-template-columns:1fr 200px;min-height:400px">
+      <div style="padding:20px;border-right:1px solid #1a1a1a">
+        <div class="q-stem">A 72-year-old woman with a history of hypertension, type 2 diabetes, and preserved ejection fraction heart failure presents to clinic with worsening dyspnea over 2 weeks. Current medications include lisinopril 10 mg daily and amlodipine 5 mg daily. Her examination reveals elevated JVP, bilateral crackles at lung bases, and 2+ pitting edema to the knees. ECG shows sinus rhythm. Chest X-ray shows pulmonary vascular congestion. Which of the following medications would provide the greatest immediate symptomatic benefit?</div>
+        <div class="q-option">A. Increase lisinopril to 20 mg daily</div>
+        <div class="q-option">B. Add carvedilol 3.125 mg twice daily</div>
+        <div class="q-option q-option" style="border-color:var(--b);background:var(--blue-50)">C. Add furosemide 40 mg daily <span class="pill p-b" style="margin-left:6px;font-size:8px">Selected · Auto-saved</span></div>
+        <div class="q-option">D. Add spironolactone 25 mg daily</div>
+        <div class="q-option">E. Add digoxin 0.125 mg daily</div>
+        <div style="margin-top:12px;display:flex;gap:8px">
+          <button class="qa-btn" style="font-size:11px">← Previous</button>
+          <button class="qa-btn primary" style="font-size:11px">Next →</button>
+        </div>
+      </div>
+
+      <!-- Navigation panel -->
+      <div style="background:var(--ink);padding:12px">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#333;margin-bottom:8px">Question navigator</div>
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:3px">
+          <div style="padding:5px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:10px;background:#1d9e75;color:#fff;border-radius:2px;cursor:pointer">1</div>
+          <div style="padding:5px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:10px;background:#1d9e75;color:#fff;border-radius:2px;cursor:pointer">2</div>
+          <div style="padding:5px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:10px;background:#1d9e75;color:#fff;border-radius:2px;cursor:pointer">3</div>
+          <div style="padding:5px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:10px;background:#1d9e75;color:#fff;border-radius:2px;cursor:pointer">4</div>
+          <div style="padding:5px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:10px;background:#1d9e75;color:#fff;border-radius:2px;cursor:pointer">5</div>
+          <div style="padding:5px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:10px;background:#1d9e75;color:#fff;border-radius:2px;cursor:pointer">6</div>
+          <div style="padding:5px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:10px;background:#185fa5;color:#fff;border-radius:2px;cursor:pointer">7</div>
+          <div style="padding:5px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:10px;background:#1d9e75;color:#fff;border-radius:2px;cursor:pointer">8</div>
+          <div style="padding:5px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:10px;background:#ef9f27;color:#fff;border-radius:2px;cursor:pointer;position:relative">9<div style="position:absolute;top:-2px;right:-2px;width:6px;height:6px;border-radius:50%;background:#fff"></div></div>
+          <div style="padding:5px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:10px;background:#1d9e75;color:#fff;border-radius:2px;cursor:pointer">10</div>
+          <div style="padding:5px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:10px;background:#1d9e75;color:#fff;border-radius:2px;cursor:pointer">11</div>
+          <div style="padding:5px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:10px;background:#ef9f27;color:#fff;border-radius:2px;cursor:pointer;font-weight:600">12</div>
+          <div style="padding:5px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:10px;background:#333;color:#888;border-radius:2px;cursor:pointer">13</div>
+          <div style="padding:5px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:10px;background:#333;color:#888;border-radius:2px;cursor:pointer">14</div>
+          <div style="padding:5px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:10px;background:#333;color:#888;border-radius:2px;cursor:pointer">15</div>
+        </div>
+        <div style="margin-top:10px;display:flex;flex-direction:column;gap:3px">
+          <div style="display:flex;align-items:center;gap:5px"><div style="width:8px;height:8px;border-radius:2px;background:#1d9e75;flex-shrink:0"></div><span style="font-size:10px;color:#555">Answered (11)</span></div>
+          <div style="display:flex;align-items:center;gap:5px"><div style="width:8px;height:8px;border-radius:2px;background:#ef9f27;flex-shrink:0"></div><span style="font-size:10px;color:#555">Current / flagged</span></div>
+          <div style="display:flex;align-items:center;gap:5px"><div style="width:8px;height:8px;border-radius:2px;background:#333;flex-shrink:0"></div><span style="font-size:10px;color:#555">Not yet visited (29)</span></div>
+        </div>
+        <div style="margin-top:10px;padding-top:10px;border-top:1px solid #1a1a1a;font-size:10px;color:#444;font-family:'JetBrains Mono',monospace">Auto-saved 2s ago</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h3>Exam scrambling — per-student item and option order (C02)</h3>
+<p>Each student receives items in a unique randomized order derived from their <code>student_id + exam_id + item_order_seed</code>. Within each item, the A-E options are also shuffled per student using a separate <code>option_shuffle_seed</code>. This prevents answer sharing between students taking the same exam simultaneously. The scrambling is deterministic — if a student loses connectivity and re-enters the exam, they see the same order they started with. Faculty see the canonical item format when reviewing; scrambling is transparent to the faculty view.</p>
+</section>
+
+<!-- VII: RESULTS + WHY WRONG -->
+<section id="results">
+<div class="sid">VII / Results + Why Wrong?</div>
+<h2>The most important moment in learning — understanding what you missed and why</h2>
+
+<div class="call-v"><div class="cl">Why Wrong? — the AI explanation system</div>
+<p>Most assessment tools tell you what the right answer was. Why Wrong? tells you <em>why your reasoning was wrong</em> — specifically, which misconception you most likely held that caused you to choose the incorrect option. This is powered by the misconception graph in the knowledge graph: each wrong answer option is connected to one or more misconception categories (via Toulmin warrant-claim chains), and after submission, Haiku generates a personalized explanation that names the misconception, explains why it's wrong, and gives the correct mental model. This is the difference between assessment and learning.</p>
+</div>
+
+<div class="screen">
+  <div class="screen-bar"><div class="screen-dots"><div class="screen-dot"></div><div class="screen-dot"></div><div class="screen-dot"></div></div><span class="screen-title">results — MEDI-601 Cardio Midterm</span></div>
+  <div class="mock-main" style="padding:16px">
+    <!-- Score summary -->
+    <div style="border:1px solid var(--edge);background:#fff;border-radius:4px;padding:16px;margin-bottom:14px">
+      <div style="display:grid;grid-template-columns:1fr 3fr;gap:16px;align-items:center">
+        <div style="text-align:center">
+          <div style="font-family:'Fraunces',serif;font-size:56px;font-weight:300;line-height:1;color:#1d9e75">76%</div>
+          <div style="font-size:12px;color:#888;margin-top:2px">30 / 40 correct</div>
+          <div style="margin-top:8px"><span class="pill p-g">Above class avg (71%)</span></div>
+        </div>
+        <div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
+            <div class="stat-card" style="padding:10px 12px"><div class="label">Correct</div><div class="value" style="font-size:22px;color:#1d9e75">30</div></div>
+            <div class="stat-card" style="padding:10px 12px"><div class="label">Incorrect</div><div class="value" style="font-size:22px;color:#a82828">10</div></div>
+            <div class="stat-card" style="padding:10px 12px"><div class="label">Time used</div><div class="value" style="font-size:22px">43m</div></div>
+          </div>
+          <div style="display:flex;gap:4px;flex-wrap:wrap">
+            <span class="pill p-g">Cardiovascular: 82%</span>
+            <span class="pill p-gold">Pharmacology: 70%</span>
+            <span class="pill p-r">Diuretics: 50%</span>
+          </div>
+          <div style="margin-top:10px">
+            <button class="qa-btn primary">Review wrong answers</button>
+            <button class="qa-btn" style="margin-left:6px">Practice weak topics</button>
+            <button class="qa-btn" style="margin-left:6px">How this affects mastery →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wrong answer review with Why Wrong -->
+    <div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#999;margin-bottom:10px">Wrong answers — Why Wrong? explanations</div>
+
+    <!-- Item 7 — Wrong answer -->
+    <div style="border:1px solid var(--edge);background:#fff;border-radius:4px;margin-bottom:10px;overflow:hidden">
+      <div style="background:var(--red-50);padding:10px 14px;border-bottom:1px solid #f09595;display:flex;justify-content:space-between">
+        <span style="font-size:12px;font-weight:500;color:#791f1f">Q7 — Incorrect</span>
+        <div><span class="pill p-b">Pharmacology</span> <span class="pill p-r">Bloom 3</span></div>
+      </div>
+      <div style="padding:14px">
+        <div style="font-size:13px;color:#444;line-height:1.7;margin-bottom:12px">A patient with HFrEF (EF 25%) develops significant bradycardia after starting carvedilol. The attending decides to switch to a more cardioselective beta-blocker. Which agent would be the most appropriate replacement?</div>
+        <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:12px">
+          <div class="q-option wrong" style="border-color:var(--r)">B. Atenolol <span class="pill p-r" style="margin-left:6px">Your answer</span></div>
+          <div class="q-option correct" style="border-color:var(--g)">C. Metoprolol succinate <span class="pill p-g" style="margin-left:6px">Correct answer</span></div>
+        </div>
+        <div class="why-wrong">
+          <div class="ww-head">Why Wrong? — AI explanation</div>
+          <p>You chose atenolol, which is indeed highly cardioselective (β1 > β2). The reasoning was likely: "cardioselective → atenolol." However, this misses a critical distinction for heart failure: atenolol has no evidence of mortality benefit in HFrEF. The three beta-blockers proven to reduce mortality in HFrEF are carvedilol (non-selective), metoprolol succinate (β1-selective), and bisoprolol (β1-selective). Atenolol is used in hypertension and stable angina but is not approved for HFrEF management. The misconception here is conflating "cardioselective" with "evidence-based for HFrEF" — these are different properties. Next time: for HFrEF, ask "which beta-blocker has RCT mortality data?" not just "which is most cardioselective?"</p>
+        </div>
+        <div style="margin-top:10px;display:flex;gap:6px">
+          <button class="qa-btn" style="font-size:11px">Add to study queue</button>
+          <button class="qa-btn" style="font-size:11px">Practice similar questions</button>
+          <button class="qa-btn" style="font-size:11px">View Toulmin evidence chain</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Item 9 — Another wrong answer -->
+    <div style="border:1px solid var(--edge);background:#fff;border-radius:4px;margin-bottom:10px;overflow:hidden">
+      <div style="background:var(--red-50);padding:10px 14px;border-bottom:1px solid #f09595;display:flex;justify-content:space-between">
+        <span style="font-size:12px;font-weight:500;color:#791f1f">Q9 — Incorrect (flagged)</span>
+        <div><span class="pill p-b">Cardiovascular</span> <span class="pill p-v">Bloom 4</span></div>
+      </div>
+      <div style="padding:14px">
+        <div style="font-size:13px;color:#444;line-height:1.7;margin-bottom:12px">A 58-year-old man with HFpEF (EF 60%) presents with dyspnea on exertion. His BNP is 340 pg/mL. Which of the following best explains why ACE inhibitors have NOT demonstrated the same mortality benefit in HFpEF as in HFrEF?</div>
+        <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:12px">
+          <div class="q-option wrong" style="border-color:var(--r)">A. Afterload reduction is not beneficial in preserved EF <span class="pill p-r" style="margin-left:6px">Your answer</span></div>
+          <div class="q-option correct" style="border-color:var(--g)">D. The pathophysiology of HFpEF is heterogeneous and less dependent on neurohormonal activation <span class="pill p-g" style="margin-left:6px">Correct</span></div>
+        </div>
+        <div class="why-wrong">
+          <div class="ww-head">Why Wrong? — AI explanation</div>
+          <p>Your answer reflects a partially correct but incomplete mental model. Afterload reduction is indeed beneficial in HFpEF — it reduces pulmonary congestion and improves exercise tolerance. The actual reason ACE inhibitors lack mortality evidence in HFpEF is more fundamental: HFpEF is not a single disease but a heterogeneous syndrome driven by multiple mechanisms (inflammation, fibrosis, microvascular dysfunction, metabolic syndrome effects). Unlike HFrEF where RAAS overactivation is a dominant pathophysiologic driver, HFpEF doesn't have one central mechanism to target. Large trials (CHARM-Preserved, I-PRESERVE) failed to show benefit precisely because the patient population was mechanistically diverse. The clinical lesson: absence of evidence ≠ evidence of harm; in HFpEF, current treatment focuses on symptom management and comorbidity treatment.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- VIII: MASTERY -->
+<section id="mastery">
+<div class="sid">VIII / Mastery View</div>
+<h2>The full picture of what you know, what's decaying, and what's at clinical stake</h2>
+
+<div class="screen">
+  <div class="screen-bar"><div class="screen-dots"><div class="screen-dot"></div><div class="screen-dot"></div><div class="screen-dot"></div></div><span class="screen-title">mastery — Marcus Johnson · 247 concepts seen</span></div>
+  <div class="mock-main" style="padding:16px">
+    <div class="tab-bar" style="margin-bottom:14px;border-radius:4px 4px 0 0">
+      <div class="tab active">System view</div>
+      <div class="tab">Decaying concepts</div>
+      <div class="tab">Clinical consequence</div>
+      <div class="tab">All concepts</div>
+    </div>
+
+    <!-- System view grid -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">
+      <div class="stat-card"><div class="label">Mastered (p≥0.95)</div><div class="value" style="color:#1d9e75">84</div><div class="sub">34% of seen concepts</div></div>
+      <div class="stat-card"><div class="label">Learning (0.7–0.95)</div><div class="value" style="color:#ba7517">94</div><div class="sub">38% of seen concepts</div></div>
+      <div class="stat-card"><div class="label">Struggling (&lt;0.7)</div><div class="value" style="color:#a82828">69</div><div class="sub">28% of seen concepts</div></div>
+      <div class="stat-card"><div class="label">Decaying now</div><div class="value" style="color:#ef9f27">23</div><div class="sub">In queue to review</div></div>
+    </div>
+
+    <!-- BKT heatmap by concept within systems -->
+    <div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#999;margin-bottom:8px">Cardiovascular — 52 concepts · click any concept for details</div>
+    <div style="display:grid;grid-template-columns:repeat(9,1fr);gap:3px;margin-bottom:14px">
+      <div class="bkt-cell bkt-4">HFrEF<br>0.97</div>
+      <div class="bkt-cell bkt-4">ACE-I<br>0.96</div>
+      <div class="bkt-cell bkt-3">HFpEF<br>0.88</div>
+      <div class="bkt-cell bkt-2">NYHA<br>0.61</div>
+      <div class="bkt-cell bkt-3">BNP<br>0.84</div>
+      <div class="bkt-cell bkt-4">EF<br>0.97</div>
+      <div class="bkt-cell bkt-3">Starling<br>0.82</div>
+      <div class="bkt-cell bkt-1">RAAS<br>0.48</div>
+      <div class="bkt-cell bkt-4">Furose-<br>mide 0.95</div>
+      <div class="bkt-cell bkt-3">Cardio-<br>megaly 0.79</div>
+      <div class="bkt-cell bkt-2">Carvedi-<br>lol 0.68</div>
+      <div class="bkt-cell bkt-4">Bisoprolol<br>0.96</div>
+      <div class="bkt-cell bkt-3">JVP<br>0.81</div>
+      <div class="bkt-cell bkt-0">GDMT<br>0.32</div>
+      <div class="bkt-cell bkt-4">Diuresis<br>0.95</div>
+      <div class="bkt-cell bkt-1">S3 gallop<br>0.44</div>
+      <div class="bkt-cell bkt-2">Pulm<br>edema 0.72</div>
+      <div class="bkt-cell bkt-4">Orthop-<br>nea 0.95</div>
+    </div>
+
+    <div style="display:flex;gap:8px;margin-bottom:14px;align-items:center;flex-wrap:wrap">
+      <span style="font-size:11px;color:#888">Legend:</span>
+      <span style="display:inline-flex;align-items:center;gap:5px"><div style="width:14px;height:14px;background:#fcebeb;border-radius:2px"></div><span style="font-size:11px">Struggling (&lt;0.5)</span></span>
+      <span style="display:inline-flex;align-items:center;gap:5px"><div style="width:14px;height:14px;background:#faeeda;border-radius:2px"></div><span style="font-size:11px">Building (0.5–0.7)</span></span>
+      <span style="display:inline-flex;align-items:center;gap:5px"><div style="width:14px;height:14px;background:#fdf7e0;border-radius:2px"></div><span style="font-size:11px">Learning (0.7–0.85)</span></span>
+      <span style="display:inline-flex;align-items:center;gap:5px"><div style="width:14px;height:14px;background:#eaf3de;border-radius:2px"></div><span style="font-size:11px">Strong (0.85–0.95)</span></span>
+      <span style="display:inline-flex;align-items:center;gap:5px"><div style="width:14px;height:14px;background:#1d9e75;border-radius:2px"></div><span style="font-size:11px">Mastered (≥0.95)</span></span>
+    </div>
+
+    <!-- Decaying concepts panel -->
+    <div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#999;margin-bottom:8px">Concepts decaying fastest — review today to prevent forgetting</div>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="border:1px solid var(--red-50);padding:10px 14px;border-radius:4px;background:var(--red-50);display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-size:12.5px;font-weight:500;color:#791f1f">RAAS activation in HFrEF</div>
+          <div style="font-size:11px;color:#a82828">Was at p=0.88 on Jan 27 · Now p=0.48 · Decayed in 8 days</div>
+          <div style="margin-top:5px"><div class="decay-bar" style="width:160px"><div class="decay-fill" style="width:48%;background:#e24b4a"></div></div></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:5px;align-items:flex-end">
+          <span class="pill p-r">High clinical risk</span>
+          <button class="qa-btn amber" style="font-size:11px;padding:4px 10px">Review now</button>
+        </div>
+      </div>
+      <div style="border:1px solid var(--amber-50);padding:10px 14px;border-radius:4px;background:var(--amber-50);display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-size:12.5px;font-weight:500;color:#633806">NYHA classification criteria</div>
+          <div style="font-size:11px;color:#ba7517">Was at p=0.77 on Jan 29 · Now p=0.61 · Decaying in 6 days</div>
+          <div style="margin-top:5px"><div class="decay-bar" style="width:160px"><div class="decay-fill" style="width:61%;background:#ba7517"></div></div></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:5px;align-items:flex-end">
+          <span class="pill p-gold">Exam in 3 days</span>
+          <button class="qa-btn" style="font-size:11px;padding:4px 10px">Add to queue</button>
+        </div>
+      </div>
+    </div>
+
+    <h4 style="margin-top:18px;margin-bottom:6px">Clinical consequence ordering</h4>
+    <p style="font-size:12.5px;margin-bottom:10px">When multiple concepts are at the same mastery level, the queue prioritizes by clinical consequence — the real-world severity of getting this concept wrong. Concepts in the "immediately life-threatening" tier appear in the queue before concepts in the "benign/supportive" tier, even if p_mastery is identical.</p>
+    <table>
+      <thead><tr><th>Tier</th><th>Description</th><th>Example concepts</th><th>Queue priority modifier</th></tr></thead>
+      <tbody>
+        <tr><td><span class="pill p-r">Tier 1</span></td><td>Immediately life-threatening if missed</td><td>STEMI recognition, PE treatment, sepsis protocols</td><td>+3 priority points</td></tr>
+        <tr><td><span class="pill p-gold">Tier 2</span></td><td>Significant morbidity if missed</td><td>HFrEF GDMT, medication dosing, contraindications</td><td>+2 priority points</td></tr>
+        <tr><td><span class="pill p-b">Tier 3</span></td><td>Important but manageable if missed</td><td>Classification systems, grading scales</td><td>+1 priority point</td></tr>
+        <tr><td><span class="pill p-gray">Tier 4</span></td><td>Diagnostic/supportive knowledge</td><td>Eponym authors, historical context</td><td>No modifier</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</section>
+
+<!-- IX: USMLE READINESS -->
+<section id="usmle">
+<div class="sid">IX / USMLE Readiness Tracker</div>
+<h2>Step 1 and Step 2 coverage — built from actual question responses, not self-report</h2>
+
+<div class="call-g"><div class="cl">Coverage is earned, not assigned</div>
+<p>The USMLE readiness tracker does not show coverage based on which lectures a student attended or which courses they're enrolled in. Coverage is earned only through answering questions — for each USMLE topic, coverage is granted when a student has answered at least one question that maps to that topic. This distinction matters: a student can sit through a Heart Failure lecture without actually knowing anything about Heart Failure. The tracker shows what they've demonstrated via responses, not what they've been exposed to. This is a fundamentally more honest readiness measure than lecture attendance tracking.</p>
+</div>
+
+<div class="screen">
+  <div class="screen-bar"><div class="screen-dots"><div class="screen-dot"></div><div class="screen-dot"></div><div class="screen-dot"></div></div><span class="screen-title">USMLE readiness — Step 1 · Marcus Johnson · M2</span></div>
+  <div class="mock-main" style="padding:16px">
+    <div class="tab-bar" style="margin-bottom:14px">
+      <div class="tab active">Step 1</div>
+      <div class="tab">Step 2 CK</div>
+    </div>
+
+    <!-- Overall -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:14px">
+      <div class="stat-card"><div class="label">Overall coverage</div><div class="value">38%</div><div class="sub">375 / 987 topics</div></div>
+      <div class="stat-card"><div class="label">Questions answered</div><div class="value">487</div><div class="sub">Exam + self-test</div></div>
+      <div class="stat-card"><div class="label">Target date</div><div class="value">Jun '26</div><div class="sub">16 months away</div></div>
+      <div class="stat-card"><div class="label">Pace needed</div><div class="value">45</div><div class="sub">New topics/week to hit 90%</div></div>
+    </div>
+
+    <!-- System by system breakdown -->
+    <div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#999;margin-bottom:8px">Coverage by Step 1 organ system</div>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="border:1px solid var(--edge);background:#fff;padding:10px 14px;border-radius:4px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <span style="font-size:13px;font-weight:500">Cardiovascular</span>
+          <div style="display:flex;gap:6px;align-items:center">
+            <span class="pill p-g">88 topics covered</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#1d9e75">87%</span>
+          </div>
+        </div>
+        <div style="height:8px;background:var(--edge);border-radius:4px;overflow:hidden"><div style="width:87%;height:100%;background:#1d9e75;border-radius:4px"></div></div>
+        <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:6px">
+          <span style="font-size:11px;color:#888">87 qs answered · avg performance 81% · 12 topics not yet tested</span>
+        </div>
+      </div>
+      <div style="border:1px solid var(--edge);background:#fff;padding:10px 14px;border-radius:4px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <span style="font-size:13px;font-weight:500">Pharmacology</span>
+          <div style="display:flex;gap:6px;align-items:center">
+            <span class="pill p-g">72 topics covered</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#1d9e75">73%</span>
+          </div>
+        </div>
+        <div style="height:8px;background:var(--edge);border-radius:4px;overflow:hidden"><div style="width:73%;height:100%;background:#1d9e75;border-radius:4px"></div></div>
+      </div>
+      <div style="border:1px solid var(--amber-50);background:var(--amber-50);padding:10px 14px;border-radius:4px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <span style="font-size:13px;font-weight:500;color:var(--amber-800)">Renal</span>
+          <div style="display:flex;gap:6px;align-items:center">
+            <span class="pill p-gold">18 topics covered</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#ba7517">24%</span>
+            <span class="pill p-r">Gap</span>
+          </div>
+        </div>
+        <div style="height:8px;background:rgba(0,0,0,.1);border-radius:4px;overflow:hidden"><div style="width:24%;height:100%;background:#ba7517;border-radius:4px"></div></div>
+        <div style="margin-top:6px;display:flex;gap:6px;align-items:center">
+          <span style="font-size:11px;color:#ba7517">57 topics not yet tested · At current pace, Renal will be 31% by exam day</span>
+          <button class="qa-btn" style="font-size:10px;padding:3px 8px;margin-left:auto">Practice Renal now</button>
+        </div>
+      </div>
+      <div style="border:1px solid var(--red-50);background:var(--red-50);padding:10px 14px;border-radius:4px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <span style="font-size:13px;font-weight:500;color:#791f1f">Neurology</span>
+          <div style="display:flex;gap:6px;align-items:center">
+            <span class="pill p-r">4 topics covered</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#a82828">5%</span>
+            <span class="pill p-r">Critical gap</span>
+          </div>
+        </div>
+        <div style="height:8px;background:rgba(0,0,0,.1);border-radius:4px;overflow:hidden"><div style="width:5%;height:100%;background:#a82828;border-radius:4px"></div></div>
+        <div style="margin-top:6px;font-size:11px;color:#a82828">Neurology not yet offered in your current courses. Ask your advisor about adding Neurology content.</div>
+      </div>
+    </div>
+
+    <!-- Projection -->
+    <div style="margin-top:14px;border:1px solid var(--edge);background:#fff;padding:14px;border-radius:4px">
+      <div style="font-size:12.5px;font-weight:500;margin-bottom:8px">Readiness projection</div>
+      <div style="font-size:12px;color:#888;margin-bottom:10px">Based on your current pace of 14 new Step 1 topics/week from question responses:</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+        <div style="text-align:center;padding:10px;background:var(--gray-50);border-radius:3px"><div style="font-size:18px;font-weight:500">38%</div><div style="font-size:11px;color:#888">Today</div></div>
+        <div style="text-align:center;padding:10px;background:var(--gray-50);border-radius:3px"><div style="font-size:18px;font-weight:500">52%</div><div style="font-size:11px;color:#888">+6 months</div></div>
+        <div style="text-align:center;padding:10px;background:var(--gray-50);border-radius:3px"><div style="font-size:18px;font-weight:500">63%</div><div style="font-size:11px;color:#888">+12 months</div></div>
+        <div style="text-align:center;padding:10px;background:var(--amber-50);border-radius:3px"><div style="font-size:18px;font-weight:500;color:#ba7517">71%</div><div style="font-size:11px;color:#ba7517">Exam day<br>(Jun '26)</div></div>
+      </div>
+      <div style="margin-top:10px;padding:10px;background:var(--amber-50);border-radius:3px;font-size:12px;color:#633806">To reach 90% by exam day, you'd need to answer ~45 new topics/week — roughly double your current pace. Consider increasing your daily study goal or adding practice sessions on uncovered systems.</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- X: HISTORY -->
+<section id="history">
+<div class="sid">X / History</div>
+<h2>Every session, every attempt — the full performance record</h2>
+
+<div class="screen">
+  <div class="screen-bar"><div class="screen-dots"><div class="screen-dot"></div><div class="screen-dot"></div><div class="screen-dot"></div></div><span class="screen-title">history — all sessions</span></div>
+  <div class="mock-main" style="padding:16px">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">
+      <div class="stat-card"><div class="label">Total sessions</div><div class="value">67</div><div class="sub">Since Jan 2025</div></div>
+      <div class="stat-card"><div class="label">Questions answered</div><div class="value">1,204</div><div class="sub">Exam + practice + queue</div></div>
+      <div class="stat-card"><div class="label">Overall accuracy</div><div class="value">74%</div><div class="sub">All time</div></div>
+      <div class="stat-card"><div class="label">Study hours</div><div class="value">42h</div><div class="sub">Estimated from sessions</div></div>
+    </div>
+
+    <div class="tab-bar" style="margin-bottom:12px">
+      <div class="tab active">All sessions</div>
+      <div class="tab">Exams only</div>
+      <div class="tab">Practice only</div>
+      <div class="tab">Study queue</div>
+    </div>
+
+    <table>
+      <thead><tr><th>Session</th><th>Type</th><th>Topics</th><th>Questions</th><th>Score / Accuracy</th><th>Date</th><th></th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>MEDI-601 Cardio Midterm</strong></td>
+          <td><span class="pill p-b">Exam</span></td>
+          <td>Cardiovascular, Pharm</td>
+          <td>40</td>
+          <td><span class="pill p-g">76% (30/40)</span></td>
+          <td class="mono" style="font-size:11px">Feb 7</td>
+          <td><a style="font-size:11px;color:var(--b)">Review</a></td>
+        </tr>
+        <tr>
+          <td><strong>Daily queue — 12 cards</strong></td>
+          <td><span class="pill p-gold">Queue</span></td>
+          <td>Mixed (BKT-selected)</td>
+          <td>12</td>
+          <td><span class="pill p-g">83% (10/12)</span></td>
+          <td class="mono" style="font-size:11px">Feb 3</td>
+          <td><a style="font-size:11px;color:var(--b)">Review</a></td>
+        </tr>
+        <tr>
+          <td><strong>Pharmacology Quiz 1</strong></td>
+          <td><span class="pill p-b">Exam</span></td>
+          <td>Pharmacology</td>
+          <td>20</td>
+          <td><span class="pill p-g">91% (18/20)</span></td>
+          <td class="mono" style="font-size:11px">Jan 31</td>
+          <td><a style="font-size:11px;color:var(--b)">Review</a></td>
+        </tr>
+        <tr>
+          <td><strong>Adaptive practice — Cardiovascular</strong></td>
+          <td><span class="pill p-v">Practice</span></td>
+          <td>Cardiovascular</td>
+          <td>30</td>
+          <td><span class="pill p-g">80% (24/30)</span></td>
+          <td class="mono" style="font-size:11px">Jan 29</td>
+          <td><a style="font-size:11px;color:var(--b)">Review</a></td>
+        </tr>
+        <tr>
+          <td><strong>Daily queue — 8 cards</strong></td>
+          <td><span class="pill p-gold">Queue</span></td>
+          <td>Mixed (BKT-selected)</td>
+          <td>8</td>
+          <td><span class="pill p-gold">62% (5/8)</span></td>
+          <td class="mono" style="font-size:11px">Jan 28</td>
+          <td><a style="font-size:11px;color:var(--b)">Review</a></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Performance trend -->
+    <div style="margin-top:14px;border:1px solid var(--edge);background:#fff;padding:14px;border-radius:4px">
+      <div style="font-size:12.5px;font-weight:500;margin-bottom:6px">Performance trend — last 30 days</div>
+      <div style="font-size:12px;color:#888;margin-bottom:10px">Rolling 7-session accuracy average. Trend up = mastery building. Trend flat = maintenance. Trend down = review needed.</div>
+      <div style="display:flex;align-items:flex-end;gap:4px;height:60px;padding:0 4px">
+        <div style="flex:1;background:#c0dd97;border-radius:2px 2px 0 0" title="68%" style="height:68%;flex:1;background:#c0dd97;border-radius:2px 2px 0 0"></div>
+        <div style="height:72%;flex:1;background:#c0dd97;border-radius:2px 2px 0 0"></div>
+        <div style="height:74%;flex:1;background:#97c459;border-radius:2px 2px 0 0"></div>
+        <div style="height:70%;flex:1;background:#97c459;border-radius:2px 2px 0 0"></div>
+        <div style="height:78%;flex:1;background:#97c459;border-radius:2px 2px 0 0"></div>
+        <div style="height:76%;flex:1;background:#97c459;border-radius:2px 2px 0 0"></div>
+        <div style="height:80%;flex:1;background:#639922;border-radius:2px 2px 0 0"></div>
+        <div style="height:83%;flex:1;background:#639922;border-radius:2px 2px 0 0"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:9px;color:#aaa;margin-top:3px">
+        <span>Jan 6</span><span>Jan 13</span><span>Jan 20</span><span>Jan 27</span><span>Feb 3</span>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<div class="footer">
+  <span>Journey OS · Student Persona (M1–M4) · Complete Product Specification · MSM · 2025</span>
+  <span>BKT mastery · IRT practice · Why Wrong? AI explanations · USMLE Step 1/2 readiness tracker</span>
+</div>
+</body>
+</html>

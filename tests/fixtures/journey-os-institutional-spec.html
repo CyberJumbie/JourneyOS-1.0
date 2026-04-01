@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Journey OS — Institutional Personas Product Specification</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap');
+:root{
+  --ink:#0c0c0c;--paper:#f4f1eb;--edge:#ddd6c4;
+  --r:#a82828;--g:#185230;--y:#6a4c14;--b:#162450;--gold:#8a6614;
+  --pre:#080d12;--prefg:#c4bfb0;--tag:#e8e2d4;
+  --blue-50:#e6f1fb;--blue-800:#0c447c;
+  --teal-50:#e1f5ee;--teal-800:#085041;
+  --amber-50:#faeeda;--amber-800:#633806;
+  --purple-50:#eeedfe;--purple-800:#3c3489;
+  --green-50:#eaf3de;--green-800:#27500a;
+  --red-50:#fcebeb;--red-800:#791f1f;
+  --gray-50:#f1efe8;--gray-800:#444441;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);font-size:13.5px;line-height:1.8}
+.cover{background:var(--ink);min-height:80vh;padding:80px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+.cg{position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent,transparent 79px,rgba(168,40,40,.04) 80px),repeating-linear-gradient(0deg,transparent,transparent 79px,rgba(168,40,40,.03) 80px)}
+.cr{position:relative;z-index:1}
+.eye{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:#f09595;margin-bottom:16px}
+h1{font-family:'Fraunces',serif;font-size:60px;font-weight:300;line-height:.9;letter-spacing:-2px;color:#ede8e0;margin-bottom:12px}
+h1 em{font-style:italic;color:#5dcaa5}
+.c-sub{font-family:'Fraunces',serif;font-style:italic;font-size:19px;color:#555;max-width:680px;margin-bottom:28px}
+.stat-row{display:flex;gap:1px;background:rgba(255,255,255,.05);margin-bottom:20px}
+.stat{padding:12px 20px}
+.stat-n{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;display:block;line-height:1;color:#f09595}
+.stat-l{font-size:9px;color:#444;font-family:'JetBrains Mono',monospace;letter-spacing:.04em;margin-top:3px}
+.chips{display:flex;gap:4px;flex-wrap:wrap}
+.c-chip{font-family:'JetBrains Mono',monospace;font-size:8px;padding:4px 10px;border:1px solid #1c1c1c;color:#555}
+.c-chip.ok{border-color:#2a1a1a;color:#f09595}
+/* PERSONA DIVIDERS */
+.persona-banner{padding:32px 80px;color:#fff;margin-bottom:0}
+.persona-banner.admin{background:#162450}
+.persona-banner.advisor{background:#185230}
+.persona-banner.chair{background:#4a1b0c}
+.persona-banner.dean{background:#26215c}
+.persona-label{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.28em;text-transform:uppercase;opacity:.6;margin-bottom:6px}
+.persona-title{font-family:'Fraunces',serif;font-size:36px;font-weight:300;line-height:1;margin-bottom:4px}
+.persona-desc{font-size:13px;opacity:.7;font-style:italic;font-family:'Fraunces',serif;max-width:640px}
+/* NAV */
+.nav{background:#060606;border-bottom:1px solid #111;padding:0 80px;display:flex;overflow-x:auto}
+.ni{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:#333;padding:10px 13px;border-right:1px solid #111;white-space:nowrap;text-decoration:none;flex-shrink:0}
+.ni:hover{color:#f09595}
+.ni.admin{border-bottom:2px solid #185fa5}
+.ni.advisor{border-bottom:2px solid #1d9e75}
+.ni.chair{border-bottom:2px solid #d85a30}
+.ni.dean{border-bottom:2px solid #7f77dd}
+section{padding:52px 80px;border-bottom:1px solid var(--edge)}
+.sid{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--r);margin-bottom:10px}
+.sid.g{color:var(--g)}.sid.chair{color:#854f0b}.sid.dean{color:#534ab7}
+h2{font-family:'Fraunces',serif;font-size:32px;font-weight:300;line-height:1.07;margin-bottom:18px}
+h3{font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#999;margin:26px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--edge)}
+h4{font-family:'Fraunces',serif;font-size:17px;font-weight:400;margin:12px 0 5px}
+p{margin-bottom:10px;max-width:840px;line-height:1.75}
+code{font-family:'JetBrains Mono',monospace;font-size:11px;background:var(--tag);padding:1px 5px;border-radius:2px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:12px 0}
+.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:12px 0}
+.four{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin:12px 0}
+.card{border:1px solid var(--edge);padding:14px 16px;background:#fff;border-radius:4px}
+.card .card-l{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#bbb;margin-bottom:3px}
+.card .card-t{font-family:'Fraunces',serif;font-size:15px;font-weight:400;margin-bottom:5px}
+.card p{font-size:12px;color:#666;margin:0;line-height:1.65}
+.call{padding:11px 15px;margin:10px 0;border-radius:0 2px 2px 0}
+.call .cl{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;margin-bottom:4px}
+.call p{font-size:12.5px;margin:0;max-width:none}
+.call-b{border-left:3px solid var(--b);background:var(--blue-50)}.call-b .cl{color:var(--b)}
+.call-g{border-left:3px solid var(--g);background:var(--green-50)}.call-g .cl{color:var(--g)}
+.call-gold{border-left:3px solid var(--gold);background:var(--amber-50)}.call-gold .cl{color:var(--gold)}
+.call-r{border-left:3px solid var(--r);background:var(--red-50)}.call-r .cl{color:var(--r)}
+.call-v{border-left:3px solid #534ab7;background:var(--purple-50)}.call-v .cl{color:#534ab7}
+.pill{display:inline-block;padding:2px 7px;border-radius:2px;font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:600;vertical-align:middle;white-space:nowrap}
+.p-b{background:var(--blue-50);color:var(--blue-800)}.p-g{background:var(--green-50);color:var(--green-800)}
+.p-t{background:var(--teal-50);color:var(--teal-800)}.p-gold{background:var(--amber-50);color:var(--amber-800)}
+.p-v{background:var(--purple-50);color:var(--purple-800)}.p-r{background:var(--red-50);color:var(--red-800)}
+.p-gray{background:var(--gray-50);color:var(--gray-800)}.p-ink{background:var(--ink);color:#bbb}
+.screen{border:1px solid var(--edge);background:#fff;overflow:hidden;margin:14px 0;border-radius:4px}
+.screen-bar{background:var(--gray-50);padding:8px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--edge)}
+.screen-dots{display:flex;gap:5px}
+.screen-dot{width:10px;height:10px;border-radius:50%;background:var(--edge)}
+.screen-title{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.05em;color:#aaa;margin-left:8px}
+.mock-shell{display:grid;grid-template-columns:200px 1fr;min-height:380px}
+.mock-nav{background:var(--ink);padding:16px 0}
+.mock-logo{padding:12px 16px 16px;font-family:'Fraunces',serif;font-size:14px;font-style:italic;color:#ede8e0;border-bottom:1px solid #1a1a1a;margin-bottom:8px}
+.mock-nav-item{padding:7px 16px;font-size:12px;color:#666;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.mock-nav-item:hover{background:#111;color:#aaa}
+.mock-nav-item.active{background:#1a1a1a}
+.mock-nav-item.active.admin{color:#85b7eb}
+.mock-nav-item.active.advisor{color:#5dcaa5}
+.mock-nav-item.active.chair{color:#f0997b}
+.mock-nav-item.active.dean{color:#afa9ec}
+.mock-nav-item .dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
+.mock-nav-section{padding:12px 16px 4px;font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#2a2a2a}
+.mock-main{padding:18px;background:#faf8f4;overflow:auto}
+.stat-card{border:1px solid var(--edge);padding:14px 16px;background:#fff;border-radius:4px}
+.stat-card .label{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#bbb;margin-bottom:3px}
+.stat-card .value{font-family:'Fraunces',serif;font-size:26px;font-weight:300;line-height:1;color:var(--ink)}
+.stat-card .sub{font-size:11px;color:#aaa;margin-top:2px}
+.tab-bar{display:flex;border-bottom:1px solid var(--edge);background:#fff;overflow-x:auto}
+.tab{padding:8px 14px;font-size:12px;color:#888;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;flex-shrink:0}
+.tab.active{color:var(--b);border-bottom-color:var(--b);font-weight:500}
+.qa-row{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.qa-btn{padding:6px 13px;border:1px solid var(--edge);background:#fff;font-size:12px;cursor:pointer;border-radius:2px;color:var(--ink)}
+.qa-btn.primary{background:var(--ink);color:#ede8e0;border-color:var(--ink)}
+table{width:100%;border-collapse:collapse;font-size:12px;margin:8px 0 14px}
+th{background:var(--ink);color:var(--paper);padding:7px 11px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase}
+td{padding:7px 11px;border-bottom:1px solid var(--edge);vertical-align:top}
+tr:nth-child(even) td{background:#faf7f0}
+.mono{font-family:'JetBrains Mono',monospace;font-size:10.5px}
+/* Pipeline */
+.pipe-step{display:inline-flex;align-items:center;gap:0;flex-shrink:0}
+.pipe-node{padding:4px 10px;font-family:'JetBrains Mono',monospace;font-size:9px;border:1px solid var(--edge);background:#fff;white-space:nowrap}
+.pipe-node.ok{background:var(--green-50);color:var(--green-800);border-color:#97c459}
+.pipe-node.running{background:var(--blue-50);color:var(--blue-800);border-color:#85b7eb}
+.pipe-node.failed{background:var(--red-50);color:var(--red-800);border-color:#f09595}
+.pipe-node.pending{color:#bbb}
+/* Alert row */
+.alert-row{padding:10px 14px;border:1px solid var(--edge);background:#fff;border-radius:3px;margin-bottom:6px;display:flex;gap:10px;align-items:flex-start}
+.alert-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px}
+/* LCME element */
+.lcme-el{padding:8px 12px;border:1px solid var(--edge);border-radius:3px;background:#fff;display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.lcme-el .el-code{font-family:'JetBrains Mono',monospace;font-size:10px;color:#aaa;width:40px;flex-shrink:0}
+.lcme-el .el-label{font-size:12px;flex:1}
+/* Equity bar */
+.eq-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--edge)}
+.eq-row:last-child{border:none}
+.eq-label{font-size:12px;width:150px;flex-shrink:0}
+.eq-bars{flex:1;display:flex;gap:4px;align-items:center}
+.eq-bar-wrap{flex:1;height:8px;background:var(--edge);border-radius:3px;overflow:hidden}
+.eq-bar{height:100%;border-radius:3px}
+/* Student at-risk card */
+.risk-card{border:1px solid var(--edge);padding:12px;border-radius:4px;background:#fff;margin-bottom:6px;cursor:pointer}
+.risk-card.high{border-left:3px solid var(--r)}
+.risk-card.medium{border-left:3px solid #ba7517}
+.risk-card.low{border-left:3px solid #1d9e75}
+/* Angoff row */
+.angoff-item{padding:8px 12px;border:1px solid var(--edge);border-radius:3px;background:#fff;display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.feed-item{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--edge);align-items:flex-start}
+.feed-item:last-child{border:none}
+.feed-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.feed-body{flex:1}
+.feed-text{font-size:12.5px}
+.feed-time{font-family:'JetBrains Mono',monospace;font-size:10px;color:#bbb;margin-top:1px}
+.footer{background:var(--ink);padding:24px 80px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-family:'JetBrains Mono',monospace;font-size:9px;color:#333}
+@media(max-width:900px){.cover,.nav,.footer,.persona-banner,section{padding-left:24px;padding-right:24px}.two,.three,.four{grid-template-columns:1fr}h1{font-size:40px}.mock-shell{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+<div class="cg"></div>
+<div class="cr">
+  <div>
+    <div class="eye">Journey OS · Institutional Personas · Admin · Advisor · Chair · Dean · Complete Specification</div>
+    <h1>Four Personas<br>One <em>Institution</em></h1>
+    <div class="c-sub">The complete screen-by-screen specification for every institutional role — from system administrators managing FERPA-compliant pipelines to deans navigating LCME readiness — each persona designed around the decisions they actually make</div>
+  </div>
+  <div>
+    <div class="stat-row">
+      <div class="stat"><span class="stat-n">Admin</span><div class="stat-l">8 nav sections</div></div>
+      <div class="stat"><span class="stat-n">Advisor</span><div class="stat-l">6 nav sections</div></div>
+      <div class="stat"><span class="stat-n">Chair</span><div class="stat-l">6 nav sections</div></div>
+      <div class="stat"><span class="stat-n">Dean</span><div class="stat-l">5 nav sections</div></div>
+    </div>
+    <div class="chips">
+      <span class="c-chip ok">✓ Admin: FERPA audit log + pipeline health</span>
+      <span class="c-chip ok">✓ Advisor: at-risk gap type classifier</span>
+      <span class="c-chip ok">✓ Chair: Angoff simulation tool</span>
+      <span class="c-chip ok">✓ Dean: LCME readiness room + equity dashboard</span>
+      <span class="c-chip ok">✓ All personas: complete nav + every screen</span>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="nav">
+  <a class="ni admin" href="#admin-nav">Admin: Nav</a>
+  <a class="ni admin" href="#admin-dash">Admin: Dashboard</a>
+  <a class="ni admin" href="#admin-pipeline">Admin: Pipeline</a>
+  <a class="ni admin" href="#admin-users">Admin: Users</a>
+  <a class="ni admin" href="#admin-ferpa">Admin: FERPA</a>
+  <a class="ni advisor" href="#advisor-nav">Advisor: Nav</a>
+  <a class="ni advisor" href="#advisor-dash">Advisor: Dashboard</a>
+  <a class="ni advisor" href="#advisor-profile">Advisor: Student</a>
+  <a class="ni chair" href="#chair-nav">Chair: Nav</a>
+  <a class="ni chair" href="#chair-curriculum">Chair: Curriculum</a>
+  <a class="ni chair" href="#chair-angoff">Chair: Standard Setting</a>
+  <a class="ni dean" href="#dean-nav">Dean: Nav</a>
+  <a class="ni dean" href="#dean-lcme">Dean: LCME</a>
+  <a class="ni dean" href="#dean-equity">Dean: Equity</a>
+</div>
+
+<!-- ══════════ ADMIN PERSONA ══════════ -->
+<div class="persona-banner admin" id="admin-persona">
+  <div class="persona-label">Persona 1 of 4</div>
+  <div class="persona-title">System Administrator</div>
+  <div class="persona-desc">The operational backbone — manages pipeline health, user accounts, FERPA compliance, generation limits, and data integrity. The admin rarely interacts with content; they keep the system trustworthy.</div>
+</div>
+
+<section id="admin-nav">
+<div class="sid">Admin · I / Navigation Architecture</div>
+<h2>Eight sections — operations, compliance, and system health</h2>
+
+<p>The admin persona is unlike any other in Journey OS. Where faculty create and students consume, admins maintain trust. Their navigation is organized around system health (Dashboard, Pipeline), user management (Faculty, Students), compliance (FERPA, Data Integrity), and operational controls (Generation Limits, Settings). Every admin action is consequential — modifying user permissions, reviewing FERPA logs, retrying failed pipelines — and the UI reflects that seriousness.</p>
+
+<div class="screen">
+  <div class="screen-bar"><div class="screen-dots"><div class="screen-dot"></div><div class="screen-dot"></div><div class="screen-dot"></div></div><span class="screen-title">admin — system administration panel</span></div>
+  <div class="mock-shell">
+    <div class="mock-nav">
+      <div class="mock-logo">Journey OS Admin</div>
+      <div class="mock-nav-section">Operations</div>
+      <div class="mock-nav-item active admin"><span class="dot" style="background:#85b7eb"></span> Dashboard <span class="pill p-r" style="font-size:8px">3 alerts</span></div>
+      <div class="mock-nav-item"><span class="dot"></span> Pipeline Health</div>
+      <div class="mock-nav-section">Users</div>
+      <div class="mock-nav-item"><span class="dot"></span> Faculty <span class="pill p-gold" style="font-size:8px">2 pending</span></div>
+      <div class="mock-nav-item"><span class="dot"></span> Students</div>
+      <div class="mock-nav-section">Compliance</div>
+      <div class="mock-nav-item"><span class="dot"></span> FERPA Audit Log</div>
+      <div class="mock-nav-item"><span class="dot"></span> Data Integrity</div>
+      <div class="mock-nav-section">Controls</div>
+      <div class="mock-nav-item"><span class="dot"></span> Generation Limits</div>
+      <div class="mock-nav-item"><span class="dot"></span> Settings</div>
+    </div>
+    <div class="mock-main">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px">
+        <div class="stat-card"><div class="label">Pipeline health</div><div class="value" style="color:#1d9e75">Healthy</div><div class="sub">All 3 pipelines running</div></div>
+        <div class="stat-card"><div class="label">Active faculty</div><div class="value">24</div><div class="sub">2 pending approval</div></div>
+        <div class="stat-card"><div class="label">Total students</div><div class="value">312</div><div class="sub">M1-M4 enrolled</div></div>
+        <div class="stat-card"><div class="label">FERPA events today</div><div class="value">8</div><div class="sub">All routine access</div></div>
+      </div>
+      <p style="font-size:12px;color:#aaa;font-style:italic">← Full admin dashboard in §II</p>
+    </div>
+  </div>
+</div>
+
+<h3>Admin navigation — section purpose</h3>
+<table>
+<thead><tr><th>Tab</th><th>Content</th><th>Badge trigger</th><th>Admin action</th></tr></thead>
+<tbody>
+<tr><td><strong>Dashboard</strong></td><td>Action queue sorted by severity: critical pipeline failures, pending enrollments, budget alerts, Neo4j sync backlog</td><td>Total unresolved alerts</td><td>Triage and resolve</td></tr>
+<tr><td><strong>Pipeline Health</strong></td><td>P1/P2/P3 real-time status, dead letter queue, retry controls, recent run history</td><td>Failed pipeline count</td><td>Retry, inspect logs, escalate</td></tr>
+<tr><td><strong>Faculty</strong></td><td>All faculty accounts, onboarding status, generation usage, pending approvals</td><td>Pending approval count</td><td>Approve, suspend, reset limits</td></tr>
+<tr><td><strong>Students</strong></td><td>All students, enrollment status, ADA accommodations, account issues</td><td>—</td><td>Approve, add accommodation, unenroll</td></tr>
+<tr><td><strong>FERPA Audit Log</strong></td><td>Immutable log of all student data access events, trigger-level written, service_role only</td><td>—</td><td>Read-only search and export</td></tr>
+<tr><td><strong>Data Integrity</strong></td><td>Neo4j sync status, orphaned records, schema validation failures, seed health</td><td>Sync failure count</td><td>Trigger reconciliation, inspect failures</td></tr>
+<tr><td><strong>Generation Limits</strong></td><td>Per-faculty daily limits, institution-level concurrent caps, cost tracking</td><td>—</td><td>Adjust limits, view cost burn</td></tr>
+<tr><td><strong>Settings</strong></td><td>Institution config: SAML SSO, SIS integration, email notifications, feature flags</td><td>—</td><td>Configure integrations</td></tr>
+</tbody>
+</table>
+</section>
+
+<section id="admin-dash">
+<div class="sid">Admin · II / Dashboard + Action Queue</div>
+<h2>The severity-sorted action queue — highest impact first, every time</h2>
+
+<p>The admin dashboard is not a metrics display — it's a triage center. The action queue surfaces everything that requires human intervention, sorted by impact severity. A critical pipeline failure that is blocking faculty from generating questions appears above a routine pending enrollment. The admin should be able to open Journey OS, see the queue, work through it top-to-bottom, and be done. Nothing important should be buried.</p>
+
+<div class="screen">
+  <div class="screen-bar"><div class="screen-dots"><div class="screen-dot"></div><div class="screen-dot"></div><div class="screen-dot"></div></div><span class="screen-title">admin dashboard — Thursday, Feb 6</span></div>
+  <div class="mock-main" style="padding:16px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <div>
+        <div style="font-family:'Fraunces',serif;font-size:20px">System status — Morehouse School of Medicine</div>
+        <div style="font-size:12px;color:#888">Thursday, Feb 6 · 3 items need attention</div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <span class="pill p-g">P1 · Running</span>
+        <span class="pill p-g">P2 · Running</span>
+        <span class="pill p-gold">P3 · 1 failed</span>
+      </div>
+    </div>
+
+    <!-- Action queue -->
+    <div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#999;margin-bottom:8px">Action queue — sorted by severity</div>
+
+    <div class="alert-row" style="border-left:3px solid var(--r)">
+      <div class="alert-dot" style="background:#a82828"></div>
+      <div style="flex:1">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div>
+            <span class="pill p-r">CRITICAL</span>
+            <span style="font-size:12.5px;font-weight:500;margin-left:8px">P3 generation batch failed — 8 items lost to dead letter queue</span>
+          </div>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#aaa">2h ago</span>
+        </div>
+        <div style="font-size:12px;color:#888;margin-top:3px">Faculty: Dr. Williams · Course: MEDI-601 · Inngest error: Context window exceeded on HeteroSAGE embedding step. 8 items written to pipeline_dead_letters. Faculty cannot see failed items.</div>
+        <div class="qa-row" style="margin-top:8px">
+          <button class="qa-btn primary" style="font-size:11px">View dead letters</button>
+          <button class="qa-btn" style="font-size:11px">Retry with reduced batch size</button>
+          <button class="qa-btn" style="font-size:11px">Notify faculty</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="alert-row" style="border-left:3px solid #ba7517;margin-top:6px">
+      <div class="alert-dot" style="background:#ba7517"></div>
+      <div style="flex:1">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div>
+            <span class="pill p-gold">HIGH</span>
+            <span style="font-size:12.5px;font-weight:500;margin-left:8px">2 faculty accounts pending approval — blocked from uploading content</span>
+          </div>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#aaa">Yesterday</span>
+        </div>
+        <div style="font-size:12px;color:#888;margin-top:3px">Dr. Patel (PHRM) and Dr. Osei (PATH) registered via SSO but are pending role assignment. Cannot upload documents until approved.</div>
+        <div class="qa-row" style="margin-top:8px">
+          <button class="qa-btn primary" style="font-size:11px">Review and approve</button>
+          <button class="qa-btn" style="font-size:11px">View registration details</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="alert-row" style="border-left:3px solid #185fa5;margin-top:6px">
+      <div class="alert-dot" style="background:#185fa5"></div>
+      <div style="flex:1">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div>
+            <span class="pill p-b">INFO</span>
+            <span style="font-size:12.5px;font-weight:500;margin-left:8px">Neo4j sync backlog: 34 subconcepts have neo4j_sync_status = 'failed'</span>
+          </div>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#aaa">3 days old</span>
+        </div>
+        <div style="font-size:12px;color:#888;margin-top:3px">Supabase records exist and are accessible. Neo4j graph is missing these nodes — affects coverage heatmap accuracy but not exam delivery. Weekly reconciliation job runs Monday.</div>
+        <div class="qa-row" style="margin-top:8px">
+          <button class="qa-btn" style="font-size:11px">Run reconciliation now</button>
+          <button class="qa-btn" style="font-size:11px">View affected records</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- System health summary -->
+    <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div>
+        <div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#999;margin-bottom:8px">Pipeline overview</div>
+        <div style="border:1px solid var(--edge);background:#fff;border-radius:4px;padding:12px">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--gray-50)">
+            <span style="font-size:12px">P1 · Lecture ingestion</span>
+            <div><span class="pill p-g">Running</span> <span style="font-size:11px;color:#888;margin-left:4px">3 lectures processing</span></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--gray-50)">
+            <span style="font-size:12px">P2 · Knowledge enrichment</span>
+            <div><span class="pill p-g">Running</span> <span style="font-size:11px;color:#888;margin-left:4px">12 subconcepts in queue</span></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0">
+            <span style="font-size:12px">P3 · Item generation</span>
+            <div><span class="pill p-gold">1 failed</span> <span style="font-size:11px;color:#888;margin-left:4px">8 in dead letter</span></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#999;margin-bottom:8px">Today's activity</div>
+        <div style="border:1px solid var(--edge);background:#fff;border-radius:4px;padding:10px 12px">
+          <div class="feed-item"><div class="feed-dot" style="background:#1d9e75"></div><div class="feed-body"><div class="feed-text">14 lectures processed successfully today (P1)</div><div class="feed-time">Rolling today · P1 pipeline</div></div></div>
+          <div class="feed-item"><div class="feed-dot" style="background:#185fa5"></div><div class="feed-body"><div class="feed-text">87 student exam sessions completed — all answers persisted (C01)</div><div class="feed-time">Today · Exam delivery</div></div></div>
+          <div class="feed-item"><div class="feed-dot" style="background:#ba7517"></div><div class="feed-body"><div class="feed-text">Generation cost this week: $47.20 (budget: $150/week)</div><div class="feed-time">Weekly · Cost tracking</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<section id="admin-pipeline">
+<div class="sid">Admin · III / Pipeline Health</div>
+<h2>Real-time visibility into P1, P2, and P3 — with dead letter queue management</h2>
+
+<div class="call-r"><div class="cl">Dead letter queue — the safety net</div>
+<p>Every Inngest function has an <code>onFailure</code> handler that writes to <code>pipeline_dead_letters</code> after all retries are exhausted. This table carries: event name, payload, error message, stack trace, retry count, and faculty ID. The admin can inspect any dead letter, retry it manually with an override (e.g., reduced batch size), or mark it as permanently failed. Faculty are notified when their pipeline items enter the dead letter queue so they know something went wrong.</p>
+</div>
+
+<div class="screen">
+  <div class="screen-bar"><div class="screen-dots"><div class="screen-dot"></div><div class="screen-dot"></div><div class="screen-dot"></div></div><span class="screen-title">pipeline health</span></div>
+  <div class="mock-main" style="padding:16px">
+    <div class="tab-bar" style="margin-bottom:14px">
+      <div class="tab active">P1 · Ingestion</div>
+      <div class="tab">P2 · Enrichment</div>
+      <div class="tab">P3 · Generation <span class="pill p-r" style="margin-left:4px">1 failed</span></div>
+      <div class="tab">Dead letters <span class="pill p-r" style="margin-left:4px">8</span></div>
+    </div>
+
+    <!-- P1 Pipeline status -->
+    <div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#999;margin-bottom:8px">P1 · Active runs (3)</div>
+    <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:14px">
+      <div style="border:1px solid var(--edge);padding:10px 14px;border-radius:4px;background:#fff">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div><span style="font-size:12.5px;font-weight:500">Week5-Renal-Physiology.pptx</span> <span style="font-size:11px;color:#888;margin-left:6px">Dr. Johnson · MEDI-601</span></div>
+          <span class="pill p-b">Running · Step 5 of 9</span>
+        </div>
+        <div style="display:flex;gap:3px;flex-wrap:wrap">
+          <div class="pipe-step"><div class="pipe-node ok">Upload</div></div>
+          <div class="pipe-step"><div class="pipe-node ok" style="margin-left:1px">Extract</div></div>
+          <div class="pipe-step"><div class="pipe-node ok" style="margin-left:1px">OCR</div></div>
+          <div class="pipe-step"><div class="pipe-node ok" style="margin-left:1px">Chunk</div></div>
+          <div class="pipe-step"><div class="pipe-node ok" style="margin-left:1px">Embed</div></div>
+          <div class="pipe-step"><div class="pipe-node running" style="margin-left:1px">UMLS</div></div>
+          <div class="pipe-step"><div class="pipe-node pending" style="margin-left:1px">LCME classify</div></div>
+          <div class="pipe-step"><div class="pipe-node pending" style="margin-left:1px">TEACHES edges</div></div>
+          <div class="pipe-step"><div class="pipe-node pending" style="margin-left:1px">Review gate</div></div>
+        </div>
+        <div style="font-size:11px;color:#888;margin-top:6px">Started 8 min ago · UMLS batching (20 req/sec throttle) · Est. 4 min remaining</div>
+      </div>
+    </div>
+
+    <!-- Dead letter queue -->
+    <div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#999;margin-bottom:8px">Dead letter queue — 8 items requiring admin attention</div>
+    <table>
+      <thead><tr><th>Event</th><th>Faculty / Course</th><th>Error</th><th>Retries</th><th>Age</th><th>Actions</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="mono">journey/items.batch-generate</span></td>
+          <td>Dr. Williams · MEDI-601</td>
+          <td style="font-size:11px;color:#a82828">Context window exceeded (HeteroSAGE embedding — 8 subconcepts)</td>
+          <td><span class="pill p-r">3/3 retries</span></td>
+          <td class="mono" style="font-size:11px">2h ago</td>
+          <td>
+            <div style="display:flex;gap:4px">
+              <button class="qa-btn primary" style="font-size:10px;padding:2px 7px">Retry (batch=2)</button>
+              <button class="qa-btn" style="font-size:10px;padding:2px 7px">Mark failed</button>
+              <button class="qa-btn" style="font-size:10px;padding:2px 7px">View payload</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<h3>Generation limits (C10)</h3>
+<p>Three-layer rate control: (1) per-faculty concurrent limit (max 3 simultaneous P3 runs per faculty_id via Inngest concurrency key), (2) per-faculty daily limit (tracked in <code>generation_daily_usage</code> — default 100 items/day, configurable per faculty), (3) institution-level monthly budget cap (tracked in <code>institution_generation_limits</code> — default $500/month, triggers alert at 80%). Admin can view current usage, adjust limits per faculty, and see cost breakdown by course and faculty member.</p>
+</section>
+
+<section id="admin-users">
+<div class="sid">Admin · IV / User Management</div>
+<h2>Faculty + students — approval, accommodations, and account health</h2>
+
+<div class="two">
+<div>
+<h4>Faculty management</h4>
+<p>Pending faculty appear with their registration details (MSM email, department, role claim). Admin approves or rejects. Approved faculty get role = 'faculty' on their Supabase auth.users row and a corresponding Faculty node in Neo4j. Admin can suspend (immediately revokes access), reset generation limits, view usage history, or transfer courses if a faculty member leaves.</p>
+<p>Faculty flags visible to admin: awaiting_approval, generation_limit_exceeded, items_pending_review_aging (items sitting in review for >30 days — FERPA alert), suspended, inactive_30d.</p>
+</div>
+<div>
+<h4>Student management + ADA accommodations</h4>
+<p>Students can be enrolled manually (by admin) or via SIS integration. ADA accommodations are stored in <code>student_accommodations</code> table: accommodation_type (extended_time, separate_room, reader, etc.), multiplier (1.5x, 2.0x time), and effective_date. When an exam is administered, the exam delivery engine checks this table and adjusts the timer for the specific student. The accommodation record is FERPA-protected — only admins and the individual student's advisor can view it.</p>
+</div>
+</div>
+
+<div class="call-r"><div class="cl">FERPA — the non-negotiable</div>
+<p>Student educational records are protected by FERPA. In Journey OS, this means: (1) The FERPA audit log is written by a Postgres trigger at the database level — it cannot be bypassed by application code. (2) The log is immutable — rows can be inserted but never updated or deleted, even by service_role. (3) Only the admin and the student's assigned advisor can access student performance data. Faculty see aggregate course data but never individual student answers to questions. (4) The FERPA audit log search is read-only even for admins — no deletions, no exports without a logged reason.</p>
+</div>
+</section>
+
+<section id="admin-ferpa">
+<div class="sid">Admin · V / FERPA Audit Log</div>
+<h2>Immutable, trigger-written, service_role-only — the compliance record</h2>
+
+<div class="screen">
+  <div class="screen-bar"><div class="screen-dots"><div class="screen-dot"></div><div class="screen-dot"></div><div class="screen-dot"></div></div><span class="screen-title">FERPA audit log — read only</span></div>
+  <div class="mock-main" style="padding:16px">
+    <div class="call-b" style="margin-bottom:14px"><div class="cl">Read-only view</div><p>This log is written by Postgres triggers and cannot be modified by any application action, including admin actions. All access to this log is itself logged. Export requires a logged reason code.</p></div>
+
+    <div style="display:flex;gap:8px;margin-bottom:12px;align-items:center">
+      <input type="text" placeholder="Search by student ID, accessor ID, or event type..." style="flex:1;padding:6px 10px;border:1px solid var(--edge);border-radius:4px;font-size:12px">
+      <select style="padding:6px;border:1px solid var(--edge);font-size:12px"><option>All event types</option><option>Student data access</option><option>Grade disclosure</option><option>Exam session</option></select>
+      <input type="date" style="padding:6px;border:1px solid var(--edge);font-size:12px">
+    </div>
+    <table>
+      <thead><tr><th>Timestamp</th><th>Event type</th><th>Student ID</th><th>Accessor</th><th>Accessor role</th><th>Details</th></tr></thead>
+      <tbody>
+        <tr><td class="mono" style="font-size:10px">2025-02-06 14:23:11 UTC</td><td><span class="pill p-b">student_data_access</span></td><td class="mono">STU-004821</td><td class="mono">ADV-001234</td><td><span class="pill p-g">Advisor</span></td><td style="font-size:11px">Mastery view accessed — academic review session</td></tr>
+        <tr><td class="mono" style="font-size:10px">2025-02-06 14:01:44 UTC</td><td><span class="pill p-v">exam_session_start</span></td><td class="mono">STU-004821</td><td class="mono">SYSTEM</td><td><span class="pill p-gray">System</span></td><td style="font-size:11px">MEDI-601 Cardio Midterm session created — session_id: SES-00891</td></tr>
+        <tr><td class="mono" style="font-size:10px">2025-02-06 09:12:30 UTC</td><td><span class="pill p-b">student_data_access</span></td><td class="mono">STU-003311</td><td class="mono">ADM-000001</td><td><span class="pill p-r">Admin</span></td><td style="font-size:11px">Accommodation record viewed — reason: ADA verification</td></tr>
+        <tr><td class="mono" style="font-size:10px">2025-02-05 16:44:02 UTC</td><td><span class="pill p-gold">grade_disclosure</span></td><td class="mono">STU-002847</td><td class="mono">ADV-001234</td><td><span class="pill p-g">Advisor</span></td><td style="font-size:11px">Exam result shared — advisor intervention session</td></tr>
+      </tbody>
+    </table>
+    <div class="qa-row">
+      <button class="qa-btn" style="font-size:11px">Export log (requires reason code)</button>
+      <button class="qa-btn" style="font-size:11px">Generate compliance report</button>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ══════════ ADVISOR PERSONA ══════════ -->
+<div class="persona-banner advisor" id="advisor-persona" style="margin-top:0">
+  <div class="persona-label">Persona 2 of 4</div>
+  <div class="persona-title">Academic Advisor</div>
+  <div class="persona-desc">The student's advocate inside the institution — monitors at-risk patterns, surfaces intervention opportunities, and maintains the relationship between student performance data and human support.</div>
+</div>
+
+<section id="advisor-nav">
+<div class="sid g">Advisor · I / Navigation Architecture</div>
+<h2>Six sections focused on student well-being and intervention</h2>
+
+<p>The advisor persona is built around one question: which students need help, and how do I help them? The navigation reflects the funnel from broad awareness (Dashboard with at-risk roster) to specific action (Student Profile with intervention log). Every screen answers: who is at risk, what kind of gap are they experiencing, and what should I do about it?</p>
+
+<div class="screen">
+  <div class="screen-bar"><div class="screen-dots"><div class="screen-dot"></div><div class="screen-dot"></div><div class="screen-dot"></div></div><span class="screen-title">advisor view — Dr. Chen, Academic Advisor</span></div>
+  <div class="mock-shell">
+    <div class="mock-nav">
+      <div class="mock-logo">Journey OS</div>
+      <div class="mock-nav-section">Overview</div>
+      <div class="mock-nav-item active advisor"><span class="dot" style="background:#5dcaa5"></span> Dashboard <span class="pill p-r" style="font-size:8px">4 at-risk</span></div>
+      <div class="mock-nav-item"><span class="dot"></span> My Students</div>
+      <div class="mock-nav-section">Intervention</div>
+      <div class="mock-nav-item"><span class="dot"></span> At-Risk Panel</div>
+      <div class="mock-nav-item"><span class="dot"></span> Interventions</div>
+      <div class="mock-nav-section">Reports</div>
+      <div class="mock-nav-item"><span class="dot"></span> Reports</div>
+    </div>
+    <div class="mock-main">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px">
+        <div class="stat-card"><div class="label">My students</div><div class="value">28</div><div class="sub">Across M1-M4</div></div>
+        <div class="stat-card"><div class="label">At-risk</div><div class="value" style="color:#a82828">4</div><div class="sub">Need intervention</div></div>
+        <div class="stat-card"><div class="label">Interventions logged</div><div class="value">12</div><div class="sub">This semester</div></div>
+        <div class="stat-card"><div class="label">Avg USMLE coverage</div><div class="value">41%</div><div class="sub">Across my students</div></div>
+      </div>
+      <p style="font-size:12px;color:#aaa;font-style:italic">← Full advisor dashboard in §II</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section id="advisor-dash">
+<div class="sid g">Advisor · II / Dashboard + At-Risk Classification</div>
+<h2>Three gap types — isolated, cluster, or systemic — determine the intervention</h2>
+
+<div class="call-g"><div class="cl">The at-risk gap type classifier</div>
+<p>Not all gaps are the same. An advisor looking at a student with poor Renal scores needs to know: is this a single isolated concept they haven't seen yet? Is it a cluster of related concepts (Renal physiology + acid-base + diuretics) that point to a foundational misunderstanding? Or is it a systemic pattern — low mastery across multiple unrelated organ systems — suggesting an engagement or study method problem rather than a content gap? The three classifier types determine the intervention recommendation: for isolated gaps, suggest targeted practice; for cluster gaps, suggest reviewing the foundational concept and its downstream effects; for systemic gaps, flag for an in-person advisor meeting and possibly learning support services.</p>
+</div>
+
+<div class="screen">
+  <div class="screen-bar"><div class="screen-dots"><div class="screen-dot"></div><div class="screen-dot"></div><div class="screen-dot"></div></div><span class="screen-title">advisor dashboard — at-risk students</span></div>
+  <div class="mock-main" style="padding:16px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div style="font-family:'Fraunces',serif;font-size:20px">At-risk students — Feb 2025</div>
+      <div style="display:flex;gap:6px">
+        <span class="pill p-r" style="cursor:pointer">Systemic (1)</span>
+        <span class="pill p-gold" style="cursor:pointer">Cluster (2)</span>
+        <span class="pill p-b" style="cursor:pointer">Isolated (1)</span>
+      </div>
+    </div>
+
+    <div class="risk-card high">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div>
+          <div style="font-size:13px;font-weight:500">Johnson, Marcus · M2</div>
+          <div style="font-size:11px;color:#888">MEDI-601 Section B · Last active: Today</div>
+        </div>
+        <div style="display:flex;gap:6px;flex-direction:column;align-items:flex-end">
+          <span class="pill p-r">SYSTEMIC · High risk</span>
+          <span style="font-size:11px;color:#888">Advisor action needed</span>
+        </div>
+      </div>
+      <div style="margin-top:8px;background:var(--red-50);padding:10px;border-radius:3px">
+        <div style="font-size:11px;font-weight:500;color:#791f1f;margin-bottom:4px">Gap analysis: Systemic — low mastery across 5 unrelated organ systems</div>
+        <div style="font-size:11px;color:#a82828">Cardiovascular 28%, Renal 14%, Neurology 8%, Pulmonary 22%, Endocrine 11%. Pattern consistent with engagement or study method problem, not isolated content gap. Streak: 2 days (down from 11-day streak 3 weeks ago — abrupt drop).</div>
+      </div>
+      <div style="margin-top:8px">
+        <div style="font-size:11px;color:#888;font-style:italic">Suggested conversation openers:</div>
+        <div style="font-size:11px;color:#444;margin-top:3px">"Marcus, I noticed your daily study streak dropped recently — how are things going outside of school?" · "Are you finding the study queue helpful, or is there a format that works better for you?"</div>
+      </div>
+      <div class="qa-row" style="margin-top:8px">
+        <button class="qa-btn primary" style="font-size:11px">View full profile</button>
+        <button class="qa-btn" style="font-size:11px">Log intervention</button>
+        <button class="qa-btn" style="font-size:11px">Schedule meeting</button>
+        <button class="qa-btn" style="font-size:11px">Refer to learning support</button>
+      </div>
+    </div>
+
+    <div class="risk-card medium" style="margin-top:6px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div>
+          <div style="font-size:13px;font-weight:500">Thompson, Aisha · M2</div>
+          <div style="font-size:11px;color:#888">MEDI-601 Section A · Last active: 2 days ago</div>
+        </div>
+        <div style="display:flex;gap:6px;flex-direction:column;align-items:flex-end">
+          <span class="pill p-gold">CLUSTER · Medium risk</span>
+        </div>
+      </div>
+      <div style="margin-top:8px;background:var(--amber-50);padding:10px;border-radius:3px">
+        <div style="font-size:11px;font-weight:500;color:#633806;margin-bottom:4px">Gap analysis: Cluster — Renal physiology foundation affecting downstream concepts</div>
+        <div style="font-size:11px;color:#ba7517">p_mastery below 0.7 for: Glomerular filtration (0.52), Tubular reabsorption (0.48), Countercurrent multiplication (0.41), Loop diuretic mechanism (0.44). These 4 concepts form a causally-linked cluster — understanding GFR is prerequisite to understanding diuretics. Addressing the foundational concept should propagate mastery improvements downstream.</div>
+      </div>
+      <div style="margin-top:8px">
+        <div style="font-size:11px;color:#888;font-style:italic">Suggested approach:</div>
+        <div style="font-size:11px;color:#444;margin-top:3px">Review GFR regulation first, then work through the cluster in order. Targeted practice session rather than full queue. Estimated recovery time: 2 weeks of focused Renal practice.</div>
+      </div>
+      <div class="qa-row" style="margin-top:8px">
+        <button class="qa-btn primary" style="font-size:11px">View full profile</button>
+        <button class="qa-btn" style="font-size:11px">Generate Renal practice set</button>
+        <button class="qa-btn" style="font-size:11px">Log intervention</button>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<section id="advisor-profile">
+<div class="sid g">Advisor · III / Student Profile</div>
+<h2>The full view of one student — mastery, engagement, intervention history</h2>
+
+<div class="screen">
+  <div class="screen-bar"><div class="screen-dots"><div class="screen-dot"></div><div class="screen-dot"></div><div class="screen-dot"></div></div><span class="screen-title">student profile — Marcus Johnson · M2</span></div>
+  <div class="mock-main" style="padding:16px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div>
+        <div style="border:1px solid var(--edge);background:#fff;border-radius:4px;padding:14px;margin-bottom:12px">
+          <div style="font-size:14px;font-weight:500;margin-bottom:2px">Marcus Johnson</div>
+          <div style="font-size:11px;color:#888;margin-bottom:10px">M2 · MEDI-601 Section B · Student ID: STU-004821</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+            <div class="stat-card" style="padding:8px 10px"><div class="label">USMLE Step 1</div><div class="value" style="font-size:20px;color:#a82828">38%</div></div>
+            <div class="stat-card" style="padding:8px 10px"><div class="label">Streak</div><div class="value" style="font-size:20px">2 days</div></div>
+            <div class="stat-card" style="padding:8px 10px"><div class="label">Mastered</div><div class="value" style="font-size:20px">84</div><div class="sub">p≥0.95 concepts</div></div>
+            <div class="stat-card" style="padding:8px 10px"><div class="label">Exam avg</div><div class="value" style="font-size:20px">71%</div></div>
+          </div>
+        </div>
+
+        <div style="border:1px solid var(--edge);background:#fff;border-radius:4px;padding:12px;margin-bottom:12px">
+          <div style="font-size:12.5px;font-weight:500;margin-bottom:8px">Mastery by USMLE system</div>
+          <div style="display:flex;flex-direction:column;gap:5px">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 8px;background:var(--amber-50);border-radius:3px"><span style="font-size:12px;color:var(--amber-800)">Cardiovascular</span><div style="display:flex;gap:4px;align-items:center"><div style="width:60px;height:5px;background:rgba(0,0,0,.1);border-radius:3px"><div style="width:28%;height:100%;background:#ba7517;border-radius:3px"></div></div><span style="font-size:11px;font-family:'JetBrains Mono',monospace;color:#ba7517">28%</span></div></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 8px;background:var(--red-50);border-radius:3px"><span style="font-size:12px;color:#791f1f">Renal</span><div style="display:flex;gap:4px;align-items:center"><div style="width:60px;height:5px;background:rgba(0,0,0,.1);border-radius:3px"><div style="width:14%;height:100%;background:#a82828;border-radius:3px"></div></div><span style="font-size:11px;font-family:'JetBrains Mono',monospace;color:#a82828">14%</span></div></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 8px;background:var(--red-50);border-radius:3px"><span style="font-size:12px;color:#791f1f">Neurology</span><div><span style="font-size:11px;color:#a82828">8%</span></div></div>
+          </div>
+          <div style="font-size:11px;color:#888;margin-top:8px"><span class="pill p-r">SYSTEMIC</span> Low mastery across 5 unrelated systems — not a content gap</div>
+        </div>
+      </div>
+
+      <div>
+        <div style="border:1px solid var(--edge);background:#fff;border-radius:4px;padding:12px;margin-bottom:12px">
+          <div style="font-size:12.5px;font-weight:500;margin-bottom:8px">Engagement data</div>
+          <div style="display:flex;flex-direction:column;gap:5px">
+            <div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;border-bottom:1px solid var(--gray-50)"><span>Study sessions this month</span><span class="mono" style="font-size:11px">8 (target: 20)</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;border-bottom:1px solid var(--gray-50)"><span>Current streak</span><span class="mono" style="font-size:11px;color:#a82828">2 days (was 11)</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;border-bottom:1px solid var(--gray-50)"><span>Streak drop date</span><span class="mono" style="font-size:11px;color:#a82828">Jan 24</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;border-bottom:1px solid var(--gray-50)"><span>Avg daily cards completed</span><span class="mono" style="font-size:11px">3.2 (goal: 12)</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0"><span>Exam completion rate</span><span class="mono" style="font-size:11px">3/5 (60%)</span></div>
+          </div>
+          <div style="font-size:11px;color:#888;margin-top:8px;padding:8px;background:var(--red-50);border-radius:3px">Engagement cliff on Jan 24 — 11-day streak broke. Sessions dropped from ~5/week to 1/week. This pattern often indicates outside stressors.</div>
+        </div>
+
+        <div style="border:1px solid var(--edge);background:#fff;border-radius:4px;padding:12px">
+          <div style="font-size:12.5px;font-weight:500;margin-bottom:8px">Intervention log</div>
+          <div class="feed-item"><div class="feed-dot" style="background:#185fa5"></div><div class="feed-body"><div class="feed-text">Email sent: "Checking in after streak drop" — no response yet</div><div class="feed-time">Jan 28 · Advisor: Dr. Chen</div></div></div>
+          <div class="feed-item"><div class="feed-dot" style="background:#1d9e75"></div><div class="feed-body"><div class="feed-text">Meeting completed · Discussed Renal study strategy · Student engaged</div><div class="feed-time">Jan 15 · Advisor: Dr. Chen</div></div></div>
+          <div class="feed-item"><div class="feed-dot" style="background:#ba7517"></div><div class="feed-body"><div class="feed-text">Academic concern flag created — systemic gap pattern detected by system</div><div class="feed-time">Feb 3 · System alert</div></div></div>
+
+          <button class="qa-btn primary" style="width:100%;margin-top:10px;font-size:11px;padding:7px">+ Log new intervention</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ══════════ CHAIR PERSONA ══════════ -->
+<div class="persona-banner chair" id="chair-persona">
+  <div class="persona-label">Persona 3 of 4</div>
+  <div class="persona-title">Department Chair</div>
+  <div class="persona-desc">The curriculum architect — ensures courses across the department align with USMLE standards, maintains assessment quality through psychometric analysis, and develops faculty using item quality data as evidence.</div>
+</div>
+
+<section id="chair-nav">
+<div class="sid chair">Chair · I / Navigation Architecture</div>
+<h2>Six sections — curriculum, quality, standard setting, faculty development</h2>
+
+<p>The Department Chair sees the institution's assessment operation as a system. Where faculty see individual courses and students see individual queues, the Chair sees: are our courses collectively covering the USMLE blueprint? Are our items reliable enough to make high-stakes decisions? Are our standards defensible? The Chair persona answers those questions with institution-level data.</p>
+
+<div class="screen">
+  <div class="screen-bar"><div class="screen-dots"><div class="screen-dot"></div><div class="screen-dot"></div><div class="screen-dot"></div></div><span class="screen-title">chair view — Department of Internal Medicine</span></div>
+  <div class="mock-shell">
+    <div class="mock-nav">
+      <div class="mock-logo">Journey OS</div>
+      <div class="mock-nav-section">Curriculum</div>
+      <div class="mock-nav-item active chair"><span class="dot" style="background:#f0997b"></span> Curriculum overview</div>
+      <div class="mock-nav-item"><span class="dot"></span> Course health</div>
+      <div class="mock-nav-section">Quality</div>
+      <div class="mock-nav-item"><span class="dot"></span> Item quality</div>
+      <div class="mock-nav-item"><span class="dot"></span> Standard setting</div>
+      <div class="mock-nav-section">Faculty</div>
+      <div class="mock-nav-item"><span class="dot"></span> Faculty development</div>
+      <div class="mock-nav-item"><span class="dot"></span> USMLE alignment</div>
+    </div>
+    <div class="mock-main">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px">
+        <div class="stat-card"><div class="label">Dept. USMLE coverage</div><div class="value">64%</div><div class="sub">Step 1 systems</div></div>
+        <div class="stat-card"><div class="label">Total items in bank</div><div class="value">1,847</div><div class="sub">Across all courses</div></div>
+        <div class="stat-card"><div class="label">Avg KR-20 reliability</div><div class="value">0.74</div><div class="sub">Last semester (target ≥0.70)</div></div>
+        <div class="stat-card"><div class="label">Active faculty</div><div class="value">12</div><div class="sub">Using Journey OS</div></div>
+      </div>
+      <p style="font-size:12px;color:#aaa;font-style:italic">← Full curriculum view in §II</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section id="chair-curriculum">
+<div class="sid chair">Chair · II / Curriculum Overview</div>
+<h2>Institution-wide USMLE heatmap + year-over-year alignment trend</h2>
+
+<div class="screen">
+  <div class="screen-bar"><div class="screen-dots"><div class="screen-dot"></div><div class="screen-dot"></div><div class="screen-dot"></div></div><span class="screen-title">curriculum overview — Dept. of Internal Medicine</span></div>
+  <div class="mock-main" style="padding:16px">
+    <div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#999;margin-bottom:8px">USMLE Step 1 — institutional coverage heatmap (18 systems × 6 Bloom levels)</div>
+    <div style="overflow-x:auto;margin-bottom:14px">
+      <table style="min-width:700px;font-size:10px">
+        <thead><tr>
+          <th style="width:120px">System</th>
+          <th style="text-align:center">B1 Remember</th>
+          <th style="text-align:center">B2 Understand</th>
+          <th style="text-align:center">B3 Apply</th>
+          <th style="text-align:center">B4 Analyze</th>
+          <th style="text-align:center">B5 Evaluate</th>
+          <th style="text-align:center">B6 Create</th>
+          <th style="text-align:center;width:60px">Overall</th>
+        </tr></thead>
+        <tbody>
+          <tr><td>Cardiovascular</td><td class="bkt-cell" style="background:#eaf3de;color:#27500a;font-size:10px">94%</td><td class="bkt-cell" style="background:#eaf3de;font-size:10px">88%</td><td class="bkt-cell" style="background:#eaf3de;font-size:10px">82%</td><td class="bkt-cell" style="background:#faeeda;font-size:10px">71%</td><td class="bkt-cell" style="background:#faeeda;font-size:10px">58%</td><td class="bkt-cell" style="background:#fcebeb;color:#791f1f;font-size:10px">22%</td><td style="text-align:center;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:#1d9e75">86%</td></tr>
+          <tr><td>Pharmacology</td><td class="bkt-cell" style="background:#eaf3de;font-size:10px">88%</td><td class="bkt-cell" style="background:#eaf3de;font-size:10px">82%</td><td class="bkt-cell" style="background:#eaf3de;font-size:10px">76%</td><td class="bkt-cell" style="background:#faeeda;font-size:10px">64%</td><td class="bkt-cell" style="background:#faeeda;font-size:10px">48%</td><td class="bkt-cell" style="background:#fcebeb;font-size:10px">18%</td><td style="text-align:center;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:#ba7517">73%</td></tr>
+          <tr><td>Renal</td><td class="bkt-cell" style="background:#faeeda;font-size:10px">72%</td><td class="bkt-cell" style="background:#faeeda;font-size:10px">64%</td><td class="bkt-cell" style="background:#faeeda;font-size:10px">54%</td><td class="bkt-cell" style="background:#fcebeb;font-size:10px">31%</td><td class="bkt-cell" style="background:#fcebeb;font-size:10px">18%</td><td class="bkt-cell" style="background:#fcebeb;font-size:10px">8%</td><td style="text-align:center;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:#a82828">41%</td></tr>
+          <tr><td>Musculoskeletal</td><td class="bkt-cell" style="background:#faeeda;font-size:10px">68%</td><td class="bkt-cell" style="background:#faeeda;font-size:10px">58%</td><td class="bkt-cell" style="background:#fcebeb;font-size:10px">42%</td><td class="bkt-cell" style="background:#fcebeb;font-size:10px">24%</td><td class="bkt-cell" style="background:#fcebeb;font-size:10px">14%</td><td class="bkt-cell" style="background:#fcebeb;font-size:10px">5%</td><td style="text-align:center;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:#a82828">35%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="call-gold"><div class="cl">Key finding</div>
+    <p>Bloom levels 5 and 6 (Evaluate and Create) are consistently undercovered across all systems — averaging 18% coverage institution-wide. This aligns with known USMLE Step 1 difficulty: the hardest questions require evaluation and synthesis. Faculty need targeted prompts to generate higher-Bloom items. The Chair can use the "Fill Bloom 5-6 gaps" action to trigger generation campaigns for the specific system × Bloom cells that are below 40%.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
+      <div class="stat-card"><div class="label">Bloom 1-3 average coverage</div><div class="value" style="color:#1d9e75">78%</div><div class="sub">Recall and application well-covered</div></div>
+      <div class="stat-card"><div class="label">Bloom 4-6 average coverage</div><div class="value" style="color:#a82828">31%</div><div class="sub">Analysis/evaluation — critical gap</div></div>
+    </div>
+  </div>
+</div>
+</section>
+
+<section id="chair-angoff">
+<div class="sid chair">Chair · III / Standard Setting + Item Quality</div>
+<h2>Angoff simulation, KR-20 reliability, DIF analysis — defensible cut scores</h2>
+
+<div class="call-v"><div class="cl">Why standard setting matters</div>
+<p>A passing score on a medical school exam should be defensible: it should represent a judgment by qualified faculty about what a minimally competent student should be able to do, not an arbitrary percentage. The Angoff method asks faculty to judge, for each item: "What percentage of minimally competent students would answer this correctly?" The average of these judgments becomes the cut score. Journey OS implements this as a simulation tool — showing faculty the item stem and options, collecting Angoff ratings, computing the aggregate cut score, and comparing it against the actual score distribution. This produces a legally and academically defensible pass/fail threshold.</p>
+</div>
+
+<div class="screen">
+  <div class="screen-bar"><div class="screen-dots"><div class="screen-dot"></div><div class="screen-dot"></div><div class="screen-dot"></div></div><span class="screen-title">standard setting — Angoff simulation · MEDI-601 Cardio Midterm</span></div>
+  <div class="mock-main" style="padding:16px">
+    <div class="tab-bar" style="margin-bottom:14px">
+      <div class="tab active">Angoff simulation</div>
+      <div class="tab">KR-20 reliability</div>
+      <div class="tab">DIF analysis</div>
+      <div class="tab">p-value distribution</div>
+    </div>
+
+    <!-- Angoff view -->
+    <div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#999;margin-bottom:8px">Faculty Angoff ratings — "What % of borderline-competent students would answer correctly?"</div>
+    <div style="margin-bottom:12px">
+      <div class="angoff-item">
+        <span style="font-size:11px;font-family:'JetBrains Mono',monospace;color:#888;width:40px">Q1</span>
+        <span style="flex:1;font-size:12px">Heart failure pathophysiology — preload/afterload distinction</span>
+        <span class="pill p-b" style="margin-right:8px">Bloom 3</span>
+        <div style="display:flex;gap:4px;align-items:center">
+          <span style="font-size:11px;color:#888">Your rating:</span>
+          <input type="range" min="0" max="100" value="70" style="width:80px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:12px;width:30px">70%</span>
+          <span style="font-size:11px;color:#888;margin-left:8px">Group avg: 68%</span>
+        </div>
+      </div>
+      <div class="angoff-item">
+        <span style="font-size:11px;font-family:'JetBrains Mono',monospace;color:#888;width:40px">Q7</span>
+        <span style="flex:1;font-size:12px">HFrEF mortality-reducing beta-blockers (carvedilol vs atenolol)</span>
+        <span class="pill p-v" style="margin-right:8px">Bloom 4</span>
+        <div style="display:flex;gap:4px;align-items:center">
+          <span style="font-size:11px;color:#888">Your rating:</span>
+          <input type="range" min="0" max="100" value="55" style="width:80px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:12px;width:30px">55%</span>
+          <span style="font-size:11px;color:#888;margin-left:8px">Group avg: 52%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results summary -->
+    <div style="border:1px solid var(--edge);background:#fff;padding:14px;border-radius:4px">
+      <div style="font-size:12.5px;font-weight:500;margin-bottom:10px">Angoff simulation results</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+        <div class="stat-card" style="padding:10px 12px"><div class="label">Cut score</div><div class="value" style="font-size:22px">62%</div><div class="sub">Angoff aggregate</div></div>
+        <div class="stat-card" style="padding:10px 12px"><div class="label">Actual pass rate</div><div class="value" style="font-size:22px">78%</div><div class="sub">At 62% cutoff</div></div>
+        <div class="stat-card" style="padding:10px 12px"><div class="label">KR-20</div><div class="value" style="font-size:22px">0.74</div><div class="sub">Meets threshold</div></div>
+        <div class="stat-card" style="padding:10px 12px"><div class="label">Raters</div><div class="value" style="font-size:22px">4</div><div class="sub">Faculty panelists</div></div>
+      </div>
+      <div style="margin-top:10px;padding:10px;background:var(--green-50);border-radius:3px;font-size:12px;color:#185230">Cut score of 62% is supported by Angoff data (4 raters, good agreement). Passing rate of 78% is within normal range for M2 pre-clerkship exam. KR-20 = 0.74 indicates good reliability. Recommended: adopt 62% as official cut score for this exam.</div>
+    </div>
+
+    <div style="margin-top:12px">
+      <div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#999;margin-bottom:8px">DIF analysis — differential item functioning by subgroup</div>
+      <p style="font-size:12.5px;margin-bottom:10px">DIF identifies items that perform differently for identically-able students from different demographic groups (gender, URM status). An item with high DIF may be biased. Items flagged for DIF are not automatically removed — they trigger a faculty review. The Chair reviews flagged items and decides whether to remove, revise, or retain with documentation.</p>
+      <table>
+        <thead><tr><th>Item</th><th>DIF statistic (Mantel-Haenszel)</th><th>Direction</th><th>Magnitude</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td>Q14 — ACE inhibitor mechanism</td><td class="mono">χ² = 8.2, p = 0.004</td><td>Favors non-URM</td><td><span class="pill p-r">Moderate DIF</span></td><td><button class="qa-btn primary" style="font-size:10px;padding:2px 7px">Review item</button></td></tr>
+          <tr><td>Q22 — NYHA classification</td><td class="mono">χ² = 2.1, p = 0.15</td><td>No DIF</td><td><span class="pill p-g">Acceptable</span></td><td>—</td></tr>
+          <tr><td>Q37 — Diuretic choice clinical</td><td class="mono">χ² = 11.4, p = 0.001</td><td>Favors female</td><td><span class="pill p-gold">High DIF</span></td><td><button class="qa-btn primary" style="font-size:10px;padding:2px 7px">Review item</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ══════════ DEAN PERSONA ══════════ -->
+<div class="persona-banner dean" id="dean-persona">
+  <div class="persona-label">Persona 4 of 4</div>
+  <div class="persona-title">Dean of Student Affairs / Academic Affairs</div>
+  <div class="persona-desc">The institutional steward — responsible for LCME accreditation evidence, equity in student outcomes, and the institution's long-term educational mission. Journey OS is an instrument for demonstrating institutional excellence.</div>
+</div>
+
+<section id="dean-nav">
+<div class="sid dean">Dean · I / Navigation Architecture</div>
+<h2>Five sections — LCME readiness, equity, and institutional outcomes</h2>
+
+<p>The Dean's relationship to Journey OS is different from every other persona. The Dean doesn't log in to manage daily operations — they log in to prepare for accreditation reviews, to monitor equity in student outcomes, and to track the institution's long-term educational trajectory. The navigation reflects this: fewer tabs, higher signal-to-noise ratio, executive-ready data visualizations.</p>
+
+<div class="screen">
+  <div class="screen-bar"><div class="screen-dots"><div class="screen-dot"></div><div class="screen-dot"></div><div class="screen-dot"></div></div><span class="screen-title">dean view — Dr. Richardson, Dean of Academic Affairs</span></div>
+  <div class="mock-shell">
+    <div class="mock-nav">
+      <div class="mock-logo">Journey OS</div>
+      <div class="mock-nav-section">Overview</div>
+      <div class="mock-nav-item active dean"><span class="dot" style="background:#afa9ec"></span> Overview</div>
+      <div class="mock-nav-section">Accreditation</div>
+      <div class="mock-nav-item"><span class="dot"></span> LCME Readiness</div>
+      <div class="mock-nav-item"><span class="dot"></span> Equity Dashboard</div>
+      <div class="mock-nav-section">Outcomes</div>
+      <div class="mock-nav-item"><span class="dot"></span> Student Outcomes</div>
+      <div class="mock-nav-item"><span class="dot"></span> Institutional Maturity</div>
+    </div>
+    <div class="mock-main">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px">
+        <div class="stat-card"><div class="label">LCME elements covered</div><div class="value">38 / 58</div><div class="sub">66% with evidence</div></div>
+        <div class="stat-card"><div class="label">USMLE Step 1 coverage</div><div class="value">64%</div><div class="sub">Institution-wide</div></div>
+        <div class="stat-card"><div class="label">Equity gap (URM)</div><div class="value" style="color:#ba7517">d=0.31</div><div class="sub">Cohen's d — monitoring</div></div>
+        <div class="stat-card"><div class="label">Next accreditation</div><div class="value">18 mo</div><div class="sub">DCI review due Aug 2026</div></div>
+      </div>
+      <p style="font-size:12px;color:#aaa;font-style:italic">← Full dean views in §II and §III</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section id="dean-lcme">
+<div class="sid dean">Dean · II / LCME Readiness Room</div>
+<h2>58 LCME elements — evidence status, DCI export, and gap triage</h2>
+
+<div class="call-v"><div class="cl">The LCME Readiness Room</div>
+<p>LCME accreditation requires medical schools to demonstrate compliance with 58 Elements organized into 12 standards. For the Dean, Journey OS becomes an evidence management system: for each element, it shows what data Journey OS can contribute to the DCI (Data Collection Instrument), what evidence status that data has (confirmed vs. partial vs. gap), and provides a one-click export formatted for DCI submission. This is the feature that makes Journey OS relevant at the most senior level of the institution.</p>
+</div>
+
+<div class="screen">
+  <div class="screen-bar"><div class="screen-dots"><div class="screen-dot"></div><div class="screen-dot"></div><div class="screen-dot"></div></div><span class="screen-title">LCME readiness room</span></div>
+  <div class="mock-main" style="padding:16px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div>
+        <div style="font-family:'Fraunces',serif;font-size:20px">LCME Readiness Room</div>
+        <div style="font-size:12px;color:#888">58 elements · DCI review: Aug 2026 · 18 months away</div>
+      </div>
+      <div class="qa-row" style="margin:0">
+        <button class="qa-btn primary">Export DCI evidence package</button>
+        <button class="qa-btn">Generate readiness report</button>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">
+      <div class="stat-card"><div class="label">Confirmed evidence</div><div class="value" style="color:#1d9e75">24</div><div class="sub">Journey OS data available</div></div>
+      <div class="stat-card"><div class="label">Partial evidence</div><div class="value" style="color:#ba7517">14</div><div class="sub">Data available, gaps exist</div></div>
+      <div class="stat-card"><div class="label">No evidence</div><div class="value" style="color:#a82828">20</div><div class="sub">Outside Journey OS scope</div></div>
+      <div class="stat-card"><div class="label">DCI-ready elements</div><div class="value">38</div><div class="sub">Can export now</div></div>
+    </div>
+
+    <div class="tab-bar" style="margin-bottom:12px">
+      <div class="tab active">Standard 7 — Curriculum Management</div>
+      <div class="tab">Standard 8 — Assessment</div>
+      <div class="tab">Standard 9 — Outcomes</div>
+      <div class="tab">All standards</div>
+    </div>
+
+    <!-- Standard 8 elements (assessment) -->
+    <div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#999;margin-bottom:8px">Standard 8 — Assessment of Medical Students</div>
+
+    <div class="lcme-el" style="border-left:3px solid #1d9e75">
+      <span class="lcme-el-code">8.1</span>
+      <span class="lcme-el-label">A medical school ensures that its methods for the assessment of medical students support the achievement of its educational program objectives</span>
+      <span class="pill p-g" style="margin-left:8px">Confirmed</span>
+      <button class="qa-btn" style="font-size:10px;padding:2px 7px;margin-left:8px">View evidence</button>
+    </div>
+    <div class="lcme-el" style="border-left:3px solid #1d9e75">
+      <span class="lcme-el-code">8.2</span>
+      <span class="lcme-el-label">A medical school has a system for the assessment of medical student attainment of competencies required for graduation</span>
+      <span class="pill p-g" style="margin-left:8px">Confirmed</span>
+      <button class="qa-btn" style="font-size:10px;padding:2px 7px;margin-left:8px">View evidence</button>
+    </div>
+    <div class="lcme-el" style="border-left:3px solid #ba7517">
+      <span class="lcme-el-code">8.3</span>
+      <span class="lcme-el-label">The assessment process includes formative and summative components aligned with defined competencies</span>
+      <span class="pill p-gold" style="margin-left:8px">Partial</span>
+      <div style="flex:1;font-size:11px;color:#ba7517;padding-left:8px">Journey OS covers summative (exams) and some formative (study queue). Structured formative assessment documentation is incomplete.</div>
+      <button class="qa-btn" style="font-size:10px;padding:2px 7px;margin-left:8px">Fill gap</button>
+    </div>
+    <div class="lcme-el" style="border-left:3px solid #ba7517">
+      <span class="lcme-el-code">8.4</span>
+      <span class="lcme-el-label">The school uses valid, reliable, and appropriate assessment methods and instruments</span>
+      <span class="pill p-gold" style="margin-left:8px">Partial</span>
+      <div style="flex:1;font-size:11px;color:#ba7517;padding-left:8px">IRT calibration data available for 847 items. KR-20 data available for all formal exams. Needs: validity evidence documentation for newly-generated items (ECD framework).</div>
+      <button class="qa-btn" style="font-size:10px;padding:2px 7px;margin-left:8px">Export data</button>
+    </div>
+    <div class="lcme-el" style="border-left:3px solid var(--r)">
+      <span class="lcme-el-code">8.7</span>
+      <span class="lcme-el-label">The medical school documents that the faculty have the information needed to fulfill their responsibilities for student assessment and promotion</span>
+      <span class="pill p-r" style="margin-left:8px">No Journey OS data</span>
+      <div style="flex:1;font-size:11px;color:#aaa;padding-left:8px">Requires faculty training records — outside Journey OS scope. Gather from HR system.</div>
+    </div>
+
+    <div style="margin-top:14px;border:1px solid var(--purple-50);background:var(--purple-50);padding:12px;border-radius:4px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:#534ab7;margin-bottom:6px">DCI export package — what Journey OS provides</div>
+      <div style="font-size:12.5px;color:#3c3489;margin-bottom:8px">The export generates a structured evidence package for Elements 8.1–8.6 including: item bank statistics (count by course, Bloom distribution, QA score summary), exam administration records (dates, student counts, pass rates), psychometric summary (KR-20 per exam, DIF results, p-value distributions), USMLE coverage matrix (all 18 systems × 6 Bloom levels), and BKT mastery aggregate by cohort.</div>
+      <button class="qa-btn primary">Export LCME evidence package (PDF + Excel)</button>
+    </div>
+  </div>
+</div>
+</section>
+
+<section id="dean-equity">
+<div class="sid dean">Dean · III / Equity Dashboard</div>
+<h2>DIF analysis, URM/gender performance gaps, Cohen's d over time</h2>
+
+<div class="call-r"><div class="cl">Why the equity dashboard matters institutionally</div>
+<p>LCME Standard 3.3 requires medical schools to maintain institutional policies for fair and appropriate treatment of all medical students. The equity dashboard operationalizes this requirement: it surfaces performance gaps between demographic groups on the same assessment items, computed using Cohen's d (effect size). A gap of d &gt; 0.5 (medium effect) triggers a review. The dashboard tracks gaps over time to determine whether they are growing, stable, or closing — helping the Dean understand whether institutional interventions are working.</p>
+</div>
+
+<div class="screen">
+  <div class="screen-bar"><div class="screen-dots"><div class="screen-dot"></div><div class="screen-dot"></div><div class="screen-dot"></div></div><span class="screen-title">equity dashboard — Spring 2025</span></div>
+  <div class="mock-main" style="padding:16px">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">
+      <div class="stat-card"><div class="label">URM performance gap</div><div class="value" style="color:#ba7517">d = 0.31</div><div class="sub">Small-medium effect · Monitoring</div></div>
+      <div class="stat-card"><div class="label">Gender performance gap</div><div class="value" style="color:#1d9e75">d = 0.08</div><div class="sub">Negligible effect · Within range</div></div>
+      <div class="stat-card"><div class="label">Items with DIF flagged</div><div class="value" style="color:#ba7517">8</div><div class="sub">Across all courses · Under review</div></div>
+      <div class="stat-card"><div class="label">Gap trend (12 months)</div><div class="value" style="color:#ba7517">Stable</div><div class="sub">URM gap d: 0.34 → 0.31</div></div>
+    </div>
+
+    <div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#999;margin-bottom:8px">Performance gap — URM vs. non-URM students by USMLE system</div>
+    <div style="border:1px solid var(--edge);background:#fff;padding:14px;border-radius:4px;margin-bottom:14px">
+      <div class="eq-row">
+        <span class="eq-label" style="font-size:12px">Cardiovascular</span>
+        <div class="eq-bars">
+          <div style="width:80px;font-size:10px;color:#888;text-align:right;padding-right:6px">URM 71%</div>
+          <div class="eq-bar-wrap"><div class="eq-bar" style="width:71%;background:#185fa5"></div></div>
+          <div class="eq-bar-wrap" style="margin-left:4px"><div class="eq-bar" style="width:84%;background:#1d9e75"></div></div>
+          <div style="width:80px;font-size:10px;color:#888;padding-left:6px">non-URM 84%</div>
+        </div>
+        <span class="pill p-gold" style="margin-left:10px;flex-shrink:0">d = 0.38</span>
+      </div>
+      <div class="eq-row">
+        <span class="eq-label" style="font-size:12px">Pharmacology</span>
+        <div class="eq-bars">
+          <div style="width:80px;font-size:10px;color:#888;text-align:right;padding-right:6px">URM 74%</div>
+          <div class="eq-bar-wrap"><div class="eq-bar" style="width:74%;background:#185fa5"></div></div>
+          <div class="eq-bar-wrap" style="margin-left:4px"><div class="eq-bar" style="width:80%;background:#1d9e75"></div></div>
+          <div style="width:80px;font-size:10px;color:#888;padding-left:6px">non-URM 80%</div>
+        </div>
+        <span class="pill p-g" style="margin-left:10px;flex-shrink:0">d = 0.18</span>
+      </div>
+      <div class="eq-row">
+        <span class="eq-label" style="font-size:12px">Renal</span>
+        <div class="eq-bars">
+          <div style="width:80px;font-size:10px;color:#888;text-align:right;padding-right:6px">URM 52%</div>
+          <div class="eq-bar-wrap"><div class="eq-bar" style="width:52%;background:#185fa5"></div></div>
+          <div class="eq-bar-wrap" style="margin-left:4px"><div class="eq-bar" style="width:71%;background:#1d9e75"></div></div>
+          <div style="width:80px;font-size:10px;color:#888;padding-left:6px">non-URM 71%</div>
+        </div>
+        <span class="pill p-r" style="margin-left:10px;flex-shrink:0">d = 0.54 ⚠</span>
+      </div>
+    </div>
+
+    <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="card">
+        <div class="card-l">Gap trend — 12 months (URM d)</div>
+        <div class="card-t">Renal gap widening</div>
+        <p>The Renal system gap grew from d=0.41 to d=0.54 over 12 months. This is the only system showing consistent widening. Likely cause: Renal content is undertaught (41% coverage vs 86% for Cardiovascular) — URM students with fewer outside study resources are disproportionately affected by content gaps in the institutional item bank.</p>
+        <div class="qa-row"><button class="qa-btn primary" style="font-size:11px">Prioritize Renal item generation</button></div>
+      </div>
+      <div class="card">
+        <div class="card-l">Institutional maturity model</div>
+        <div class="card-t">Current stage: Level 3 of 5</div>
+        <p>Level 1: Item bank exists. Level 2: Systematic generation. Level 3: Psychometric QA (current). Level 4: Adaptive delivery + BKT at scale. Level 5: Continuous equity monitoring with automated interventions. The Dean can view evidence for each level and what actions advance the institution to the next stage.</p>
+        <div class="qa-row"><button class="qa-btn" style="font-size:11px">View maturity model →</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<div class="footer">
+  <span>Journey OS · Institutional Personas · Admin + Advisor + Department Chair + Dean · Complete Product Specification · MSM · 2025</span>
+  <span>FERPA compliance · Pipeline health · At-risk classification · Angoff simulation · LCME readiness room · Equity dashboard</span>
+</div>
+</body>
+</html>

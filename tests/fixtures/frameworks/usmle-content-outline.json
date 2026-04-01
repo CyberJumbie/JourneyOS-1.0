@@ -1,0 +1,328 @@
+{
+  "$schema": "usmle-content-outline-schema",
+  "source": "USMLE Content Outline (2025), FSMB & NBME",
+  "version": "2025",
+  "exam": {
+    "name": "USMLE Step 1",
+    "format": "MCQ",
+    "blocks": 7,
+    "block_time_minutes": 60,
+    "max_questions_per_block": 40,
+    "max_total_questions": 280,
+    "scoring": "pass/fail",
+    "pass_fail_effective": "2022-01-26"
+  },
+  "step1_system_specifications": [
+    { "system": "Human Development", "range_pct": [1, 3], "notes": "Includes Normal Age-Related Findings and Care of the Well Patient" },
+    { "system": "Blood & Lymphoreticular/Immune Systems", "range_pct": [9, 13] },
+    { "system": "Behavioral Health & Nervous Systems/Special Senses", "range_pct": [10, 14] },
+    { "system": "Musculoskeletal, Skin & Subcutaneous Tissue", "range_pct": [8, 12] },
+    { "system": "Cardiovascular System", "range_pct": [7, 11] },
+    { "system": "Respiratory & Renal/Urinary Systems", "range_pct": [11, 15] },
+    { "system": "Gastrointestinal System", "range_pct": [6, 10] },
+    { "system": "Reproductive & Endocrine Systems", "range_pct": [12, 16] },
+    { "system": "Multisystem Processes & Disorders", "range_pct": [8, 12] },
+    { "system": "Biostatistics & Epidemiology/Population Health", "range_pct": [4, 6] },
+    { "system": "Social Sciences: Communication and Interpersonal Skills", "range_pct": [6, 9] }
+  ],
+  "step1_physician_tasks": [
+    { "competency": "Medical Knowledge: Applying Foundational Science Concepts", "range_pct": [60, 70] },
+    { "competency": "Patient Care: Diagnosis", "range_pct": [20, 25], "subtasks": ["History/Physical Examination", "Diagnosis"] },
+    { "competency": "Communication and Interpersonal Skills", "range_pct": [6, 9] },
+    { "competency": "Practice-based Learning & Improvement", "range_pct": [4, 6] }
+  ],
+  "step1_discipline_specifications": [
+    { "discipline": "Pathology", "range_pct": [45, 55] },
+    { "discipline": "Physiology", "range_pct": [30, 40] },
+    { "discipline": "Pharmacology", "range_pct": [10, 20] },
+    { "discipline": "Biochemistry & Nutrition", "range_pct": [5, 15] },
+    { "discipline": "Microbiology", "range_pct": [10, 20] },
+    { "discipline": "Immunology", "range_pct": [5, 15] },
+    { "discipline": "Gross Anatomy & Embryology", "range_pct": [10, 20] },
+    { "discipline": "Histology & Cell Biology", "range_pct": [5, 15] },
+    { "discipline": "Behavioral Sciences", "range_pct": [10, 15] },
+    { "discipline": "Genetics", "range_pct": [5, 10] }
+  ],
+  "systems": [
+    {
+      "id": "human-development",
+      "title": "Human Development",
+      "topics": [
+        {
+          "category": "Normal age-related findings and care of the well patient",
+          "age_groups": [
+            {
+              "group": "Infancy and childhood (0-12 years)",
+              "subtopics": ["Linear growth and variations", "Weight", "Head circumference", "Micturition/defecation/primary incontinence", "Normal physical examination", "Screening", "Sleep", "Teething syndrome", "Motor developmental stages", "Speech developmental stages", "Cognitive developmental stages", "Psychosocial developmental stages", "Anticipatory guidance", "Nutrition", "Exercise", "Preventive/travel medicine", "Risk factors (guns, swimming, motor vehicles, car seats)", "Routine vaccinations", "Adaptive behavioral responses to stress/illness", "Patient adherence"]
+            },
+            {
+              "group": "Adolescence (13-17 years)",
+              "subtopics": ["Linear growth and constitutional delay", "Weight", "Puberty", "Gynecomastia", "Autonomy/self-identity", "Sleep", "Abstract thought", "Psychosocial (autonomy, role confusion, sexual identity)", "Risk-taking behavior", "Safe sex/consent/screening for reproductive coercion", "Routine vaccinations"]
+            },
+            {
+              "group": "Adulthood (18-64 years)",
+              "subtopics": ["Weight", "Normal physical examination", "Screening", "Sleep", "Cognitive stages", "Intimacy vs isolation", "Nutrition", "Exercise", "Risk factors and prevention", "Routine vaccinations"]
+            },
+            {
+              "group": "Older adulthood (65+ years)",
+              "subtopics": ["Weight/height (spinal compression)", "Skin/bruising", "Response to temperature", "Micturition/defecation", "Sleep", "Motor changes", "Cognitive changes (normal aging)", "Integrity vs despair", "Falls prevention", "Polypharmacy", "Driving", "Caregiver stress", "Routine vaccinations"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "immune-system",
+      "title": "Immune System",
+      "topics": [
+        {
+          "category": "Disorders associated with immunodeficiency",
+          "subtopics": [
+            "Humoral immunity deficiency (CVID, hyper-IgM, X-linked agammaglobulinemia, selective Ig deficiency)",
+            "Cell-mediated immunity deficiency (ADA deficiency, DiGeorge/22q11.2, SCID, Wiskott-Aldrich)",
+            "Complement deficiency (C1-C5, terminal C5b-C9, C1 esterase inhibitor/hereditary angioedema, MBL deficiency)",
+            "Phagocytic cell/NK cell deficiency (Chediak-Higashi, chronic granulomatous disease, leukocyte adhesion deficiency)"
+          ]
+        },
+        {
+          "category": "HIV/AIDS",
+          "subtopics": ["HIV1 and HIV2", "AIDS complications (neuropathy, dementia, renal insufficiency)", "Immunology of AIDS", "Immune reconstitution syndrome", "Secondary infections", "Noninfectious complications (Kaposi sarcoma)"]
+        },
+        {
+          "category": "Immunologically mediated disorders",
+          "subtopics": ["Hypersensitivity reactions (type 1-4, anaphylaxis, drug reactions, serum sickness)", "Transplantation (rejection, graft-versus-host disease)"]
+        },
+        {
+          "category": "Adverse effects of drugs on immune system",
+          "subtopics": ["Jarisch-Herxheimer reaction", "Immunosuppressants (prednisone, azathioprine, cyclosporine, methotrexate)", "Monoclonal antibodies (abciximab, adalimumab, bevacizumab, infliximab, rituximab)", "Vaccine adverse effects"]
+        }
+      ]
+    },
+    {
+      "id": "blood-lymphoreticular",
+      "title": "Blood & Lymphoreticular System",
+      "topics": [
+        {
+          "category": "Infectious and immunologic disorders",
+          "subtopics": ["Bacterial/viral/parasitic blood infections", "Hemorrhagic fever (Ebola, Marburg)", "Malaria", "Babesiosis", "Lymphadenitis", "Cat-scratch disease", "Cryoglobulinemia", "Autoimmune hemolytic anemia", "PNH", "TTP", "HUS"]
+        },
+        {
+          "category": "Neoplasms",
+          "subtopics": ["Acute leukemia (ALL, AML)", "Chronic leukemia (CLL, CML)", "Hodgkin/Non-Hodgkin lymphoma", "Burkitt lymphoma", "Multiple myeloma", "MGUS", "Myelofibrosis", "Myelodysplastic syndrome", "Waldenstrom macroglobulinemia"]
+        },
+        {
+          "category": "Anemia, cytopenias, and polycythemia",
+          "subtopics": ["Anemia of chronic disease", "G6PD deficiency", "Pyruvate kinase deficiency", "Hereditary spherocytosis/elliptocytosis", "Sickle cell disease", "Thalassemias", "Sideroblastic anemia", "Aplastic anemia", "ITP", "Polycythemia vera"]
+        },
+        {
+          "category": "Coagulation disorders",
+          "subtopics": ["DIC", "Hemophilia A/B", "Von Willebrand disease", "HIT", "Factor V Leiden", "Protein C/S deficiency", "Antiphospholipid antibodies", "Prothrombin G20210A", "Transfusion reactions (ABO, Rh, TRALI)"]
+        },
+        {
+          "category": "Traumatic and mechanical disorders",
+          "subtopics": ["Mechanical injury to erythrocytes", "Splenic disorders (rupture, infarct, abscess, splenectomy complications, hypersplenism)"]
+        },
+        {
+          "category": "Adverse drug effects",
+          "subtopics": ["Antiplatelet drugs", "Antithrombin drugs", "Chemotherapeutic agents", "Warfarin", "Tumor lysis syndrome"]
+        }
+      ]
+    },
+    {
+      "id": "behavioral-health",
+      "title": "Behavioral Health",
+      "topics": [
+        { "category": "Psychotic disorders", "subtopics": ["Schizophrenia", "Schizoaffective disorder", "Brief psychotic disorder", "Delusional disorder", "Substance-induced psychotic disorder"] },
+        { "category": "Anxiety disorders", "subtopics": ["GAD", "Panic disorder", "Phobic disorders", "Social phobia", "OCD", "PTSD", "Acute stress disorder", "Separation anxiety", "Selective mutism"] },
+        { "category": "Mood disorders", "subtopics": ["Major depressive disorder", "Postpartum depression", "Bipolar disorder", "Persistent depressive disorder", "Cyclothymic disorder", "Premenstrual dysphoric disorder", "Suicidal ideation/attempt"] },
+        { "category": "Somatic symptoms and related disorders", "subtopics": ["Somatic symptom disorder", "Illness anxiety disorder", "Conversion disorder", "Body dysmorphic disorder", "Dissociative disorders", "Malingering"] },
+        { "category": "Eating disorders and impulse-control", "subtopics": ["Anorexia nervosa", "Bulimia nervosa", "Binge-eating disorder", "Gambling/kleptomania/pyromania"] },
+        { "category": "Disorders originating in infancy/childhood", "subtopics": ["ADHD", "Autism spectrum disorder", "Oppositional defiant/conduct disorder", "Intellectual developmental disorder", "Learning disorder/dyslexia", "Tic disorders/Tourette", "Elimination disorders", "Reactive attachment disorder"] },
+        { "category": "Personality disorders", "subtopics": ["Antisocial", "Avoidant", "Borderline", "Dependent", "Histrionic", "Narcissistic", "Obsessive-compulsive", "Paranoid", "Schizoid"] },
+        { "category": "Substance use disorders", "subtopics": ["Alcohol", "Tobacco/nicotine", "Cannabis", "Opioids/heroin", "Stimulants (cocaine, methamphetamine)", "Sedatives/benzodiazepines/barbiturates", "Hallucinogens", "Inhalants", "Polysubstance use"] },
+        { "category": "Sexual disorders and gender dysphoria", "subtopics": ["Gender dysphoria", "Psychosexual dysfunction"] }
+      ]
+    },
+    {
+      "id": "nervous-system-special-senses",
+      "title": "Nervous System & Special Senses",
+      "topics": [
+        { "category": "Infectious/immunologic/inflammatory disorders", "subtopics": ["Bacterial meningitis", "Viral meningitis", "Fungal meningitis", "Encephalitis (HSV, West Nile, rabies)", "Prion disease", "Botulism", "Tetanus", "Myasthenia gravis", "Multiple sclerosis", "Transverse myelitis"] },
+        { "category": "Neoplasms", "subtopics": ["Meningioma", "Neurofibromatosis", "Glioblastoma", "Astrocytoma", "Medulloblastoma", "Primary CNS lymphoma", "Metastatic (breast, lung, melanoma)"] },
+        { "category": "Cerebrovascular disease", "subtopics": ["TIA", "Thrombotic stroke", "Embolic stroke", "Intracerebral/subarachnoid hemorrhage", "Cerebral aneurysm", "Carotid stenosis/dissection", "Venous sinus thrombosis", "Vascular dementia"] },
+        { "category": "Spine and spinal cord disorders", "subtopics": ["Cauda equina syndrome", "Spinal cord compression", "Spinal stenosis", "Syringomyelia", "Paraplegia/quadriplegia"] },
+        { "category": "Cranial and peripheral nerve disorders", "subtopics": ["Bell palsy", "Horner syndrome", "Carpal/cubital tunnel syndrome", "Guillain-Barre syndrome", "Charcot-Marie-Tooth", "Herpes zoster neuropathy"] },
+        { "category": "Degenerative disorders", "subtopics": ["Alzheimer disease", "Frontotemporal dementia", "Lewy body disease", "Mild cognitive impairment"] },
+        { "category": "Movement disorders", "subtopics": ["Parkinson disease", "Huntington disease", "Essential tremor", "Acute dystonia"] },
+        { "category": "Paroxysmal disorders", "subtopics": ["Migraine", "Tension headache", "Cluster headache", "Generalized tonic-clonic seizures", "Partial seizures", "Absence seizures", "Febrile seizures"] },
+        { "category": "Sleep disorders", "subtopics": ["Narcolepsy/cataplexy", "Insomnia", "Restless legs syndrome", "REM sleep behavior disorder"] },
+        { "category": "Disorders of the eye", "subtopics": ["Glaucoma", "Cataracts", "Macular degeneration", "Retinal detachment", "Optic neuritis", "Conjunctivitis", "Uveitis", "Retinoblastoma"] },
+        { "category": "Disorders of the ear", "subtopics": ["Otitis media/externa", "Cholesteatoma", "Acoustic neuroma", "Meniere disease", "BPPV", "Hearing loss/noise-induced", "Otosclerosis"] },
+        { "category": "Adverse drug effects on nervous system", "subtopics": ["Tardive dyskinesia", "Neuroleptic malignant syndrome", "Serotonin syndrome", "Drug-induced neuropathy (vincristine, isoniazid)", "Extrapyramidal effects"] }
+      ]
+    },
+    {
+      "id": "skin-subcutaneous",
+      "title": "Skin & Subcutaneous Tissue",
+      "topics": [
+        { "category": "Infectious disorders and infestations", "subtopics": ["Cellulitis/erysipelas/impetigo", "MRSA skin infections", "Herpes simplex/zoster", "Molluscum contagiosum", "Dermatophytosis/tinea", "Candidiasis", "Scabies/lice"] },
+        { "category": "Immunologic and inflammatory disorders", "subtopics": ["Psoriasis", "Lichen planus", "Contact dermatitis", "Atopic dermatitis", "Pemphigus/pemphigoid", "Stevens-Johnson syndrome/TEN", "Erythema nodosum", "Urticaria", "Vitiligo"] },
+        { "category": "Neoplasms", "subtopics": ["Actinic keratoses", "Basal cell carcinoma", "Squamous cell carcinoma", "Melanoma", "Seborrheic keratosis"] },
+        { "category": "Integumentary disorders", "subtopics": ["Acne vulgaris", "Rosacea", "Alopecia", "Hidradenitis suppurativa"] },
+        { "category": "Traumatic and mechanical disorders", "subtopics": ["Burns", "Decubitus ulcers", "Keloids", "UV light effects", "Frostbite"] }
+      ]
+    },
+    {
+      "id": "musculoskeletal",
+      "title": "Musculoskeletal System",
+      "topics": [
+        { "category": "Infectious/inflammatory/immunologic", "subtopics": ["Osteomyelitis", "Septic arthritis", "Necrotizing fasciitis", "Rheumatoid arthritis", "Ankylosing spondylitis", "Dermatomyositis/polymyositis", "Juvenile idiopathic arthritis", "Bursitis/tendinitis"] },
+        { "category": "Neoplasms", "subtopics": ["Osteosarcoma", "Bone metastases", "Osteoid osteoma", "Enchondroma"] },
+        { "category": "Degenerative and metabolic", "subtopics": ["Osteoarthritis", "Osteoporosis", "Osteomalacia", "Paget disease of bone", "Gout/pseudogout", "Herniated disc", "Rhabdomyolysis", "Avascular necrosis"] },
+        { "category": "Traumatic and mechanical", "subtopics": ["Fractures", "Dislocations", "Compartment syndrome", "Low back pain", "Rotator cuff syndrome", "Sprains/strains", "Scoliosis"] },
+        { "category": "Congenital disorders", "subtopics": ["Achondroplasia", "Developmental hip dysplasia", "Osteogenesis imperfecta", "McArdle disease", "Mitochondrial myopathies"] }
+      ]
+    },
+    {
+      "id": "cardiovascular",
+      "title": "Cardiovascular System",
+      "topics": [
+        { "category": "Infectious/immunologic/inflammatory", "subtopics": ["Bacterial endocarditis", "Myocarditis", "Atherosclerosis"] },
+        { "category": "Dysrhythmias", "subtopics": ["Atrial fibrillation/flutter", "Ventricular tachycardia/fibrillation", "AV blocks (1st/2nd/3rd degree)", "LBBB/RBBB", "Wolff-Parkinson-White", "Long QT syndrome", "Torsades de pointes", "Sick sinus syndrome"] },
+        { "category": "Heart failure", "subtopics": ["Congestive heart failure", "Cor pulmonale", "Systolic/diastolic dysfunction", "Cardiogenic pulmonary edema", "High-output heart failure"] },
+        { "category": "Ischemic heart disease", "subtopics": ["Acute coronary syndrome/MI", "Stable/unstable angina", "Coronary artery spasm"] },
+        { "category": "Myocardial diseases", "subtopics": ["Dilated cardiomyopathy", "Hypertrophic cardiomyopathy", "Restrictive cardiomyopathy", "Takotsubo cardiomyopathy", "MI complications (free wall rupture, papillary muscle rupture)"] },
+        { "category": "Pericardial diseases", "subtopics": ["Acute pericarditis", "Pericardial effusion/tamponade", "Constrictive pericarditis"] },
+        { "category": "Valvular heart disease", "subtopics": ["Mitral/aortic/tricuspid/pulmonic valve disorders", "Rheumatic heart disease", "Prosthetic valve complications"] },
+        { "category": "Hypertension", "subtopics": ["Essential hypertension", "Secondary hypertension", "Hypertensive emergency"] },
+        { "category": "Vascular disorders", "subtopics": ["Aortic aneurysm/dissection", "Peripheral arterial disease", "DVT/VTE", "Varicose veins", "Venous insufficiency"] },
+        { "category": "Congenital disorders", "subtopics": ["ASD", "VSD", "PDA", "Tetralogy of Fallot", "Coarctation of aorta", "Transposition of great vessels"] }
+      ]
+    },
+    {
+      "id": "respiratory",
+      "title": "Respiratory System",
+      "topics": [
+        { "category": "Upper airway infections", "subtopics": ["Acute URI", "Sinusitis", "Epiglottitis", "Croup", "Pharyngitis/tonsillitis", "Peritonsillar abscess", "Pertussis"] },
+        { "category": "Lower airway infections", "subtopics": ["Community-acquired pneumonia", "Hospital-acquired/ventilator-associated pneumonia", "Aspiration pneumonia", "TB", "Lung abscess", "Pneumocystis jirovecii", "Fungal infections (aspergillosis, histoplasmosis, coccidioidomycosis)"] },
+        { "category": "Neoplasms", "subtopics": ["Squamous cell lung cancer", "Adenocarcinoma", "Small cell lung cancer", "Large cell", "Bronchial carcinoid", "Mesothelioma", "Metastatic lung disease"] },
+        { "category": "Obstructive airway disease", "subtopics": ["Asthma", "COPD/emphysema/chronic bronchitis", "Bronchiectasis"] },
+        { "category": "Restrictive/interstitial lung disease", "subtopics": ["Pneumoconiosis (asbestosis, silicosis)", "Hypersensitivity pneumonitis", "Interstitial pneumonia (UIP, DIP, NSIP)", "Sarcoidosis"] },
+        { "category": "Respiratory failure and vascular", "subtopics": ["ARDS", "Pulmonary hypertension", "Pulmonary embolism", "Air/fat embolism"] },
+        { "category": "Pleural/mediastinal disorders", "subtopics": ["Pleural effusion", "Pneumothorax", "Empyema", "Hemothorax"] },
+        { "category": "Traumatic/mechanical", "subtopics": ["Obstructive/central sleep apnea", "Atelectasis", "Foreign body aspiration", "Drowning"] }
+      ]
+    },
+    {
+      "id": "gastrointestinal",
+      "title": "Gastrointestinal System",
+      "topics": [
+        { "category": "Infectious disorders", "subtopics": ["C. difficile colitis", "Bacterial enteritis (E. coli, Salmonella, Shigella, Campylobacter, Vibrio)", "Hepatitis A/B/C/D/E", "Parasitic (Giardia, Entamoeba, Cryptosporidium)", "CMV/herpes esophagitis"] },
+        { "category": "Immunologic/inflammatory", "subtopics": ["Celiac disease", "Crohn disease", "Ulcerative colitis", "Autoimmune hepatitis", "Eosinophilic esophagitis", "Microscopic colitis"] },
+        { "category": "Neoplasms", "subtopics": ["Esophageal cancer", "Barrett esophagus", "Gastric cancer", "Colorectal cancer", "Hereditary polyposis syndromes (FAP, Lynch)", "Hepatocellular carcinoma", "Pancreatic cancer", "Cholangiocarcinoma", "GIST", "Carcinoid tumors"] },
+        { "category": "Esophageal disorders", "subtopics": ["GERD", "Achalasia", "Mallory-Weiss syndrome", "Esophageal varices", "Hiatal hernia", "Esophageal stricture"] },
+        { "category": "Stomach/intestinal disorders", "subtopics": ["Peptic ulcer disease", "Gastritis", "Gastroparesis", "Appendicitis", "Diverticulitis/diverticulosis", "Irritable bowel syndrome", "Mesenteric ischemia", "Intestinal obstruction", "Intussusception", "Volvulus", "Hirschsprung disease"] },
+        { "category": "Liver/biliary disorders", "subtopics": ["Cirrhosis", "Portal hypertension/varices", "Hepatic encephalopathy", "NAFLD", "Alcoholic hepatitis", "Gilbert/Crigler-Najjar syndrome", "Cholelithiasis/cholecystitis", "Cholangitis", "Primary biliary cirrhosis", "Primary sclerosing cholangitis"] },
+        { "category": "Pancreatic disorders", "subtopics": ["Acute pancreatitis", "Chronic pancreatitis", "Pancreatic pseudocyst"] }
+      ]
+    },
+    {
+      "id": "renal-urinary",
+      "title": "Renal & Urinary System",
+      "topics": [
+        { "category": "Infectious disorders", "subtopics": ["Pyelonephritis", "Cystitis", "UTIs", "Renal abscess", "Renal tuberculosis"] },
+        { "category": "Immunologic/inflammatory (glomerular)", "subtopics": ["Poststreptococcal glomerulonephritis", "IgA nephropathy", "Minimal change disease", "Nephrotic syndrome", "Lupus nephritis", "Alport syndrome", "Thin basement membrane disease"] },
+        { "category": "Tubular interstitial disease", "subtopics": ["Acute tubular necrosis", "Acute interstitial nephritis", "Papillary necrosis", "HIV nephropathy"] },
+        { "category": "Metabolic and regulatory", "subtopics": ["AKI", "CKD/ESRD", "Renal tubular acidosis", "Nephrolithiasis", "Fanconi syndrome", "Cystinuria"] },
+        { "category": "Vascular disorders", "subtopics": ["Renal artery stenosis", "Renal vein thrombosis", "Renal infarction"] },
+        { "category": "Neoplasms", "subtopics": ["Renal cell carcinoma", "Wilms tumor", "Bladder cancer", "Polycystic kidney disease"] },
+        { "category": "Traumatic/mechanical", "subtopics": ["Obstructive uropathy", "Neurogenic bladder", "Vesicoureteral reflux", "Urinary incontinence", "Posterior urethral valves"] }
+      ]
+    },
+    {
+      "id": "pregnancy-childbirth",
+      "title": "Pregnancy, Childbirth, & the Puerperium",
+      "topics": [
+        { "category": "Prenatal care", "subtopics": ["Preconception counseling (folate, immunizations, Rh screening)", "Prenatal risk assessment (genetic screening, AFP, diabetes)", "Supervision of normal pregnancy (nutrition, ultrasonography, fetal growth, TORCH screening)"] },
+        { "category": "Obstetric complications", "subtopics": ["Spontaneous/threatened/missed abortion", "Ectopic pregnancy", "Gestational diabetes", "Preeclampsia/eclampsia/HELLP", "Placenta previa/abruption", "Fetal growth restriction", "Multiple gestation", "Rh isoimmunization", "Hyperemesis gravidarum", "Oligohydramnios/polyhydramnios"] },
+        { "category": "Labor and delivery", "subtopics": ["Normal labor/delivery", "Complicated labor (shoulder dystocia)", "Cesarean delivery", "Cord prolapse", "Malpresentation", "Premature rupture of membranes", "Preterm labor"] },
+        { "category": "Puerperium", "subtopics": ["Postpartum hemorrhage", "Postpartum sepsis", "Lactation/breastfeeding problems", "Postpartum cardiomyopathy", "Retained placenta/accreta"] },
+        { "category": "Newborn (birth-4 weeks)", "subtopics": ["Normal newborn exam", "Newborn screening", "ABO/Rh incompatibility", "Birth trauma", "Neonatal jaundice", "Neonatal hypoglycemia", "Respiratory distress syndrome", "Meconium aspiration", "SIDS", "Congenital infections (TORCH)", "Necrotizing enterocolitis"] },
+        { "category": "Teratology/adverse drug effects", "subtopics": ["Alcohol/tobacco/drugs in pregnancy", "ACE inhibitors", "SSRIs", "Warfarin", "Prenatal radiation exposure"] }
+      ]
+    },
+    {
+      "id": "female-reproductive-breast",
+      "title": "Female and Transgender Reproductive System & Breast",
+      "topics": [
+        { "category": "Breast disorders", "subtopics": ["Mastitis/breast abscess", "Fibrocystic changes", "Fibroadenoma", "Breast cancer", "Intraductal carcinoma", "Paget disease of breast", "Intraductal papilloma"] },
+        { "category": "Infectious/STI disorders", "subtopics": ["Bacterial vaginosis", "Candidal vaginitis", "PID/salpingitis", "Cervicitis", "Genital herpes", "HPV/condylomata", "Gonorrhea", "Chlamydia/LGV", "Syphilis", "Trichomoniasis"] },
+        { "category": "Neoplasms", "subtopics": ["Cervical cancer/dysplasia/HPV", "Endometrial cancer", "Ovarian cancer", "Leiomyomata", "Gestational trophoblastic disease", "Vulvar cancer"] },
+        { "category": "Menstrual/endocrine disorders", "subtopics": ["Amenorrhea (primary/secondary)", "Abnormal uterine bleeding", "Endometriosis", "PCOS", "Dysmenorrhea", "PMS"] },
+        { "category": "Fertility/contraception", "subtopics": ["Female infertility", "Contraception methods", "Assisted reproductive techniques", "Sterilization", "Turner syndrome"] },
+        { "category": "Menopause", "subtopics": ["Premature menopause", "Vasomotor symptoms", "Postmenopausal bleeding", "Vaginal atrophy"] }
+      ]
+    },
+    {
+      "id": "male-reproductive",
+      "title": "Male and Transgender Reproductive System",
+      "topics": [
+        { "category": "Infectious disorders", "subtopics": ["Epididymitis", "Orchitis", "Prostatitis", "STIs (same as female)"] },
+        { "category": "Neoplasms", "subtopics": ["Testicular cancer", "Prostate cancer", "Penile cancer"] },
+        { "category": "Metabolic/sexual dysfunction", "subtopics": ["Erectile dysfunction", "Male infertility", "Premature ejaculation"] },
+        { "category": "Traumatic/mechanical", "subtopics": ["BPH", "Testicular torsion", "Hydrocele", "Varicocele", "Phimosis", "Peyronie disease"] },
+        { "category": "Congenital disorders", "subtopics": ["Hypospadias", "Klinefelter syndrome", "Cryptorchidism"] }
+      ]
+    },
+    {
+      "id": "endocrine",
+      "title": "Endocrine System",
+      "topics": [
+        { "category": "Diabetes mellitus", "subtopics": ["Type 1", "Type 1.5", "Type 2", "DKA", "Hyperosmolar coma", "Chronic complications (retinopathy, nephropathy, neuropathy, gastroparesis)", "Metabolic syndrome"] },
+        { "category": "Hypoglycemia/islet cell", "subtopics": ["Insulinoma", "Glucagonoma", "Pancreatic neuroendocrine tumors"] },
+        { "category": "Thyroid disorders", "subtopics": ["Hypothyroidism", "Hyperthyroidism/thyrotoxicosis/thyroid storm", "Hashimoto thyroiditis", "Graves disease", "Thyroid nodules/cysts", "Thyroid cancer (papillary, follicular, medullary, anaplastic)", "Euthyroid sick syndrome"] },
+        { "category": "Parathyroid disorders", "subtopics": ["Hyperparathyroidism", "Hypoparathyroidism", "Metabolic bone disease"] },
+        { "category": "Adrenal disorders", "subtopics": ["Addison disease", "Cushing syndrome", "Hyperaldosteronism", "Pheochromocytoma", "Adrenal carcinoma", "Congenital adrenal hyperplasia", "Delayed/precocious puberty"] },
+        { "category": "Pituitary disorders", "subtopics": ["Acromegaly/gigantism", "Diabetes insipidus", "SIADH", "Panhypopituitarism", "Sheehan syndrome", "Prolactinoma", "Growth hormone deficiency", "Craniopharyngioma"] },
+        { "category": "Multiple endocrine neoplasia", "subtopics": ["MEN1", "MEN2"] }
+      ]
+    },
+    {
+      "id": "multisystem",
+      "title": "Multisystem Processes & Disorders",
+      "topics": [
+        { "category": "Infectious disorders", "subtopics": ["Lyme disease", "TB (disseminated)", "Toxic shock syndrome", "EBV/mononucleosis", "CMV", "Systemic fungal infections (blastomycosis, histoplasmosis, coccidioidomycosis)", "Parasitic (schistosomiasis, leishmaniasis, Chagas disease)"] },
+        { "category": "Immunologic/inflammatory", "subtopics": ["SLE", "Rheumatic fever", "Sarcoidosis", "Vasculitis (polyarteritis nodosa, granulomatosis with polyangiitis, Takayasu)", "Scleroderma", "Sjogren syndrome", "Kawasaki disease", "Behcet syndrome", "Polymyalgia rheumatica/temporal arteritis", "Raynaud disease", "Reactive arthritis", "Goodpasture syndrome", "IgA vasculitis"] },
+        { "category": "Paraneoplastic syndromes", "subtopics": ["Endocrine (SIADH, Cushing, hypercalcemia)", "Neurologic (Lambert-Eaton, limbic encephalitis)", "Hematologic (polycythemia)", "Mucocutaneous (acanthosis nigricans)"] },
+        { "category": "Nutrition", "subtopics": ["Protein-calorie malnutrition (kwashiorkor, marasmus)", "Vitamin deficiencies/toxicities (A, B1/thiamine, B3/niacin, B6, B9/folate, B12, C, D, E, K)", "Mineral deficiencies/toxicities", "Obesity", "Enteral/parenteral nutrition"] },
+        { "category": "Fluid, electrolyte, acid-base", "subtopics": ["Dehydration/hypovolemia/volume overload", "Hypo/hypernatremia", "Hypo/hyperkalemia", "Hypo/hypercalcemia", "Metabolic acidosis/alkalosis", "Respiratory acidosis/alkalosis", "Mixed acid-base disorders"] },
+        { "category": "Toxins and environmental", "subtopics": ["Hypothermia/hyperthermia/heat stroke", "Radiation exposure", "Burns/electrocution", "High-altitude sickness", "Lead poisoning", "Acetaminophen/ASA poisoning", "Ethylene glycol/methanol poisoning", "Carbon monoxide"] },
+        { "category": "Shock", "subtopics": ["Cardiogenic", "Hypovolemic", "Neurogenic", "Septic/SIRS", "Distributive"] },
+        { "category": "Genetic/metabolic/developmental", "subtopics": ["Down syndrome", "Cystic fibrosis", "Marfan syndrome", "Ehlers-Danlos", "Hemochromatosis", "Wilson disease", "Alpha-1 antitrypsin deficiency", "Inborn errors of metabolism", "Storage diseases (Tay-Sachs, Fabry, glycogen storage)", "Fragile X syndrome", "Amyloidosis"] },
+        { "category": "Abuse", "subtopics": ["Child abuse/nonaccidental trauma", "Intimate partner violence", "Elder abuse", "Sexual assault"] }
+      ]
+    },
+    {
+      "id": "biostatistics-epi",
+      "title": "Biostatistics, Epidemiology/Population Health, & Interpretation of Medical Literature",
+      "topics": [
+        { "category": "Epidemiology/population health", "subtopics": ["Incidence/prevalence", "Mortality/morbidity rates", "Life expectancy/HALE", "PAR", "Kaplan-Meier curves", "QALY/DALY", "Disease surveillance/outbreak investigation", "Herd immunity", "Vaccine effectiveness", "Attack rate"] },
+        { "category": "Study design", "subtopics": ["Case report/case series", "Cross-sectional", "Case-control", "Cohort (retrospective/prospective)", "RCT", "Systematic review/meta-analysis", "Intention-to-treat analysis", "Inclusion/exclusion criteria", "Randomization/blinding"] },
+        { "category": "Measures of association", "subtopics": ["Relative risk", "Odds ratio", "Hazard ratio", "NNT/NNH", "Absolute risk"] },
+        { "category": "Principles of testing/screening", "subtopics": ["Sensitivity/specificity", "PPV/NPV", "ROC curves", "Likelihood ratios", "Lead-time bias/length bias", "Bayes theorem"] },
+        { "category": "Study interpretation", "subtopics": ["Type I/II error", "Power/sample size", "p-values", "Confidence intervals", "Chi-square/t-test", "Bias (selection, recall, information)", "Confounding", "Internal/external validity", "Statistical vs clinical significance"] },
+        { "category": "Research ethics", "subtopics": ["Informed consent", "HIPAA", "IRB roles", "Drug development phases", "Off-label use"] }
+      ]
+    },
+    {
+      "id": "social-sciences",
+      "title": "Social Sciences",
+      "topics": [
+        { "category": "Communication and interpersonal skills", "subtopics": ["Patient-centered communication", "Health literacy/numeracy", "Cultural competence", "Use of interpreter/surrogate", "Motivational interviewing"] },
+        { "category": "Medical ethics and jurisprudence", "subtopics": ["Informed consent/refusal", "Medical decision-making capacity", "Advance directives/health care proxy", "Brain death/organ donation", "Hospice/palliative care", "Physician-patient relationship (autonomy, beneficence, nonmaleficence, justice)", "Confidentiality/HIPAA", "Impaired physician/duty to report", "Malpractice/negligence", "Child/elder abuse reporting"] },
+        { "category": "Systems-based practice and patient safety", "subtopics": ["Swiss cheese model of error", "Active vs latent errors", "Root cause analysis", "Failure mode and effects analysis", "Medication errors/reconciliation", "Handoff communication/transitions of care", "Healthcare-associated infections", "Universal protocol/time out", "Quality improvement (PDSA cycles)", "High-reliability organizations", "Safety culture/psychological safety", "Situational awareness/CRM"] },
+        { "category": "Health care policy and economics", "subtopics": ["Health care disparities (race, SES, gender, immigration)", "Access to care", "Medicare/Medicaid", "Insurance navigation (deductibles, copays, in/out of network)", "EMTALA", "Pay-for-performance"] }
+      ]
+    }
+  ]
+}

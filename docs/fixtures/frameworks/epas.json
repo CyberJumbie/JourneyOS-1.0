@@ -1,0 +1,123 @@
+{
+  "source": "AAMC Core EPAs for Entering Residency",
+  "source_url": "https://www.aamc.org/what-we-do/mission-areas/medical-education/cbme/core-epas",
+  "epas": [
+    {
+      "id": "epa_1",
+      "number": 1,
+      "title": "Gather a History and Perform a Physical Examination",
+      "group": "epa_group_1",
+      "trust_level": "Indirect Supervision",
+      "critical_competencies": ["PC", "ICS"],
+      "supporting_competencies": ["MK", "PROF"]
+    },
+    {
+      "id": "epa_2",
+      "number": 2,
+      "title": "Prioritize a Differential Diagnosis Following a Clinical Encounter",
+      "group": "epa_group_1",
+      "trust_level": "Indirect Supervision",
+      "critical_competencies": ["MK", "PC"],
+      "supporting_competencies": ["PBLI"]
+    },
+    {
+      "id": "epa_3",
+      "number": 3,
+      "title": "Recommend and Interpret Common Diagnostic and Screening Tests",
+      "group": "epa_group_2",
+      "trust_level": "Direct Supervision initially",
+      "critical_competencies": ["MK", "PC"],
+      "supporting_competencies": ["SBP"]
+    },
+    {
+      "id": "epa_4",
+      "number": 4,
+      "title": "Enter and Discuss Orders and Prescriptions",
+      "group": "epa_group_2",
+      "trust_level": "Direct Supervision",
+      "critical_competencies": ["PC", "MK"],
+      "supporting_competencies": ["SBP", "ICS"]
+    },
+    {
+      "id": "epa_5",
+      "number": 5,
+      "title": "Document a Clinical Encounter in the Patient Record",
+      "group": "epa_group_1",
+      "trust_level": "Indirect Supervision",
+      "critical_competencies": ["PC", "ICS"],
+      "supporting_competencies": ["PROF", "SBP"]
+    },
+    {
+      "id": "epa_6",
+      "number": 6,
+      "title": "Provide an Oral Presentation of a Clinical Encounter",
+      "group": "epa_group_1",
+      "trust_level": "Indirect Supervision",
+      "critical_competencies": ["ICS", "PC"],
+      "supporting_competencies": ["MK"]
+    },
+    {
+      "id": "epa_7",
+      "number": 7,
+      "title": "Form Clinical Questions and Retrieve Evidence to Advance Patient Care",
+      "group": "epa_group_1",
+      "trust_level": "Indirect Supervision",
+      "critical_competencies": ["PBLI", "MK"],
+      "supporting_competencies": ["PC"]
+    },
+    {
+      "id": "epa_8",
+      "number": 8,
+      "title": "Give or Receive a Patient Handover to Transition Care Responsibility",
+      "group": "epa_group_2",
+      "trust_level": "Direct Supervision",
+      "critical_competencies": ["ICS", "PC"],
+      "supporting_competencies": ["SBP", "PROF"]
+    },
+    {
+      "id": "epa_9",
+      "number": 9,
+      "title": "Collaborate as a Member of an Interprofessional Team",
+      "group": "epa_group_1",
+      "trust_level": "Indirect Supervision",
+      "critical_competencies": ["ICS", "PROF"],
+      "supporting_competencies": ["SBP", "PC"]
+    },
+    {
+      "id": "epa_10",
+      "number": 10,
+      "title": "Recognize a Patient Requiring Urgent or Emergent Care and Initiate Evaluation and Management",
+      "group": "epa_group_3",
+      "trust_level": "Simulation preferred",
+      "critical_competencies": ["PC", "MK"],
+      "supporting_competencies": ["ICS", "SBP"]
+    },
+    {
+      "id": "epa_11",
+      "number": 11,
+      "title": "Obtain Informed Consent for Tests and/or Procedures",
+      "group": "epa_group_3",
+      "trust_level": "Direct Supervision",
+      "critical_competencies": ["ICS", "PROF"],
+      "supporting_competencies": ["PC", "MK"]
+    },
+    {
+      "id": "epa_12",
+      "number": 12,
+      "title": "Perform General Procedures of a Physician",
+      "group": "epa_group_3",
+      "trust_level": "Direct Supervision",
+      "critical_competencies": ["PC"],
+      "supporting_competencies": ["MK", "ICS", "PROF"]
+    },
+    {
+      "id": "epa_13",
+      "number": 13,
+      "title": "Identify System Failures and Contribute to a Culture of Safety and Improvement",
+      "group": "epa_group_3",
+      "trust_level": "Indirect Supervision",
+      "critical_competencies": ["SBP", "PBLI", "PROF"],
+      "supporting_competencies": ["ICS"]
+    }
+  ]
+}

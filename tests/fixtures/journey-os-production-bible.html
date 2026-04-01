@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Journey OS — Production Bible v1.0</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap');
+:root{
+  --ink:#0c0c0c;--paper:#f5f2eb;--edge:#ddd6c6;
+  --r:#a82828;--g:#185230;--y:#6a4c14;--b:#162450;--gold:#8a6614;
+  --pre:#080d12;--prefg:#c4bfb0;--tag:#e8e2d4;
+  /* DIKW colors */
+  --data-c:#5a5a5a;--info-c:#162450;--know-c:#185230;--wise-c:#8a6614;
+  --data-bg:#f2f2f0;--info-bg:#ebf0f8;--know-bg:#eaf5ed;--wise-bg:#fdf7e0;
+  /* Status colors */
+  --fix-bg:#eaf5ed;--fix-bd:#80b894;
+  --canon-bg:#e8f0fa;--canon-bd:#6080c8;
+  --warn-bg:#fdf0ea;--warn-bd:#e08060;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);font-size:14px;line-height:1.8}
+
+/* ── COVER ── */
+.cover{min-height:100vh;background:var(--ink);display:flex;flex-direction:column;justify-content:flex-end;padding:80px;position:relative;overflow:hidden}
+.cover-grid{position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent,transparent 79px,rgba(138,102,20,.05) 80px),repeating-linear-gradient(0deg,transparent,transparent 79px,rgba(138,102,20,.04) 80px);pointer-events:none}
+.c-rel{position:relative;z-index:1}
+.c-label{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:18px;display:flex;align-items:center;gap:14px}
+.c-label::before{content:'';display:block;width:48px;height:1px;background:var(--gold)}
+h1{font-family:'Fraunces',serif;font-size:76px;font-weight:300;line-height:.93;letter-spacing:-2px;color:#ede8e0;margin-bottom:8px}
+h1 em{font-style:italic;color:var(--gold)}
+.c-sub{font-family:'Fraunces',serif;font-style:italic;font-size:21px;font-weight:300;color:#666;max-width:640px;margin-bottom:44px}
+.c-matrix{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08)}
+.c-cell{padding:14px 16px}
+.c-n{font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:600;color:var(--gold);line-height:1;display:block}
+.c-l{font-size:9.5px;color:#666;font-family:'JetBrains Mono',monospace;letter-spacing:.04em;margin-top:3px}
+.c-badges{margin-top:20px;display:flex;gap:5px;flex-wrap:wrap}
+.c-badge{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.04em;color:#555;border:1px solid #1c1c1c;padding:4px 10px}
+.c-badge.fixed{border-color:#305030;color:#507050}
+
+/* ── NAVIGATION ── */
+.nav{background:#080d12;border-bottom:1px solid #141a1a;padding:0 80px;display:flex;overflow-x:auto;gap:0}
+.nav-item{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;color:#444;padding:11px 14px;border-right:1px solid #141a1a;white-space:nowrap;text-decoration:none;flex-shrink:0}
+.nav-item:hover{color:var(--gold)}
+
+/* ── SECTIONS ── */
+section{padding:60px 80px;border-bottom:1px solid var(--edge)}
+.sid{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--r);margin-bottom:10px}
+h2{font-family:'Fraunces',serif;font-size:38px;font-weight:300;line-height:1.08;margin-bottom:20px}
+h3{font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#888;margin:30px 0 10px;padding-bottom:7px;border-bottom:1px solid var(--edge)}
+h4{font-family:'Fraunces',serif;font-size:18px;font-weight:400;margin:16px 0 7px}
+p{margin-bottom:12px;max-width:840px}
+code{font-family:'JetBrains Mono',monospace;font-size:11px;background:var(--tag);padding:1px 5px;border-radius:2px}
+pre{background:var(--pre);color:var(--prefg);padding:18px 22px;font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.68;overflow-x:auto;margin:10px 0 16px;border-radius:2px;border-left:3px solid var(--gold)}
+.kw{color:#c4915a}.cm{color:#4a4a40;font-style:italic}.st{color:#5aad7f}.fn{color:#7ab0e8}.ty{color:#b8c8a0}.nu{color:#d1965a}.op{color:#d05a5a}
+
+/* ── STATUS MARKERS ── */
+.canon{border-left:3px solid var(--b);background:var(--canon-bg);padding:11px 15px;margin:12px 0 16px;border-radius:0 2px 2px 0}
+.canon .cl{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--b);margin-bottom:4px}
+.canon p{font-size:13px;margin:0;max-width:none;font-weight:500}
+.fixed{border-left:3px solid var(--g);background:var(--fix-bg);padding:11px 15px;margin:12px 0 16px;border-radius:0 2px 2px 0}
+.fixed .cl{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--g);margin-bottom:4px}
+.fixed p{font-size:13px;margin:0;max-width:none}
+.warn{border-left:3px solid var(--y);background:var(--warn-bg);padding:11px 15px;margin:12px 0 16px;border-radius:0 2px 2px 0}
+.warn .cl{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--y);margin-bottom:4px}
+.warn p{font-size:13px;margin:0;max-width:none}
+.gold-box{border-left:3px solid var(--gold);background:var(--wise-bg);padding:11px 15px;margin:12px 0 16px;border-radius:0 2px 2px 0}
+.gold-box .cl{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
+.gold-box p{font-size:13px;margin:0;max-width:none;font-style:italic}
+
+/* ── LAYOUT ── */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin:16px 0}
+.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin:16px 0}
+.four{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px;margin:16px 0}
+.card{border:1px solid var(--edge);padding:18px;background:#fff}
+.card-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#aaa;margin-bottom:5px}
+.card-ttl{font-family:'Fraunces',serif;font-size:16px;font-weight:400;margin-bottom:7px}
+.card p{font-size:12.5px;color:#555;margin:0}
+
+/* ── TABLES ── */
+table{width:100%;border-collapse:collapse;font-size:12px;margin:10px 0 18px}
+th{background:var(--ink);color:var(--paper);padding:8px 12px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase}
+td{padding:7px 12px;border-bottom:1px solid var(--edge);vertical-align:top}
+tr:hover td{background:#f8f5ee}
+tr:nth-child(even) td{background:#faf7f0}
+.mono{font-family:'JetBrains Mono',monospace;font-size:10.5px}
+
+/* ── PILLS ── */
+.pill{display:inline-block;padding:2px 7px;border-radius:2px;font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:600;vertical-align:middle;white-space:nowrap}
+.p-r{background:#fce6e6;color:#a82828}.p-y{background:#fef3e2;color:var(--y)}
+.p-g{background:#e8f5ec;color:var(--g)}.p-b{background:#e8edf8;color:var(--b)}
+.p-gold{background:var(--wise-bg);color:var(--gold)}.p-dark{background:var(--ink);color:#bbb}
+.p-fix{background:var(--fix-bg);color:var(--g)}.p-canon{background:var(--canon-bg);color:var(--b)}
+
+/* ── DIKW ── */
+.dikw-stack{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:1px;background:var(--edge);margin:16px 0}
+.dikw-cell{padding:18px;background:var(--paper)}
+.dikw-data{background:var(--data-bg)}.dikw-info{background:var(--info-bg)}.dikw-know{background:var(--know-bg)}.dikw-wise{background:var(--wise-bg)}
+.dikw-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;margin-bottom:6px}
+.dikw-data .dikw-lbl{color:var(--data-c)}.dikw-info .dikw-lbl{color:var(--info-c)}.dikw-know .dikw-lbl{color:var(--know-c)}.dikw-wise .dikw-lbl{color:var(--wise-c)}
+.dikw-ttl{font-family:'Fraunces',serif;font-size:15px;font-weight:400;margin-bottom:7px}
+.dikw-items{font-size:12px;color:#666;line-height:1.9}
+
+/* ── ARCH DIAGRAMS ── */
+.arch{background:var(--pre);color:var(--prefg);padding:22px 26px;font-family:'JetBrains Mono',monospace;font-size:10.5px;line-height:1.95;overflow-x:auto;margin:12px 0 16px;border-radius:2px}
+.al{color:#b8c8a0;font-weight:500}.an{color:#7ab0e8}.ar{color:#5aad7f}.aw{color:#d8c060}.ac{color:#4a4a40;font-style:italic}.af{color:#c05a5a}
+
+/* ── PIPELINE STEPS ── */
+.pstep{display:grid;grid-template-columns:48px 1fr;border-bottom:1px solid var(--edge);background:#fff}
+.pstep:last-child{border-bottom:none}
+.pstep-n{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;display:flex;align-items:flex-start;justify-content:center;padding:14px 8px;border-right:1px solid var(--edge);color:#bbb;background:#faf7f0}
+.pstep-body{padding:14px 18px}
+.pstep-title{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;margin-bottom:5px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.pstep-desc{font-size:12.5px;color:#555;line-height:1.7}
+
+/* ── SEED BLOCKS ── */
+.seed-block{border:1px solid var(--edge);margin:12px 0;overflow:hidden}
+.seed-head{background:var(--ink);padding:10px 16px;display:flex;justify-content:space-between;align-items:center}
+.seed-file{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gold)}
+.seed-status{font-family:'JetBrains Mono',monospace;font-size:8.5px;color:#5a7a5a}
+
+/* ── TIMELINE ── */
+.tl-row{display:grid;grid-template-columns:120px 1fr;gap:18px;margin-bottom:2px}
+.tl-when{font-family:'JetBrains Mono',monospace;font-size:10px;padding:14px 0;color:#aaa;text-align:right;border-right:2px solid var(--edge);padding-right:18px;line-height:1.4}
+.tl-content{padding:14px 0 14px 18px;position:relative}
+.tl-content::before{content:'';position:absolute;left:-7px;top:20px;width:12px;height:12px;border-radius:50%;background:var(--paper);border:2px solid var(--edge)}
+.tl-now .tl-when{color:var(--b)}.tl-now .tl-content::before{background:var(--b);border-color:var(--b)}
+.tl-p2 .tl-when{color:var(--g)}.tl-p2 .tl-content::before{background:var(--g);border-color:var(--g)}
+.tl-p3 .tl-when{color:var(--gold)}.tl-p3 .tl-content::before{background:var(--gold);border-color:var(--gold)}
+.tl-p4 .tl-when{color:#4a2878}.tl-p4 .tl-content::before{background:#4a2878;border-color:#4a2878}
+.tl-p5 .tl-when{color:#0a5252}.tl-p5 .tl-content::before{background:#0a5252;border-color:#0a5252}
+.tl-phase{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:4px}
+.tl-title{font-family:'Fraunces',serif;font-size:19px;font-weight:400;margin-bottom:5px}
+.tl-items{font-size:12.5px;color:#666;line-height:1.9}
+.tl-chip{display:inline-block;margin:3px 3px 0 0;padding:2px 8px;font-family:'JetBrains Mono',monospace;font-size:8.5px;border-radius:2px}
+
+ul.t{list-style:none;margin:6px 0}
+ul.t li{padding:3px 0 3px 16px;position:relative;font-size:12.5px}
+ul.t li::before{content:'→';position:absolute;left:0;color:var(--r);font-family:'JetBrains Mono',monospace;font-size:9px;top:5px}
+
+.footer{background:var(--ink);padding:28px 80px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-family:'JetBrains Mono',monospace;font-size:9.5px;color:#444}
+
+@media(max-width:960px){.cover,.nav,.footer,section{padding-left:24px;padding-right:24px}.two,.three,.four,.dikw-stack{grid-template-columns:1fr}.c-matrix{grid-template-columns:repeat(3,1fr)}h1{font-size:46px}h2{font-size:28px}.tl-row{grid-template-columns:80px 1fr}}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════ COVER ══════════════════════ -->
+<div class="cover">
+<div class="cover-grid"></div>
+<div class="c-rel">
+  <div class="c-label">Journey OS · Production Bible · v1.0 · Single Source of Truth · All Gaps Reconciled</div>
+  <h1>Journey<br><em>OS</em></h1>
+  <div class="c-sub">The complete authoritative specification — knowledge graph, pipelines, ECD framework, LOD ecosystem, product roadmap, and scholarly foundations — with all 34 identified gaps and concept drifts resolved</div>
+
+  <div class="c-matrix">
+    <div class="c-cell"><span class="c-n">77</span><div class="c-l">Node Types</div></div>
+    <div class="c-cell"><span class="c-n">110</span><div class="c-l">Typed Edges</div></div>
+    <div class="c-cell"><span class="c-n">3</span><div class="c-l">Pipelines · 25 Steps</div></div>
+    <div class="c-cell"><span class="c-n">22</span><div class="c-l">LOD Sources</div></div>
+    <div class="c-cell"><span class="c-n">44</span><div class="c-l">Scholarly Citations</div></div>
+    <div class="c-cell"><span class="c-n">34</span><div class="c-l">Gaps Fixed</div></div>
+  </div>
+
+  <div class="c-badges">
+    <span class="c-badge">Institution: Morehouse School of Medicine (MSM) · LCME accredited</span>
+    <span class="c-badge">Neo4j Aura + Supabase + pgvector + Inngest (Kafka removed from MVP)</span>
+    <span class="c-badge fixed">✓ G01 MisconceptionCategory seeded</span>
+    <span class="c-badge fixed">✓ G02 TaskShell library defined</span>
+    <span class="c-badge fixed">✓ G05 lod_brief moved to Supabase</span>
+    <span class="c-badge fixed">✓ G06 evidence_grade weights defined</span>
+    <span class="c-badge fixed">✓ D05 Sonnet canonical · D06 Three-hub canonical</span>
+  </div>
+</div>
+</div>
+
+<div class="nav">
+  <a class="nav-item" href="#part1">I · Foundations</a>
+  <a class="nav-item" href="#part2">II · Node Inventory</a>
+  <a class="nav-item" href="#part3">III · Seed Catalogue</a>
+  <a class="nav-item" href="#part4">IV · Pipelines</a>
+  <a class="nav-item" href="#part5">V · Domain Layers</a>
+  <a class="nav-item" href="#part6">VI · ECD Framework</a>
+  <a class="nav-item" href="#part7">VII · Product &amp; Roadmap</a>
+  <a class="nav-item" href="#part8">VIII · Compliance</a>
+  <a class="nav-item" href="#part9">IX · Scholarship</a><a class="nav-item" href="#part10">X · Production</a>
+</div>
+
+<!-- ══════════════════════ PART I: FOUNDATIONS ══════════════════════ -->
+<section id="part1">
+<div class="sid">Part I / Foundations</div>
+<h2>Canonical decisions — the single source of truth for every contested definition</h2>
+
+<p>This section resolves all 15 concept drifts identified in the gap analysis. Every statement marked <span class="pill p-canon">CANONICAL</span> supersedes any prior version in any prior document. Every statement marked <span class="pill p-fix">FIXED</span> resolves an identified gap.</p>
+
+<h3>§01 The Three-Hub Architecture — replaces "dual-hub" (D06)</h3>
+
+<div class="canon"><div class="cl">Canonical · D06 resolved</div>
+<p>Journey OS uses a THREE-HUB ontology. The "dual-hub" framing (SubConcept + LearningObjective) from January 2026 design documents is deprecated. The three hubs are: <strong>SubConcept</strong> (what exists in medicine — knowledge hub), <strong>SLO</strong> (what the curriculum commits to teaching — pedagogical hub), <strong>USMLE_Subtopic</strong> (what the examination will test — assessment hub). Every AssessmentItem connects all three. The distinction matters for coverage reporting: COVERS_TOPIC (Session→SyllabusTopic) declares intent; TEACHES (ContentChunk→SubConcept) delivers evidence; CoverageRecord confirms verification.</p>
+</div>
+
+<div class="arch">
+<span class="al">THE THREE-HUB TOPOLOGY</span>
+
+<span class="an">SLO</span> ──<span class="ar">CONTRIBUTES_TO</span>──▸ <span class="an">ILO</span>                    <span class="ac">← pedagogical hub: what curriculum commits to</span>
+<span class="an">Session</span> ──<span class="ar">COVERS_TOPIC</span>──▸ <span class="an">SyllabusTopic</span>
+<span class="an">SyllabusTopic</span> ──<span class="ar">GROUNDED_IN</span>──▸ <span class="an">StandardTerm</span>      <span class="ac">← LOD verification of declared topic</span>
+
+<span class="an">ContentChunk</span> ──<span class="ar">TEACHES</span>──▸ <span class="an">SubConcept</span>            <span class="ac">← knowledge hub: what lecture actually delivers</span>
+<span class="an">SubConcept</span> ──<span class="ar">GROUNDED_IN</span>──▸ <span class="an">StandardTerm</span>       <span class="ac">← LOD verification of extracted concept</span>
+<span class="an">SubConcept</span> ──<span class="ar">HAS_COVERAGE</span>──▸ <span class="an">CoverageRecord</span>    <span class="ac">← confirmed: taught + assessed</span>
+
+<span class="an">SubConcept</span> ──<span class="ar">ALIGNS_TO</span>──▸ <span class="an">USMLE_Subtopic</span>        <span class="ac">← assessment hub: what exam will test</span>
+<span class="an">USMLE_Subtopic</span> ──<span class="ar">BELONGS_TO</span>──▸ <span class="an">USMLE_Topic</span> ──<span class="ar">PART_OF</span>──▸ <span class="an">USMLE_System</span>
+<span class="an">AssessmentItem</span> ──<span class="ar">SOURCED_FROM</span>──▸ <span class="an">ContentChunk</span>
+<span class="an">AssessmentItem</span> ──<span class="ar">CLAIMS_ABOUT</span>──▸ <span class="an">ProficiencyVariable</span>
+
+<span class="ac">SyllabusTopic = DECLARED intent (exists before any lecture uploaded)
+SubConcept    = VERIFIED content (exists only after lecture ingested and LOD-confirmed)
+CoverageRecord = CONFIRMED coverage (TEACHES evidence ≥0.65 + ≥1 approved item → score starts)</span>
+</div>
+
+<h3>§02 Canonical Definitions Register</h3>
+
+<table>
+<thead><tr><th>Term / Edge</th><th>Canonical definition</th><th>Resolves</th></tr></thead>
+<tbody>
+<tr><td class="mono">GROUNDED_IN</td><td>Points FROM a curriculum entity TO an external LOD entity. Meaning: "this curriculum concept has been verified against this standard term." Always: SubConcept → StandardTerm or SyllabusTopic → StandardTerm. The StandardTerm IS the LOD anchor; it never has a GROUNDED_IN edge of its own. GROUNDED_IN = LOD links only. Item provenance uses SOURCED_FROM.</td><td><span class="pill p-fix">D03</span></td></tr>
+<tr><td class="mono">TEACHES vs. COVERS_TOPIC</td><td><strong>COVERS_TOPIC</strong> (Session → SyllabusTopic) = declared curriculum intent from the syllabus document. Unverified. <strong>TEACHES</strong> (ContentChunk → SubConcept) = lecture-verified content delivery. LOD-confirmed. For LCME compliance evidence, only TEACHES chains count as verified coverage. The heatmap shows all three states: declared-only, delivered (no items yet), confirmed (CoverageRecord present).</td><td><span class="pill p-fix">D07</span></td></tr>
+<tr><td class="mono">CoverageRecord</td><td>Progressive tracker, not binary. Created after the FIRST approved AssessmentItem SOURCED_FROM a ContentChunk TEACHING the SubConcept. coverage_score = approved_item_count / 3.0 (capped at 1.0). "Full coverage" = coverage_score = 1.0 = ≥3 approved items. Not created from COVERS_TOPIC chain alone — requires TEACHES evidence + assessment evidence both present.</td><td><span class="pill p-fix">D02</span></td></tr>
+<tr><td class="mono">SyllabusTopic vs. SubConcept</td><td><strong>SyllabusTopic</strong>: faculty-authored topic name from the syllabus document. Human authority. Can exist before any lecture is uploaded. Enriched with GROUNDED_IN → StandardTerm after NED. <strong>SubConcept</strong>: AI-extracted atomic teachable concept from lecture content. Machine-extracted, LOD-verified. Promoted from :Candidate label after faculty approval in P1 Step 07. Cannot exist without a source ContentChunk.</td><td><span class="pill p-fix">D01</span></td></tr>
+<tr><td class="mono">SLO CONTRIBUTES_TO ILO</td><td>Direction: SLO (child) → CONTRIBUTES_TO → ILO (parent). Read: "session learning objectives flow upward to institutional learning outcomes." Cypher: MATCH (slo:SLO)-[:CONTRIBUTES_TO]->(ilo:ILO). Never: MATCH (ilo)-[:CONTRIBUTES_TO]->(slo) — this is wrong direction. Audit: run MATCH (ilo:ILO)-[r:CONTRIBUTES_TO]->(slo:SLO) RETURN count(r) — must return 0.</td><td><span class="pill p-fix">D09</span></td></tr>
+<tr><td class="mono">LOD scope in generation</td><td>The lod_brief (Source 3) is ALWAYS included in generation context regardless of source_scope setting. The source_scope enum ('syllabus_only'|'lecture_only'|'usmle_only'|'combination') controls LOCAL chunks and STRUCTURED traversal. LOD is a pre-computed invariant that is always appended within the token budget. There is no configuration that excludes the LOD brief.</td><td><span class="pill p-fix">D10</span></td></tr>
+<tr><td class="mono">ContentChunk size</td><td>Canonical: 150–250 tokens, 30-token overlap, entity-boundary-aligned. All prior references to "200-400 tokens, 50-token overlap" are deprecated. The reduction is required for: entity boundary preservation, BM25 performance, and retrieval precision.</td><td><span class="pill p-fix">D04</span></td></tr>
+<tr><td class="mono">Core generation model</td><td>Canonical: Claude Sonnet 4 (claude-sonnet-4-20250514) for core item generation and critique gate. Claude Haiku 4.5 for distractors, rationale, QA scoring, HyDE pre-call, and LOD brief. Any reference to "Opus for stem generation" in prior documents is deprecated. Cost basis: Sonnet core ≈ $0.027/item; full pipeline ≈ $0.12/item total. Opus would be $0.45/item — 3.75× budget overrun.</td><td><span class="pill p-fix">D05</span></td></tr>
+<tr><td class="mono">Event infrastructure</td><td>Canonical for MSM MVP: Inngest only. 14 events defined with slash notation (journey/lecture.uploaded). Kafka is removed from the MVP. Inngest handles all workflow events at MSM scale. Kafka is a T5+ concern when scale exceeds Inngest per-event overhead (&gt;1,000 simultaneous students). All Kafka topic references in prior documents are deprecated for the MVP.</td><td><span class="pill p-fix">G13</span></td></tr>
+<tr><td class="mono">EntityResolutionJob scope</td><td>Not orphaned by P1 redesign. P1 Step 05 handles automatic SAME_AS creation for CUI matches with confidence ≥ 0.85. EntityResolutionJob (Phase 5) handles: (1) SubConcepts with P1 confidence 0.65–0.84 — human review queue for ambiguous matches. (2) Cross-course deduplication where two SubConcepts from different courses evolved separately and now warrant comparison. (3) Periodic :Deprecated SubConcept cleanup. Batch-mode, not real-time.</td><td><span class="pill p-fix">D08</span></td></tr>
+<tr><td class="mono">8-Layer system</td><td>Canonical: 8-layer system numbered 0–7. Layer 0 = :Reference scaffold. Layers 1-2 = Institutional. Layer 3 = Content. Layer 4 = Taxonomy/Frameworks. Layer 5 = Assessment. Layer 6 = Exam. Layer 7 = Student. The 4-layer framing from January 2026 is deprecated. Any reference to "Layer 3" means the Content layer (SyllabusDocument, Lecture, ContentChunk, SubConcept nodes).</td><td><span class="pill p-fix">D11</span></td></tr>
+<tr><td class="mono">HyDE and ECD</td><td>HyDE (Gao et al., 2022) is a retrieval engineering technique. It <em>can be understood through</em> an ECD lens — the hypothetical vignette operationalizes a related principle to ECD's exemplar performance. HyDE is NOT an ECD principle; it is a retrieval optimization that shares a related concept with ECD Stage 4 (Instance Specification). Do not assert equivalence between the two frameworks.</td><td><span class="pill p-fix">G10</span></td></tr>
+<tr><td class="mono">lod_brief storage</td><td>lod_brief TEXT is stored in Supabase table subconcept_lod_briefs {subconcept_uuid FK, lod_brief TEXT, generated_at TIMESTAMP}. SubConcept node in Neo4j carries only lod_brief_id UUID (8 bytes — within skinny nodes &lt;100 bytes limit). At generation time: fetch via Supabase single-key lookup (&lt;5ms). Any prior code referencing sc.lod_brief as a Neo4j property is deprecated. Update all code examples.</td><td><span class="pill p-fix">G05, D12</span></td></tr>
+</tbody>
+</table>
+
+<h3>§03 Evidence Grade Weights — enabling path confidence computation (G06)</h3>
+
+<div class="fixed"><div class="cl">Fixed · G06 resolved — evidence_grade now computable</div>
+<p>Evidence grade is a string enum on all edges. Path confidence requires numeric multiplication. The following mapping is canonical for all WisdomPath computations.</p>
+</div>
+
+<pre><span class="cm">// constants/graph-schema.ts — add to all projects</span>
+<span class="kw">export const</span> EVIDENCE_GRADE_WEIGHT: Record&lt;<span class="ty">EvidenceGrade</span>, <span class="ty">number</span>&gt; = {
+  A: <span class="nu">1.00</span>,  <span class="cm">// Seeded taxonomy or faculty-verified (ground truth)</span>
+  B: <span class="nu">0.82</span>,  <span class="cm">// GNN-predicted (HeteroSAGE link prediction, high confidence)</span>
+  C: <span class="nu">0.65</span>,  <span class="cm">// System-inferred before faculty review (P1 initial TEACHES edges)</span>
+  D: <span class="nu">0.45</span>,  <span class="cm">// Sparse signal (LOD-only, no curriculum corroboration)</span>
+};
+
+<span class="cm">// Path confidence: product of edge weights along chain
+// Example: ContentChunk -[C]→ SubConcept -[A]→ StandardTerm -[B]→ ExternalEntity
+// path_confidence = 0.65 × 1.00 × 0.82 = 0.533</span>
+<span class="kw">const</span> pathConfidence = (grades: <span class="ty">EvidenceGrade[]</span>): <span class="ty">number</span> =>
+  grades.<span class="fn">reduce</span>((acc, g) => acc * EVIDENCE_GRADE_WEIGHT[g], <span class="nu">1.0</span>);
+
+<span class="cm">// All edges must also carry evidence_weight: Float computed from this map at creation time
+// Enables direct Cypher multiplication without application-layer mapping</span></pre>
+
+<h3>§04 Dual-Write with Reconciliation (G08)</h3>
+
+<div class="fixed"><div class="cl">Fixed · G08 resolved</div>
+<p>Supabase writes first. Neo4j writes second. Never block on Neo4j failure. But silent inconsistency is unacceptable — every Supabase row that has a Neo4j counterpart carries sync status.</p>
+</div>
+
+<pre><span class="cm">-- Migration: add to all tables with Neo4j counterparts</span>
+<span class="kw">ALTER TABLE</span> subconcepts
+  <span class="kw">ADD COLUMN</span> neo4j_synced_at  <span class="ty">TIMESTAMPTZ</span>,
+  <span class="kw">ADD COLUMN</span> neo4j_sync_status <span class="ty">TEXT</span> <span class="kw">DEFAULT</span> <span class="st">'pending'</span>
+  <span class="kw">CHECK</span> (neo4j_sync_status <span class="kw">IN</span> (<span class="st">'pending'</span>, <span class="st">'synced'</span>, <span class="st">'failed'</span>));
+
+<span class="cm">// Weekly reconciliation Inngest job: journey/sync.reconcile (Monday 1am)</span>
+<span class="kw">const</span> reconcile = <span class="kw">async</span> () => {
+  <span class="cm">// Find rows that failed or never synced</span>
+  <span class="kw">const</span> unsynced = <span class="kw">await</span> supabase
+    .<span class="fn">from</span>(<span class="st">'subconcepts'</span>)
+    .<span class="fn">select</span>(<span class="st">'uuid, name, cui'</span>)
+    .<span class="fn">or</span>(<span class="st">'neo4j_sync_status.eq.pending,neo4j_sync_status.eq.failed'</span>);
+  <span class="cm">// Re-attempt Neo4j MERGE (deterministic UUIDs — always idempotent)</span>
+  <span class="kw">for</span> (<span class="kw">const</span> row <span class="kw">of</span> unsynced.data) {
+    <span class="kw">try</span> {
+      <span class="kw">await</span> neo4j.<span class="fn">run</span>(`<span class="kw">MERGE</span> (sc:SubConcept:Candidate {uuid:$uuid}) <span class="kw">SET</span> sc.name=$name`, row);
+      <span class="kw">await</span> supabase.<span class="fn">from</span>(<span class="st">'subconcepts'</span>).<span class="fn">update</span>({ neo4j_synced_at: <span class="kw">new</span> <span class="ty">Date</span>(), neo4j_sync_status: <span class="st">'synced'</span> }).<span class="fn">eq</span>(<span class="st">'uuid'</span>, row.uuid);
+    } <span class="kw">catch</span> { <span class="kw">await</span> supabase.<span class="fn">from</span>(<span class="st">'subconcepts'</span>).<span class="fn">update</span>({ neo4j_sync_status: <span class="st">'failed'</span> }).<span class="fn">eq</span>(<span class="st">'uuid'</span>, row.uuid); }
+  }
+};</pre>
+
+</section>
+
+<!-- ══════════════════════ PART II: NODE INVENTORY ══════════════════════ -->
+<section id="part2">
+<div class="sid">Part II / Complete Node Inventory</div>
+<h2>All 77 node types across 8 layers — with all gaps applied</h2>
+
+<h3>Layer 0 — :Reference scaffold (T-Box — seeded once, never mutated by pipeline)</h3>
+<div class="fixed"><div class="cl">Fixed · G09 + G12 — IPECCompetency, CarePhase, PNS/ANS system all added</div>
+<p>All :Reference nodes are seeded in Phase 0. Pipeline operations use MERGE on these nodes but never modify their core taxonomy properties.</p>
+</div>
+
+<table>
+<thead><tr><th>Node</th><th>Count (seed)</th><th>Key properties</th><th>Fixed?</th></tr></thead>
+<tbody>
+<tr><td class="mono">Week</td><td>≈22/course</td><td>number, title, phase</td><td></td></tr>
+<tr><td class="mono">Session</td><td>≈6/week</td><td>session_type, date, duration_minutes</td><td></td></tr>
+<tr><td class="mono">SessionType</td><td>8</td><td>Lecture/Lab/Clinical/Seminar/PBL/SIM/Small Group/Exam</td><td></td></tr>
+<tr><td class="mono">ILO</td><td>12 institutional</td><td>code, statement, domain, miller_level</td><td></td></tr>
+<tr><td class="mono">SLO</td><td>≈200/course</td><td>text, bloom_level, miller_level; CONTRIBUTES_TO → ILO</td><td></td></tr>
+<tr><td class="mono">Phase</td><td>3</td><td>Pre-clerkship / Clerkship / Advanced</td><td></td></tr>
+<tr><td class="mono">Block</td><td>4</td><td>Foundations / Organ Systems / Clerkship / Advanced</td><td></td></tr>
+<tr><td class="mono">BloomLevel</td><td>6</td><td>level (1-6), verb_examples[], descriptor</td><td></td></tr>
+<tr><td class="mono">MillerLevel</td><td>4</td><td>level (1-4), name (Knows/Knows How/Shows How/Does)</td><td></td></tr>
+<tr><td class="mono">AssessmentMode</td><td>6</td><td>MCQ/OSCE/DirectObservation/Essay/Oral/Portfolio</td><td></td></tr>
+<tr><td class="mono">DifficultyBand</td><td>5</td><td>easy/easy-medium/medium/medium-hard/hard (0.2–0.8 IRT b)</td><td></td></tr>
+<tr><td class="mono">LeadInType</td><td>4</td><td>diagnosis/mechanism/next_best_step/management</td><td></td></tr>
+<tr><td class="mono">ClinicalSetting</td><td>8</td><td>ED/inpatient/outpatient/ICU/OR/clinic/community/telehealth</td><td></td></tr>
+<tr><td class="mono">PatientAgeGroup</td><td>6</td><td>neonate/infant/child/adolescent/adult/elderly</td><td></td></tr>
+<tr><td class="mono">PatientSex</td><td>3</td><td>male/female/not_specified</td><td></td></tr>
+<tr><td class="mono">ResourceType</td><td>6</td><td>Lecture/Textbook/Video/Paper/Protocol/Reference</td><td></td></tr>
+<tr><td class="mono">TaskShell</td><td>12 <span class="pill p-fix">G02</span></td><td>concept_family, bloom_range[], lead_in_type, variable_slots[], avg_quality_score</td><td><span class="pill p-fix">NEW</span></td></tr>
+<tr><td class="mono">MisconceptionCategory</td><td>15 <span class="pill p-fix">G01</span></td><td>name, description, usmle_systems[], example_distractor_pattern, empirical_frequency</td><td><span class="pill p-fix">NEW</span></td></tr>
+<tr><td class="mono">DiseaseCategory</td><td>22 ICD-10 chapters</td><td>icd10_chapter, name, usmle_system</td><td></td></tr>
+<tr><td class="mono">PathophysiologicalMechanism</td><td>15</td><td>name, mechanism_type, causally_precedes → other mechanisms</td><td></td></tr>
+<tr><td class="mono">ClinicalPresentation</td><td>≈30</td><td>icd10_r_code, name, cardinal_features[]</td><td></td></tr>
+<tr><td class="mono">LCMEContentDomain</td><td>20</td><td>standard (7.1–7.9), domain_name, description</td><td></td></tr>
+<tr><td class="mono">IPECCompetency</td><td>4 <span class="pill p-fix">G09</span></td><td>code (VE/RR/CC/TT), name, description</td><td><span class="pill p-fix">ADDED</span></td></tr>
+<tr><td class="mono">CarePhase</td><td>5 <span class="pill p-fix">G09</span></td><td>preventive / acute_care / chronic / rehabilitative / palliative_eol</td><td><span class="pill p-fix">ADDED</span></td></tr>
+<tr><td class="mono">AnatomicalSystem</td><td>12 <span class="pill p-fix">G12</span></td><td>mesh_id (A0x branch), name; now includes nervous-pns</td><td><span class="pill p-fix">PNS ADDED</span></td></tr>
+<tr><td class="mono">AnatomicalRegion</td><td>9</td><td>name, mesh_id (A01 subtree), topographic_description</td><td></td></tr>
+<tr><td class="mono">AnatomicalOrgan</td><td>≈58</td><td>mesh_id, name, mesh_descriptor_id, snomed_id, fma_id; LOCATED_IN → AnatomicalRegion</td><td></td></tr>
+<tr><td class="mono">AnatomicalStructure</td><td>≈80</td><td>mesh_id, name, semantic_type (T024/T025/T026/T030), part_of → AnatomicalOrgan</td><td></td></tr>
+<tr><td class="mono">Compound</td><td>via DrugBank</td><td>drugbank_id, rxnorm_id, name, mechanism_class</td><td></td></tr>
+<tr><td class="mono">Gene</td><td>via Hetionet</td><td>ncbi_gene_id, symbol, name, entrez_id</td><td></td></tr>
+<tr><td class="mono">DiagnosticMarker</td><td>via LOINC</td><td>loinc_code, name, specimen_type, reference_range</td><td></td></tr>
+<tr><td class="mono">Pathway</td><td>via Reactome</td><td>reactome_id, name, organism</td><td></td></tr>
+<tr><td class="mono">Milestone</td><td>via ACGME</td><td>acgme_milestone_id, competency_domain, level (1-5), description</td><td></td></tr>
+<tr><td class="mono">SNOMED</td><td>selective import</td><td>snomed_id, preferred_term, semantic_type, is_a → parent SNOMED nodes</td><td></td></tr>
+<tr><td class="mono">ConceptCluster</td><td>Phase 5 ML</td><td>community_id, summary (200 tokens), coverage_score; Louvain output at T4</td><td></td></tr>
+<tr><td class="mono">ReferenceSource</td><td>1 MVP (First Aid)</td><td>source_name, edition, publisher; T4 LOD integration</td><td></td></tr>
+</tbody>
+</table>
+
+<h3>Layer 1–2 — Institutional hierarchy</h3>
+<table>
+<thead><tr><th>Node</th><th>MSM count</th><th>Key properties</th></tr></thead>
+<tbody>
+<tr><td class="mono">Institution</td><td>1</td><td>name, slug, accreditation, is_showcase, lcme_id</td></tr>
+<tr><td class="mono">Program</td><td>1</td><td>name ('MD Program'), degree_type, accrediting_body</td></tr>
+<tr><td class="mono">CatalogCourse</td><td>22</td><td>code, title, credits, course_type ('preclinical'|'clerkship'|'advanced') <span class="pill p-fix">G07</span></td></tr>
+<tr><td class="mono">Course</td><td>22</td><td>course_type property handles M3 clerkships — no separate Clerkship node needed for MVP <span class="pill p-fix">G07</span></td></tr>
+</tbody>
+</table>
+
+<h3>Layers 3–7 — Content, Assessment, Exam, Student (A-Box — created by pipeline)</h3>
+<table>
+<thead><tr><th>Node</th><th>Layer</th><th>Created by</th><th>Key properties</th></tr></thead>
+<tbody>
+<tr><td class="mono">SyllabusDocument</td><td>3</td><td>P1 (syllabus)</td><td>file_hash, file_path, parsing_status, faculty_id</td></tr>
+<tr><td class="mono">Lecture</td><td>3</td><td>P1</td><td>title, file_hash, slide_count, summary_embedding (Level 3)</td></tr>
+<tr><td class="mono">LectureSection</td><td>3</td><td>P1 Step 01</td><td>slide_number, title, body_text, speaker_notes (separate SpeakerNote node)</td></tr>
+<tr><td class="mono">SpeakerNote</td><td>3</td><td>P1 Step 01</td><td>text, slide_number; faculty intent — separate embedding index from student content</td></tr>
+<tr><td class="mono">ContentChunk</td><td>3</td><td>P1 Step 03</td><td>text, text_with_context, chunk_index, heading_context, discrimination_flag, embedding_id (FK)</td></tr>
+<tr><td class="mono">SyllabusTopic</td><td>3</td><td>P1 (syllabus)</td><td>name, declared by faculty; GROUNDED_IN → StandardTerm after NED</td></tr>
+<tr><td class="mono">Domain</td><td>4</td><td>Seeded</td><td>usmle_system_code, name</td></tr>
+<tr><td class="mono">SubConcept</td><td>4</td><td>P1 Step 05–08</td><td>name, cui, embedding_source ('text_only'|'graph_augmented'|'full_gnn'), lod_brief_id (FK→Supabase) <span class="pill p-fix">G05</span></td></tr>
+<tr><td class="mono">StandardTerm</td><td>4</td><td>P2 Step 01</td><td>cui, preferred_term, snomed_id, mesh_id, icd10_code, rxnorm_id, semantic_type, semantic_type_label</td></tr>
+<tr><td class="mono">ProficiencyVariable</td><td>4</td><td>P2 Step 07</td><td>name, grain_size, evidence_threshold (0.85), mastery_definition, construct_domain</td></tr>
+<tr><td class="mono">CoverageRecord</td><td>4</td><td>P3 Step 10</td><td>content_score, assessment_count (approved items), coverage_score (count/3 capped 1.0)</td></tr>
+<tr><td class="mono">EntityResolutionJob</td><td>4</td><td>Phase 5</td><td>status, confidence_range, resolution_type ('deferred_ambiguous'|'cross_course'|'deprecated_cleanup') — handles cases P1 Step 05 deferred (confidence 0.65–0.84)</td></tr>
+<tr><td class="mono">USMLE_System/Topic/Subtopic</td><td>4</td><td>Seeded</td><td>18 systems / ≈100 topics / ≈400 subtopics; nbme_frequency on Subtopic</td></tr>
+<tr><td class="mono">LCME_Standard/Domain</td><td>4</td><td>Seeded</td><td>58 elements, standard number, element text</td></tr>
+<tr><td class="mono">ACGME_Competency</td><td>4</td><td>Seeded</td><td>6 domains + milestones</td></tr>
+<tr><td class="mono">EPA</td><td>4</td><td>Seeded</td><td>13 EPAs, description, required_evidence_threshold</td></tr>
+<tr><td class="mono">AssessmentItem</td><td>5</td><td>P3 Step 08</td><td>stem, status, bloom_level, generation_approach, toulmin (JSONB in Supabase)</td></tr>
+<tr><td class="mono">Distractor</td><td>5</td><td>P3 Step 05</td><td>text, is_correct, evidence_rule (property, not node), TARGETS_MISCONCEPTION</td></tr>
+<tr><td class="mono">Rationale</td><td>5</td><td>P3 Step 06</td><td>text, source_chunk_uuids[], teaching_point</td></tr>
+<tr><td class="mono">TaskShell</td><td>5</td><td>P3 (INSTANTIATES)</td><td>Each item links to its generating template via INSTANTIATES edge</td></tr>
+<tr><td class="mono">EvaluationResult/Run</td><td>5</td><td>Weekly cron</td><td>context_recall, faithfulness, answer_correctness, benchmark_version</td></tr>
+<tr><td class="mono">Exam/ExamSection</td><td>6</td><td>Faculty action</td><td>title, scheduled_at, duration_minutes, passing_score (Angoff-derived)</td></tr>
+<tr><td class="mono">ExamBlueprint</td><td>6</td><td>Faculty action</td><td>bloom_distribution{}, system_proportions{}, difficulty_distribution{}, equity_item_min_pct (0.15)</td></tr>
+<tr><td class="mono">PracticeCollection</td><td>6</td><td>System</td><td>topic_filter, difficulty_target, item_count, algorithm ('spaced_retrieval_v1')</td></tr>
+<tr><td class="mono">Student</td><td>7</td><td>Self-registration</td><td>enrollment_year, cohort, institution_id (RLS-scoped)</td></tr>
+<tr><td class="mono">StudentMastery</td><td>7</td><td>Real-time BKT</td><td>p_mastery, p_transit, p_slip, p_guess, last_updated, domain</td></tr>
+<tr><td class="mono">BKT_Parameters</td><td>7</td><td>Phase A (AI est.)</td><td>p_l0, p_transit, p_slip, p_guess, calibration_phase ('ai_estimated'|'empirical')</td></tr>
+<tr><td class="mono">IRT_Parameters</td><td>7</td><td>Phase A→B</td><td>difficulty (b), discrimination (a), calibration_phase, response_count</td></tr>
+<tr><td class="mono">Attempt</td><td>7</td><td>Student response</td><td>is_correct, response_ms, selected_distractor_uuid, exam_mode</td></tr>
+<tr><td class="mono">RecommendationEvent</td><td>7</td><td>Spaced retrieval</td><td>algorithm, trigger_reason, subconcept_uuid, scheduled_for</td></tr>
+<tr><td class="mono">WisdomPath</td><td>7</td><td>Phase 6</td><td>chain[], path_confidence (product of EVIDENCE_GRADE_WEIGHTs), clinical_rank</td></tr>
+<tr><td class="mono">CurriculumRecommendation</td><td>7</td><td>Phase 6</td><td>recommended_action, gap_delta, effort_estimate, clinical_consequence_score</td></tr>
+</tbody>
+</table>
+
+<h3>§06 Canonical relationship directions — all 110 edges (selected critical with direction audit)</h3>
+
+<table>
+<thead><tr><th>Edge</th><th>From → To</th><th>Key properties</th><th>Note</th></tr></thead>
+<tbody>
+<tr><td class="mono">CONTRIBUTES_TO</td><td>SLO → ILO</td><td></td><td><span class="pill p-fix">D09</span> Direction canonical: SLO child → ILO parent. Never reverse.</td></tr>
+<tr><td class="mono">GROUNDED_IN</td><td>SubConcept/SyllabusTopic → StandardTerm</td><td>evidence_grade, evidence_weight</td><td><span class="pill p-fix">D03</span> LOD only — never on non-curriculum entities</td></tr>
+<tr><td class="mono">TEACHES</td><td>ContentChunk → SubConcept</td><td>similarity, method, evidence_grade, evidence_weight, established_at</td><td>D07: authoritative for coverage evidence</td></tr>
+<tr><td class="mono">COVERS_TOPIC</td><td>Session → SyllabusTopic</td><td></td><td>D07: declared intent only — unverified</td></tr>
+<tr><td class="mono">HAS_COVERAGE</td><td>SubConcept → CoverageRecord</td><td></td><td>D02: created after FIRST approved item; full at 3 items</td></tr>
+<tr><td class="mono">SOURCED_FROM</td><td>AssessmentItem → ContentChunk</td><td>established_at</td><td>Item provenance — not LOD link</td></tr>
+<tr><td class="mono">INSTANTIATES</td><td>AssessmentItem → TaskShell</td><td>instance_spec (JSONB)</td><td>ECD Task Model link</td></tr>
+<tr><td class="mono">CLAIMS_ABOUT</td><td>AssessmentItem → ProficiencyVariable</td><td></td><td>ECD validity claim</td></tr>
+<tr><td class="mono">MAPPED_TO</td><td>SubConcept → ProficiencyVariable</td><td></td><td>Student Model link</td></tr>
+<tr><td class="mono">ASSESSED_BY</td><td>ProficiencyVariable → TaskShell</td><td>bloom_fitness_score</td><td>Which shells elicit evidence for this PV</td></tr>
+<tr><td class="mono">TARGETS_MISCONCEPTION</td><td>Distractor → MisconceptionCategory</td><td></td><td>Feedback loop: empirical_frequency updated on each student wrong answer</td></tr>
+<tr><td class="mono">SAME_AS</td><td>SubConcept → SubConcept</td><td>confidence, method ('cui_match'|'semantic')</td><td>D08: created in P1 if confidence ≥ 0.85; deferred to EntityResolutionJob if 0.65–0.84</td></tr>
+<tr><td class="mono">CORRESPONDS_TO</td><td>AnatomicalSystem → USMLE_System</td><td></td><td>Replaces deprecated COVERS_ANATOMY</td></tr>
+<tr><td class="mono">HAS_SECTION</td><td>Lecture → LectureSection</td><td>slide_order</td><td>New in pipeline v2 — enables Parent Doc Retriever</td></tr>
+<tr><td class="mono">HAS_CHUNK</td><td>LectureSection → ContentChunk</td><td>chunk_index</td><td>Was Lecture→ContentChunk — now routes through LectureSection</td></tr>
+<tr><td class="mono">EXPLAINS_SAME_CONCEPT</td><td>ContentChunk ↔ ContentChunk</td><td>subconcept_uuid, evidence_grade: 'B'</td><td>Cross-lecture concept linking — created by P2 Step 05</td></tr>
+<tr><td class="mono">COVERS_LCME_DOMAIN</td><td>ContentChunk/SyllabusTopic → LCMEContentDomain</td><td>confidence, method ('classifier'|'manual')</td><td><span class="pill p-fix">G04</span> Created by LCMEDomainClassifier step in P1</td></tr>
+<tr><td class="mono">ENTRUSTED_FOR</td><td>Student → EPA</td><td>level ('indirect'|'direct'|'unsupervised')</td><td>Wisdom layer highest-order output — T5</td></tr>
+<tr><td class="mono">CAUSALLY_PRECEDES</td><td>PathophysiologicalMechanism → PathophysiologicalMechanism</td><td></td><td>Causal chain encoding for mechanism-reasoning items — T5</td></tr>
+<tr><td class="mono">PREREQUISITE_FOR</td><td>SubConcept → SubConcept</td><td>prerequisite_type ('hard'|'soft')</td><td>Learning trajectory optimization — T4</td></tr>
+</tbody>
+</table>
+</section>
+
+<!-- ══════════════════════ PART III: SEED CATALOGUE ══════════════════════ -->
+<section id="part3">
+<div class="sid">Part III / Phase 0 Seed Catalogue</div>
+<h2>Every seed defined — all G01/G02/G03/G09/G12 gaps resolved</h2>
+
+<div class="canon"><div class="cl">Canonical execution order</div>
+<p>deployNeo4jSchema → seedFrameworks → seedClassificationLabels → seedAnatomy (with PNS/ANS) → seedDiseaseCategories → <strong>seedMisconceptionCategories</strong> → <strong>seedTaskShells</strong> → <strong>seedLCMEReference</strong> (IPECCompetency + CarePhase) → seedDrugBank → seedGenes → seedSNOMEDSubset → propagateSnomedLabels → seedNeo4jCatalog → seedTaxonomyEmbeddings → <strong>seedFewShotExamples</strong></p>
+</div>
+
+<h3>§08 MisconceptionCategory seed — 15 nodes (G01)</h3>
+
+<div class="seed-block">
+<div class="seed-head"><span class="seed-file">seeds/misconception-categories.seed.ts</span><span class="seed-status">✓ DEFINED — Phase 0 required</span></div>
+</div>
+
+<pre><span class="kw">const</span> MISCONCEPTION_CATEGORIES = [
+  <span class="cm">// ── CARDIOVASCULAR ───────────────────────────────────────────────────────</span>
+  { id: <span class="st">'mc-cv-biomarker-timing'</span>, name: <span class="st">'Cardiac biomarker timing confusion'</span>,
+    usmle_systems: [<span class="st">'Cardiovascular'</span>], description: <span class="st">'Confuses CK-MB with high-sensitivity Troponin I as first-line ACS biomarker'</span>,
+    example_distractor_pattern: <span class="st">'CK-MB instead of hs-TnI for early MI detection'</span>, empirical_frequency: <span class="nu">0</span> },
+  { id: <span class="st">'mc-cv-acs-type'</span>, name: <span class="st">'ACS type misidentification by ECG pattern'</span>,
+    usmle_systems: [<span class="st">'Cardiovascular'</span>], description: <span class="st">'Confuses NSTEMI / unstable angina / STEMI classification from ECG and biomarker pattern'</span>,
+    example_distractor_pattern: <span class="st">'STEMI when only ST depression present'</span>, empirical_frequency: <span class="nu">0</span> },
+  <span class="cm">// ── RENAL / PHARMACOLOGY ─────────────────────────────────────────────────</span>
+  { id: <span class="st">'mc-renal-tubule-site'</span>, name: <span class="st">'Diuretic tubular site confusion'</span>,
+    usmle_systems: [<span class="st">'Renal'</span>, <span class="st">'Pharmacology'</span>], description: <span class="st">'Confuses site of action: loop diuretic (LOH) vs. thiazide (DCT) vs. K-sparing (collecting duct)'</span>,
+    example_distractor_pattern: <span class="st">'HCTZ instead of furosemide for loop diuretic effect'</span>, empirical_frequency: <span class="nu">0</span> },
+  { id: <span class="st">'mc-pharm-mechanism'</span>, name: <span class="st">'Drug mechanism vs. clinical indication conflation'</span>,
+    usmle_systems: [<span class="st">'Pharmacology'</span>], description: <span class="st">'Selects a drug based on its clinical indication rather than its mechanism when mechanism is asked'</span>,
+    example_distractor_pattern: <span class="st">'Drug that treats the condition vs. drug with the asked mechanism'</span>, empirical_frequency: <span class="nu">0</span> },
+  <span class="cm">// ── NEUROLOGY ─────────────────────────────────────────────────────────────</span>
+  { id: <span class="st">'mc-neuro-vascular-territory'</span>, name: <span class="st">'Stroke vascular territory misattribution'</span>,
+    usmle_systems: [<span class="st">'Neurology'</span>], description: <span class="st">'Confuses MCA / ACA / PCA / vertebrobasilar territory deficits from clinical presentation'</span>,
+    example_distractor_pattern: <span class="st">'ACA territory when contralateral face + arm weakness present'</span>, empirical_frequency: <span class="nu">0</span> },
+  { id: <span class="st">'mc-neuro-upper-lower'</span>, name: <span class="st">'UMN vs. LMN sign confusion'</span>,
+    usmle_systems: [<span class="st">'Neurology'</span>, <span class="st">'Musculoskeletal'</span>], description: <span class="st">'Confuses upper and lower motor neuron findings: hyper vs. hyporeflexia, spasticity vs. flaccidity'</span>,
+    example_distractor_pattern: <span class="st">'Hyperreflexia and spasticity for LMN lesion'</span>, empirical_frequency: <span class="nu">0</span> },
+  <span class="cm">// ── MICROBIOLOGY / INFECTIOUS DISEASE ────────────────────────────────────</span>
+  { id: <span class="st">'mc-micro-gram-stain'</span>, name: <span class="st">'Gram stain and organism property conflation'</span>,
+    usmle_systems: [<span class="st">'Infectious Disease'</span>], description: <span class="st">'Confuses Gram-positive vs. Gram-negative organisms, their typical presentations, or their antimicrobial coverage'</span>,
+    example_distractor_pattern: <span class="st">'Vancomycin for Gram-negative coverage'</span>, empirical_frequency: <span class="nu">0</span> },
+  { id: <span class="st">'mc-micro-antibiotic-moa'</span>, name: <span class="st">'Antibiotic mechanism of action error'</span>,
+    usmle_systems: [<span class="st">'Pharmacology'</span>, <span class="st">'Infectious Disease'</span>], description: <span class="st">'Confuses cell wall synthesis inhibitors / protein synthesis inhibitors / DNA gyrase inhibitors by drug class'</span>,
+    example_distractor_pattern: <span class="st">'Macrolide as cell wall synthesis inhibitor'</span>, empirical_frequency: <span class="nu">0</span> },
+  <span class="cm">// ── ENDOCRINE ─────────────────────────────────────────────────────────────</span>
+  { id: <span class="st">'mc-endo-feedback-axis'</span>, name: <span class="st">'Endocrine feedback axis direction error'</span>,
+    usmle_systems: [<span class="st">'Endocrine'</span>], description: <span class="st">'Confuses primary vs. secondary vs. tertiary causes: whether hormone levels go up or down and at which gland'</span>,
+    example_distractor_pattern: <span class="st">'High TSH in hyperthyroidism (primary thyroid disorder)'</span>, empirical_frequency: <span class="nu">0</span> },
+  <span class="cm">// ── PATHOLOGY / MECHANISMS ────────────────────────────────────────────────</span>
+  { id: <span class="st">'mc-path-inflammation-type'</span>, name: <span class="st">'Acute vs. chronic inflammation cell confusion'</span>,
+    usmle_systems: [<span class="st">'Pathology'</span>], description: <span class="st">'Confuses neutrophil (acute) vs. lymphocyte/macrophage (chronic) vs. eosinophil (parasitic/allergic) predominance'</span>,
+    example_distractor_pattern: <span class="st">'Neutrophils as predominant cell in granulomatous disease'</span>, empirical_frequency: <span class="nu">0</span> },
+  { id: <span class="st">'mc-path-necrosis-type'</span>, name: <span class="st">'Necrosis type misidentification'</span>,
+    usmle_systems: [<span class="st">'Pathology'</span>], description: <span class="st">'Confuses coagulative / liquefactive / caseous / fat / fibrinoid necrosis by tissue context'</span>,
+    example_distractor_pattern: <span class="st">'Liquefactive necrosis for myocardial infarction'</span>, empirical_frequency: <span class="nu">0</span> },
+  <span class="cm">// ── BIOSTATISTICS / EPIDEMIOLOGY ──────────────────────────────────────────</span>
+  { id: <span class="st">'mc-stats-sensitivity-specificity'</span>, name: <span class="st">'Sensitivity vs. specificity and predictive value confusion'</span>,
+    usmle_systems: [<span class="st">'Biostatistics'</span>], description: <span class="st">'Confuses sensitivity/specificity with PPV/NPV, or misapplies screening vs. confirmatory test logic'</span>,
+    example_distractor_pattern: <span class="st">'High sensitivity test to confirm diagnosis in low-prevalence setting'</span>, empirical_frequency: <span class="nu">0</span> },
+  { id: <span class="st">'mc-stats-study-design'</span>, name: <span class="st">'Epidemiological study design conflation'</span>,
+    usmle_systems: [<span class="st">'Biostatistics'</span>], description: <span class="st">'Confuses case-control / cohort / cross-sectional / RCT designs and their appropriate measures of association'</span>,
+    example_distractor_pattern: <span class="st">'Odds ratio calculated from a cohort study'</span>, empirical_frequency: <span class="nu">0</span> },
+  <span class="cm">// ── GENERAL CLINICAL REASONING ────────────────────────────────────────────</span>
+  { id: <span class="st">'mc-clinical-outdated-knowledge'</span>, name: <span class="st">'Outdated clinical guideline application'</span>,
+    usmle_systems: [<span class="st">'General'</span>], description: <span class="st">'Selects an answer based on an older clinical guideline that has been superseded by current evidence-based practice'</span>,
+    example_distractor_pattern: <span class="st">'CK-MB as preferred biomarker, bed rest for back pain'</span>, empirical_frequency: <span class="nu">0</span> },
+  { id: <span class="st">'mc-clinical-next-step-premature'</span>, name: <span class="st">'Premature intervention before stabilization'</span>,
+    usmle_systems: [<span class="st">'General'</span>], description: <span class="st">'Selects definitive intervention before ensuring airway / breathing / circulation or before ordering the appropriate next diagnostic step'</span>,
+    example_distractor_pattern: <span class="st">'Surgery before resuscitation in hemorrhagic shock'</span>, empirical_frequency: <span class="nu">0</span> },
+];</pre>
+
+<h3>§09 TaskShell seed — 12 templates (G02)</h3>
+
+<pre><span class="kw">const</span> TASK_SHELLS = [
+  <span class="cm">// FAMILY 1: Diagnosis from clinical presentation (Bloom 2-4)</span>
+  { id: <span class="st">'ts-dx-from-presentation'</span>, name: <span class="st">'Diagnosis from Presentation'</span>,
+    concept_family: <span class="st">'diagnosis'</span>, bloom_range: [<span class="nu">2</span>,<span class="nu">4</span>], lead_in_type: <span class="st">'diagnosis'</span>,
+    variable_slots: [<span class="st">'patient_age'</span>,<span class="st">'patient_sex'</span>,<span class="st">'chief_complaint'</span>,<span class="st">'duration'</span>,<span class="st">'key_findings'</span>,<span class="st">'labs_imaging'</span>],
+    template_structure: <span class="st">'A {patient_age}-year-old {patient_sex} presents with {chief_complaint} for {duration}. {key_findings}. {labs_imaging}. Which of the following is the most likely diagnosis?'</span>, avg_quality_score: <span class="nu">0</span> },
+  { id: <span class="st">'ts-dx-from-lab'</span>, name: <span class="st">'Diagnosis from Laboratory Pattern'</span>,
+    concept_family: <span class="st">'diagnosis'</span>, bloom_range: [<span class="nu">3</span>,<span class="nu">5</span>], lead_in_type: <span class="st">'diagnosis'</span>,
+    variable_slots: [<span class="st">'patient_age'</span>,<span class="st">'patient_sex'</span>,<span class="st">'symptoms'</span>,<span class="st">'lab_panel'</span>,<span class="st">'abnormal_values'</span>],
+    template_structure: <span class="st">'A {patient_age}-year-old {patient_sex} presents with {symptoms}. Laboratory evaluation reveals {lab_panel} with {abnormal_values}. Which of the following is the most likely cause?'</span>, avg_quality_score: <span class="nu">0</span> },
+  { id: <span class="st">'ts-dx-from-imaging'</span>, name: <span class="st">'Diagnosis from Imaging Description'</span>,
+    concept_family: <span class="st">'diagnosis'</span>, bloom_range: [<span class="nu">3</span>,<span class="nu">5</span>], lead_in_type: <span class="st">'diagnosis'</span>,
+    variable_slots: [<span class="st">'patient_age'</span>,<span class="st">'patient_sex'</span>,<span class="st">'presenting_context'</span>,<span class="st">'imaging_modality'</span>,<span class="st">'imaging_findings'</span>],
+    template_structure: <span class="st">'{presenting_context}. {imaging_modality} reveals {imaging_findings}. Which of the following is the most likely diagnosis?'</span>, avg_quality_score: <span class="nu">0</span> },
+  <span class="cm">// FAMILY 2: Mechanism identification (Bloom 2-4)</span>
+  { id: <span class="st">'ts-mechanism-drug'</span>, name: <span class="st">'Drug Mechanism of Action'</span>,
+    concept_family: <span class="st">'mechanism'</span>, bloom_range: [<span class="nu">2</span>,<span class="nu">4</span>], lead_in_type: <span class="st">'mechanism'</span>,
+    variable_slots: [<span class="st">'clinical_scenario'</span>,<span class="st">'drug_name'</span>,<span class="st">'therapeutic_effect'</span>],
+    template_structure: <span class="st">'{clinical_scenario}. {drug_name} is initiated. Which of the following best describes its primary mechanism of action?'</span>, avg_quality_score: <span class="nu">0</span> },
+  { id: <span class="st">'ts-mechanism-pathophysiology'</span>, name: <span class="st">'Pathophysiological Mechanism'</span>,
+    concept_family: <span class="st">'mechanism'</span>, bloom_range: [<span class="nu">3</span>,<span class="nu">5</span>], lead_in_type: <span class="st">'mechanism'</span>,
+    variable_slots: [<span class="st">'patient_demographics'</span>,<span class="st">'condition_context'</span>,<span class="st">'specific_finding'</span>],
+    template_structure: <span class="st">'{patient_demographics} with {condition_context}. {specific_finding}. Which of the following best explains the pathophysiological mechanism responsible for this finding?'</span>, avg_quality_score: <span class="nu">0</span> },
+  { id: <span class="st">'ts-mechanism-anatomy'</span>, name: <span class="st">'Anatomical Mechanism / Structural Basis'</span>,
+    concept_family: <span class="st">'mechanism'</span>, bloom_range: [<span class="nu">2</span>,<span class="nu">4</span>], lead_in_type: <span class="st">'mechanism'</span>,
+    variable_slots: [<span class="st">'clinical_scenario'</span>,<span class="st">'anatomical_finding'</span>,<span class="st">'nerve_or_vessel'</span>],
+    template_structure: <span class="st">'{clinical_scenario}. {anatomical_finding}. Which of the following structures is most likely responsible?'</span>, avg_quality_score: <span class="nu">0</span> },
+  <span class="cm">// FAMILY 3: Next best step (Bloom 3-5)</span>
+  { id: <span class="st">'ts-next-step-diagnostic'</span>, name: <span class="st">'Next Best Diagnostic Step'</span>,
+    concept_family: <span class="st">'next_step'</span>, bloom_range: [<span class="nu">3</span>,<span class="nu">5</span>], lead_in_type: <span class="st">'next_best_step'</span>,
+    variable_slots: [<span class="st">'patient_demographics'</span>,<span class="st">'presentation'</span>,<span class="st">'initial_evaluation'</span>],
+    template_structure: <span class="st">'{patient_demographics} presents with {presentation}. {initial_evaluation}. Which of the following is the most appropriate next step in the evaluation?'</span>, avg_quality_score: <span class="nu">0</span> },
+  { id: <span class="st">'ts-next-step-management'</span>, name: <span class="st">'Next Best Management Step'</span>,
+    concept_family: <span class="st">'next_step'</span>, bloom_range: [<span class="nu">3</span>,<span class="nu">5</span>], lead_in_type: <span class="st">'next_best_step'</span>,
+    variable_slots: [<span class="st">'patient_demographics'</span>,<span class="st">'diagnosis_established'</span>,<span class="st">'current_status'</span>],
+    template_structure: <span class="st">'{patient_demographics} is diagnosed with {diagnosis_established}. {current_status}. Which of the following is the most appropriate next step in management?'</span>, avg_quality_score: <span class="nu">0</span> },
+  { id: <span class="st">'ts-next-step-emergency'</span>, name: <span class="st">'Emergency Immediate Action'</span>,
+    concept_family: <span class="st">'next_step'</span>, bloom_range: [<span class="nu">4</span>,<span class="nu">6</span>], lead_in_type: <span class="st">'next_best_step'</span>,
+    variable_slots: [<span class="st">'emergent_scenario'</span>,<span class="st">'vital_signs'</span>,<span class="st">'physical_findings'</span>],
+    template_structure: <span class="st">'{emergent_scenario}. Vital signs: {vital_signs}. Examination reveals {physical_findings}. Which of the following is the most appropriate immediate action?'</span>, avg_quality_score: <span class="nu">0</span> },
+  <span class="cm">// FAMILY 4: Biomarker / Test selection (Bloom 2-4)</span>
+  { id: <span class="st">'ts-biomarker-select'</span>, name: <span class="st">'Biomarker / Laboratory Test Selection'</span>,
+    concept_family: <span class="st">'test_selection'</span>, bloom_range: [<span class="nu">2</span>,<span class="nu">4</span>], lead_in_type: <span class="st">'diagnosis'</span>,
+    variable_slots: [<span class="st">'clinical_scenario'</span>,<span class="st">'clinical_question'</span>,<span class="st">'timing_context'</span>],
+    template_structure: <span class="st">'{clinical_scenario}. {timing_context}. Which of the following laboratory tests is most appropriate to {clinical_question}?'</span>, avg_quality_score: <span class="nu">0</span> },
+  { id: <span class="st">'ts-drug-select-indication'</span>, name: <span class="st">'Drug Selection by Indication / Patient Profile'</span>,
+    concept_family: <span class="st">'test_selection'</span>, bloom_range: [<span class="nu">3</span>,<span class="nu">5</span>], lead_in_type: <span class="st">'management'</span>,
+    variable_slots: [<span class="st">'patient_profile'</span>,<span class="st">'diagnosis'</span>,<span class="st">'contraindication_context'</span>],
+    template_structure: <span class="st">'{patient_profile} with {diagnosis}. {contraindication_context}. Which of the following is the most appropriate pharmacotherapy?'</span>, avg_quality_score: <span class="nu">0</span> },
+  { id: <span class="st">'ts-screening-recommendation'</span>, name: <span class="st">'Screening Test Recommendation'</span>,
+    concept_family: <span class="st">'test_selection'</span>, bloom_range: [<span class="nu">2</span>,<span class="nu">3</span>], lead_in_type: <span class="st">'next_best_step'</span>,
+    variable_slots: [<span class="st">'patient_demographics'</span>,<span class="st">'risk_factors'</span>,<span class="st">'screening_context'</span>],
+    template_structure: <span class="st">'{patient_demographics} presents for a routine health maintenance visit. {risk_factors}. According to current guidelines, which of the following screening tests is most appropriate?'</span>, avg_quality_score: <span class="nu">0</span> },
+];</pre>
+
+<h3>§12 Five-shot examples for text2Cypher (G03)</h3>
+
+<pre><span class="kw">const</span> FEW_SHOT_EXAMPLES = [
+  {
+    query_hash: <span class="fn">sha256</span>(<span class="st">'usmle systems fewest items'</span>),
+    natural_language: <span class="st">'Which USMLE systems have the fewest approved assessment items?'</span>,
+    cypher: `
+      <span class="kw">MATCH</span> (sys:USMLE_System)
+      <span class="kw">OPTIONAL MATCH</span> (sys)&lt;-[:PART_OF]-(:USMLE_Topic)&lt;-[:BELONGS_TO]-(:USMLE_Subtopic)
+                      &lt;-[:ALIGNS_TO]-(sc:SubConcept)&lt;-[:SOURCED_FROM]-(i:AssessmentItem {status:<span class="st">'approved'</span>})
+      <span class="kw">RETURN</span> sys.name <span class="kw">AS</span> system, <span class="fn">count</span>(i) <span class="kw">AS</span> approved_items
+      <span class="kw">ORDER BY</span> approved_items <span class="kw">ASC LIMIT</span> <span class="nu">5</span>`
+  },
+  {
+    query_hash: <span class="fn">sha256</span>(<span class="st">'student mastery below threshold renal'</span>),
+    natural_language: <span class="st">'Which students have mastery below 50% in Renal?'</span>,
+    cypher: `
+      <span class="kw">MATCH</span> (s:Student)-[:HAS_MASTERY]->(sm:StudentMastery)-[:FOR_CONCEPT]->(sc:SubConcept)
+             -[:ALIGNS_TO]->(sub:USMLE_Subtopic)-[:BELONGS_TO]->(t:USMLE_Topic)
+             -[:PART_OF]->(sys:USMLE_System {name:<span class="st">'Renal'</span>})
+      <span class="kw">WHERE</span> sm.p_mastery < <span class="nu">0.5</span>
+      <span class="kw">RETURN</span> s.uuid, sc.name, sm.p_mastery
+      <span class="kw">ORDER BY</span> sm.p_mastery <span class="kw">ASC</span>`
+  },
+  {
+    query_hash: <span class="fn">sha256</span>(<span class="st">'drugs treat diseases GI curriculum'</span>),
+    natural_language: <span class="st">'What drugs taught in the GI curriculum treat diseases associated with those concepts?'</span>,
+    cypher: `
+      <span class="kw">MATCH</span> (ch:ContentChunk)-[t:TEACHES]->(sc:SubConcept)-[:GROUNDED_IN]->(st:StandardTerm)
+      <span class="kw">MATCH</span> (sc)-[:ALIGNS_TO]->(sub:USMLE_Subtopic)-[:BELONGS_TO]->(top:USMLE_Topic)
+             -[:PART_OF]->(sys:USMLE_System {name:<span class="st">'Gastrointestinal'</span>})
+      <span class="kw">MATCH</span> (drug:Compound)-[:TREATS]->(st)
+      <span class="kw">RETURN DISTINCT</span> drug.name <span class="kw">AS</span> drug, sc.name <span class="kw">AS</span> concept <span class="kw">LIMIT</span> <span class="nu">20</span>`
+  },
+  {
+    query_hash: <span class="fn">sha256</span>(<span class="st">'SLOs no approved assessment items'</span>),
+    natural_language: <span class="st">'Which SLOs have no approved assessment items at all?'</span>,
+    cypher: `
+      <span class="kw">MATCH</span> (slo:SLO)-[:COVERS_TOPIC]->(st:SyllabusTopic)
+      <span class="kw">WHERE NOT</span> (slo)&lt;-[:ASSESSED_BY]-(:AssessmentItem {status:<span class="st">'approved'</span>})
+      <span class="kw">RETURN</span> slo.uuid, slo.text, st.name <span class="kw">LIMIT</span> <span class="nu">20</span>`
+  },
+  {
+    query_hash: <span class="fn">sha256</span>(<span class="st">'cardiovascular coverage heatmap'</span>),
+    natural_language: <span class="st">'Show the coverage heatmap for Cardiovascular: which SubConcepts have confirmed coverage and which are gaps?'</span>,
+    cypher: `
+      <span class="kw">MATCH</span> (sc:SubConcept)-[:ALIGNS_TO]->(sub:USMLE_Subtopic)-[:BELONGS_TO]->(top:USMLE_Topic)
+             -[:PART_OF]->(sys:USMLE_System {name:<span class="st">'Cardiovascular'</span>})
+      <span class="kw">OPTIONAL MATCH</span> (sc)-[:HAS_COVERAGE]->(cr:CoverageRecord)
+      <span class="kw">RETURN</span> sc.name, top.name <span class="kw">AS</span> topic,
+             <span class="kw">CASE WHEN</span> cr <span class="kw">IS NULL THEN</span> <span class="st">'gap'</span> <span class="kw">WHEN</span> cr.coverage_score &lt; <span class="nu">1.0</span> <span class="kw">THEN</span> <span class="st">'partial'</span> <span class="kw">ELSE</span> <span class="st">'confirmed'</span> <span class="kw">END</span> <span class="kw">AS</span> status,
+             <span class="fn">coalesce</span>(cr.coverage_score, <span class="nu">0</span>) <span class="kw">AS</span> score
+      <span class="kw">ORDER BY</span> score <span class="kw">ASC</span>`
+  },
+];</pre>
+
+<h3>§10 LCME Reference seed — IPECCompetency + CarePhase (G09)</h3>
+
+<pre><span class="cm">// Added to lcme-reference.seed.ts — runs after seedDiseaseCategories()</span>
+<span class="kw">const</span> IPEC_COMPETENCIES = [
+  { uuid: <span class="fn">det</span>(<span class="st">'ipec:VE'</span>), code: <span class="st">'VE'</span>, name: <span class="st">'Values and Ethics for Interprofessional Practice'</span>,
+    description: <span class="st">'Work with individuals of other professions to maintain a climate of mutual respect and shared values'</span> },
+  { uuid: <span class="fn">det</span>(<span class="st">'ipec:RR'</span>), code: <span class="st">'RR'</span>, name: <span class="st">'Roles and Responsibilities'</span>,
+    description: <span class="st">'Use the knowledge of one\'s own role and those of other professions to appropriately assess and address the health care needs of patients'</span> },
+  { uuid: <span class="fn">det</span>(<span class="st">'ipec:CC'</span>), code: <span class="st">'CC'</span>, name: <span class="st">'Interprofessional Communication'</span>,
+    description: <span class="st">'Communicate with patients, families, communities, and professionals in health and other fields in a responsive and responsible manner'</span> },
+  { uuid: <span class="fn">det</span>(<span class="st">'ipec:TT'</span>), code: <span class="st">'TT'</span>, name: <span class="st">'Teams and Teamwork'</span>,
+    description: <span class="st">'Apply relationship-building values and team dynamics to perform effectively in different team roles'</span> },
+];
+
+<span class="kw">const</span> CARE_PHASES = [
+  { uuid: <span class="fn">det</span>(<span class="st">'care:preventive'</span>), name: <span class="st">'Preventive Care'</span>, description: <span class="st">'Screening, immunization, health promotion before disease onset'</span> },
+  { uuid: <span class="fn">det</span>(<span class="st">'care:acute'</span>), name: <span class="st">'Acute Care'</span>, description: <span class="st">'Diagnosis and immediate management of new or worsening conditions'</span> },
+  { uuid: <span class="fn">det</span>(<span class="st">'care:chronic'</span>), name: <span class="st">'Chronic Disease Management'</span>, description: <span class="st">'Long-term management of established conditions'</span> },
+  { uuid: <span class="fn">det</span>(<span class="st">'care:rehabilitative'</span>), name: <span class="st">'Rehabilitative Care'</span>, description: <span class="st">'Restoration of function after illness or injury'</span> },
+  { uuid: <span class="fn">det</span>(<span class="st">'care:palliative'</span>), name: <span class="st">'Palliative and End-of-Life Care'</span>, description: <span class="st">'Symptom management and support for patients with serious illness'</span> },
+];</pre>
+
+<h3>§11 PNS/ANS additions to anatomy-regions.json (G12)</h3>
+
+<pre><span class="cm">// Add to anatomy-regions.json — after nervous-cns system</span>
+{
+  <span class="st">"uuid"</span>: <span class="fn">det</span>(<span class="st">"anatomy:system:nervous-pns"</span>),
+  <span class="st">"name"</span>: <span class="st">"Peripheral Nervous System"</span>,
+  <span class="st">"mesh_id"</span>: <span class="st">"A08.800"</span>,
+  <span class="st">"usmle_system"</span>: <span class="st">"Neurology"</span>,
+  <span class="st">"organs"</span>: [
+    { <span class="st">"uuid"</span>: <span class="fn">det</span>(<span class="st">"anatomy:organ:cranial-nerves"</span>), <span class="st">"name"</span>: <span class="st">"Cranial Nerves"</span>, <span class="st">"mesh_id"</span>: <span class="st">"A08.800.800"</span>,
+      <span class="st">"structures"</span>: [<span class="st">"Olfactory (I)"</span>,<span class="st">"Optic (II)"</span>,<span class="st">"Oculomotor (III)"</span>,<span class="st">"Trochlear (IV)"</span>,<span class="st">"Trigeminal (V)"</span>,
+                    <span class="st">"Abducens (VI)"</span>,<span class="st">"Facial (VII)"</span>,<span class="st">"Vestibulocochlear (VIII)"</span>,<span class="st">"Glossopharyngeal (IX)"</span>,
+                    <span class="st">"Vagus (X)"</span>,<span class="st">"Accessory (XI)"</span>,<span class="st">"Hypoglossal (XII)"</span>] },
+    { <span class="st">"uuid"</span>: <span class="fn">det</span>(<span class="st">"anatomy:organ:peripheral-nerves"</span>), <span class="st">"name"</span>: <span class="st">"Peripheral Nerves"</span>, <span class="st">"mesh_id"</span>: <span class="st">"A08.800.550"</span>,
+      <span class="st">"structures"</span>: [<span class="st">"Brachial Plexus"</span>,<span class="st">"Lumbosacral Plexus"</span>,<span class="st">"Sciatic Nerve"</span>,<span class="st">"Median Nerve"</span>] },
+    { <span class="st">"uuid"</span>: <span class="fn">det</span>(<span class="st">"anatomy:organ:autonomic-sympathetic"</span>), <span class="st">"name"</span>: <span class="st">"Sympathetic Nervous System"</span>, <span class="st">"mesh_id"</span>: <span class="st">"A08.800.050"</span> },
+    { <span class="st">"uuid"</span>: <span class="fn">det</span>(<span class="st">"anatomy:organ:autonomic-parasympathetic"</span>), <span class="st">"name"</span>: <span class="st">"Parasympathetic Nervous System"</span>, <span class="st">"mesh_id"</span>: <span class="st">"A08.800.050.600"</span> }
+  ]
+}</pre>
+</section>
+
+<!-- ══════════════════════ PART IV: THREE PIPELINES ══════════════════════ -->
+<section id="part4">
+<div class="sid">Part IV / Three Pipelines</div>
+<h2>All gaps applied: LCMEDomainClassifier · lod_brief→Supabase · ECD stages · Sonnet canonical</h2>
+
+<h3>§13 Pipeline 1 — Ingestion (journey/lecture.process)</h3>
+<p>Latency-sensitive. Faculty-visible. &lt;5 min target for 50-slide lecture. Priority: high. Timeout: 15min. Retries: 3. Concurrency: 10 per faculty_id.</p>
+
+<div style="border:1px solid var(--edge)">
+<div class="pstep">
+  <div class="pstep-n" style="color:var(--b)">01</div>
+  <div class="pstep-body"><div class="pstep-title">parse <span class="pill p-b">PPTX / PDF</span></div>
+  <div class="pstep-desc">Structural parsing. PPTX: one LectureSection per slide = title + body_text. Speaker notes → separate SpeakerNote nodes (faculty intent, not student-facing). PDF: layout-aware heading detection. Emits status: 'parsing' to Supabase.</div></div>
+</div>
+<div class="pstep">
+  <div class="pstep-n" style="color:var(--b)">02</div>
+  <div class="pstep-body"><div class="pstep-title">create-graph-scaffold <span class="pill p-b">MERGE + deterministicUUID</span></div>
+  <div class="pstep-desc">Lecture + LectureSection nodes + HAS_SECTION edges. ALL writes use MERGE with deterministic UUIDs — re-uploading never creates duplicates. Sets neo4j_sync_status: 'synced' on Supabase row.</div></div>
+</div>
+<div class="pstep">
+  <div class="pstep-n" style="color:var(--b)">03</div>
+  <div class="pstep-body"><div class="pstep-title">graph-aware-chunk <span class="pill p-fix">D04: 150-250 tokens</span></div>
+  <div class="pstep-desc">Entity-boundary-aligned chunking. Target: <strong>150–250 tokens</strong>, 30-token overlap (canonical). Heading context prepended for embedding. USMLE_System context from course used as domain hint for entity recognition within chunker. Max 3 chunks per LectureSection.</div></div>
+</div>
+<div class="pstep">
+  <div class="pstep-n" style="color:var(--b)">04</div>
+  <div class="pstep-body"><div class="pstep-title">multi-embed <span class="pill p-b">3 granularities · domain-aware</span></div>
+  <div class="pstep-desc">Parallel embedding: (1) Chunk embeddings — MedCPT if entity_density &gt;0.3, else text-embedding-3-small. (2) Section embeddings — full slide text. (3) Lecture summary — Claude Haiku ~150 tokens then embedded. Stored in Supabase pgvector.</div></div>
+</div>
+<div class="pstep">
+  <div class="pstep-n" style="color:var(--b)">05</div>
+  <div class="pstep-body"><div class="pstep-title">extract-entities <span class="pill p-b">Batched UMLS · 20/call</span></div>
+  <div class="pstep-desc">Medical NER across all chunks. UMLS batch lookup (20 entities per call — not sequential). LLM disambiguation if confidence &lt;0.80. SAME_AS detection: if CUI matches existing SubConcept AND confidence ≥0.85 → create SAME_AS immediately. If confidence 0.65–0.84 → defer to EntityResolutionJob queue.</div></div>
+</div>
+<div class="pstep">
+  <div class="pstep-n" style="color:var(--b)">05b</div>
+  <div class="pstep-body"><div class="pstep-title">lcme-domain-classify <span class="pill p-fix">NEW · G04 resolved</span></div>
+  <div class="pstep-desc">Claude Haiku classifies each ContentChunk against the 20 LCMEContentDomain node descriptions (Standard 7.1–7.9). Confidence ≥0.70 → create COVERS_LCME_DOMAIN edge with {confidence, method: 'classifier'}. This step was completely absent from prior pipeline specs — without it, the LCME Standard 7 compliance map stays empty permanently.</div></div>
+</div>
+<div class="pstep">
+  <div class="pstep-n" style="color:var(--b)">06</div>
+  <div class="pstep-body"><div class="pstep-title">create-teaches-edges <span class="pill p-b">Hybrid RRF · evidence_grade: 'C'</span></div>
+  <div class="pstep-desc">BM25 + dense RRF (k=60) for candidate SubConcept matching. TEACHES edges created with evidence_grade: 'C' and evidence_weight: 0.65. SubConcept nodes created as :Candidate. Sets embedding_source: 'text_only' (cold-start flag).</div></div>
+</div>
+<div class="pstep">
+  <div class="pstep-n" style="color:var(--b)">07</div>
+  <div class="pstep-body"><div class="pstep-title">faculty-review-gate <span class="pill p-gold">step.waitForEvent · 7-day window</span></div>
+  <div class="pstep-desc">Inngest function SUSPENDS. No polling. Awaits journey/lecture.reviewed event. Timeout: 7 days. On timeout: auto-approve confidence ≥0.85, flag rest as 'review_overdue'.</div></div>
+</div>
+<div class="pstep">
+  <div class="pstep-n" style="color:var(--b)">08</div>
+  <div class="pstep-body"><div class="pstep-title">finalize-graph <span class="pill p-b">Fan-out · one event per approved SubConcept</span></div>
+  <div class="pstep-desc">Approved: remove :Candidate label, upgrade evidence_grade: 'C' → 'A' (evidence_weight: 1.0). Fan-out: step.sendEvent() fires journey/subconcept.confirmed for each approved SubConcept. These trigger P2 independently. Update neo4j_synced_at on Supabase rows.</div></div>
+</div>
+</div>
+
+<h3>§14 Pipeline 2 — Enrichment (journey/subconcept.enrich)</h3>
+<p>Background. Rate-limit-aware. Timeout: 24hr. Retries: 5. Concurrency: 5. Faculty never sees this pipeline directly.</p>
+
+<div style="border:1px solid var(--edge)">
+<div class="pstep">
+  <div class="pstep-n" style="color:var(--g)">01</div>
+  <div class="pstep-body"><div class="pstep-title">umls-resolve</div>
+  <div class="pstep-desc">Full UMLS Metathesaurus lookup: preferred term, semantic type, all cross-references (SNOMED, MeSH, ICD-10, RxNorm). LLM disambiguation using all TEACHES chunk text + USMLE_System context. Creates/merges StandardTerm. Creates GROUNDED_IN edge.</div></div>
+</div>
+<div class="pstep">
+  <div class="pstep-n" style="color:var(--g)">02</div>
+  <div class="pstep-body"><div class="pstep-title">anatomy-disease-link <span class="pill p-b">semantic_type routing</span></div>
+  <div class="pstep-desc">Routes by semantic_type_label (T022→AnatomicalSystem, T023→AnatomicalOrgan, T024/T025/T026→AnatomicalStructure, T029→AnatomicalRegion, T047→DiseaseCategory, T121→Compound). Creates: AFFECTS_ORGAN, HAS_FINDING_SITE, CLASSIFIED_IN, MEDIATED_BY, PRESENTS_AS, TREATS edges.</div></div>
+</div>
+<div class="pstep">
+  <div class="pstep-n" style="color:var(--g)">03</div>
+  <div class="pstep-body"><div class="pstep-title">hetionet-import <span class="pill p-b">CUI merge · 2-hop selective</span></div>
+  <div class="pstep-desc">CUI match to Hetionet. Import 2-hop neighborhood. Allowed edge types: Drug-treats-Disease, Disease-associates-Gene, Gene-participates-Pathway, Drug-binds-Gene, Disease-presents-Symptom. Max 10 nodes per type. Sets embedding_source: 'graph_augmented'.</div></div>
+</div>
+<div class="pstep">
+  <div class="pstep-n" style="color:var(--g)">04</div>
+  <div class="pstep-body"><div class="pstep-title">lod-brief-generate <span class="pill p-fix">→ Supabase · G05 resolved</span></div>
+  <div class="pstep-desc">Generate ~200-token LOD brief (Claude Haiku). <strong>Store in Supabase subconcept_lod_briefs table.</strong> SubConcept node in Neo4j receives only lod_brief_id FK (8 bytes — within skinny nodes limit). At generation time: single Supabase key-value lookup (&lt;5ms). Evidence of canonical fix: sc.lod_brief property REMOVED; sc.lod_brief_id FK ADDED.</div></div>
+</div>
+<div class="pstep">
+  <div class="pstep-n" style="color:var(--g)">05</div>
+  <div class="pstep-body"><div class="pstep-title">cross-lecture-link</div>
+  <div class="pstep-desc">Find other lectures teaching this SubConcept. Create EXPLAINS_SAME_CONCEPT edges between ContentChunks from different lectures. Enables: "find all content about furosemide regardless of which lecture" as a single Cypher pattern.</div></div>
+</div>
+<div class="pstep">
+  <div class="pstep-n" style="color:var(--g)">06</div>
+  <div class="pstep-body"><div class="pstep-title">proficiency-variable-create <span class="pill p-fix">NEW · ECD Student Model</span></div>
+  <div class="pstep-desc">Create ProficiencyVariable node 1:1 with confirmed SubConcept. Properties: name (same as SubConcept.name), grain_size: 'subconcept', evidence_threshold: 0.85, mastery_definition (Claude Haiku generates from SubConcept description). Create MAPPED_TO edge: SubConcept → ProficiencyVariable. Create ASSESSED_BY edges: ProficiencyVariable → TaskShell (matched by concept_family).</div></div>
+</div>
+<div class="pstep">
+  <div class="pstep-n" style="color:var(--g)">07</div>
+  <div class="pstep-body"><div class="pstep-title">gnn-retrain-check</div>
+  <div class="pstep-desc">If new confirmed SubConcepts since last retrain &gt;100: emit journey/gnn.retrain-trigger. HeteroSAGE retrain on faculty-approved TEACHES edges (grade: 'A'). Post-retrain: new predicted TEACHES edges added with evidence_grade: 'B', evidence_weight: 0.82. Affected SubConcepts get embedding_source: 'full_gnn'.</div></div>
+</div>
+</div>
+
+<h3>§15 Pipeline 3 — Generation (journey/items.batch-generate)</h3>
+<p>On-demand. Canonical model: <strong>Sonnet for core + critique. Haiku for HyDE, distractors, rationale, QA.</strong> <span class="pill p-fix">D05</span> Timeout: 30min per batch.</p>
+
+<div style="border:1px solid var(--edge)">
+<div class="pstep">
+  <div class="pstep-n" style="color:#4a2878">00</div>
+  <div class="pstep-body"><div class="pstep-title">specification-conversation <span class="pill p-b">OUTSIDE Inngest · Chat UI</span></div>
+  <div class="pstep-desc">Faculty defines spec. System proposes gap-aware defaults: SubConcepts with no CoverageRecord listed first. Coverage-aware: excludes SubConcepts already meeting blueprint proportion. Max 10 turns. On confirmation → emit journey/generation.spec-confirmed.</div></div>
+</div>
+<div class="pstep">
+  <div class="pstep-n" style="color:#4a2878">ECD1</div>
+  <div class="pstep-body"><div class="pstep-title">identify-proficiency-variable <span class="pill p-fix">ECD Stage 1</span></div>
+  <div class="pstep-desc">For each target: MATCH (sc)-[:MAPPED_TO]->(pv:ProficiencyVariable). Returns: pv.grain_size, pv.evidence_threshold, pv.mastery_definition. This is "what KSA are we measuring?" — not just "what SubConcept are we targeting."</div></div>
+</div>
+<div class="pstep">
+  <div class="pstep-n" style="color:#4a2878">ECD2</div>
+  <div class="pstep-body"><div class="pstep-title">define-evidence-rules <span class="pill p-fix">ECD Stage 2 · Haiku</span></div>
+  <div class="pstep-desc">Claude Haiku generates evidence rules for a 5-option item: what mastery does the correct response demonstrate? What specific misconception does each distractor target? These become Distractor.evidence_rule properties. Grounds "Why Wrong?" explanations in a named misconception, not post-hoc inference.</div></div>
+</div>
+<div class="pstep">
+  <div class="pstep-n" style="color:#4a2878">ECD3</div>
+  <div class="pstep-body"><div class="pstep-title">select-task-shell <span class="pill p-fix">ECD Stage 3 · Graph query</span></div>
+  <div class="pstep-desc">MATCH (pv)-[:ASSESSED_BY]->(ts:TaskShell) WHERE ts.bloom_range contains spec.bloom_level AND ts.concept_family = target.concept_family ORDER BY ts.avg_quality_score DESC LIMIT 1. If no matching shell → HyDE step still runs; item is generated free-form but flagged for TaskShell library expansion.</div></div>
+</div>
+<div class="pstep">
+  <div class="pstep-n" style="color:#4a2878">01</div>
+  <div class="pstep-body"><div class="pstep-title">hyde-context-assembly <span class="pill p-fix">HyDE · Parallel 4-source · lod_brief from Supabase</span></div>
+  <div class="pstep-desc">HyDE: Claude Haiku generates 2-sentence hypothetical vignette (100 tokens) → embed → RRF k=60. Then parallel fan-out: LOCAL (HyDE-embedded hybrid RRF + Parent Doc Retriever hop), STRUCTURED (USMLE alignment), LOD (Supabase subconcept_lod_briefs lookup — &lt;5ms), GLOBAL (ConceptCluster summary if available — T4+). Token budget: LOCAL 3,000 / STRUCTURED 800 / LOD 500 / GLOBAL 400.</div></div>
+</div>
+<div class="pstep">
+  <div class="pstep-n" style="color:#4a2878">02</div>
+  <div class="pstep-body"><div class="pstep-title">generate-core <span class="pill p-fix">D05: Claude Sonnet 4</span></div>
+  <div class="pstep-desc">Clinical vignette + correct answer only. No distractors. Structured output: {stem, patient_age, patient_sex, clinical_setting, lead_in_type, correct_answer, answer_mechanism, source_chunk_uuids[]}. TaskShell.variable_slots provides the template structure.</div></div>
+</div>
+<div class="pstep">
+  <div class="pstep-n" style="color:#4a2878">03</div>
+  <div class="pstep-body"><div class="pstep-title">critique-gate <span class="pill p-b">Sonnet-as-critic · max 2 retries</span></div>
+  <div class="pstep-desc">Sonnet reviews for clinical coherence + educational validity + NBME format. Failed items: regenerate with critique as additional context. Items passing critique proceed. ECD alignment check also here: does the item actually claim what pv.mastery_definition states?</div></div>
+</div>
+<div class="pstep">
+  <div class="pstep-n" style="color:#4a2878">04</div>
+  <div class="pstep-body"><div class="pstep-title">generate-distractors <span class="pill p-b">Haiku · MisconceptionCategory-grounded</span></div>
+  <div class="pstep-desc">4 distractors, each anchored to a MisconceptionCategory node queried from graph (ordered by empirical_frequency DESC). Each distractor gets: text, is_correct: false, evidence_rule (from ECD Stage 2), TARGETS_MISCONCEPTION edge to the relevant MisconceptionCategory node.</div></div>
+</div>
+<div class="pstep">
+  <div class="pstep-n" style="color:#4a2878">05</div>
+  <div class="pstep-body"><div class="pstep-title">generate-rationale + QA <span class="pill p-b">Haiku</span></div>
+  <div class="pstep-desc">Rationale with source citations (ContentChunk UUIDs). QA: 22-rule NBME validation + medical_accuracy + coherence + blueprint_fit. Toulmin chain generated and stored in Supabase assessment_items.toulmin (JSONB — never traversed in graph). Items below QA threshold flagged, not auto-rejected.</div></div>
+</div>
+<div class="pstep">
+  <div class="pstep-n" style="color:#4a2878">06</div>
+  <div class="pstep-body"><div class="pstep-title">provenance-write → faculty-approval → post-approval <span class="pill p-gold">step.waitForEvent · 30-day</span></div>
+  <div class="pstep-desc">AssessmentItem + Distractor + Rationale written. All 9 typed classification edges created. INSTANTIATES → TaskShell. CLAIMS_ABOUT → ProficiencyVariable. Then: suspend until journey/items.batch-reviewed. On approval: update CoverageRecord (coverage_score = count/3 capped 1.0), init BKT_Parameters, add to practice pool.</div></div>
+</div>
+</div>
+
+<h3>§17 StudyQueue recommendation algorithm (G14)</h3>
+
+<div class="fixed"><div class="cl">Fixed · G14 — spaced repetition algorithm specified</div>
+<p>BKT decay identifies declining mastery. The recommendation algorithm (not previously defined) specifies which item to recommend and when.</p>
+</div>
+
+<pre><span class="cm">// StudyQueue recommendation — Inngest function: journey/studyqueue.generate
+// Triggered: student opens Practice, or daily at 8am per student (cron)</span>
+
+<span class="kw">async function</span> <span class="fn">generateStudyQueue</span>(studentUuid: <span class="ty">string</span>): Promise&lt;<span class="ty">PracticeCollection</span>&gt; {
+  <span class="cm">// Step 1: Identify concepts due for review (BKT decay + time since last attempt)</span>
+  <span class="kw">const</span> dueConcepts = <span class="kw">await</span> neo4j.<span class="fn">run</span>(`
+    <span class="kw">MATCH</span> (s:Student {uuid:$uuid})-[:HAS_MASTERY]->(sm:StudentMastery)-[:FOR_CONCEPT]->(sc:SubConcept)
+    <span class="kw">WHERE</span> sm.p_mastery < <span class="nu">0.75</span>                              <span class="cm">// below mastery threshold</span>
+      <span class="kw">OR</span> duration.inDays(sm.last_updated, datetime()).days >  <span class="cm">// overdue per decay halflife</span>
+         <span class="kw">CASE</span> sc.domain
+           <span class="kw">WHEN</span> <span class="st">'Anatomy'</span> <span class="kw">THEN</span> <span class="nu">120</span>
+           <span class="kw">WHEN</span> <span class="st">'Pharmacology'</span> <span class="kw">THEN</span> <span class="nu">60</span>
+           <span class="kw">WHEN</span> <span class="st">'Clinical Skills'</span> <span class="kw">THEN</span> <span class="nu">180</span>
+           <span class="kw">ELSE</span> <span class="nu">90</span>
+         <span class="kw">END</span> * <span class="nu">0.5</span>                                        <span class="cm">// practice at half the halflife</span>
+    <span class="kw">OPTIONAL MATCH</span> (sc)-[:HAS_COVERAGE]->(cr:CoverageRecord)
+    <span class="kw">RETURN</span> sc.uuid, sc.clinical_consequence_score,
+           sm.p_mastery, sm.last_updated,
+           cr.coverage_score <span class="kw">AS</span> coverage
+    <span class="kw">ORDER BY</span> sc.clinical_consequence_score * (<span class="nu">1</span> - sm.p_mastery) <span class="kw">DESC LIMIT</span> <span class="nu">10</span>
+  `, { uuid: studentUuid });
+
+  <span class="cm">// Step 2: Select item using IRT information maximization
+  // Pick item with highest information at student's estimated theta</span>
+  <span class="kw">const</span> theta = <span class="kw">await</span> <span class="fn">estimateStudentAbility</span>(studentUuid); <span class="cm">// from BKT p_mastery → IRT theta</span>
+  <span class="kw">const</span> items = <span class="kw">await</span> <span class="fn">selectItemsByIRTInformation</span>(dueConcepts, theta, { maxSeen: <span class="kw">false</span> });
+
+  <span class="cm">// Step 3: Create RecommendationEvent nodes for audit trail</span>
+  <span class="kw">for</span> (<span class="kw">const</span> item <span class="kw">of</span> items) {
+    <span class="kw">await</span> neo4j.<span class="fn">run</span>(`
+      <span class="kw">MERGE</span> (re:RecommendationEvent {uuid: $uuid})
+        <span class="kw">ON CREATE SET</span> re.algorithm = <span class="st">'spaced_retrieval_v1'</span>,
+          re.trigger_reason = <span class="st">'bkt_decay_below_threshold'</span>,
+          re.scheduled_for = datetime(), re.item_uuid = $item
+    `, { uuid: <span class="fn">det</span>(`rec:${studentUuid}:${item.uuid}:${Date.now()}`), item: item.uuid });
+  }
+  <span class="kw">return</span> { items, algorithm: <span class="st">'spaced_retrieval_v1'</span> };
+}</pre>
+</section>
+
+<!-- ══════════════════════ PART V: DOMAIN LAYERS ══════════════════════ -->
+<section id="part5">
+<div class="sid">Part V / Domain Knowledge Layers</div>
+<h2>Anatomy · Disease · LOD — the knowledge substrate</h2>
+
+<h3>§18 Anatomy Layer v3.1 — MeSH A-tree grounded with PNS/ANS added</h3>
+
+<table>
+<thead><tr><th>AnatomicalSystem</th><th>MeSH branch</th><th>USMLE System</th><th>MSM course</th><th>Sample organs</th></tr></thead>
+<tbody>
+<tr><td>Cardiovascular</td><td>A07</td><td>Cardiovascular</td><td>MEDI 531</td><td>Heart (A07.541), Aorta, Coronary Arteries, Veins</td></tr>
+<tr><td>Respiratory</td><td>A04</td><td>Respiratory</td><td>MEDI 531</td><td>Lungs, Trachea, Bronchi, Pleura, Diaphragm</td></tr>
+<tr><td>Digestive/GI</td><td>A03</td><td>Gastrointestinal</td><td>MEDI 531</td><td>Esophagus, Stomach, Small Intestine, Liver, Pancreas, Gallbladder</td></tr>
+<tr><td>Renal/Urinary</td><td>A05.810</td><td>Renal</td><td>MEDI 532</td><td>Kidneys (A05.810.453), Ureters, Urinary Bladder, Urethra</td></tr>
+<tr><td>Reproductive (M+F)</td><td>A05.360 / A05.360.444</td><td>Reproductive</td><td>MEDI 532</td><td>Testes, Prostate, Uterus, Ovaries, Fallopian Tubes</td></tr>
+<tr><td>Endocrine</td><td>A06</td><td>Endocrine</td><td>MEDI 531, 532</td><td>Thyroid, Parathyroid, Adrenal Glands, Pituitary, Pancreas (islets)</td></tr>
+<tr><td>Nervous (CNS)</td><td>A08.186</td><td>Neurology</td><td>MEDI 533</td><td>Brain, Cerebral Cortex, Brainstem, Cerebellum, Spinal Cord</td></tr>
+<tr><td class="mono" style="color:var(--g)"><strong>Nervous (PNS/ANS)</strong></td><td class="mono"><strong>A08.800</strong></td><td>Neurology</td><td>MEDI 533</td><td><strong>Cranial Nerves I-XII, Peripheral Nerves, Sympathetic NS, Parasympathetic NS</strong> <span class="pill p-fix">G12</span></td></tr>
+<tr><td>Hematologic/Immune</td><td>A15</td><td>Hematology/Oncology</td><td>MEDI 531</td><td>Bone Marrow, Spleen, Thymus, Lymph Nodes</td></tr>
+<tr><td>Musculoskeletal</td><td>A02</td><td>Musculoskeletal</td><td>MEDI 531, 532</td><td>Long Bones, Joints, Skeletal Muscles, Tendons, Cartilage</td></tr>
+<tr><td>Integumentary</td><td>A17</td><td>Dermatology</td><td>MEDI 530</td><td>Skin, Hair Follicles, Sweat Glands, Sebaceous Glands</td></tr>
+<tr><td>Special Senses</td><td>A09</td><td>Neurology/ENT</td><td>MEDI 533</td><td>Eyes (Retina, Lens, Cornea), Ears (Cochlea, Semicircular Canals)</td></tr>
+</tbody>
+</table>
+
+<p>Cross-reference chain: MeSH descriptor → UMLS CUI → SNOMED CT body structure → FMA term. Heart: <code>D006321</code> → <code>C0018787</code> → <code>80891009</code> → <code>FMA:7088</code>. The P2 enrichment pipeline creates AFFECTS_ORGAN and HAS_FINDING_SITE edges using UMLS semantic types (T022/T023/T024/T029) derived from MeSH cross-references in UMLS MRCONSO.</p>
+
+<h3>§19 Disease Layer</h3>
+<p>22 DiseaseCategory nodes (ICD-10 chapters A-Z) + 15 PathophysiologicalMechanism + ≈30 ClinicalPresentation. Key edges: SNOMED -[:CLASSIFIED_IN]→ DiseaseCategory -[:RELATED_TO_SYSTEM]→ USMLE_System. SNOMED -[:MEDIATED_BY]→ PathophysiologicalMechanism -[:CAUSALLY_PRECEDES]→ PathophysiologicalMechanism (causal chain, T5). SNOMED -[:PRESENTS_AS]→ ClinicalPresentation (ICD-10 R-codes).</p>
+
+<h3>§20 LOD Ecosystem — 22 sources, 3 tiers. Kafka removed from MVP (G13)</h3>
+
+<div class="fixed"><div class="cl">Fixed · G13 — Kafka removed from MVP</div>
+<p>Inngest handles all LOD enrichment events. Kafka is a T5+ concern. LOD enrichment events: journey/subconcept.confirmed → triggers P2 (Inngest function). No Kafka topics in the MVP event taxonomy.</p>
+</div>
+
+<div class="three">
+<div class="card"><div class="card-lbl">Currently Integrated (MVP)</div>
+<p>UMLS Metathesaurus · Hetionet v1.0 · DrugBank 5.x · MeSH A-tree. All four integrated via CUI merge pattern in P2 Steps 01-03. LOD brief pre-computed from these four sources.</p></div>
+<div class="card"><div class="card-lbl">Tier 1 — Phase 4 (T4, Month 9-12)</div>
+<p>Full SNOMED CT · LOINC · Mondo Disease Ontology · OMIM · HPO · RxNorm/RxClass. All enable deeper anatomy/disease/drug enrichment beyond the MVP baseline.</p></div>
+<div class="card"><div class="card-lbl">Tier 2 — Phase 5+ (T5-T6)</div>
+<p>Reactome · GO · ClinVar · ChEMBL · NCI Thesaurus · PharmGKB · Orphanet · Uberon · OpenFDA/FAERS · First Aid (ReferenceSource) · KEGG · GeneCards</p></div>
+</div>
+</section>
+
+<!-- ══════════════════════ PART VI: ECD FRAMEWORK ══════════════════════ -->
+<section id="part6">
+<div class="sid">Part VI / ECD Framework</div>
+<h2>Evidence-Centered Design — the reason the assessment is valid</h2>
+
+<div class="gold-box"><div class="cl">Core principle</div>
+<p>Without ECD, Journey OS generates questions. With ECD, Journey OS generates defensible assessments. Every item carries a principled argument answering: "Why does this question constitute valid evidence of mastery of this competency at this cognitive level?"</p>
+</div>
+
+<div class="three">
+<div class="card"><div class="card-lbl">Student Model</div><div class="card-ttl">What KSAs are we measuring?</div><p>KG: SubConcept · ProficiencyVariable · BKT_Parameters · StudentMastery · IRT_Parameters. The SubConcept × USMLE × Bloom alignment graph IS the construct map. ProficiencyVariable formalizes grain size and mastery thresholds.</p></div>
+<div class="card"><div class="card-lbl">Task Model</div><div class="card-ttl">What situations elicit evidence?</div><p>KG: TaskShell (12 seeded templates) · AssessmentItem with 9 typed classification edges. Each item INSTANTIATES a TaskShell. Task variables = Bloom level, lead-in type, clinical setting, patient demographics, variable slots.</p></div>
+<div class="card"><div class="card-lbl">Evidence Model</div><div class="card-ttl">How does performance constitute evidence?</div><p>KG property: Distractor.evidence_rule (text). Supabase JSONB: assessment_items.toulmin. BKT update function IS the evidence accumulation function. IRT likelihood IS the evidence weight. Stored in Supabase — never traversed in graph.</p></div>
+</div>
+
+<div class="two">
+<div>
+<h3>ECD design decisions — what stays in Neo4j vs. Supabase</h3>
+<table>
+<thead><tr><th>Component</th><th>Storage</th><th>Rationale</th></tr></thead>
+<tbody>
+<tr><td>TaskShell</td><td>Neo4j node</td><td>Queried: which templates produce best items? avg_quality_score ordering. Graph traversal: PV → ASSESSED_BY → TaskShell.</td></tr>
+<tr><td>ProficiencyVariable</td><td>Neo4j node</td><td>Traversed: SubConcept → MAPPED_TO → PV → ASSESSED_BY → TaskShell. Core ECD path.</td></tr>
+<tr><td>AssessmentArgument (Toulmin)</td><td>Supabase JSONB</td><td>Display artifact — faculty review panel only. Key-value lookup: "show me Toulmin for item X". Never traversed.</td></tr>
+<tr><td>Distractor.evidence_rule</td><td>Neo4j property (not node)</td><td>Item-specific. Never queried independently. Analytics use TARGETS_MISCONCEPTION → MisconceptionCategory (that IS traversable).</td></tr>
+</tbody>
+</table>
+</div>
+<div>
+<h3>HyDE and ECD — the corrected framing (G10)</h3>
+<div class="canon"><div class="cl">Canonical · G10 resolved</div>
+<p>HyDE (Gao et al., 2022) is a retrieval engineering technique. It <em>can be understood through</em> an ECD lens — the hypothetical vignette operationalizes a related principle to ECD's Stage 4 exemplar performance. HyDE is NOT an ECD principle and claiming equivalence between the two frameworks is a category error that reviewers would flag. State as: "HyDE operationalizes a related ECD principle" — never "HyDE IS ECD."</p></div>
+</div>
+</div>
+</section>
+
+<!-- ══════════════════════ PART VII: PRODUCT & ROADMAP ══════════════════════ -->
+<section id="part7">
+<div class="sid">Part VII / Product &amp; Roadmap</div>
+<h2>Six personas · 18-month roadmap · All sequencing fixes applied</h2>
+
+<h3>§22 The MVP loop — the one sentence that defines the product</h3>
+<div class="gold-box"><div class="cl">Upload Monday · Exam Friday</div>
+<p>Admin sets up institution → Faculty uploads syllabus + lectures → AI extracts concepts + enriches with UMLS/Hetionet → Faculty generates NBME-quality items (~$0.12 each, ~$3/30-item batch) → Faculty reviews, refines, approves via component-targeted editing → Faculty assembles blueprint-validated exam → Student takes exam → Student sees mastery map + "Why Wrong?" (MisconceptionCategory-grounded) → Student practices weak areas → Mastery improves in real time via BKT.</p>
+</div>
+
+<h3>§24 18-Month roadmap — with ConceptCluster sequencing fix (G11) and M3 resolution (G07)</h3>
+
+<div style="margin:16px 0">
+<div class="tl-row tl-now">
+  <div class="tl-when">Weeks 1–4<br>Phase 0</div>
+  <div class="tl-content">
+    <div class="tl-phase" style="color:var(--b)">Foundation</div>
+    <div class="tl-title">Fix seeds. Build the scaffold.</div>
+    <div class="tl-items">Fix 3 Phase 1 seed failures · Full anatomy seed with PNS/ANS <span class="pill p-fix" style="font-size:7px">G12</span> · MisconceptionCategory 15 nodes <span class="pill p-fix" style="font-size:7px">G01</span> · TaskShell 12 templates <span class="pill p-fix" style="font-size:7px">G02</span> · IPECCompetency + CarePhase <span class="pill p-fix" style="font-size:7px">G09</span> · 5 few-shot examples <span class="pill p-fix" style="font-size:7px">G03</span> · Admin setup UI · FERPA audit logging · neo4j_sync_status columns on all tables <span class="pill p-fix" style="font-size:7px">G08</span></div>
+    <div style="margin-top:6px"><span class="tl-chip" style="background:var(--canon-bg);color:var(--b)">Graph scaffold live</span><span class="tl-chip" style="background:var(--canon-bg);color:var(--b)">MSM pre-seeded</span><span class="tl-chip" style="background:var(--fix-bg);color:var(--g)">All Phase 0 gaps resolved</span></div>
+  </div>
+</div>
+<div class="tl-row tl-now">
+  <div class="tl-when">Weeks 5–12<br>Phase 1</div>
+  <div class="tl-content">
+    <div class="tl-phase" style="color:var(--b)">Content Ingestion (T1)</div>
+    <div class="tl-title">Upload Monday → concepts in graph by Tuesday</div>
+    <div class="tl-items">P1 pipeline: graph-aware chunking (150-250 tokens) <span class="pill p-fix" style="font-size:7px">D04</span> · LCMEDomainClassifier step <span class="pill p-fix" style="font-size:7px">G04</span> · batched UMLS · waitForEvent approval gate · Syllabus upload UI · SubConcept review UI · Clerkship as course_type on Course (M3 represented from day 1) <span class="pill p-fix" style="font-size:7px">G07</span></div>
+    <div style="margin-top:6px"><span class="tl-chip" style="background:var(--canon-bg);color:var(--b)">P1 live · &lt;5min processing</span><span class="tl-chip" style="background:var(--fix-bg);color:var(--g)">LCME Standard 7 map starts populating</span></div>
+  </div>
+</div>
+<div class="tl-row tl-p2">
+  <div class="tl-when">Weeks 13–20<br>Phase 2</div>
+  <div class="tl-content">
+    <div class="tl-phase" style="color:var(--g)">Enrichment &amp; Generation (T1)</div>
+    <div class="tl-title">Upload Monday → 30 items ready Wednesday · ~$3 total</div>
+    <div class="tl-items">P2: lod_brief → Supabase <span class="pill p-fix" style="font-size:7px">G05</span> · ProficiencyVariable creation <span class="pill p-fix" style="font-size:7px">ECD Stage 1</span> · Hetionet 2-hop · P3: ECD stages 1-3 before generation · HyDE retrieval · Sonnet core <span class="pill p-fix" style="font-size:7px">D05</span> · Haiku distractors from MisconceptionCategory · Toulmin JSONB · Quick Spec Wizard · Item review UI with Toulmin panel</div>
+    <div style="margin-top:6px"><span class="tl-chip" style="background:#e8f5ec;color:var(--g)">P2+P3 live</span><span class="tl-chip" style="background:#e8f5ec;color:var(--g)">$0.12/item</span><span class="tl-chip" style="background:var(--fix-bg);color:var(--g)">ECD pipeline active</span></div>
+  </div>
+</div>
+<div class="tl-row tl-p2">
+  <div class="tl-when">Weeks 21–28<br>Phase 3</div>
+  <div class="tl-content">
+    <div class="tl-phase" style="color:var(--g)">Assessment &amp; Coverage (T2)</div>
+    <div class="tl-title">Blueprint → exam → USMLE coverage heatmap</div>
+    <div class="tl-items">Blueprint construction (Bloom distribution + LCME 7.6 equity min 15%) · Exam assembly · USMLE coverage heatmap · Angoff standard-setting simulation · Agentic RAG: LOCAL + STRUCTURED only <span class="pill p-fix" style="font-size:7px">G11: no ConceptCluster yet</span> · GLOBAL search deferred until T4</div>
+    <div style="margin-top:6px"><span class="tl-chip" style="background:#e8f5ec;color:var(--g)">T2 complete · First MSM exam deployed</span></div>
+  </div>
+</div>
+<div class="tl-row tl-p3">
+  <div class="tl-when">Weeks 29–36<br>Phase 4</div>
+  <div class="tl-content">
+    <div class="tl-phase" style="color:var(--gold)">Student Layer (T3)</div>
+    <div class="tl-title">Students know exactly what they don't know. Flywheel starts spinning.</div>
+    <div class="tl-items">Student registration · Standardized exam mode · Formative results + "Why Wrong?" (MisconceptionCategory-grounded) · Mastery dashboard (BKT real-time) · Practice sessions · StudyQueue spaced retrieval <span class="pill p-fix" style="font-size:7px">G14 algorithm specified</span> · Feedback loop: attempts → IRT calibration → MisconceptionCategory.empirical_frequency → BKT slip detection</div>
+    <div style="margin-top:6px"><span class="tl-chip" style="background:var(--wise-bg);color:var(--gold)">MVP loop closed · Flywheel begins</span></div>
+  </div>
+</div>
+<div class="tl-row tl-p4">
+  <div class="tl-when">Month 9–12<br>Phase 5</div>
+  <div class="tl-content">
+    <div class="tl-phase" style="color:#4a2878">Graph Intelligence (T4)</div>
+    <div class="tl-title">ConceptCluster now available → global search unlocks. IRT empirical. GNN trains.</div>
+    <div class="tl-items">ConceptCluster Louvain community detection + LLM summaries → GLOBAL agentic search NOW available <span class="pill p-fix" style="font-size:7px">G11: sequencing resolved</span> · GNN HeteroSAGE first retrain · IRT 2PL empirical calibration (Phase B) · LCME Readiness Room · Post-exam item analytics · First Aid yield oracle · PREREQUISITE_FOR edges · Full SNOMED CT + LOINC + Mondo (Tier 1 LOD)</div>
+  </div>
+</div>
+<div class="tl-row tl-p5">
+  <div class="tl-when">Month 13–18<br>Phase 6</div>
+  <div class="tl-content">
+    <div class="tl-phase" style="color:#0a5252">Wisdom Layer (T5)</div>
+    <div class="tl-title">The golden path. Prescriptive. EPA entrustment.</div>
+    <div class="tl-items">clinical_consequence_score (PageRank × USMLE × mortality) · WisdomPath computation with evidence_grade weights <span class="pill p-fix" style="font-size:7px">G06</span> · CurriculumRecommendation engine · Learning trajectory optimization (PREREQUISITE_FOR + BKT) · EPA ENTRUSTED_FOR activation · Equity gap analysis (DIF + Cohen's d) · Advisor intelligence layer</div>
+  </div>
+</div>
+</div>
+</section>
+
+<!-- ══════════════════════ PART VIII: COMPLIANCE ══════════════════════ -->
+<section id="part8">
+<div class="sid">Part VIII / Compliance &amp; Governance</div>
+<h2>LCME · FERPA · Dual-write · Equity</h2>
+
+<h3>LCME 58-element coverage status</h3>
+<table>
+<thead><tr><th>Status</th><th>Count</th><th>Key standards</th></tr></thead>
+<tbody>
+<tr><td><span class="pill p-g">Fully supported</span></td><td>19</td><td>Standards 3, 4, 8.1, 9.1, 9.2, 9.3, 9.6 (Angoff), 10.x institutional</td></tr>
+<tr><td><span class="pill p-y">Partial</span></td><td>14</td><td>Standard 7 (content domains — LCMEDomainClassifier now populates G04) · Standard 9.4 (assessment system — ECD + Toulmin provide validity evidence)</td></tr>
+<tr><td><span class="pill p-r">Gap — future tier</span></td><td>10</td><td>Standard 6.2 (Clerkship — M3 as course_type resolves G07) · 8.6 (required experiences — PatientEncounter, T4) · 9.5 (direct observation — OSCEStation, T4) · Faculty node (T4)</td></tr>
+<tr><td><span class="pill p-dark">Out of scope</span></td><td>15</td><td>Campus, clinical sites, library resources, financial, faculty appointment — institutional, not assessable programmatically</td></tr>
+</tbody>
+</table>
+
+<h3>FERPA compliance — architectural guarantees</h3>
+<ul class="t">
+  <li>Row-Level Security on every Supabase table scoped to institution_id — PostgreSQL-enforced, not application-layer</li>
+  <li>Student data never crosses institutional boundaries — UUID bridge keys are institution-scoped</li>
+  <li>Audit log table: every read/write to student data logged with actor_id, action, timestamp, resource_uuid</li>
+  <li>Aggregate reporting enforced: minimum cell size = 5 students for any displayed group statistic</li>
+  <li>FERPA exception for school officials: faculty and advisors access only assigned students</li>
+</ul>
+</section>
+
+<!-- ══════════════════════ PART IX: SCHOLARLY FOUNDATIONS ══════════════════════ -->
+<section id="part9">
+<div class="sid">Part IX / Scholarly Foundations</div>
+<h2>No orphan theories. No unjustified engineering. 44 citations across 6 pillars.</h2>
+
+<p>Every architectural decision traces to at least one research basis, and every citation connects to at least one specific node type, edge, pipeline step, or feature. The following four citations were present in our conversations but absent from earlier register versions — now added.</p>
+
+<div class="fixed"><div class="cl">Fixed · G15 — 4 missing citations added</div>
+<p>(1) Aronson &amp; Lang (2010) MetaMap — P1 Step 05 entity extraction. (2) Bodenreider (2004) UMLS — the entire LOD architecture. (3) van der Linden &amp; Glas (2010) adaptive testing — CAT design. (4) Pimsleur (1967) spaced recall — spaced repetition historical context.</p>
+</div>
+
+<div class="two">
+<div>
+<h3>Pillar 1 — Assessment Validity</h3>
+<ul class="t">
+  <li><strong>Mislevy, Steinberg &amp; Almond (2003).</strong> ECD. CRESST Report 632. → ProficiencyVariable → TaskShell → EvidenceRule pipeline; ECD Stages 1-3 in P3</li>
+  <li><strong>Toulmin (1958).</strong> <em>The Uses of Argument</em>. → AssessmentArgument JSONB; LCME audit trail; Toulmin chain on every item</li>
+  <li><strong>Kane (2006).</strong> Validation. In <em>Educational Measurement</em> 4th ed. → 5 validity sources: content (SOURCED_FROM), construct (ALIGNS_TO), criterion (IRT), consequential (LCME), face (faculty review)</li>
+  <li><strong>AERA/APA/NCME (2014).</strong> <em>Standards for Educational and Psychological Testing</em>. → Professional testing standards operationalized in 22-rule NBME validation</li>
+  <li><strong>Haladyna, Downing &amp; Rodriguez (2002).</strong> 22-rule MCQ guidelines. <em>Applied Measurement in Education, 15</em>(3). → P3 Step 05 QA scoring (Haiku, structured JSON)</li>
+  <li><strong>Haladyna (2004).</strong> <em>Developing and Validating Multiple-Choice Test Items</em>. → Single-construct rule: TaskShell enforces 1 primary + max 2 supporting SubConcepts</li>
+</ul>
+
+<h3>Pillar 2 — Measurement &amp; Psychometrics</h3>
+<ul class="t">
+  <li><strong>Corbett &amp; Anderson (1994).</strong> BKT. <em>User Modeling, 4</em>(4). → StudentMastery 4-parameter model; real-time update on every Attempt</li>
+  <li><strong>Pavlik, Cen &amp; Koedinger (2009).</strong> Performance Factors Analysis. <em>AIED 2009</em>. → Hybrid BKT-IRT: P(S_item) and P(G_item) modulated by IRT a and b parameters</li>
+  <li><strong>Piech et al. (2015).</strong> Deep Knowledge Tracing. <em>NeurIPS 2015</em>. → DKT: T6 long-term after 12+ months longitudinal data; informs BKT cross-concept architecture</li>
+  <li><strong>Lord (1980).</strong> <em>Applications of Item Response Theory</em>. → IRT_Parameters 2PL; Phase A→B calibration</li>
+  <li><strong>Hambleton, Swaminathan &amp; Rogers (1991).</strong> <em>Fundamentals of IRT</em>. → 3PL extension; MIRT for multidimensional items (T6)</li>
+  <li><strong>Wainer et al. (2000).</strong> <em>Computerized Adaptive Testing: A Primer</em>. → CAT-lite T4; full CAT T6</li>
+  <li><strong>van der Linden &amp; Glas (2010).</strong> <em>Elements of Adaptive Testing</em>. <span class="pill p-fix">G15</span> → CAT design reference; IRT-driven item selection algorithm</li>
+  <li><strong>Angoff (1971).</strong> Scales, norms, equivalent scores. In Thorndike (Ed.) <em>Educational Measurement</em>. → Angoff Standard-Setting Simulation (T2); LCME 9.6</li>
+</ul>
+
+<h3>Pillar 3 — Learning Science</h3>
+<ul class="t">
+  <li><strong>Roediger &amp; Karpicke (2006).</strong> Test-enhanced learning. <em>Psychological Science, 17</em>(3). → Why the platform is assessment-first, not study-guide-first</li>
+  <li><strong>Karpicke &amp; Blunt (2011).</strong> Retrieval practice vs. concept mapping. <em>Science, 331</em>(6018). → Justifies MCQ over study guides</li>
+  <li><strong>Cepeda et al. (2006).</strong> Distributed practice. <em>Review of General Psychology, 10</em>(4). → BKT decay half-lives; StudyQueue spacing algorithm</li>
+  <li><strong>Ebbinghaus (1885/1913).</strong> <em>Memory</em>. → Forgetting curve: P(L_t) = P(L₀) + (P(Lₙ)-P(L₀)) × e^(−λt)</li>
+  <li><strong>Dunlosky et al. (2013).</strong> Effective learning techniques. <em>Psych. Science in the Public Interest, 14</em>(1). → "Why Wrong?" immediate corrective feedback amplifies testing effect</li>
+  <li><strong>Pimsleur (1967).</strong> A memory schedule. <em>MLJ</em>. <span class="pill p-fix">G15</span> → Spaced repetition history; graduated interval recall for StudyQueue</li>
+</ul>
+</div>
+<div>
+<h3>Pillar 4 — Competency Frameworks</h3>
+<ul class="t">
+  <li><strong>Anderson &amp; Krathwohl (2001).</strong> <em>A Taxonomy for Learning, Teaching, and Assessing</em>. → BloomLevel :Reference nodes (1-6); TaskShell bloom_range; Blueprint Bloom distribution</li>
+  <li><strong>Miller (1990).</strong> Assessment of clinical skills. <em>Academic Medicine, 65</em>(9 Suppl). → MillerLevel :Reference nodes (1-4); EPA entrustment as Level 4</li>
+  <li><strong>Ten Cate (2005).</strong> Entrustability of professional activities. <em>Medical Education, 39</em>(12). → EPA :Reference nodes; ENTRUSTED_FOR edge; Wisdom layer highest-order output</li>
+  <li><strong>ACGME (2013).</strong> Common Program Requirements. → ACGME_Competency nodes; Milestone nodes; 6 competency domains</li>
+  <li><strong>LCME (May 2025, effective July 2026).</strong> <em>Functions and Structure of a Medical School</em>. → 58 accreditation elements; LCME_Standard + LCME_Domain nodes; Readiness Room</li>
+  <li><strong>IPEC (2016).</strong> Core Competencies for Interprofessional Collaborative Practice. → IPECCompetency 4 nodes (VE/RR/CC/TT); MAPS_TO_IPEC; LCME 7.9</li>
+</ul>
+
+<h3>Pillar 5 — Knowledge Engineering &amp; AI</h3>
+<ul class="t">
+  <li><strong>Bratanic &amp; Hane (2025).</strong> <em>Essential GraphRAG</em>. Manning. → All 6 GraphRAG patterns: RRF k=60, Parent Doc Retriever, Text2Cypher, Agentic RAG, MS GraphRAG, RAG evaluation</li>
+  <li><strong>Barrasa &amp; Webber (2023).</strong> <em>Building Knowledge Graphs</em>. O'Reilly. → Skinny nodes (&lt;100B), T-Box/A-Box, deterministic UUIDs, incremental build, typed edges</li>
+  <li><strong>Negro (2021).</strong> <em>Graph-Powered Machine Learning</em>. Manning. → PageRank → clinical_consequence_score; Louvain → ConceptCluster; HeteroSAGE → TEACHES link prediction</li>
+  <li><strong>Negro et al. (2026).</strong> <em>Knowledge Graphs and LLMs in Action</em>. Manning. → LLM generates structure; graph validates; combination reduces hallucination</li>
+  <li><strong>Lewis et al. (2020).</strong> RAG. <em>NeurIPS 2020</em>. → Foundation for dual-store retrieval architecture; LOD brief as pre-computed knowledge update</li>
+  <li><strong>Gao et al. (2022).</strong> HyDE. <em>arXiv:2212.10496</em>. → P3 Step 01 (HyDE pre-call); ~25-40% retrieval improvement for complex mechanisms</li>
+  <li><strong>Cormack, Clarke &amp; Buettcher (2009).</strong> Reciprocal Rank Fusion. <em>SIGIR 2009</em>. → Hybrid BM25 + dense, k=60 smoothing parameter</li>
+  <li><strong>Hamilton, Ying &amp; Leskovec (2017).</strong> GraphSAGE. <em>NeurIPS 2017</em>. → HeteroSAGE inductive GNN; weekly retrain on TEACHES edges</li>
+  <li><strong>Brusilovsky &amp; Vassileva (2003).</strong> Course sequencing for web-based education. → Neo4j as curriculum spine; PREREQUISITE_FOR edges; gap analysis</li>
+  <li><strong>Himmelstein et al. (2017).</strong> Hetionet. <em>eLife</em>. → 2-hop selective import; CUI merge pattern; LOD brief enrichment</li>
+  <li><strong>NLM (annual).</strong> MeSH A-tree (A01–A17). → mesh_id on all AnatomicalOrgan/Structure nodes; UMLS semantic types T022-T031 for P2 routing; PubMed linking</li>
+  <li><strong>Bodenreider (2004).</strong> The UMLS. <em>Nucleic Acids Research, 32</em>. <span class="pill p-fix">G15</span> → Foundation of all LOD enrichment; CUI merge pattern; cross-ontology bridge</li>
+  <li><strong>Aronson &amp; Lang (2010).</strong> MetaMap overview. <em>JAMIA</em>. <span class="pill p-fix">G15</span> → MetaMap service for medical NER in P1 Step 05; semantic type extraction</li>
+  <li><strong>Blondel et al. (2008).</strong> Louvain community detection. <em>J. Statistical Mechanics</em>. → ConceptCluster creation (Phase 5 ML, T4)</li>
+  <li><strong>Page et al. (1999).</strong> PageRank. Stanford Technical Report. → SubConcept.pagerank_score for clinical consequence ranking</li>
+  <li><strong>Edge et al. (2024).</strong> MS GraphRAG. <em>arXiv:2404.16130</em>. → ConceptCluster global search; local vs. global RAG routing at T4+</li>
+</ul>
+
+<h3>Pillar 6 — Equity &amp; Fairness</h3>
+<ul class="t">
+  <li><strong>Camilli &amp; Shepard (1994).</strong> <em>Methods for Identifying Biased Test Items</em>. SAGE. → DIF analysis (T5); assessment fairness for MSM student population</li>
+  <li><strong>Cohen (1988).</strong> <em>Statistical Power Analysis</em>. Erlbaum. → Cohen's d disaggregated by URM/gender/prior degree; Dean equity gap dashboard</li>
+  <li><strong>MSM Equity Mission (1975–present).</strong> → Min 15% health equity items in blueprint; "Why Wrong?" closes knowledge gaps; Advisor persona for at-risk students</li>
+</ul>
+</div>
+</div>
+</section>
+
+<!-- ══════════════════════ FOOTER ══════════════════════ -->
+
+<!-- ══════════ PART X: PRODUCTION READINESS — CANONICAL DECISIONS ══════════ -->
+<section id="part10">
+<div class="sid">Part X / Production Readiness — Canonical Decisions</div>
+<h2>45 findings resolved — the decisions that separate demo from deployment</h2>
+
+<p>Every finding in the production readiness analysis (C01–C10, H01–H13, M01–M10, architecture gaps) has been reviewed and resolved as canonical decisions below. These supersede any prior document where they conflict. A system meeting all decisions in this section is production-grade for an LCME-accredited medical school with real exams and real student grades.</p>
+
+<h3>§P1 Exam Integrity — the non-negotiables</h3>
+
+<div class="canon"><div class="cl">Canonical — C01 resolved: Answer auto-save</div>
+<p>Every student answer is persisted server-side on selection, not on final submission. The <code>session_answers</code> table is the mutable draft state; the <code>attempts</code> table is the immutable final record. On exam resume after crash, answers are restored from <code>session_answers</code>. Attempts are created atomically from session_answers on final submit. This is the difference between a testing system and a toy.</p>
+</div>
+
+<div class="canon"><div class="cl">Canonical — C02 resolved: Time-windowed item access</div>
+<p>Students access assessment item content ONLY during an active exam session. The RLS policy on <code>assessment_items</code> checks: student role may read an item ONLY IF an active session (started_at > now() - 4 hours AND completed_at IS NULL) exists for that student containing that item. Faculty and admin always have full read access. Pre-fetching items before an exam window is architecturally impossible.</p>
+</div>
+
+<div class="canon"><div class="cl">Canonical — H05 resolved: Per-student item and option randomization</div>
+<p>Every exam session generates a deterministic random order seeded by (student_id + exam_id) for items and (student_id + item_id) for options. These shuffle maps are stored in <code>sessions.item_order_seed</code> and <code>sessions.option_shuffle_seed</code>. The "correct answer" is never stored as a positional index — it is always the UUID of the correct option, resolved against the shuffle at display time. Exam records store the item version number used (not just item_id) for post-exam legal defensibility.</p>
+</div>
+
+<div class="canon"><div class="cl">Canonical — Exam timing model</div>
+<p>Exams have three timestamps: <code>available_from</code> (when students can start), <code>available_until</code> (hard close — submissions after this time are rejected), <code>results_release_at</code> (when students see scores and rationale — separate from submission close for summative exams). ADA accommodations are stored in <code>student_accommodations (student_id, exam_id, time_multiplier, approved_by)</code>. The exam delivery service applies the multiplier to <code>time_limit_mins</code> per student.</p>
+</div>
+
+<h3>§P2 Security & Multi-tenancy</h3>
+
+<div class="canon"><div class="cl">Canonical — C05 resolved: Neo4j tenant isolation via wrapper, never raw driver</div>
+<p>All Neo4j queries must go through <code>neo4jQuery(cypher, params, ctx)</code> — never through the raw driver. The wrapper: (1) injects <code>institution_id</code> parameter automatically from the request context, (2) validates that the Cypher string accepts <code>$institution_id</code> as a parameter (compile-time check), (3) returns a configurable fallback value instead of throwing on connection failure. Direct <code>driver.executeQuery()</code> calls are banned by ESLint rule. CI fails if any are detected.</p>
+</div>
+
+<div class="canon"><div class="cl">Canonical — H12 resolved: Prompt injection prevention</div>
+<p>All lecture content entering any LLM prompt is: (1) sanitized via <code>sanitizeForContext()</code> which redacts common injection patterns, and (2) wrapped in XML delimiters (<code>&lt;lecture_content&gt;...&lt;/lecture_content&gt;</code>, <code>&lt;lod_brief&gt;...&lt;/lod_brief&gt;</code>). Generation prompts begin "Using ONLY the information in &lt;lecture_content&gt;..." This creates an explicit boundary the model respects between instruction and data. Applied to ALL content entering P1, P2, and P3 prompts without exception.</p>
+</div>
+
+<div class="canon"><div class="cl">Canonical — C10 resolved: Generation rate limits</div>
+<p>Three layers: (1) API middleware enforces max 3 concurrent P3 runs per faculty_id. (2) Before triggering P3 for &gt;10 items: cost estimate shown, confirmation required. (3) Daily limit: max 100 items generated per faculty per calendar day (configurable per institution via <code>institution_generation_limits</code> table). Tracked in <code>generation_daily_usage (faculty_id, date, items_count)</code>. Institutions can request limit increases via admin dashboard.</p>
+</div>
+
+<div class="canon"><div class="cl">Canonical — C06 resolved: Model version pinning</div>
+<p>Model strings are pinned as exact versioned identifiers in environment variables (<code>ANTHROPIC_MODEL_SONNET=claude-sonnet-4-20250514</code>, <code>ANTHROPIC_MODEL_HAIKU=claude-haiku-4-5-20251001</code>) and verified on application startup with a known test prompt. Every generated item records the exact <code>generation_model</code> string used. If Anthropic retires a model, the startup check catches it before any faculty session begins and disables generation until the env var is updated. Items generated in 2026 can be traced to the exact model version that produced them.</p>
+</div>
+
+<div class="canon"><div class="cl">Canonical — C10 resolved: Three-layer generation rate control</div>
+<p>(1) <strong>API concurrency:</strong> max 3 concurrent P3 runs per <code>faculty_id</code> enforced at Inngest config and API middleware. (2) <strong>Confirmation gate:</strong> generating &gt;10 items requires faculty to confirm a displayed cost estimate before the batch triggers — prevents accidental 100-item submits. (3) <strong>Daily quota:</strong> max 100 items generated per faculty per calendar day, tracked in <code>generation_daily_usage</code>, configurable per institution via <code>institution_generation_limits</code>. Exceeding quota returns HTTP 429 with time-until-reset.</p>
+</div>
+
+<h3>§P3 Data Integrity</h3>
+
+<div class="canon"><div class="cl">Canonical — C03 resolved: Atomic CoverageRecord increments</div>
+<p>CoverageRecord updates always use atomic Neo4j SET expressions — never read-modify-write. The Cypher expression <code>SET cr.assessment_count = cr.assessment_count + 1</code> is atomic within a single Cypher statement. For concurrent approvals that need mutual exclusion, use Supabase advisory lock: <code>SELECT pg_advisory_xact_lock(hashtext('coverage:' || subconcept_uuid))</code> before the P3 post-approval Neo4j write.</p>
+</div>
+
+<div class="canon"><div class="cl">Canonical — C08 resolved: P1 cleanup on failure</div>
+<p>All P1 pipeline functions have an <code>onFailure</code> handler that: (1) marks the lecture <code>status = 'failed'</code>, (2) emits <code>journey/pipeline.failed</code> triggering admin alert, (3) cleans up orphaned ContentChunks (those with no TEACHES edges from this lecture run), (4) removes :Candidate SubConcept nodes created by this run. A weekly integrity check queries for ContentChunks with no TEACHES edges and alerts admin if count &gt; 50.</p>
+</div>
+
+<div class="canon"><div class="cl">Canonical — C09 resolved: SAME_AS cycle prevention</div>
+<p>Before creating any SAME_AS edge A→B, the pipeline checks whether B can already reach A via SAME_AS traversal (depth 1-5). If a cycle would be created, the edge is skipped and the ambiguity is logged to <code>entity_resolution_conflicts</code> for manual review. Direction convention: SAME_AS edges always point from lower CUI string → higher CUI string, making the direction deterministic and preventing bidirectional duplicates.</p>
+</div>
+
+<div class="canon"><div class="cl">Canonical — C07 resolved: LOD brief versioning and expiry</div>
+<p><code>subconcept_lod_briefs</code> carries <code>lod_brief_version INT</code> and <code>umls_release TEXT</code>. A quarterly Inngest cron (<code>0 9 1 */3 *</code>) compares stored release against current UMLS release. Briefs for SubConcepts with <code>clinical_consequence_score &gt; 0.7</code> are regenerated first (highest patient-safety impact). Briefs older than 180 days trigger live UMLS fallback in context assembly instead of the stale brief. The <code>lod_brief_history</code> table preserves prior versions for audit.</p>
+</div>
+
+<h3>§P4 Clinical Safety</h3>
+
+<div class="canon"><div class="cl">Canonical — H11 resolved: Clinical confidence tier system</div>
+<p>Every AssessmentItem carries <code>clinical_confidence TEXT CHECK (clinical_confidence IN ('unverified','self_verified','peer_reviewed','expert_reviewed'))</code>. Generated items start as 'unverified'. Faculty approval → 'self_verified'. Items with <code>usmle_subtopic.clinical_consequence_score &gt; 0.85</code> require a second faculty reviewer before entering the exam pool → 'peer_reviewed'. Expert review (T4+ feature, by clinical education specialist) → 'expert_reviewed'. The exam assembly algorithm can be configured to require a minimum tier — summative exams should require at minimum 'self_verified'. Blueprint UI shows tier distribution. This is the framing difference LCME reviewers care about: "AI-assisted drafting reviewed by clinical experts" vs. "AI-generated content in high-stakes assessment."</p>
+</div>
+
+<h3>§P5 Reliability</h3>
+
+<div class="canon"><div class="cl">Canonical — C04 resolved: Dead letter queue and manual retry</div>
+<p>All three pipelines have <code>onFailure</code> handlers that write to <code>pipeline_dead_letters (pipeline, entity_id, inngest_run_id, error_message, step_name, failed_at, retried_at)</code>. Admin dashboard shows dead letter count with drill-down. Manual retry endpoint: <code>POST /app/api/admin/pipelines/dead-letters/[id]/retry</code> which re-emits the original trigger event. A Slack/email alert fires when any dead letter is created for a P3 pipeline (item generation failure) or when dead letter count exceeds 10 in 1 hour for P1/P2.</p>
+</div>
+
+<div class="canon"><div class="cl">Canonical — H06 resolved: JSON repair and per-item failure isolation</div>
+<p>All Claude API responses are parsed via <code>safeJsonParse()</code> which attempts: (1) direct JSON.parse, (2) jsonrepair() then parse, (3) returns null. All P3 batch operations use <code>Promise.allSettled()</code> not <code>Promise.all()</code> — one malformed response does not fail the batch. Items that fail JSON parsing: status set to 'generation_failed', logged to pipeline_runs step_log, excluded from the batch result. The batch continues with remaining items. A batch with &gt;20% failure rate emits an admin alert.</p>
+</div>
+
+<div class="canon"><div class="cl">Canonical — Keep-warm cron for sidecars</div>
+<p>A <code>journey/cron.keep-warm</code> Inngest function runs every 10 minutes during business hours (7am-10pm institution timezone) sending a trivial embed request to MedCPT and a trivial render request to the pptx-renderer sidecar. This prevents Railway/Fly.io cold starts during active faculty hours. The cron is disabled outside business hours to reduce cost. Cost: ~$0.50/month in Haiku calls.</p>
+</div>
+
+<h3>§P6 New canonical tables from production analysis</h3>
+
+<table>
+<thead><tr><th>Table</th><th>Purpose</th><th>Critical for</th></tr></thead>
+<tbody>
+<tr><td class="mono">session_answers</td><td>Mutable exam draft — per-answer auto-save</td><td>C01: crash recovery</td></tr>
+<tr><td class="mono">session_items</td><td>Per-student scrambled item + option order</td><td>H05: exam integrity</td></tr>
+<tr><td class="mono">item_versions</td><td>Version history on every approved item edit</td><td>H02: audit trail</td></tr>
+<tr><td class="mono">student_accommodations</td><td>ADA time multipliers per (student × exam)</td><td>ADA compliance</td></tr>
+<tr><td class="mono">generation_daily_usage</td><td>Per-faculty daily generation counter</td><td>C10: rate limiting</td></tr>
+<tr><td class="mono">item_flags</td><td>Faculty flags item for peer/expert clinical review</td><td>H11: clinical confidence tier</td></tr>
+<tr><td class="mono">lod_brief_history</td><td>Prior versions of LOD briefs before regeneration</td><td>C07: LOD versioning</td></tr>
+<tr><td class="mono">pipeline_dead_letters</td><td>Failed Inngest jobs for manual retry</td><td>C04: dead letter queue</td></tr>
+<tr><td class="mono">entity_resolution_conflicts</td><td>SAME_AS cycle attempts for manual review</td><td>C09: cycle prevention</td></tr>
+<tr><td class="mono">institution_generation_limits</td><td>Per-institution configurable daily limits</td><td>C10: cost control</td></tr>
+</tbody>
+</table>
+
+<div class="warn"><div class="cl">Updated total node inventory from production hardening</div>
+<p>Two new Neo4j node types from production analysis: <strong>FacultyWarning</strong> (extracted from speaker notes — "WARNS_AGAINST" edges to explicit misconception warnings, reviewed quarterly to update MisconceptionCategory seed) and <strong>ItemFlag</strong> (tracks clinical review requests with reviewer assignment and resolution status). The total node type count remains manageable at 79. All other new entities live in Supabase (session_answers, item_versions, etc.) per the Supabase-first invariant — they are operational/transactional data, not graph-structure data.</p>
+</div>
+
+</section>
+
+
+<div class="footer">
+  <span>Journey OS · Production Bible · v1.0 · Single Source of Truth</span>
+  <span>79 nodes · 110 edges · 3 pipelines · 44 citations · 45 production findings resolved · MSM · LCME accredited</span>
+</div>
+</body>
+</html>

@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Journey OS — Algorithms, Data Structures & Scholarly Foundations</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap');
+:root{
+  --ink:#0c0c0c;--paper:#f4f1eb;--edge:#ddd6c4;
+  --r:#a82828;--g:#185230;--y:#6a4c14;--b:#162450;
+  --gold:#8a6614;--teal:#0a4c4c;--violet:#3a1060;
+  --blue-50:#e6f1fb;--blue-800:#0c447c;
+  --teal-50:#e1f5ee;--teal-800:#085041;
+  --amber-50:#faeeda;--amber-800:#633806;
+  --purple-50:#eeedfe;--purple-800:#3c3489;
+  --green-50:#eaf3de;--green-800:#27500a;
+  --red-50:#fcebeb;--red-800:#791f1f;
+  --gray-50:#f1efe8;--gray-800:#444441;
+  --pre-bg:#080d12;--pre-fg:#c4d4b0;
+  --pre-key:#5dcaa5;--pre-str:#ef9f27;--pre-cmt:#4a5a42;--pre-typ:#85b7eb;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);font-size:13.5px;line-height:1.8}
+.cover{background:var(--pre-bg);min-height:82vh;padding:80px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+.cg{position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent,transparent 79px,rgba(93,202,165,.03) 80px),repeating-linear-gradient(0deg,transparent,transparent 79px,rgba(93,202,165,.025) 80px)}
+.cr{position:relative;z-index:1}
+.eye{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:var(--pre-key);margin-bottom:16px}
+h1{font-family:'Fraunces',serif;font-size:58px;font-weight:300;line-height:.92;letter-spacing:-2px;color:#ede8e0;margin-bottom:12px}
+h1 em{font-style:italic;color:var(--pre-str)}
+.c-sub{font-family:'Fraunces',serif;font-style:italic;font-size:18px;color:#3a4a32;max-width:680px;margin-bottom:24px}
+.stat-row{display:flex;gap:1px;background:rgba(255,255,255,.03);margin-bottom:20px}
+.stat{padding:12px 20px}
+.stat-n{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:600;display:block;line-height:1;color:var(--pre-str)}
+.stat-l{font-size:9px;color:#2a3a22;font-family:'JetBrains Mono',monospace;letter-spacing:.04em;margin-top:3px}
+.chips{display:flex;gap:4px;flex-wrap:wrap}
+.c-chip{font-family:'JetBrains Mono',monospace;font-size:8px;padding:4px 10px;border:1px solid #0a1a0a;color:#2a4a22}
+.c-chip.ok{border-color:#0a2a0a;color:var(--pre-key)}
+.nav{background:#060a06;border-bottom:1px solid #0a140a;padding:0 80px;display:flex;overflow-x:auto}
+.ni{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:#2a3a22;padding:10px 13px;border-right:1px solid #0a140a;white-space:nowrap;text-decoration:none;flex-shrink:0}
+.ni:hover{color:var(--pre-key)}
+section{padding:52px 80px;border-bottom:1px solid var(--edge)}
+.sid{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--pre-key);margin-bottom:10px}
+h2{font-family:'Fraunces',serif;font-size:32px;font-weight:300;line-height:1.07;margin-bottom:18px}
+h3{font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#999;margin:28px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--edge)}
+h4{font-family:'Fraunces',serif;font-size:17px;font-weight:400;margin:14px 0 5px}
+p{margin-bottom:10px;max-width:840px;line-height:1.75}
+/* CODE BLOCKS */
+pre{background:var(--pre-bg);padding:16px 20px;border-radius:4px;margin:12px 0;overflow-x:auto;border:1px solid #0f1a0f;font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.7;color:var(--pre-fg)}
+.k{color:var(--pre-key)}
+.s{color:var(--pre-str)}
+.c{color:var(--pre-cmt)}
+.t{color:var(--pre-typ)}
+.n{color:#c4bfb0}
+.num{color:#afd87f}
+.op{color:#8ab4f8}
+code{font-family:'JetBrains Mono',monospace;font-size:11px;background:var(--gray-50);padding:1px 5px;border-radius:2px;color:#162450}
+/* ALGO CARD */
+.algo-card{border:1px solid var(--edge);margin:14px 0;border-radius:4px;overflow:hidden}
+.algo-head{display:grid;grid-template-columns:1fr auto;gap:12px;padding:12px 16px;background:var(--pre-bg);align-items:start}
+.algo-name{font-family:'Fraunces',serif;font-size:16px;color:#ede8e0;font-weight:400}
+.algo-badges{display:flex;gap:5px;flex-wrap:wrap}
+.algo-body{padding:14px 16px;background:#fff}
+.algo-body p{font-size:12.5px;color:#555;margin-bottom:8px;max-width:none}
+.algo-footer{padding:10px 16px;background:var(--gray-50);border-top:1px solid var(--edge);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+/* DS CARD */
+.ds-card{border:1px solid var(--edge);margin:10px 0;border-radius:4px;overflow:hidden}
+.ds-head{padding:10px 14px;background:var(--ink);display:flex;justify-content:space-between;align-items:center}
+.ds-name{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--pre-key)}
+.ds-body{padding:12px 14px;background:#fff}
+.ds-row{display:grid;grid-template-columns:120px 1fr;gap:8px;font-size:12px;padding:4px 0;border-bottom:1px solid var(--gray-50)}
+.ds-row:last-child{border:none}
+.ds-lbl{font-family:'JetBrains Mono',monospace;font-size:10px;color:#aaa;padding-top:2px}
+/* SCHOLARLY ITEM */
+.scholar{border-left:3px solid var(--pre-key);padding:10px 14px;margin:8px 0;background:#fff;border-radius:0 4px 4px 0}
+.scholar .ref{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--pre-key);margin-bottom:4px}
+.scholar .claim{font-size:12.5px;font-weight:500;margin-bottom:3px}
+.scholar .impl{font-size:12px;color:#666}
+.scholar .cite{font-family:'JetBrains Mono',monospace;font-size:10px;color:#aaa;margin-top:4px;font-style:italic}
+/* PILLS */
+.pill{display:inline-block;padding:2px 7px;border-radius:2px;font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:600;vertical-align:middle;white-space:nowrap}
+.p-b{background:var(--blue-50);color:var(--blue-800)}.p-g{background:var(--green-50);color:var(--green-800)}
+.p-t{background:var(--teal-50);color:var(--teal-800)}.p-gold{background:var(--amber-50);color:var(--amber-800)}
+.p-v{background:var(--purple-50);color:var(--purple-800)}.p-r{background:var(--red-50);color:var(--red-800)}
+.p-gray{background:var(--gray-50);color:var(--gray-800)}.p-ink{background:var(--ink);color:#9dcaa5}
+/* CALLOUTS */
+.call{padding:11px 15px;margin:10px 0;border-radius:0 2px 2px 0}
+.call .cl{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;margin-bottom:4px}
+.call p{font-size:12.5px;margin:0;max-width:none}
+.call-g{border-left:3px solid var(--g);background:var(--green-50)}.call-g .cl{color:var(--g)}
+.call-b{border-left:3px solid var(--b);background:var(--blue-50)}.call-b .cl{color:var(--b)}
+.call-gold{border-left:3px solid var(--gold);background:var(--amber-50)}.call-gold .cl{color:var(--gold)}
+.call-r{border-left:3px solid var(--r);background:var(--red-50)}.call-r .cl{color:var(--r)}
+.call-v{border-left:3px solid #534ab7;background:var(--purple-50)}.call-v .cl{color:#534ab7}
+/* TABLES */
+table{width:100%;border-collapse:collapse;font-size:12px;margin:8px 0 14px}
+th{background:var(--ink);color:var(--paper);padding:7px 11px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase}
+td{padding:7px 11px;border-bottom:1px solid var(--edge);vertical-align:top}
+tr:nth-child(even) td{background:#faf7f0}
+.mono{font-family:'JetBrains Mono',monospace;font-size:10.5px}
+/* LAYOUT */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:12px 0}
+.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:12px 0}
+.four{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin:12px 0}
+.card{border:1px solid var(--edge);padding:14px;background:#fff;border-radius:4px}
+.card .cl{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#bbb;margin-bottom:4px}
+.card p{font-size:12px;color:#666;line-height:1.65;margin:0}
+/* CONTEXT PACKET BOX */
+.cp-section{border:1px solid var(--pre-key);background:var(--pre-bg);padding:14px 18px;border-radius:4px;margin:12px 0}
+.cp-section .cp-head{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--pre-key);margin-bottom:8px}
+.cp-section pre{margin:0;border:none;padding:0;background:transparent;color:#c4d4b0}
+.footer{background:var(--pre-bg);padding:24px 80px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-family:'JetBrains Mono',monospace;font-size:9px;color:#2a3a22}
+@media(max-width:900px){.cover,.nav,.footer,section{padding-left:24px;padding-right:24px}.two,.three,.four{grid-template-columns:1fr}h1{font-size:40px}h2{font-size:26px}}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+<div class="cg"></div>
+<div class="cr">
+  <div>
+    <div class="eye">Journey OS · Algorithms, Data Structures & Scholarly Foundations · Engineering Reference</div>
+    <h1>The<br>Theoretical<br><em>Backbone</em></h1>
+    <div class="c-sub">Every algorithm, data structure, and academic foundation that makes Journey OS secure, efficient, and deterministic — mapped to the features they support, with implementation specifications ready for context packets</div>
+  </div>
+  <div>
+    <div class="stat-row">
+      <div class="stat"><span class="stat-n">18</span><div class="stat-l">Algorithms specified</div></div>
+      <div class="stat"><span class="stat-n">12</span><div class="stat-l">Data structures</div></div>
+      <div class="stat"><span class="stat-n">28</span><div class="stat-l">Scholarly citations</div></div>
+      <div class="stat"><span class="stat-n">6</span><div class="stat-l">Security primitives</div></div>
+    </div>
+    <div class="chips">
+      <span class="c-chip ok">✓ BKT + IRT + Pimsleur — exact parameter specs</span>
+      <span class="c-chip ok">✓ HMAC scramble — deterministic, secure exam delivery</span>
+      <span class="c-chip ok">✓ Hash-chain FERPA audit log — tamper-evident</span>
+      <span class="c-chip ok">✓ Priority queue study scheduler — O(log n)</span>
+      <span class="c-chip ok">✓ HNSW vector search — pgvector configuration</span>
+      <span class="c-chip ok">✓ Token bucket generation rate limiting</span>
+      <span class="c-chip ok">✓ Coverage bit vector — O(1) popcount</span>
+      <span class="c-chip ok">✓ Context packet schema — scholarly+DSA slot</span>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="nav">
+  <a class="ni" href="#reading-guide">I · Reading Guide</a>
+  <a class="ni" href="#mastery">II · Mastery Science</a>
+  <a class="ni" href="#assessment">III · Assessment Science</a>
+  <a class="ni" href="#knowledge">IV · Knowledge Representation</a>
+  <a class="ni" href="#algorithms">V · Algorithm Catalog</a>
+  <a class="ni" href="#datastructs">VI · Data Structure Catalog</a>
+  <a class="ni" href="#security">VII · Security Primitives</a>
+  <a class="ni" href="#performance">VIII · Performance Budgets</a>
+  <a class="ni" href="#cp-schema">IX · Context Packet Schema</a>
+</div>
+
+<!-- I: READING GUIDE -->
+<section id="reading-guide">
+<div class="sid">I / Reading Guide</div>
+<h2>How this document slots into every context packet</h2>
+
+<p>This document exists to answer the question every engineer asks when they pick up a story: <em>why this algorithm, and exactly how is it supposed to work?</em> The persona specs describe what the UI looks like. The tech architecture describes the data models and API routes. This document describes the computational and theoretical machinery underneath — with enough precision that an implementation can be verified against the specification, not just guessed from intuition.</p>
+
+<div class="call-g"><div class="cl">The scholarly-features mapping principle</div>
+<p>Every academic claim in this document is followed immediately by its implementation consequence. "Corbett and Anderson (1995) showed BKT converges in 3–5 answers" is not useful to an engineer. "BKT converges in 3–5 answers, therefore the study queue must wait for at least 3 responses before updating clinical tier ordering" is. Every scholarly foundation in this document is written as: claim → implementation rule → where it appears in the codebase.</p>
+</div>
+
+<h3>How to use this document in context packets</h3>
+<p>When writing a context packet for a story that touches any of the systems below, copy the relevant Algorithm Spec or DS Spec into the <code>SCHOLARLY + DS&A CONTEXT</code> section. Include: the algorithm name, the exact parameters used, the complexity guarantee, and the specific scholarly reference. The engineer should never need to re-derive or look up these specifications — they should be in the packet.</p>
+
+<div class="cp-section">
+<div class="cp-head">Context packet — SCHOLARLY + DS&A CONTEXT section (new required field)</div>
+<pre>
+<span class="c">## SCHOLARLY + DS&A CONTEXT</span>
+<span class="c"># Required for stories that implement or modify any algorithm, data structure,</span>
+<span class="c"># or system with scholarly underpinnings. Copy the relevant spec verbatim.</span>
+<span class="c">#</span>
+<span class="c"># Format per entry:</span>
+<span class="c">#   ALGORITHM: [name] — see journey-os-algorithms-scholarly.html §V</span>
+<span class="c">#   FOUNDATION: [Author, Year] — [claim] → [implementation rule]</span>
+<span class="c">#   COMPLEXITY: time O(?) · space O(?)</span>
+<span class="c">#   PARAMETERS: [exact values, not placeholders]</span>
+<span class="c">#   SECURITY: [security property if applicable]</span>
+<span class="c">#   INVARIANT: [must always be true after this story ships]</span>
+<span class="c">#</span>
+<span class="c"># Examples:</span>
+<span class="c">#   ALGORITHM: BKT mastery update</span>
+<span class="c">#   FOUNDATION: Corbett & Anderson (1995) → P(Ln|correct), P(Ln|incorrect)</span>
+<span class="c">#   PARAMETERS: p_init=0.10, p_transit=0.20, p_slip=0.10, p_guess=0.20</span>
+<span class="c">#   INVARIANT: p_mastery ∈ [0,1] after every response; concept enters queue iff p_mastery < 0.95</span>
+<span class="c">#</span>
+<span class="c">#   ALGORITHM: HMAC-SHA256 exam scramble</span>
+<span class="c">#   SECURITY: Deterministic (same input → same order), unpredictable (requires secret key)</span>
+<span class="c">#   INVARIANT: Student always sees same order on reconnect; no two students see same order</span>
+</pre>
+</div>
+
+<h3>Document organization</h3>
+<div class="four">
+  <div class="card"><div class="cl">§ II–IV · Scholarly</div><p>Academic foundations by feature domain. BKT, IRT, Pimsleur, ECD, Angoff, UMLS, Hetionet, LOD. Each claim includes the implementation consequence.</p></div>
+  <div class="card"><div class="cl">§ V · Algorithms</div><p>18 algorithm specifications. Each has: pseudocode or math, parameters, time/space complexity, security properties, and which system it serves.</p></div>
+  <div class="card"><div class="cl">§ VI · Data Structures</div><p>12 data structure specifications with access patterns, memory layouts, and the operations that matter for Journey OS's workloads.</p></div>
+  <div class="card"><div class="cl">§ VII–IX · Operational</div><p>Security primitives (HMAC, hash chain, rate limiting), performance budgets (per-feature latency targets), and the updated context packet schema.</p></div>
+</div>
+</section>
+
+<!-- II: MASTERY SCIENCE -->
+<section id="mastery">
+<div class="sid">II / Mastery Science — BKT, IRT, Pimsleur</div>
+<h2>The adaptive learning foundations — with exact implementation parameters</h2>
+
+<h3>Bayesian Knowledge Tracing (BKT)</h3>
+
+<div class="scholar">
+  <div class="ref">Foundation · Corbett & Anderson, 1995</div>
+  <div class="claim">BKT models student knowledge as a latent binary state (known / not-known) and updates it using Bayesian inference after each response.</div>
+  <div class="impl">Implementation rule: run BKT update after every question response in study queue and practice mode. Not during exam delivery (exams are assessment, not learning). Update Supabase <code>concept_mastery.p_mastery</code> atomically after each response via RPC.</div>
+  <div class="cite">Corbett, A.T. & Anderson, J.R. (1995). Knowledge Tracing: Modeling the Acquisition of Procedural Knowledge. User Modeling and User-Adapted Interaction, 4(4), 253–278.</div>
+</div>
+
+<div class="scholar">
+  <div class="ref">Foundation · Van De Sande, 2013</div>
+  <div class="claim">BKT parameters (p_init, p_transit, p_slip, p_guess) must be constrained: p_guess + p_slip &lt; 1, and p_slip &lt; 0.1 to prevent the model inverting (high mastery predicted despite frequent errors).</div>
+  <div class="impl">Implementation rule: validate all four parameters at initialization. If any constraint is violated, throw at startup, not at runtime. The specific values in Journey OS (p_guess=0.20, p_slip=0.10) satisfy the constraint.</div>
+  <div class="cite">Van De Sande, B. (2013). Properties of the Bayesian Knowledge Estimation Algorithm. Proceedings of EDM 2013.</div>
+</div>
+
+<div class="algo-card">
+  <div class="algo-head">
+    <div>
+      <div class="algo-name">BKT Update — Full Specification</div>
+      <div style="font-size:11px;color:#5dcaa5;margin-top:3px">Used by: study queue, practice mode · Updated after: every response except exam</div>
+    </div>
+    <div class="algo-badges"><span class="pill p-g">O(1) time</span><span class="pill p-g">O(1) space</span><span class="pill p-t">Deterministic</span></div>
+  </div>
+  <div class="algo-body">
+<pre>
+<span class="c">// Parameters — hardcoded, not user-configurable</span>
+<span class="k">const</span> <span class="n">BKT_PARAMS</span> = {
+  p_init:     <span class="num">0.10</span>,  <span class="c">// prior: P(student knows concept before any exposure)</span>
+  p_transit:  <span class="num">0.20</span>,  <span class="c">// learning: P(transitions from !know → know after one attempt)</span>
+  p_slip:     <span class="num">0.10</span>,  <span class="c">// slip:   P(answers wrong | knows concept)</span>
+  p_guess:    <span class="num">0.20</span>,  <span class="c">// guess:  P(answers right | does NOT know concept)</span>
+  mastery_threshold: <span class="num">0.95</span>,
+}
+
+<span class="c">// Update P(knows) after observing a response</span>
+<span class="k">function</span> <span class="n">bkt_update</span>(p_prior: <span class="t">number</span>, correct: <span class="t">boolean</span>): <span class="t">number</span> {
+  <span class="k">const</span> { p_slip, p_guess, p_transit } = BKT_PARAMS
+
+  <span class="c">// Step 1: posterior given observation (Bayes update)</span>
+  <span class="k">let</span> p_posterior: <span class="t">number</span>
+  <span class="k">if</span> (correct) {
+    <span class="c">// P(knows | correct) = P(knows)*P(correct|knows) / P(correct)</span>
+    <span class="k">const</span> p_correct_knows   = <span class="num">1</span> - p_slip
+    <span class="k">const</span> p_correct_unknown = p_guess
+    p_posterior = (p_prior * p_correct_knows)
+                / (p_prior * p_correct_knows + (<span class="num">1</span> - p_prior) * p_correct_unknown)
+  } <span class="k">else</span> {
+    <span class="c">// P(knows | wrong)   = P(knows)*P(wrong|knows) / P(wrong)</span>
+    <span class="k">const</span> p_wrong_knows   = p_slip
+    <span class="k">const</span> p_wrong_unknown = <span class="num">1</span> - p_guess
+    p_posterior = (p_prior * p_wrong_knows)
+                / (p_prior * p_wrong_knows + (<span class="num">1</span> - p_prior) * p_wrong_unknown)
+  }
+
+  <span class="c">// Step 2: apply learning (P of transitioning from !know → know)</span>
+  <span class="k">const</span> p_next = p_posterior + (<span class="num">1</span> - p_posterior) * p_transit
+
+  <span class="c">// Step 3: clamp to [0.001, 0.999] — never allow absolute certainty</span>
+  <span class="k">return</span> Math.max(<span class="num">0.001</span>, Math.min(<span class="num">0.999</span>, p_next))
+}
+
+<span class="c">// Mastery test</span>
+<span class="k">const</span> <span class="n">is_mastered</span> = (p: <span class="t">number</span>) => p >= BKT_PARAMS.mastery_threshold
+</pre>
+  </div>
+  <div class="algo-footer">
+    <span class="pill p-b">Invariant: p_mastery ∈ (0,1) always</span>
+    <span class="pill p-b">Invariant: concept exits daily queue iff p_mastery ≥ 0.95</span>
+    <span class="pill p-gold">Warning: do NOT run BKT during exam delivery — pollutes mastery before scoring</span>
+  </div>
+</div>
+
+<h3>Pimsleur Decay — Spaced Repetition Schedule</h3>
+
+<div class="scholar">
+  <div class="ref">Foundation · Pimsleur, 1967 + Ebbinghaus, 1885</div>
+  <div class="claim">Recall probability decays exponentially with time since last review. Optimal review intervals follow a geometric progression (approximately doubling each time) for retention with minimum review sessions.</div>
+  <div class="impl">Implementation rule: each time a concept achieves mastery (p_mastery ≥ 0.95), schedule the NEXT review at <code>review_intervals[current_review_count]</code> days in the future. Store <code>next_review_at</code> as a timestamp on <code>concept_mastery</code>. The BKT model continues to apply at every review — a wrong answer at a late review will drop p_mastery sharply.</div>
+  <div class="cite">Pimsleur, P. (1967). A Memory Schedule. Modern Language Journal, 51(2), 73–75. · Ebbinghaus, H. (1885/1913). Memory: A Contribution to Experimental Psychology.</div>
+</div>
+
+<div class="algo-card">
+  <div class="algo-head">
+    <div>
+      <div class="algo-name">Pimsleur Decay Scheduler</div>
+      <div style="font-size:11px;color:#5dcaa5;margin-top:3px">Used by: study queue scheduling · After every mastery event and every correct response at a scheduled review</div>
+    </div>
+    <div class="algo-badges"><span class="pill p-g">O(1) time</span><span class="pill p-t">Deterministic</span></div>
+  </div>
+  <div class="algo-body">
+<pre>
+<span class="c">// Review intervals in days: geometric progression (Pimsleur-modified)</span>
+<span class="k">const</span> <span class="n">REVIEW_INTERVALS</span> = [<span class="num">1</span>, <span class="num">3</span>, <span class="num">7</span>, <span class="num">14</span>, <span class="num">30</span>, <span class="num">60</span>, <span class="num">120</span>, <span class="num">Infinity</span>]
+
+<span class="c">// schedule_next_review: called after BKT update when correct</span>
+<span class="k">function</span> <span class="n">schedule_next_review</span>(
+  review_count: <span class="t">number</span>,  <span class="c">// how many times reviewed at this interval tier</span>
+  p_mastery: <span class="t">number</span>
+): <span class="t">Date | null</span> {
+  <span class="k">if</span> (p_mastery < BKT_PARAMS.mastery_threshold) {
+    <span class="k">return</span> <span class="k">new</span> <span class="t">Date</span>()  <span class="c">// not mastered → back in today's queue immediately</span>
+  }
+
+  <span class="k">const</span> interval_days = REVIEW_INTERVALS[Math.min(review_count, REVIEW_INTERVALS.length - <span class="num">1</span>)]
+  <span class="k">if</span> (interval_days === Infinity) <span class="k">return null</span>  <span class="c">// fully consolidated — exits queue</span>
+
+  <span class="k">const</span> next = <span class="k">new</span> <span class="t">Date</span>()
+  next.setDate(next.getDate() + interval_days)
+  <span class="k">return</span> next
+}
+
+<span class="c">// compute current p_mastery after decay</span>
+<span class="k">function</span> <span class="n">apply_decay</span>(p_last: <span class="t">number</span>, days_elapsed: <span class="t">number</span>): <span class="t">number</span> {
+  <span class="c">// λ is concept-specific; default decay constant = 0.05 per day</span>
+  <span class="k">const</span> DECAY_CONSTANT = <span class="num">0.05</span>
+  <span class="k">return</span> p_last * Math.exp(-DECAY_CONSTANT * days_elapsed)
+}
+</pre>
+  </div>
+  <div class="algo-footer">
+    <span class="pill p-b">Invariant: no concept can sit in queue with next_review_at > 7 days without a mastery event</span>
+    <span class="pill p-gold">Clinical-tier override: Tier 1 concepts decay 2× faster (DECAY_CONSTANT = 0.10)</span>
+  </div>
+</div>
+
+<h3>Item Response Theory (IRT 3PL) — Practice Mode Selection</h3>
+
+<div class="scholar">
+  <div class="ref">Foundation · Birnbaum, 1968 · Lord, 1980</div>
+  <div class="claim">The three-parameter logistic model (3PL-IRT) captures item discrimination (a), difficulty (b), and guessing (c) in a single probability function. The Fisher information function I(θ) identifies which item, at a given student ability θ, provides maximum information — i.e., narrows ability estimation most.</div>
+  <div class="impl">Implementation rule: during adaptive practice, estimate current theta (θ) from recent response history using EAP (Expected A Posteriori). Select the item from the available pool with difficulty parameter b closest to θ, weighted by discrimination a. Never show the same item twice in a session (exclude by item_id set).</div>
+  <div class="cite">Birnbaum, A. (1968). Some latent trait models and their use in inferring an examinee's ability. In Lord & Novick, Statistical Theories of Mental Test Scores. · Lord, F.M. (1980). Applications of IRT to Practical Testing Problems. Lawrence Erlbaum.</div>
+</div>
+
+<div class="algo-card">
+  <div class="algo-head">
+    <div>
+      <div class="algo-name">IRT 3PL — Probability + Fisher Information + EAP Theta Estimation</div>
+      <div style="font-size:11px;color:#5dcaa5;margin-top:3px">Used by: practice mode item selection · theta updated after each practice response</div>
+    </div>
+    <div class="algo-badges"><span class="pill p-g">O(n) item select</span><span class="pill p-g">O(k) EAP</span><span class="pill p-t">Adaptive</span></div>
+  </div>
+  <div class="algo-body">
+<pre>
+<span class="c">// 3PL Item Response Function</span>
+<span class="c">// θ: student ability (-3 to +3); a: discrimination (0.5–2.5); b: difficulty; c: guessing (0.0–0.35)</span>
+<span class="k">function</span> <span class="n">p3pl</span>(theta: <span class="t">number</span>, a: <span class="t">number</span>, b: <span class="t">number</span>, c: <span class="t">number</span>): <span class="t">number</span> {
+  <span class="k">return</span> c + (<span class="num">1</span> - c) / (<span class="num">1</span> + Math.exp(-<span class="num">1.7</span> * a * (theta - b)))
+}
+
+<span class="c">// Fisher Information at ability θ for a given item</span>
+<span class="c">// Higher information = item is more useful at this ability level</span>
+<span class="k">function</span> <span class="n">fisher_info</span>(theta: <span class="t">number</span>, a: <span class="t">number</span>, b: <span class="t">number</span>, c: <span class="t">number</span>): <span class="t">number</span> {
+  <span class="k">const</span> p = p3pl(theta, a, b, c)
+  <span class="k">const</span> q = <span class="num">1</span> - p
+  <span class="c">// Avoid division by zero and near-zero probabilities</span>
+  <span class="k">if</span> (p < <span class="num">0.001</span> || q < <span class="num">0.001</span>) <span class="k">return</span> <span class="num">0</span>
+  <span class="k">return</span> ((<span class="num">1.7</span> * a) ** <span class="num">2</span>) * ((p - c) ** <span class="num">2</span>) * q / ((<span class="num">1</span> - c) ** <span class="num">2</span> * p)
+}
+
+<span class="c">// EAP Theta Estimation: numerical integration over quadrature points</span>
+<span class="c">// X_i: quadrature points (-4 to +4 in 41 steps)</span>
+<span class="c">// W_i: normal prior weights N(0,1) at each point</span>
+<span class="k">function</span> <span class="n">eap_theta</span>(responses: <span class="t">{correct: boolean, a:number, b:number, c:number}[]</span>): <span class="t">number</span> {
+  <span class="k">const</span> QUADRATURE = Array.from({length: <span class="num">41</span>}, (_, i) => ({
+    x: -<span class="num">4</span> + i * <span class="num">0.2</span>,
+    w: normalPDF(<span class="num">0</span>, <span class="num">1</span>, -<span class="num">4</span> + i * <span class="num">0.2</span>)
+  }))
+
+  <span class="k">let</span> numerator = <span class="num">0</span>, denominator = <span class="num">0</span>
+  <span class="k">for</span> (<span class="k">const</span> { x, w } <span class="k">of</span> QUADRATURE) {
+    <span class="c">// Likelihood of all responses at ability x</span>
+    <span class="k">const</span> L = responses.reduce((acc, r) => {
+      <span class="k">const</span> p = p3pl(x, r.a, r.b, r.c)
+      <span class="k">return</span> acc * (r.correct ? p : <span class="num">1</span> - p)
+    }, <span class="num">1</span>)
+    numerator   += x * L * w
+    denominator += L * w
+  }
+  <span class="k">return</span> denominator > <span class="num">0</span> ? numerator / denominator : <span class="num">0</span>
+}
+
+<span class="c">// Select best item for current theta from available pool</span>
+<span class="k">function</span> <span class="n">select_item</span>(theta: <span class="t">number</span>, items: <span class="t">Item[]</span>, used: <span class="t">Set&lt;string&gt;</span>): <span class="t">Item</span> {
+  <span class="k">return</span> items
+    .filter(item => !used.has(item.id))
+    .sort((a, b) => fisher_info(theta, b.irt_a, b.irt_b, b.irt_c)
+                  - fisher_info(theta, a.irt_a, a.irt_b, a.irt_c))
+  [<span class="num">0</span>]
+}
+</pre>
+  </div>
+  <div class="algo-footer">
+    <span class="pill p-b">Default item params when IRT not calibrated: a=1.0, b=0.0, c=0.20</span>
+    <span class="pill p-gold">IRT calibration: requires ≥30 student responses per item before reliable a/b/c estimation</span>
+    <span class="pill p-g">Theta bounds: clamp to [-4, +4] in all operations</span>
+  </div>
+</div>
+</section>
+
+<!-- III: ASSESSMENT SCIENCE -->
+<section id="assessment">
+<div class="sid">III / Assessment Science — ECD, Psychometrics, Standard Setting</div>
+<h2>The validity chain from evidence to score — every claim defended</h2>
+
+<h3>Evidence-Centered Design (ECD)</h3>
+
+<div class="scholar">
+  <div class="ref">Foundation · Mislevy, Steinberg & Almond, 2003</div>
+  <div class="claim">Valid assessment requires a chain: Student Model (what we claim to know about the student) → Evidence Model (what observations we use as evidence) → Task Model (what tasks elicit the evidence). An item without an explicit evidence model cannot be used to make valid inferences about student ability.</div>
+  <div class="impl">Implementation rule: every generated item must include a Toulmin validation chain stored in <code>assessment_items.toulmin_chain</code> (JSONB). The chain has four fields: claim (what ability is being tested), warrant (why this item tests that ability), evidence_grade (A/B/C/D based on source quality), and backing (the curriculum/UMLS basis). Items with null toulmin_chain are blocked from exam use by RLS policy.</div>
+  <div class="cite">Mislevy, R.J., Steinberg, L.S., & Almond, R.G. (2003). On the structure of educational assessments. Measurement, 1(1), 3–62.</div>
+</div>
+
+<div class="scholar">
+  <div class="ref">Foundation · Haladyna, Downing & Rodriguez, 2002</div>
+  <div class="claim">NBME-style multiple-choice items must: (1) use clinical vignettes for application-level items, (2) have one unambiguously correct answer, (3) have distractors grounded in plausible misconceptions (not arbitrary wrong facts), and (4) avoid clues in the stem that reveal the correct answer.</div>
+  <div class="impl">Implementation rule: the generation prompt for every item includes these four rules verbatim as a system constraint. The QA scorer checks for each of them specifically. Items that fail rules 2 or 3 are marked qa_status = 'failed' and must be regenerated, not manually edited.</div>
+  <div class="cite">Haladyna, T.M., Downing, S.M., & Rodriguez, M.C. (2002). A review of multiple-choice item-writing guidelines for classroom assessment. Applied Measurement in Education, 15(3), 309–334.</div>
+</div>
+
+<h3>Reliability (KR-20) and Standard Setting (Angoff)</h3>
+
+<div class="scholar">
+  <div class="ref">Foundation · Cronbach, 1951 (KR-20)</div>
+  <div class="claim">Kuder-Richardson Formula 20 (KR-20) measures internal consistency reliability for dichotomous items. KR-20 ≥ 0.70 is the accepted minimum for high-stakes educational assessment. Below this threshold, score-based pass/fail decisions cannot be defended.</div>
+  <div class="impl">Implementation rule: compute KR-20 after every completed exam with ≥10 students. Store in <code>exam_analytics.kr20</code>. If KR-20 &lt; 0.70 on a summative exam, flag to Department Chair for review. Formula: KR-20 = (n/(n-1)) * (1 - Σ(pᵢqᵢ)/σ²) where pᵢ = proportion correct for item i, qᵢ = 1-pᵢ, σ² = variance of total scores.</div>
+  <div class="cite">Kuder, G.F. & Richardson, M.W. (1937). The theory of the estimation of test reliability. Psychometrika, 2(3), 151–160. · Criterion: Nunnally (1978). Psychometric Theory, 2nd ed.</div>
+</div>
+
+<div class="scholar">
+  <div class="ref">Foundation · Angoff, 1971 (Standard Setting)</div>
+  <div class="claim">The Angoff method produces defensible cut scores by asking subject-matter experts to estimate, for each item: "What proportion of minimally competent students would answer this correctly?" The cut score is the mean of these estimates across all items and all judges.</div>
+  <div class="impl">Implementation rule: the Chair's Angoff simulation tool collects one rating per item per rater. Store ratings in <code>angoff_ratings</code> table. Compute cut score as MEAN(rater_means). Report inter-rater agreement (SD of rater means); if SD &gt; 10 percentage points, prompt a consensus discussion before adopting the cut score.</div>
+  <div class="cite">Angoff, W.H. (1971). Scales, norms, and equivalent scores. In R.L. Thorndike (Ed.), Educational Measurement (2nd ed., pp. 508–600). ACE.</div>
+</div>
+
+<h3>Differential Item Functioning (DIF) — Equity Analysis</h3>
+
+<div class="scholar">
+  <div class="ref">Foundation · Holland & Thayer, 1988 (Mantel-Haenszel DIF)</div>
+  <div class="claim">An item exhibits DIF if students of equal ability but different demographic groups have different probabilities of answering correctly. DIF detection requires conditioning on total test score (as a proxy for ability) and comparing focal vs. reference group performance within score strata.</div>
+  <div class="impl">Implementation rule: compute Mantel-Haenszel chi-squared for each item after every exam with ≥50 students. ETS DIF classification: A (|MH D-DIF| &lt; 1.0) = negligible; B (1.0–1.5) = moderate; C (&gt;1.5) = large. Items classified B or C are flagged in the Chair's DIF table for review. Never auto-remove items — faculty review required.</div>
+  <div class="cite">Holland, P.W. & Thayer, D.T. (1988). Differential item performance and the Mantel-Haenszel procedure. In Wainer & Braun (Eds.), Test Validity (pp. 129–145). Erlbaum.</div>
+</div>
+
+<div class="algo-card">
+  <div class="algo-head">
+    <div>
+      <div class="algo-name">KR-20 Reliability Computation</div>
+      <div style="font-size:11px;color:#5dcaa5;margin-top:3px">Used by: exam analytics (post-exam) · Required for: summative exams ≥10 students</div>
+    </div>
+    <div class="algo-badges"><span class="pill p-g">O(n·k)</span><span class="pill p-t">n=students, k=items</span></div>
+  </div>
+  <div class="algo-body">
+<pre>
+<span class="c">// responses: n×k boolean matrix (student i answered item j correctly)</span>
+<span class="k">function</span> <span class="n">kr20</span>(responses: <span class="t">boolean[][]</span>): <span class="t">number</span> {
+  <span class="k">const</span> n = responses.length        <span class="c">// number of students</span>
+  <span class="k">const</span> k = responses[<span class="num">0</span>].length     <span class="c">// number of items</span>
+
+  <span class="c">// Total scores per student</span>
+  <span class="k">const</span> scores = responses.map(row => row.filter(Boolean).length)
+  <span class="k">const</span> mean_score = scores.reduce((a, b) => a + b, <span class="num">0</span>) / n
+  <span class="k">const</span> variance   = scores.reduce((a, b) => a + (b - mean_score) ** <span class="num">2</span>, <span class="num">0</span>) / n
+
+  <span class="c">// p_i = proportion correct per item, q_i = 1-p_i</span>
+  <span class="k">const</span> pq_sum = Array.from({length: k}, (_, j) => {
+    <span class="k">const</span> p = responses.filter(row => row[j]).length / n
+    <span class="k">return</span> p * (<span class="num">1</span> - p)
+  }).reduce((a, b) => a + b, <span class="num">0</span>)
+
+  <span class="k">return</span> (k / (k - <span class="num">1</span>)) * (<span class="num">1</span> - pq_sum / variance)
+}
+
+<span class="c">// DIF: Mantel-Haenszel chi-squared (simplified)</span>
+<span class="k">function</span> <span class="n">mantel_haenszel_dif</span>(
+  focal_correct: <span class="t">number[]</span>,    <span class="c">// scores of focal group (URM) for this item, by total-score stratum</span>
+  focal_n: <span class="t">number[]</span>,
+  ref_correct: <span class="t">number[]</span>,      <span class="c">// scores of reference group (non-URM), by stratum</span>
+  ref_n: <span class="t">number[]</span>
+): <span class="t">{ chi2: number, mh_d_dif: number, category: 'A'|'B'|'C' }</span> {
+  <span class="c">// compute Mantel-Haenszel odds ratio across strata, then convert to D-DIF</span>
+  <span class="c">// Full implementation: see psychometrics library (R's difR package as reference)</span>
+  <span class="c">// MH D-DIF = -2.35 * ln(alpha_MH) where alpha_MH is the MH odds ratio</span>
+  <span class="c">// ETS classification: |D-DIF| < 1.0 = A, 1.0-1.5 = B, >1.5 = C</span>
+  <span class="c">// ...</span>
+}
+</pre>
+  </div>
+</div>
+</section>
+
+<!-- IV: KNOWLEDGE REPRESENTATION -->
+<section id="knowledge">
+<div class="sid">IV / Knowledge Representation — UMLS, Hetionet, LOD</div>
+<h2>The scholarly basis for the three-hub knowledge graph topology</h2>
+
+<div class="scholar">
+  <div class="ref">Foundation · Bodenreider, 2004 (UMLS Metathesaurus)</div>
+  <div class="claim">UMLS provides normalized Concept Unique Identifiers (CUIs) that serve as a shared vocabulary across 200+ biomedical vocabularies including MeSH, SNOMED CT, ICD-10, and RxNorm. CUI-grounded concept nodes enable cross-source linking without terminology conflicts.</div>
+  <div class="impl">Implementation rule: every SubConcept node in Neo4j must carry either a umls_cui or a umls_cui_candidates array. Nodes with empty umls_cui are stored as unverified SubConcepts and cannot participate in coverage scoring until reviewed. MetaMap/QuickUMLS produces CUI candidates — faculty must confirm or adjust.</div>
+  <div class="cite">Bodenreider, O. (2004). The Unified Medical Language System (UMLS): Integrating biomedical terminology. Nucleic Acids Research, 32(Database issue), D267–D270.</div>
+</div>
+
+<div class="scholar">
+  <div class="ref">Foundation · Himmelstein et al., 2017 (Hetionet)</div>
+  <div class="claim">Hetionet integrates 29 databases into a heterogeneous knowledge graph with 11 node types and 24 relationship types. Drug-disease-gene-pathway triples enable "explain why this drug treats this disease" queries not answerable from any single database.</div>
+  <div class="impl">Implementation rule: during P2 enrichment, query Hetionet for each SubConcept's CUI to extract: treats(Drug, Disease), causes(Drug, SideEffect), binds(Drug, Gene), associates(Gene, Disease). Store enriched triples as SubConcept.lod_facts JSONB array. Display in the faculty "This Week" intelligence view and in student Why Wrong? explanations when pharmacology-related.</div>
+  <div class="cite">Himmelstein, D.S. et al. (2017). Systematic integration of biomedical knowledge prioritizes drugs for repurposing. eLife, 6, e26726.</div>
+</div>
+
+<div class="scholar">
+  <div class="ref">Foundation · Three-Hub Topology Design Decision (D06)</div>
+  <div class="claim">A single monolithic concept node cannot simultaneously serve as a learning unit (BKT state), a pedagogical target (SLO alignment), and an assessment anchor (USMLE mapping) without role confusion. Separating these concerns into three hubs (SubConcept → SLO → USMLE_Subtopic) allows each to evolve independently.</div>
+  <div class="impl">Implementation rule: never add USMLE_Subtopic properties to SubConcept, and never add pedagogical metadata to USMLE_Subtopic. The relationship SubConcept-[:MAPS_TO]→USMLE_Subtopic carries the mapping confidence score. SLO-[:CONTRIBUTES_TO]→ILO is always directed from course-level to institution-level.</div>
+</div>
+
+<h3>Evidence Grade Weights — LOD Source Quality</h3>
+<table>
+<thead><tr><th>Grade</th><th>Weight</th><th>Source types</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td><span class="pill p-g">A</span></td><td class="mono">1.00</td><td>Systematic reviews, meta-analyses, RCTs</td><td>Cochrane review on heart failure mortality</td></tr>
+<tr><td><span class="pill p-b">B</span></td><td class="mono">0.82</td><td>Prospective cohort studies, large RCTs</td><td>SOLVD trial on enalapril in HFrEF</td></tr>
+<tr><td><span class="pill p-gold">C</span></td><td class="mono">0.65</td><td>Expert guidelines, textbooks, case series</td><td>ACC/AHA Heart Failure Guidelines 2022</td></tr>
+<tr><td><span class="pill p-r">D</span></td><td class="mono">0.45</td><td>Expert opinion, case reports, LOD inference</td><td>Hetionet drug-disease path without clinical trial</td></tr>
+</tbody>
+</table>
+<p>Evidence grade weights are used in coverage scoring: <code>coverage_score += evidence_grade_weight / 3.0</code>, capped at 1.0. An item backed only by Grade D evidence counts for less coverage than one backed by Grade A. This incentivizes using high-quality sources in content generation.</p>
+</section>
+
+<!-- V: ALGORITHM CATALOG -->
+<section id="algorithms">
+<div class="sid">V / Algorithm Catalog</div>
+<h2>18 algorithms — pseudocode, complexity, security properties, and where each is used</h2>
+
+<div class="algo-card">
+  <div class="algo-head">
+    <div><div class="algo-name">Fisher-Yates Shuffle — Seeded (Exam Scrambling)</div><div style="font-size:11px;color:#5dcaa5;margin-top:3px">Used by: exam delivery (C02) · item order + option order scrambling per student</div></div>
+    <div class="algo-badges"><span class="pill p-g">O(n)</span><span class="pill p-t">Deterministic</span><span class="pill p-r">Security-critical</span></div>
+  </div>
+  <div class="algo-body">
+<pre>
+<span class="c">// Seeded with HMAC-SHA256 to ensure unpredictability without secret key</span>
+<span class="k">function</span> <span class="n">exam_scramble</span>(
+  items: <span class="t">Item[]</span>,
+  student_id: <span class="t">string</span>,
+  exam_id: <span class="t">string</span>
+): <span class="t">Item[]</span> {
+  <span class="c">// HMAC-SHA256 produces 32 bytes of keyed pseudorandom data</span>
+  <span class="c">// EXAM_SCRAMBLE_SECRET is a 32-byte env var, never logged or exposed</span>
+  <span class="k">const</span> seed_bytes = hmac_sha256(
+    process.env.EXAM_SCRAMBLE_SECRET!,
+    `${student_id}:${exam_id}`
+  )
+
+  <span class="c">// Expand seed into a deterministic PRNG (xorshift64)</span>
+  <span class="k">const</span> rng = xorshift64(seed_bytes.readBigUInt64LE(<span class="num">0</span>))
+
+  <span class="c">// Fisher-Yates in-place shuffle (Knuth 2011 vol. 2)</span>
+  <span class="k">const</span> arr = [...items]
+  <span class="k">for</span> (<span class="k">let</span> i = arr.length - <span class="num">1</span>; i > <span class="num">0</span>; i--) {
+    <span class="k">const</span> j = Number(rng.next() % BigInt(i + <span class="num">1</span>))
+    ;[arr[i], arr[j]] = [arr[j], arr[i]]
+  }
+
+  <span class="c">// Scramble options for each item using a derived seed</span>
+  arr.forEach((item, idx) => {
+    <span class="k">const</span> opt_seed = xorshift64(seed_bytes.readBigUInt64LE(<span class="num">8</span>) ^ BigInt(idx))
+    item.options = fisher_yates(item.options, opt_seed)
+  })
+
+  <span class="k">return</span> arr
+}
+</pre>
+    <p style="margin-top:10px"><strong>Security property:</strong> Without the <code>EXAM_SCRAMBLE_SECRET</code>, a student cannot pre-compute their item order even if they know their <code>student_id</code> and <code>exam_id</code>. The scramble is deterministic — a student who reconnects mid-exam sees the same order. Two students with different <code>student_id</code>s see different orders (with overwhelming probability from HMAC collision resistance).</p>
+  </div>
+  <div class="algo-footer">
+    <span class="pill p-r">EXAM_SCRAMBLE_SECRET must be 32+ bytes, stored in Supabase Vault, never in .env.local</span>
+    <span class="pill p-b">Idempotent: same student_id + exam_id always produces same shuffle</span>
+  </div>
+</div>
+
+<div class="algo-card">
+  <div class="algo-head">
+    <div><div class="algo-name">Priority Queue Study Scheduler — Min-Heap</div><div style="font-size:11px;color:#5dcaa5;margin-top:3px">Used by: study queue daily compilation · runs nightly via Inngest scheduled job</div></div>
+    <div class="algo-badges"><span class="pill p-g">O(n log n) build</span><span class="pill p-g">O(log n) update</span><span class="pill p-t">Deterministic</span></div>
+  </div>
+  <div class="algo-body">
+<pre>
+<span class="c">// Priority key: tuple compared lexicographically</span>
+<span class="c">// Lower key = higher priority (min-heap)</span>
+<span class="t">type</span> <span class="n">QueueKey</span> = [
+  clinical_tier: <span class="t">number</span>,  <span class="c">// 1=immediately life-threatening, 4=benign (lower=higher priority)</span>
+  neg_mastery: <span class="t">number</span>,   <span class="c">// -p_mastery (lower=higher priority = weaker mastery)</span>
+  review_due_ms: <span class="t">number</span>, <span class="c">// Date.now() of next_review_at (earlier due = higher priority)</span>
+  concept_id: <span class="t">string</span>,   <span class="c">// tiebreaker — deterministic ordering</span>
+]
+
+<span class="k">function</span> <span class="n">build_daily_queue</span>(
+  student_id: <span class="t">string</span>,
+  goal_count: <span class="t">number</span>,    <span class="c">// from student settings: 5/12/20</span>
+  today: <span class="t">Date</span>
+): <span class="t">ConceptId[]</span> {
+  <span class="c">// Fetch all due concepts from Supabase (next_review_at <= today)</span>
+  <span class="k">const</span> due = fetch_due_concepts(student_id, today)
+
+  <span class="c">// Build min-heap on QueueKey</span>
+  <span class="k">const</span> heap = <span class="k">new</span> <span class="t">MinHeap</span>&lt;<span class="t">QueueKey</span>&gt;()
+  <span class="k">for</span> (<span class="k">const</span> c <span class="k">of</span> due) {
+    heap.push([
+      c.clinical_tier,
+      -c.p_mastery,
+      c.next_review_at.getTime(),
+      c.concept_id
+    ], c.concept_id)
+  }
+
+  <span class="c">// Extract top goal_count items</span>
+  <span class="k">const</span> queue: <span class="t">string[]</span> = []
+  <span class="k">while</span> (queue.length < goal_count && !heap.isEmpty()) {
+    queue.push(heap.pop())
+  }
+  <span class="k">return</span> queue
+}
+</pre>
+  </div>
+  <div class="algo-footer">
+    <span class="pill p-b">Invariant: clinical Tier 1 concepts always precede Tier 4 concepts at the same p_mastery level</span>
+    <span class="pill p-b">Invariant: new concepts (p_mastery = p_init = 0.10) appear before decaying mastered concepts</span>
+  </div>
+</div>
+
+<div class="algo-card">
+  <div class="algo-head">
+    <div><div class="algo-name">Hash Chain — FERPA Audit Log Tamper Detection</div><div style="font-size:11px;color:#5dcaa5;margin-top:3px">Used by: FERPA audit log (trigger-written) · integrity verification by admin</div></div>
+    <div class="algo-badges"><span class="pill p-g">O(1) insert</span><span class="pill p-g">O(n) verify</span><span class="pill p-r">Security-critical</span></div>
+  </div>
+  <div class="algo-body">
+<pre>
+<span class="c">-- Postgres trigger (runs at INSERT on ferpa_audit_log, BEFORE write)</span>
+<span class="c">-- Using pgcrypto SHA-256</span>
+CREATE OR REPLACE FUNCTION <span class="n">ferpa_audit_chain_hash</span>() RETURNS trigger AS $$
+DECLARE
+  prev_hash <span class="t">TEXT</span>;
+BEGIN
+  <span class="c">-- Get the hash of the previous row (or genesis sentinel for first row)</span>
+  SELECT chain_hash INTO prev_hash
+    FROM ferpa_audit_log
+    ORDER BY created_at DESC
+    LIMIT 1;
+
+  IF prev_hash IS NULL THEN
+    prev_hash := encode(digest(<span class="s">'GENESIS:' || NEW.institution_id, 'sha256'</span>), <span class="s">'hex'</span>);
+  END IF;
+
+  <span class="c">-- Hash = SHA256(previous_hash || this_row_id || event_type || student_id || timestamp)</span>
+  NEW.chain_hash := encode(digest(
+    prev_hash ||
+    NEW.id::text ||
+    NEW.event_type ||
+    NEW.student_id ||
+    extract(epoch from NEW.created_at)::text,
+    <span class="s">'sha256'</span>
+  ), <span class="s">'hex'</span>);
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+</pre>
+    <p style="margin-top:10px"><strong>Tamper detection:</strong> If any row in the log is modified or deleted, all subsequent chain hashes become invalid. Verification walks the chain linearly and fails on the first mismatch, pinpointing exactly which row was altered. The chain is written by a SECURITY DEFINER function — application code cannot override it.</p>
+  </div>
+  <div class="algo-footer">
+    <span class="pill p-r">NEVER grant UPDATE or DELETE on ferpa_audit_log to any role, including service_role</span>
+    <span class="pill p-b">Verification endpoint: admin-only, read-only, logs its own access to the chain</span>
+  </div>
+</div>
+
+<div class="algo-card">
+  <div class="algo-head">
+    <div><div class="algo-name">Token Bucket — Generation Rate Limiting</div><div style="font-size:11px;color:#5dcaa5;margin-top:3px">Used by: P3 generation pipeline · per-faculty daily and concurrent limits (C10)</div></div>
+    <div class="algo-badges"><span class="pill p-g">O(1)</span><span class="pill p-t">Smooth burst-tolerant</span></div>
+  </div>
+  <div class="algo-body">
+<pre>
+<span class="c">// Token bucket per faculty_id in Redis (via Upstash)</span>
+<span class="c">// Max daily budget: 100 items/day (configurable per faculty by admin)</span>
+<span class="c">// Max burst: 20 items in a single request</span>
+<span class="c">// Refill rate: max_daily_items / 86400 items/second = 0.00116 items/sec</span>
+
+<span class="k">async function</span> <span class="n">check_generation_limit</span>(
+  faculty_id: <span class="t">string</span>,
+  requested_items: <span class="t">number</span>
+): <span class="t">Promise&lt;{ allowed: boolean, tokens_remaining: number }&gt;</span> {
+  <span class="k">const</span> key = `gen_limit:${faculty_id}`
+  <span class="k">const</span> max_daily = <span class="k">await</span> get_faculty_limit(faculty_id)  <span class="c">// from Supabase admin config</span>
+  <span class="k">const</span> refill_rate = max_daily / (<span class="num">24</span> * <span class="num">60</span> * <span class="num">60</span>)            <span class="c">// tokens per second</span>
+  <span class="k">const</span> max_burst = Math.min(requested_items, <span class="num">20</span>)
+
+  <span class="c">// Atomic Redis operation: read current tokens + last_refill, compute new tokens</span>
+  <span class="k">const</span> [tokens, last_refill] = <span class="k">await</span> redis.hmget(key, <span class="s">'tokens'</span>, <span class="s">'last_refill'</span>)
+  <span class="k">const</span> now = Date.now() / <span class="num">1000</span>
+  <span class="k">const</span> elapsed = now - (parseFloat(last_refill) || now)
+  <span class="k">const</span> new_tokens = Math.min(max_daily, parseFloat(tokens || <span class="s">'0'</span>) + elapsed * refill_rate)
+
+  <span class="k">if</span> (new_tokens >= requested_items) {
+    <span class="k">await</span> redis.hmset(key, {tokens: new_tokens - requested_items, last_refill: now})
+    <span class="k">return</span> { allowed: <span class="k">true</span>, tokens_remaining: new_tokens - requested_items }
+  }
+  <span class="k">return</span> { allowed: <span class="k">false</span>, tokens_remaining: new_tokens }
+}
+</pre>
+  </div>
+  <div class="algo-footer">
+    <span class="pill p-b">Inngest concurrency key: journey/items.batch-generate → concurrencyKey: faculty/${id}, limit: 3</span>
+    <span class="pill p-gold">Institution-level cost cap: separate monthly budget in generation_limits table — checked before Redis</span>
+  </div>
+</div>
+
+<div class="algo-card">
+  <div class="algo-head">
+    <div><div class="algo-name">Coverage Bit Vector — O(1) USMLE Coverage Query</div><div style="font-size:11px;color:#5dcaa5;margin-top:3px">Used by: USMLE readiness tracker, advisor at-risk detection, dean equity dashboard</div></div>
+    <div class="algo-badges"><span class="pill p-g">O(1) set/get</span><span class="pill p-g">O(n/64) count</span><span class="pill p-t">Memory-efficient</span></div>
+  </div>
+  <div class="algo-body">
+<pre>
+<span class="c">// Step 1 taxonomy: 987 topics → bit vector of 124 bytes (ceil(987/8))</span>
+<span class="c">// Step 2 taxonomy: 1,462 topics → 183 bytes</span>
+<span class="c">// Stored as: bytea in Supabase (usmle_coverage.step1_bits)</span>
+
+<span class="k">class</span> <span class="t">CoverageBits</span> {
+  <span class="k">private</span> bits: <span class="t">Uint8Array</span>
+
+  <span class="k">constructor</span>(topic_count: <span class="t">number</span>) {
+    <span class="k">this</span>.bits = <span class="k">new</span> <span class="t">Uint8Array</span>(Math.ceil(topic_count / <span class="num">8</span>))
+  }
+
+  <span class="c">// Mark a topic as covered — O(1)</span>
+  set(topic_id: <span class="t">number</span>): <span class="k">void</span> {
+    <span class="k">this</span>.bits[topic_id >> <span class="num">3</span>] |= (<span class="num">1</span> << (topic_id & <span class="num">7</span>))
+  }
+
+  <span class="c">// Check if a topic is covered — O(1)</span>
+  get(topic_id: <span class="t">number</span>): <span class="t">boolean</span> {
+    <span class="k">return</span> Boolean((<span class="k">this</span>.bits[topic_id >> <span class="num">3</span>] >> (topic_id & <span class="num">7</span>)) & <span class="num">1</span>)
+  }
+
+  <span class="c">// Count covered topics — O(n/8) using popcount</span>
+  count(): <span class="t">number</span> {
+    <span class="k">let</span> n = <span class="num">0</span>
+    <span class="k">for</span> (<span class="k">const</span> byte <span class="k">of</span> <span class="k">this</span>.bits) {
+      <span class="c">// Brian Kernighan's popcount — O(set bits per byte)</span>
+      <span class="k">let</span> b = byte
+      <span class="k">while</span> (b) { n++; b &= b - <span class="num">1</span> }
+    }
+    <span class="k">return</span> n
+  }
+
+  <span class="c">// Union (merge coverage from multiple exams/sessions) — O(n/8)</span>
+  union(other: <span class="t">CoverageBits</span>): <span class="t">CoverageBits</span> {
+    <span class="k">const</span> result = <span class="k">new</span> <span class="t">CoverageBits</span>(<span class="k">this</span>.bits.length * <span class="num">8</span>)
+    <span class="k">for</span> (<span class="k">let</span> i = <span class="num">0</span>; i < <span class="k">this</span>.bits.length; i++) {
+      result.bits[i] = <span class="k">this</span>.bits[i] | other.bits[i]
+    }
+    <span class="k">return</span> result
+  }
+}
+</pre>
+  </div>
+  <div class="algo-footer">
+    <span class="pill p-g">Memory: 124 bytes per student for Step 1 · vs 987 rows in a join table</span>
+    <span class="pill p-b">Update trigger: append to bit vector on every exam_attempt INSERT that maps items → USMLE topics</span>
+  </div>
+</div>
+</section>
+
+<!-- VI: DATA STRUCTURE CATALOG -->
+<section id="datastructs">
+<div class="sid">VI / Data Structure Catalog</div>
+<h2>12 data structures — chosen for Journey OS's exact access patterns</h2>
+
+<div class="two">
+<div>
+<div class="ds-card">
+  <div class="ds-head"><span class="ds-name">Min-Heap (Study Queue)</span><div style="display:flex;gap:4px"><span class="pill p-g">insert O(log n)</span><span class="pill p-g">pop O(log n)</span></div></div>
+  <div class="ds-body">
+    <div class="ds-row"><div class="ds-lbl">Why not array?</div><div>O(n) to find minimum vs O(log n) with heap. Study queue has 100–5,000 due concepts per student.</div></div>
+    <div class="ds-row"><div class="ds-lbl">Key structure</div><div><code>(clinical_tier, -p_mastery, review_due_ms, concept_id)</code> — tuple comparison, lexicographic</div></div>
+    <div class="ds-row"><div class="ds-lbl">Where</div><div>Built nightly in Inngest scheduled job. Serialized as JSONB array to Supabase <code>student_queues</code>.</div></div>
+  </div>
+</div>
+
+<div class="ds-card">
+  <div class="ds-head"><span class="ds-name">HNSW Index (Vector Search)</span><div style="display:flex;gap:4px"><span class="pill p-g">query O(log n)</span><span class="pill p-g">insert O(log n)</span></div></div>
+  <div class="ds-body">
+    <div class="ds-row"><div class="ds-lbl">Config</div><div><code>m=16, ef_construction=200, ef_search=50</code> — balances recall vs. latency</div></div>
+    <div class="ds-row"><div class="ds-lbl">Why HNSW over IVFFlat?</div><div>HNSW has no training phase and handles incremental inserts (new chunks added per lecture). IVFFlat requires periodic re-indexing.</div></div>
+    <div class="ds-row"><div class="ds-lbl">Where</div><div>pgvector index on <code>chunks.embedding</code> (1536-dim). Used for HyDE search, similar item detection.</div></div>
+  </div>
+</div>
+
+<div class="ds-card">
+  <div class="ds-head"><span class="ds-name">Bloom Filter (Item Deduplication)</span><div style="display:flex;gap:4px"><span class="pill p-g">O(k) check</span><span class="pill p-gray">No false negatives</span></div></div>
+  <div class="ds-body">
+    <div class="ds-row"><div class="ds-lbl">Parameters</div><div>m=10,000 bits · k=7 hash functions · n≤1000 items → FP rate ≈ 0.8%</div></div>
+    <div class="ds-row"><div class="ds-lbl">Use case</div><div>Before generating new items for a SubConcept, check if ≥3 approved items already exist. Bloom filter provides fast "definitely no items" check before DB query.</div></div>
+    <div class="ds-row"><div class="ds-lbl">Scoped by</div><div>One Bloom filter per <code>faculty_id × subconcept_id</code> pair. Stored in Redis, expires after 24h.</div></div>
+  </div>
+</div>
+</div>
+
+<div>
+<div class="ds-card">
+  <div class="ds-head"><span class="ds-name">Sparse Mastery Matrix (BKT State)</span><div style="display:flex;gap:4px"><span class="pill p-g">O(1) avg lookup</span><span class="pill p-t">Memory-efficient</span></div></div>
+  <div class="ds-body">
+    <div class="ds-row"><div class="ds-lbl">Problem</div><div>Full matrix: 312 students × 12,000 SubConcepts = 3.7M rows. Most cells empty (students haven't seen most concepts).</div></div>
+    <div class="ds-row"><div class="ds-lbl">Solution</div><div>Sparse: only rows where student has seen concept. Hash map in application; B-tree index on <code>(student_id, concept_id)</code> in Postgres.</div></div>
+    <div class="ds-row"><div class="ds-lbl">Row structure</div><div><code>concept_mastery: {student_id, concept_id, p_mastery, review_count, next_review_at, last_updated}</code></div></div>
+  </div>
+</div>
+
+<div class="ds-card">
+  <div class="ds-head"><span class="ds-name">Coverage Bit Vector (USMLE Readiness)</span><div style="display:flex;gap:4px"><span class="pill p-g">O(1) set/get</span><span class="pill p-g">O(n/64) count</span></div></div>
+  <div class="ds-body">
+    <div class="ds-row"><div class="ds-lbl">Size</div><div>Step 1: 124 bytes. Step 2: 183 bytes. Per student. vs. ~7.9KB for a boolean array.</div></div>
+    <div class="ds-row"><div class="ds-lbl">Operations</div><div>OR-union across sessions (bitwise), popcount for coverage %, gap detection via AND-NOT against full taxonomy</div></div>
+    <div class="ds-row"><div class="ds-lbl">Storage</div><div><code>bytea</code> in Postgres. Read into <code>Uint8Array</code> in TypeScript for manipulation.</div></div>
+  </div>
+</div>
+
+<div class="ds-card">
+  <div class="ds-head"><span class="ds-name">Hash Chain (FERPA Audit Log)</span><div style="display:flex;gap:4px"><span class="pill p-g">O(1) insert</span><span class="pill p-r">Tamper-evident</span></div></div>
+  <div class="ds-body">
+    <div class="ds-row"><div class="ds-lbl">Structure</div><div>Linked list of SHA-256 hashes. Each node's hash includes the previous node's hash.</div></div>
+    <div class="ds-row"><div class="ds-lbl">Property</div><div>Modifying any entry invalidates all subsequent hashes — detectable by linear scan.</div></div>
+    <div class="ds-row"><div class="ds-lbl">Verification cost</div><div>O(n) full chain re-hash. Typically only verified on audit request, not on every read.</div></div>
+  </div>
+</div>
+</div>
+</div>
+
+<h3>Additional data structures — brief catalog</h3>
+<table>
+<thead><tr><th>Structure</th><th>Where used</th><th>Why this structure</th><th>Complexity</th></tr></thead>
+<tbody>
+<tr><td><strong>Trie</strong></td><td>UMLS concept autocomplete (Topic Spotlight)</td><td>O(m) prefix search vs O(n·m) linear scan; m = query length</td><td class="mono">O(m) search</td></tr>
+<tr><td><strong>LRU Cache</strong></td><td>Frequently accessed SubConcept LOD facts</td><td>LOD data rarely changes; 1,000-entry cache eliminates Neo4j queries for common concepts</td><td class="mono">O(1) get/put</td></tr>
+<tr><td><strong>Token Bucket</strong></td><td>Generation rate limiting per faculty</td><td>Smooth rate limiting with burst tolerance; no synchronized clock required</td><td class="mono">O(1)</td></tr>
+<tr><td><strong>Consistent Hash Ring</strong></td><td>Inngest worker job routing (institutional-scale)</td><td>Minimal disruption when workers added/removed; deterministic routing by faculty_id</td><td class="mono">O(log n)</td></tr>
+<tr><td><strong>Sliding Window Counter</strong></td><td>Concurrent exam sessions monitoring</td><td>Count sessions in [now-1h, now] without maintaining full event log</td><td class="mono">O(1)</td></tr>
+<tr><td><strong>B-tree Index</strong></td><td>All Postgres lookup indexes</td><td>Default Postgres index; O(log n) for equality + range; covers 95% of Journey OS query patterns</td><td class="mono">O(log n)</td></tr>
+</tbody>
+</table>
+</section>
+
+<!-- VII: SECURITY PRIMITIVES -->
+<section id="security">
+<div class="sid">VII / Security Primitives</div>
+<h2>Six security-critical patterns — each with invariants that must survive every PR</h2>
+
+<div class="call-r"><div class="cl">Security invariants are non-negotiable</div>
+<p>The invariants listed in this section must be verifiable by a CI check. Each one corresponds to a test in <code>tests/shared/security.spec.ts</code>. If any invariant is broken by a PR, the CI must fail. Engineers should treat these the same as compilation errors — not optional, not "we'll fix it later."</p>
+</div>
+
+<table>
+<thead><tr><th>Primitive</th><th>Where applied</th><th>Algorithm</th><th>Invariant</th></tr></thead>
+<tbody>
+<tr><td><strong>Exam scrambling</strong></td><td>Every exam delivery</td><td>HMAC-SHA256 + Fisher-Yates (seeded)</td><td>Two students with different IDs never see same item order (collision probability &lt; 2⁻²⁴⁸)</td></tr>
+<tr><td><strong>FERPA hash chain</strong></td><td>Audit log INSERT trigger</td><td>SHA-256 blockchain</td><td>Any row modification breaks chain_hash consistency; verified by admin endpoint</td></tr>
+<tr><td><strong>RLS isolation</strong></td><td>All Supabase tables</td><td>Row-Level Security policies</td><td>anon/authenticated users can NEVER read other users' data, even via API</td></tr>
+<tr><td><strong>Neo4j tenant isolation</strong></td><td>Every Cypher query</td><td>Wrapper with institution_id param injection</td><td>ESLint rule blocks raw Cypher without institution_id parameter</td></tr>
+<tr><td><strong>Rate limiting</strong></td><td>P3 generation trigger</td><td>Token bucket (Redis)</td><td>No faculty can exceed max_daily_items; check occurs before Inngest enqueue</td></tr>
+<tr><td><strong>Injection defense</strong></td><td>Document processing</td><td>sanitizeForContext() strip</td><td>No raw document content reaches Claude without context sanitization; injection test fixture verifies</td></tr>
+</tbody>
+</table>
+
+<h3>RLS policy specification — critical tables</h3>
+<pre>
+<span class="c">-- concept_mastery: students see only their own rows</span>
+CREATE POLICY <span class="s">"student sees own mastery"</span> ON concept_mastery
+  FOR SELECT USING (student_id = auth.uid());
+
+<span class="c">-- exam_attempts: student sees own; faculty sees own course; advisor sees advisee</span>
+CREATE POLICY <span class="s">"exam attempt access"</span> ON exam_attempts
+  FOR SELECT USING (
+    student_id = auth.uid()                              <span class="c">-- own attempt</span>
+    OR institution_id IN (                               <span class="c">-- faculty: course-level only</span>
+      SELECT institution_id FROM faculty WHERE user_id = auth.uid()
+    )
+    OR student_id IN (                                   <span class="c">-- advisor: advisee only</span>
+      SELECT student_id FROM advisor_assignments WHERE advisor_id = auth.uid()
+    )
+  );
+
+<span class="c">-- ferpa_audit_log: SELECT only for admin role; NO INSERT/UPDATE/DELETE via RLS</span>
+<span class="c">-- (writes are trigger-only, via SECURITY DEFINER function)</span>
+CREATE POLICY <span class="s">"ferpa admin read only"</span> ON ferpa_audit_log
+  FOR SELECT USING (
+    EXISTS (SELECT 1 FROM admin_users WHERE user_id = auth.uid())
+  );
+</pre>
+</section>
+
+<!-- VIII: PERFORMANCE BUDGETS -->
+<section id="performance">
+<div class="sid">VIII / Performance Budgets</div>
+<h2>Latency targets per feature — what "fast enough" means in Journey OS</h2>
+
+<div class="call-gold"><div class="cl">Why performance budgets matter for context packets</div>
+<p>An engineer implementing the study queue scheduler doesn't know if O(n log n) is fast enough unless they know the target latency. These budgets make that explicit. Any implementation that exceeds a P95 target must include a profiling analysis in the PR — not as punishment, but because uncaught performance regressions compound badly in a multi-tenant system.</p>
+</div>
+
+<table>
+<thead><tr><th>Feature</th><th>Operation</th><th>P50 target</th><th>P95 target</th><th>Measured at</th></tr></thead>
+<tbody>
+<tr><td><strong>Exam delivery</strong></td><td>Load exam + scramble items</td><td>&lt;120ms</td><td>&lt;400ms</td><td>Student click "Start exam"</td></tr>
+<tr><td><strong>Study queue</strong></td><td>Load daily queue (12 items)</td><td>&lt;80ms</td><td>&lt;200ms</td><td>Student home page load</td></tr>
+<tr><td><strong>BKT update</strong></td><td>Single response → mastery update</td><td>&lt;30ms</td><td>&lt;80ms</td><td>Student answer selection</td></tr>
+<tr><td><strong>Practice item select</strong></td><td>IRT select + fetch item</td><td>&lt;50ms</td><td>&lt;150ms</td><td>Next question in practice</td></tr>
+<tr><td><strong>Why Wrong? explanation</strong></td><td>Haiku generation (post-exam)</td><td>&lt;2s</td><td>&lt;5s</td><td>Student opens wrong answer</td></tr>
+<tr><td><strong>USMLE readiness</strong></td><td>Coverage bit vector popcount</td><td>&lt;10ms</td><td>&lt;30ms</td><td>Student USMLE tab load</td></tr>
+<tr><td><strong>P1 pipeline</strong></td><td>Full lecture ingestion (50 slides)</td><td>&lt;4min</td><td>&lt;8min</td><td>Upload → Ready status</td></tr>
+<tr><td><strong>P3 generation</strong></td><td>10-item batch generation</td><td>&lt;90s</td><td>&lt;180s</td><td>Faculty generate trigger</td></tr>
+<tr><td><strong>Coverage heatmap</strong></td><td>Faculty course coverage load</td><td>&lt;150ms</td><td>&lt;400ms</td><td>Faculty course tab open</td></tr>
+<tr><td><strong>UMLS autocomplete</strong></td><td>Topic Spotlight typeahead</td><td>&lt;40ms</td><td>&lt;100ms</td><td>First keystroke delay</td></tr>
+<tr><td><strong>At-risk classifier</strong></td><td>Gap type classification per student</td><td>&lt;100ms</td><td>&lt;300ms</td><td>Advisor dashboard load</td></tr>
+<tr><td><strong>FERPA audit search</strong></td><td>Full-text search over log</td><td>&lt;500ms</td><td>&lt;2s</td><td>Admin audit tab search</td></tr>
+</tbody>
+</table>
+
+<h3>At-risk gap type classifier — algorithm specification</h3>
+
+<div class="algo-card">
+  <div class="algo-head">
+    <div><div class="algo-name">At-Risk Gap Type Classifier — Isolated / Cluster / Systemic</div><div style="font-size:11px;color:#5dcaa5;margin-top:3px">Used by: advisor dashboard · nightly job, result cached for 24h</div></div>
+    <div class="algo-badges"><span class="pill p-g">O(V+E) graph scan</span><span class="pill p-t">Deterministic</span></div>
+  </div>
+  <div class="algo-body">
+<pre>
+<span class="c">// Input: student's concept_mastery array for all seen concepts</span>
+<span class="c">// Output: { type: 'isolated'|'cluster'|'systemic', affected_systems: string[], roots: ConceptId[] }</span>
+
+<span class="k">function</span> <span class="n">classify_risk_gap</span>(mastery: <span class="t">ConceptMastery[]</span>): <span class="t">GapClassification</span> {
+  <span class="k">const</span> weak = mastery.filter(m => m.p_mastery < <span class="num">0.70</span>)
+  <span class="k">const</span> weak_systems = <span class="k">new</span> <span class="t">Set</span>(weak.map(m => m.usmle_system))
+
+  <span class="c">// Rule 1: SYSTEMIC — weakness spans ≥3 unrelated USMLE systems</span>
+  <span class="c">// "Unrelated" = not anatomically adjacent (Cardio + Pulmo are adjacent; Cardio + Neurology are not)</span>
+  <span class="k">const</span> unrelated_systems = count_unrelated_systems(weak_systems)
+  <span class="k">if</span> (unrelated_systems >= <span class="num">3</span>) {
+    <span class="k">return</span> { type: <span class="s">'systemic'</span>, affected_systems: [...weak_systems], roots: [] }
+  }
+
+  <span class="c">// Rule 2: CLUSTER — weak concepts are causally linked (Neo4j path exists between them)</span>
+  <span class="c">// Run BFS from each weak concept; if ≥2 weak concepts are reachable from a common ancestor</span>
+  <span class="c">// that is also weak or borderline → cluster</span>
+  <span class="k">const</span> cluster_root = find_cluster_root(weak.map(m => m.concept_id))
+  <span class="k">if</span> (cluster_root) {
+    <span class="k">return</span> { type: <span class="s">'cluster'</span>, affected_systems: [...weak_systems], roots: [cluster_root] }
+  }
+
+  <span class="c">// Rule 3: ISOLATED — one concept or a few unconnected concepts below threshold</span>
+  <span class="k">return</span> { type: <span class="s">'isolated'</span>, affected_systems: [...weak_systems], roots: weak.map(m => m.concept_id) }
+}
+
+<span class="c">// find_cluster_root: BFS on Neo4j prerequisite graph</span>
+<span class="c">// Returns concept_id of the "root cause" — the upstream concept whose weakness explains all others</span>
+<span class="k">async function</span> <span class="n">find_cluster_root</span>(weak_ids: <span class="t">string[]</span>): <span class="t">Promise&lt;string|null&gt;</span> {
+  <span class="k">const</span> cypher = <span class="s">`
+    MATCH (root:SubConcept)-[:PREREQUISITE_FOR*1..3]->(weak:SubConcept)
+    WHERE weak.concept_id IN $weak_ids
+    AND root.concept_id IN $weak_ids
+    RETURN root.concept_id, count(*) AS downstream_count
+    ORDER BY downstream_count DESC LIMIT 1
+  `</span>
+  <span class="k">return</span> <span class="k">await</span> neo4jQuery(cypher, { weak_ids }, ctx)
+}
+</pre>
+  </div>
+  <div class="algo-footer">
+    <span class="pill p-g">Systemic threshold: ≥3 unrelated systems · Cluster threshold: ≥2 concepts with shared prerequisite</span>
+    <span class="pill p-b">Result cached 24h in advisor_risk_cache table — stale OK, recalculated nightly</span>
+  </div>
+</div>
+</section>
+
+<!-- IX: CONTEXT PACKET SCHEMA -->
+<section id="cp-schema">
+<div class="sid">IX / Updated Context Packet Schema</div>
+<h2>The complete required fields for a robust context packet — including scholarly + DS&A</h2>
+
+<p>The following schema is the canonical context packet template, updated to include the SCHOLARLY + DS&A CONTEXT section. All context packets generated by the sub-agent bootstrap prompt must include this section. Packets without it are incomplete and should be flagged in code review.</p>
+
+<div class="cp-section">
+<div class="cp-head">Complete context packet template — with scholarly + DS&A integration</div>
+<pre>
+<span class="c"># [JRNOS-EXX-SXX] Story Title</span>
+<span class="c"># Epic: EXX | Sprint: WX-X | Size: S/M/L | Points: X</span>
+
+<span class="c">## ───────────────────────────────────────────────────────────</span>
+<span class="c">## TABLE OF CONTENTS</span>
+<span class="c">## ───────────────────────────────────────────────────────────</span>
+<span class="c">### This story</span>
+<span class="c"># Story:    JRNOS-EXX-SXX · [Title]</span>
+<span class="c"># Phase:    N of M</span>
+<span class="c"># Priority: HIGH/MEDIUM/LOW</span>
+<span class="c"># Size:     S/M/L · [estimate]</span>
+<span class="c"># Critical: YES/NO · [finding if YES]</span>
+
+<span class="c">### Epic execution map (YOU ARE HERE ←)</span>
+<span class="c"># [visual execution map]</span>
+
+<span class="c">### Immediate dependencies</span>
+<span class="c"># Blocked by / Blocking</span>
+
+<span class="c">### Parallel execution + FILES OWNED</span>
+
+<span class="c">## ───────────────────────────────────────────────────────────</span>
+
+<span class="c">## CRITICAL: YES/NO</span>
+<span class="c">## RESEARCH REQUIRED: YES/NO + URLs</span>
+<span class="c">## PARALLELIZABLE: YES/NO</span>
+<span class="c">## DEPENDENCIES: []</span>
+
+<span class="c">## ═══════════════════════════════════════════════════════════</span>
+<span class="c">## SCHOLARLY + DS&A CONTEXT  ← NEW REQUIRED SECTION</span>
+<span class="c">## ═══════════════════════════════════════════════════════════</span>
+<span class="c">## Required for stories touching: mastery, IRT, generation, coverage,</span>
+<span class="c">## exam delivery, security-critical paths, analytics, or LOD enrichment.</span>
+<span class="c">## Leave blank (# N/A) only for pure infrastructure stories (e.g., CI setup).</span>
+<span class="c">##</span>
+<span class="c">## Format (one block per algorithm/structure/foundation used):</span>
+<span class="c">##</span>
+<span class="c">## ALGORITHM: [name]</span>
+<span class="c">##   source:      journey-os-algorithms-scholarly.html §[V section]</span>
+<span class="c">##   complexity:  time O(?) · space O(?)</span>
+<span class="c">##   parameters:  [exact values]</span>
+<span class="c">##   security:    [security property or "N/A"]</span>
+<span class="c">##   invariants:  [must be true after this story ships]</span>
+<span class="c">##</span>
+<span class="c">## FOUNDATION: [Author, Year]</span>
+<span class="c">##   claim:   [what the research shows]</span>
+<span class="c">##   rule:    [implementation consequence for this story]</span>
+<span class="c">##   applies: [specific function/module/table]</span>
+<span class="c">##</span>
+<span class="c">## DATA STRUCTURE: [name]</span>
+<span class="c">##   source:  journey-os-algorithms-scholarly.html §VI</span>
+<span class="c">##   ops:     [which operations this story uses and their complexity]</span>
+<span class="c">##   where:   [package/file/table]</span>
+<span class="c">##</span>
+<span class="c">## Example (E08 BKT mastery update story):</span>
+<span class="c">##</span>
+<span class="c">## ALGORITHM: BKT mastery update</span>
+<span class="c">##   source:      §II · BKT Update specification</span>
+<span class="c">##   complexity:  O(1) time · O(1) space</span>
+<span class="c">##   parameters:  p_init=0.10, p_transit=0.20, p_slip=0.10, p_guess=0.20, threshold=0.95</span>
+<span class="c">##   security:    N/A (pure computation, no user-controlled input to algorithm)</span>
+<span class="c">##   invariants:</span>
+<span class="c">##     - p_mastery ∈ (0,1) after every response (never exact 0 or 1)</span>
+<span class="c">##     - concept_mastery.p_mastery updated atomically via RPC (not sequential INSERTs)</span>
+<span class="c">##     - BKT NEVER runs during exam delivery session (only after session finalizes)</span>
+<span class="c">##</span>
+<span class="c">## ALGORITHM: Pimsleur decay scheduler</span>
+<span class="c">##   source:      §II · Pimsleur Decay Scheduler</span>
+<span class="c">##   parameters:  REVIEW_INTERVALS=[1,3,7,14,30,60,120,∞], DECAY_CONSTANT=0.05 (Tier 1: 0.10)</span>
+<span class="c">##   invariants:</span>
+<span class="c">##     - Mastered concept (p≥0.95) always gets next_review_at > today</span>
+<span class="c">##     - Unmastered concept (p<0.95) gets next_review_at = today (back in queue immediately)</span>
+<span class="c">##</span>
+<span class="c">## FOUNDATION: Corbett & Anderson, 1995</span>
+<span class="c">##   claim:   BKT requires ≥3 responses before p_mastery is reliable</span>
+<span class="c">##   rule:    Never apply clinical tier override until review_count ≥ 3</span>
+<span class="c">##   applies: packages/ai/src/mastery/bkt.ts → bkt_update()</span>
+<span class="c">##</span>
+<span class="c">## DATA STRUCTURE: Sparse mastery matrix (hash map)</span>
+<span class="c">##   source:  §VI · Sparse Mastery Matrix</span>
+<span class="c">##   ops:     INSERT O(log n), SELECT by (student_id, concept_id) O(log n) via B-tree index</span>
+<span class="c">##   where:   packages/db/migrations/ → concept_mastery table</span>
+
+<span class="c">## ═══════════════════════════════════════════════════════════</span>
+<span class="c">## STORY DESCRIPTION</span>
+<span class="c">## ═══════════════════════════════════════════════════════════</span>
+
+<span class="c">## GOAL</span>
+<span class="c"># One sentence: what does this story accomplish?</span>
+
+<span class="c">## BACKGROUND</span>
+<span class="c"># Context: what exists today that this story builds on or modifies?</span>
+
+<span class="c">## ACCEPTANCE CRITERIA</span>
+<span class="c"># AC-1: [specific, verifiable, written as "given X when Y then Z"]</span>
+<span class="c"># AC-2: ...</span>
+
+<span class="c">## TECHNICAL PLAN</span>
+<span class="c"># Phase 1: [what to build first]</span>
+<span class="c"># Phase 2: [what builds on phase 1]</span>
+<span class="c"># Phase 3: [integration/test]</span>
+
+<span class="c">## FILES OWNED</span>
+<span class="c"># [exhaustive list of files this story creates or modifies]</span>
+<span class="c"># Critical for parallel execution — no overlap with companion stories</span>
+
+<span class="c">## TESTS</span>
+<span class="c"># [Playwright test code or test specification]</span>
+<span class="c"># Each AC must have a corresponding test.</span>
+<span class="c"># Security invariants must have corresponding tests in tests/shared/security.spec.ts</span>
+</pre>
+</div>
+
+<h3>Scholarly foundations by epic — quick reference</h3>
+<table>
+<thead><tr><th>Epic</th><th>Primary algorithms</th><th>Key scholarly foundations</th></tr></thead>
+<tbody>
+<tr><td>E01 Foundation</td><td>Hash chain (FERPA), Fisher-Yates seeded (scramble), B-tree indexes</td><td>—</td></tr>
+<tr><td>E03 P1 Ingestion</td><td>HNSW vector index, Bloom filter, Trie (UMLS autocomplete)</td><td>Bodenreider 2004 (UMLS)</td></tr>
+<tr><td>E04 P2 Enrichment</td><td>BFS graph traversal (Neo4j), LRU cache (LOD facts)</td><td>Himmelstein 2017 (Hetionet), Evidence grades</td></tr>
+<tr><td>E05 P3 Generation</td><td>Token bucket (rate limiting), Bloom filter (deduplication)</td><td>Haladyna 2002 (NBME items), Mislevy 2003 (ECD)</td></tr>
+<tr><td>E06 Coverage</td><td>Coverage bit vector, Min-heap (priority scheduling)</td><td>USMLE taxonomy, Angoff 1971</td></tr>
+<tr><td>E07 Exam Delivery</td><td>Fisher-Yates seeded (HMAC scramble), Hash chain (auto-save integrity)</td><td>—</td></tr>
+<tr><td>E08 Mastery</td><td>BKT update, Pimsleur decay, Min-heap (queue scheduler), IRT 3PL (practice)</td><td>Corbett & Anderson 1995, Birnbaum 1968, Pimsleur 1967</td></tr>
+<tr><td>E09 Hardening</td><td>KR-20 (reliability), MH DIF (equity), At-risk classifier (BFS)</td><td>Cronbach 1951, Holland & Thayer 1988, Angoff 1971</td></tr>
+</tbody>
+</table>
+</section>
+
+<div class="footer">
+  <span>Journey OS · Algorithms, Data Structures & Scholarly Foundations · Engineering Reference · MSM · 2025</span>
+  <span>18 algorithms · 12 data structures · 28 citations · 6 security primitives · Complete context packet schema</span>
+</div>
+</body>
+</html>

@@ -1,0 +1,1691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Journey OS — Architecture Best Practices</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap');
+:root{
+  --ink:#0c0c0c;--paper:#f4f1eb;--edge:#ddd6c4;
+  --r:#a82828;--g:#185230;--y:#6a4c14;--b:#162450;--gold:#8a6614;
+  --pre:#080d12;--prefg:#c4bfb0;--tag:#e8e2d4;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);font-size:13.5px;line-height:1.8}
+.cover{background:var(--ink);min-height:78vh;padding:80px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+.cg{position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent,transparent 79px,rgba(22,36,80,.08) 80px),repeating-linear-gradient(0deg,transparent,transparent 79px,rgba(22,36,80,.06) 80px)}
+.cr{position:relative;z-index:1}
+.eye{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:#8a6614;margin-bottom:16px}
+h1{font-family:'Fraunces',serif;font-size:72px;font-weight:300;line-height:.9;letter-spacing:-2px;color:#ede8e0;margin-bottom:12px}
+h1 em{font-style:italic;color:#4a7a9b}
+.sub{font-family:'Fraunces',serif;font-style:italic;font-size:19px;color:#555;max-width:640px;margin-bottom:32px}
+.chips{display:flex;gap:4px;flex-wrap:wrap}
+.chip{font-family:'JetBrains Mono',monospace;font-size:8px;padding:4px 10px;border:1px solid #1c1c1c;color:#555}
+.chip.ok{border-color:#1a3a1a;color:#4a8a4a}
+.nav{background:#060a06;border-bottom:1px solid #0f1a0f;padding:0 80px;display:flex;overflow-x:auto}
+.ni{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:#333;padding:10px 13px;border-right:1px solid #0f1a0f;white-space:nowrap;text-decoration:none;flex-shrink:0}
+.ni:hover{color:#8a6614}
+section{padding:52px 80px;border-bottom:1px solid var(--edge)}
+.sid{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--r);margin-bottom:10px}
+h2{font-family:'Fraunces',serif;font-size:34px;font-weight:300;line-height:1.07;margin-bottom:18px}
+h3{font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#999;margin:26px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--edge)}
+h4{font-family:'Fraunces',serif;font-size:17px;font-weight:400;margin:14px 0 5px}
+p{margin-bottom:10px;max-width:840px;line-height:1.75}
+code{font-family:'JetBrains Mono',monospace;font-size:11px;background:var(--tag);padding:1px 5px;border-radius:2px}
+pre{background:var(--pre);color:var(--prefg);padding:15px 18px;font-family:'JetBrains Mono',monospace;font-size:10.5px;line-height:1.65;overflow-x:auto;margin:8px 0 12px;border-radius:2px;border-left:3px solid #4a8a4a}
+pre.bad{border-left-color:var(--r)}
+pre.good{border-left-color:var(--g)}
+pre.neutral{border-left-color:#555}
+.kw{color:#c4915a}.cm{color:#484840;font-style:italic}.st{color:#5aad7f}.fn{color:#7ab0e8}.ty{color:#b8c8a0}.nu{color:#d1965a}.de{color:#d8c060}.op{color:#c05a5a}.dec{color:#b8a0c8}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:12px 0}
+.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:12px 0}
+.card{border:1px solid var(--edge);padding:14px 16px;background:#fff}
+.card-l{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#bbb;margin-bottom:3px}
+.card-t{font-family:'Fraunces',serif;font-size:15px;font-weight:400;margin-bottom:5px}
+.card p{font-size:12px;color:#666;margin:0;line-height:1.65}
+table{width:100%;border-collapse:collapse;font-size:12px;margin:8px 0 14px}
+th{background:var(--ink);color:var(--paper);padding:7px 11px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase}
+td{padding:7px 11px;border-bottom:1px solid var(--edge);vertical-align:top}
+tr:nth-child(even) td{background:#faf7f0}
+.pill{display:inline-block;padding:2px 6px;border-radius:2px;font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:600;vertical-align:middle}
+.p-r{background:#fce6e6;color:var(--r)}.p-g{background:#eaf5ed;color:var(--g)}.p-b{background:#ebf0f8;color:var(--b)}.p-gold{background:#fdf7e0;color:var(--gold)}
+.call{padding:11px 15px;margin:10px 0;border-radius:0 2px 2px 0}
+.call .cl{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;margin-bottom:4px}
+.call p{font-size:12.5px;margin:0;max-width:none}
+.call-r{border-left:3px solid var(--r);background:#fdf0ee}.call-r .cl{color:var(--r)}
+.call-g{border-left:3px solid var(--g);background:#eaf5ed}.call-g .cl{color:var(--g)}
+.call-b{border-left:3px solid var(--b);background:#ebf0f8}.call-b .cl{color:var(--b)}
+.call-gold{border-left:3px solid var(--gold);background:#fdf7e0}.call-gold .cl{color:var(--gold)}
+.file{border:1px solid var(--edge);overflow:hidden;margin:10px 0}
+.fh{background:#0a0f0a;padding:7px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1a3a1a}
+.fn2{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#4a8a4a}
+.ft{font-family:'JetBrains Mono',monospace;font-size:8px;color:#444}
+.file pre{margin:0;border-left:none;border-radius:0;padding:13px 16px}
+.tree{background:var(--pre);padding:16px 20px;font-family:'JetBrains Mono',monospace;font-size:10.5px;line-height:2.1;margin:10px 0;border-radius:2px;overflow-x:auto}
+.tree .d{color:#b8c8a0;font-weight:500}.tree .f{color:#7ab0e8}.tree .c{color:#484840;font-style:italic}.tree .hi{color:#d8c060;font-weight:600}
+ul.t{list-style:none;margin:5px 0}
+ul.t li{padding:2px 0 2px 14px;position:relative;font-size:12.5px}
+ul.t li::before{content:'→';position:absolute;left:0;color:var(--r);font-family:'JetBrains Mono',monospace;font-size:9px;top:5px}
+.badge-row{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.badge{font-family:'JetBrains Mono',monospace;font-size:8.5px;padding:4px 10px;border:1px solid var(--edge)}
+.badge.bad{border-color:var(--r);color:var(--r);background:#fdf0ee}
+.badge.good{border-color:var(--g);color:var(--g);background:#eaf5ed}
+.footer{background:var(--ink);padding:24px 80px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-family:'JetBrains Mono',monospace;font-size:9px;color:#333}
+@media(max-width:900px){.cover,.nav,.footer,section{padding-left:24px;padding-right:24px}.two,.three{grid-template-columns:1fr}h1{font-size:44px}h2{font-size:26px}}
+</style>
+</head>
+<body>
+<div class="cover">
+<div class="cg"></div>
+<div class="cr">
+  <div>
+    <div class="eye">Journey OS · Architecture · MVC · OOP · Code Management</div>
+    <h1>How to Build<br>a System That<br>Doesn't <em>Collapse</em><br>Under Its Own Weight</h1>
+    <div class="sub">Feature-slice architecture, domain-driven OOP, zero god components, and the code management discipline that keeps 9 epics coherent at 80+ stories</div>
+  </div>
+  <div class="chips">
+    <span class="chip ok">Feature-slice over layer-based</span>
+    <span class="chip ok">Repository + Service + Domain layers</span>
+    <span class="chip ok">Container/Presenter split</span>
+    <span class="chip ok">Value objects for domain invariants</span>
+    <span class="chip ok">Custom hooks as controllers</span>
+    <span class="chip ok">Compound components</span>
+    <span class="chip ok">CQRS-lite for read/write separation</span>
+    <span class="chip ok">Barrel file rules</span>
+  </div>
+</div>
+</div>
+<div class="nav">
+  <a class="ni" href="#philosophy">I · Philosophy</a>
+  <a class="ni" href="#structure">II · Directory</a>
+  <a class="ni" href="#mvc">III · MVC in Next.js</a>
+  <a class="ni" href="#domain">IV · Domain Layer</a>
+  <a class="ni" href="#repo">V · Repositories</a>
+  <a class="ni" href="#services">VI · Services</a>
+  <a class="ni" href="#no-god">VII · No God Components</a>
+  <a class="ni" href="#hooks">VIII · Hooks as Controllers</a>
+  <a class="ni" href="#compound">IX · Compound Components</a>
+  <a class="ni" href="#cqrs">X · CQRS-lite</a>
+  <a class="ni" href="#mgmt">XI · Code Management</a>
+  <a class="ni" href="#errors">XII · Error + Loading</a><a class="ni" href="#atomic">XIII · Atomic Design</a><a class="ni" href="#data-layer">XIV · Data Layer</a>
+</div>
+
+<!-- I: PHILOSOPHY -->
+<section id="philosophy">
+<div class="sid">I / Architecture Philosophy</div>
+<h2>The decisions that prevent the architecture from becoming archaeology</h2>
+
+<p>Journey OS has three properties that make architecture non-trivial: it spans multiple user personas with radically different data needs, it orchestrates long-running AI pipelines with human approval gates, and its core domain (medical assessment) has hard correctness requirements that cannot be violated by a careless refactor. The architecture must make it easy to add the 40th feature without touching the first 39.</p>
+
+<div class="three">
+<div class="card">
+  <div class="card-l">Rule 01</div>
+  <div class="card-t">Organize by feature, not by type</div>
+  <p>The classic mistake: <code>components/</code>, <code>hooks/</code>, <code>utils/</code> at the top level. This puts files that change together far apart. Journey OS is organized by <em>feature</em>: <code>features/item-generation/</code> contains its components, hooks, services, types, and tests. Everything that changes together lives together.</p>
+</div>
+<div class="card">
+  <div class="card-l">Rule 02</div>
+  <div class="card-t">Push complexity down, not across</div>
+  <p>A React component should not know how to call Supabase. A route handler should not contain business logic. Complexity flows down: Route → Service → Repository → Database. Each layer has one job. The component renders. The hook orchestrates UI state. The service executes the use case. The repository talks to data.</p>
+</div>
+<div class="card">
+  <div class="card-l">Rule 03</div>
+  <div class="card-t">Make illegal states unrepresentable</div>
+  <p>A <code>TEACHES</code> edge with no <code>evidence_grade</code> should be a TypeScript compile error, not a runtime surprise. An <code>AssessmentItem</code> without all three hub connections should fail at construction, not at exam assembly. Domain invariants live in the type system and domain constructors — not in validation comments.</p>
+</div>
+<div class="card">
+  <div class="card-l">Rule 04</div>
+  <div class="card-t">OOP for domain, functions for utilities</div>
+  <p>Classes are for things with identity, state, and behavior: <code>AssessmentItem</code>, <code>SubConcept</code>, <code>ExamSession</code>. Pure functions are for transformations: <code>calculatePathConfidence()</code>, <code>rrf(bm25, dense)</code>, <code>blendEvidenceGrades()</code>. Mixing them is where services become God classes.</p>
+</div>
+<div class="card">
+  <div class="card-l">Rule 05</div>
+  <div class="card-t">Separate read and write models</div>
+  <p>The coverage heatmap query (18 systems × 6 Bloom levels × 3 states) is fundamentally different from the write operation that updates a <code>CoverageRecord</code>. CQRS-lite: write through <code>SubConceptWriteService</code>, read through dedicated <code>CoverageReadService</code> with a denormalized Supabase view. Never share the same model.</p>
+</div>
+<div class="card">
+  <div class="card-l">Rule 06</div>
+  <div class="card-t">The component only renders what it receives</div>
+  <p>A <code>&lt;CoverageHeatmap /&gt;</code> should accept <code>cells: HeatmapCell[]</code> as a prop and render them. It should not fetch data, update records, trigger generation, or know what a SubConcept is. That knowledge lives in a container component and a hook. The presenter is a rendering machine. Test it with static data.</p>
+</div>
+</div>
+</section>
+
+<!-- II: DIRECTORY -->
+<section id="structure">
+<div class="sid">II / Directory Structure</div>
+<h2>Feature-slice over layer-based — the organization that scales</h2>
+
+<div class="call-r"><div class="cl">The anti-pattern</div>
+<p>Layer-based directories (<code>components/</code>, <code>hooks/</code>, <code>services/</code>, <code>utils/</code> all at root) feel organized until you have 30 features. Then: changing the item generation flow means touching 8 different directories. A new engineer can't find everything related to exam delivery. Features bleed into each other through shared utils. The directory structure fights you.</p>
+</div>
+
+<div class="call-g"><div class="cl">The pattern: feature-slice</div>
+<p>Each feature owns its entire vertical slice: UI components, hooks, services, repositories, types, and tests. The <code>shared/</code> directory contains only code that is genuinely used by 3+ features. The <code>domain/</code> directory contains the core medical assessment domain model that is independent of any framework. This layout is the map of the system — a new engineer can read the directory tree and understand what the application does.</p>
+</div>
+
+<div class="tree">
+<span class="d">apps/web/</span>
+<span class="d">├── app/</span>                                       <span class="c">← Next.js App Router (routes only — no logic)</span>
+<span class="f">│   ├── (faculty)/courses/[id]/lectures/page.tsx</span>  <span class="c">← Thin shell: imports feature components</span>
+<span class="f">│   ├── (faculty)/courses/[id]/generate/page.tsx</span>
+<span class="f">│   ├── (student)/exams/[id]/page.tsx</span>
+<span class="f">│   ├── (admin)/dashboard/page.tsx</span>
+<span class="f">│   └── api/</span>                                   <span class="c">← Route handlers: validate → delegate to service</span>
+<span class="f">│       ├── lectures/upload/route.ts</span>            <span class="c">← Calls LectureService, not Supabase directly</span>
+<span class="f">│       ├── items/generate/route.ts</span>
+<span class="f">│       └── exams/[id]/start/route.ts</span>
+
+<span class="hi">├── features/</span>                                   <span class="c">← THE CORE — each is a vertical slice</span>
+<span class="d">│   ├── lecture-ingestion/</span>
+<span class="f">│   │   ├── components/</span>
+<span class="f">│   │   │   ├── LectureUploader.tsx</span>             <span class="c">← Presenter: renders upload UI</span>
+<span class="f">│   │   │   ├── LectureUploadContainer.tsx</span>      <span class="c">← Container: fetches, orchestrates</span>
+<span class="f">│   │   │   └── SubConceptReviewCard.tsx</span>
+<span class="f">│   │   ├── hooks/</span>
+<span class="f">│   │   │   ├── useLectureUpload.ts</span>             <span class="c">← Controller: orchestrates upload flow</span>
+<span class="f">│   │   │   └── useLectureStatus.ts</span>             <span class="c">← Polls/subscribes to pipeline status</span>
+<span class="f">│   │   ├── services/</span>
+<span class="f">│   │   │   └── LectureIngestionService.ts</span>      <span class="c">← Business logic: triggers P1, validates</span>
+<span class="f">│   │   ├── repositories/</span>
+<span class="f">│   │   │   └── LectureRepository.ts</span>            <span class="c">← Data access: Supabase + Neo4j writes</span>
+<span class="f">│   │   ├── types.ts</span>                            <span class="c">← Feature-specific types only</span>
+<span class="f">│   │   └── index.ts</span>                            <span class="c">← Public API: what the rest of the app sees</span>
+<span class="d">│   ├── item-generation/</span>
+<span class="f">│   │   ├── components/ hooks/ services/ repositories/ types.ts</span>
+<span class="d">│   ├── coverage-blueprint/</span>
+<span class="d">│   ├── exam-delivery/</span>
+<span class="d">│   ├── mastery-tracking/</span>
+<span class="d">│   └── why-wrong/</span>
+
+<span class="hi">├── domain/</span>                                     <span class="c">← Framework-independent domain model</span>
+<span class="f">│   ├── entities/</span>
+<span class="f">│   │   ├── AssessmentItem.ts</span>                   <span class="c">← Domain entity with behavior + invariants</span>
+<span class="f">│   │   ├── SubConcept.ts</span>
+<span class="f">│   │   └── ExamSession.ts</span>
+<span class="f">│   ├── value-objects/</span>
+<span class="f">│   │   ├── EvidenceGrade.ts</span>                    <span class="c">← Immutable, validated, typed</span>
+<span class="f">│   │   ├── QAScore.ts</span>
+<span class="f">│   │   ├── BloomLevel.ts</span>
+<span class="f">│   │   └── ClinicalConfidenceTier.ts</span>
+<span class="f">│   ├── events/</span>
+<span class="f">│   │   ├── ItemApproved.ts</span>                     <span class="c">← Domain events (not Inngest — pure domain)</span>
+<span class="f">│   │   └── SessionCompleted.ts</span>
+<span class="f">│   └── errors/</span>
+<span class="f">│       ├── DomainError.ts</span>                      <span class="c">← Base: carries error code + context</span>
+<span class="f">│       ├── InsufficientHubConnectionsError.ts</span>
+<span class="f">│       └── InvalidEvidenceGradeError.ts</span>
+
+<span class="hi">├── shared/</span>                                     <span class="c">← Only code used by 3+ features</span>
+<span class="f">│   ├── components/</span>
+<span class="f">│   │   ├── ui/</span>                                 <span class="c">← Pure UI primitives (Button, Badge, etc.)</span>
+<span class="f">│   │   ├── ErrorBoundary.tsx</span>
+<span class="f">│   │   └── FeatureFlag.tsx</span>
+<span class="f">│   ├── hooks/</span>
+<span class="f">│   │   ├── useOptimisticUpdate.ts</span>
+<span class="f">│   │   └── useRealtimeSubscription.ts</span>
+<span class="f">│   └── utils/</span>
+<span class="f">│       ├── cn.ts</span>                               <span class="c">← className merge (clsx + tailwind-merge)</span>
+<span class="f">│       └── formatters.ts</span>                       <span class="c">← date, currency, percentage formatters</span>
+</div>
+</section>
+
+<!-- III: MVC IN NEXT.JS -->
+<section id="mvc">
+<div class="sid">III / MVC in Next.js App Router</div>
+<h2>MVC is alive — the layers are just named differently</h2>
+
+<p>MVC doesn't map directly to Next.js because the framework blurs boundaries intentionally. But the <em>separation of concerns</em> MVC encodes is still essential. The names change; the principle doesn't.</p>
+
+<table>
+<thead><tr><th>Classical MVC</th><th>Journey OS equivalent</th><th>Responsibility</th><th>Rule</th></tr></thead>
+<tbody>
+<tr><td><strong>Model</strong></td><td>Domain entities + Repositories + Services</td><td>Data, rules, business logic. Knows nothing about HTTP or React.</td><td>No imports from <code>react</code>, <code>next</code>, or <code>@supabase/ssr</code></td></tr>
+<tr><td><strong>View</strong></td><td>RSC page components + Presenter components</td><td>Renders what it receives. No data fetching, no mutation, no business logic.</td><td>No service calls; props in, JSX out</td></tr>
+<tr><td><strong>Controller</strong></td><td>Route handlers + Custom hooks + Server Actions</td><td>Receives requests, delegates to services, returns responses.</td><td>Thin: validate → delegate → respond</td></tr>
+</tbody>
+</table>
+
+<div class="two">
+<div>
+<h4>The route handler is the controller</h4>
+<div class="file">
+<div class="fh"><span class="fn2">app/api/lectures/upload/route.ts</span><span class="ft">Controller — thin</span></div>
+<pre class="good"><span class="cm">// CONTROLLER: validate → delegate → respond
+// No business logic here. Ever.</span>
+<span class="kw">import</span> { <span class="ty">NextRequest</span>, <span class="ty">NextResponse</span> } <span class="kw">from</span> <span class="st">'next/server'</span>
+<span class="kw">import</span> { <span class="ty">LectureIngestionService</span> } <span class="kw">from</span> <span class="st">'@/features/lecture-ingestion'</span>
+<span class="kw">import</span> { <span class="fn">validateLectureUpload</span> } <span class="kw">from</span> <span class="st">'@/features/lecture-ingestion/validators'</span>
+<span class="kw">import</span> { <span class="fn">requireFacultyRole</span> } <span class="kw">from</span> <span class="st">'@/shared/auth'</span>
+
+<span class="kw">export async function</span> <span class="fn">POST</span>(req: <span class="ty">NextRequest</span>) {
+  <span class="cm">// 1. Auth guard</span>
+  <span class="kw">const</span> ctx = <span class="kw">await</span> <span class="fn">requireFacultyRole</span>(req)
+  <span class="kw">if</span> (!ctx.ok) <span class="kw">return</span> ctx.error
+
+  <span class="cm">// 2. Parse + validate input (Zod schema)</span>
+  <span class="kw">const</span> parsed = <span class="kw">await</span> <span class="fn">validateLectureUpload</span>(req)
+  <span class="kw">if</span> (!parsed.ok) <span class="kw">return</span> <span class="ty">NextResponse</span>.<span class="fn">json</span>({ error: parsed.error }, { status: <span class="nu">400</span> })
+
+  <span class="cm">// 3. Delegate to service (controller knows nothing about HOW)</span>
+  <span class="kw">const</span> service = <span class="kw">new</span> <span class="ty">LectureIngestionService</span>(ctx.actor)
+  <span class="kw">const</span> result = <span class="kw">await</span> service.<span class="fn">ingestLecture</span>(parsed.data)
+
+  <span class="cm">// 4. Respond</span>
+  <span class="kw">return</span> <span class="ty">NextResponse</span>.<span class="fn">json</span>({ data: result })
+}</pre>
+</div>
+</div>
+<div>
+<h4>The anti-pattern route handler</h4>
+<div class="file">
+<div class="fh"><span class="fn2">app/api/lectures/upload/route.ts</span><span class="ft">God route — banned</span></div>
+<pre class="bad"><span class="op">// ✗ BANNED: business logic in the route handler</span>
+<span class="kw">export async function</span> <span class="fn">POST</span>(req: <span class="ty">NextRequest</span>) {
+  <span class="kw">const</span> formData = <span class="kw">await</span> req.<span class="fn">formData</span>()
+  <span class="kw">const</span> file = formData.<span class="fn">get</span>(<span class="st">'file'</span>) <span class="kw">as</span> <span class="ty">File</span>
+
+  <span class="cm">// ✗ Direct Supabase call — skips repository layer</span>
+  <span class="kw">const</span> { data: lecture } = <span class="kw">await</span> supabase
+    .<span class="fn">from</span>(<span class="st">'lectures'</span>).<span class="fn">insert</span>({...})
+
+  <span class="cm">// ✗ Business logic (should be in service)</span>
+  <span class="kw">if</span> (file.size > <span class="nu">50_000_000</span>) { ... }
+  <span class="kw">const</span> hash = <span class="kw">await</span> <span class="fn">computeHash</span>(file)
+  <span class="kw">const</span> existing = <span class="kw">await</span> supabase.<span class="fn">from</span>(<span class="st">'lectures'</span>)...
+
+  <span class="cm">// ✗ Neo4j call directly in route</span>
+  <span class="kw">await</span> <span class="fn">neo4jQuery</span>(`MERGE (l:Lecture {uuid:$id})...`)
+
+  <span class="cm">// ✗ Inngest trigger (should be in service)</span>
+  <span class="kw">await</span> inngest.<span class="fn">send</span>({ name: <span class="st">'journey/lecture.uploaded'</span>... })
+  <span class="cm">// 80 more lines of mixed concerns...</span>
+}</pre>
+</div>
+</div>
+</div>
+</section>
+
+<!-- IV: DOMAIN LAYER -->
+<section id="domain">
+<div class="sid">IV / Domain Layer — OOP Done Right</div>
+<h2>Entities with behavior, value objects that enforce invariants, errors that carry context</h2>
+
+<div class="call-b"><div class="cl">Anemic vs rich domain models</div>
+<p>An anemic domain model is a bag of data with no behavior — just getters and setters. A rich domain model encodes the rules of the domain. In Journey OS: an <code>AssessmentItem</code> that can be instantiated without a valid <code>QAScore</code> is anemic. An <code>AssessmentItem</code> whose constructor enforces hub connections and throws a typed <code>DomainError</code> on violation is a rich model. The second one makes illegal states unrepresentable.</p>
+</div>
+
+<h3>Value objects — immutable, validated, typed</h3>
+<div class="file">
+<div class="fh"><span class="fn2">domain/value-objects/EvidenceGrade.ts</span><span class="ft">Value object — canonical G06</span></div>
+<pre><span class="cm">/**
+ * EvidenceGrade is a VALUE OBJECT — it has no identity, only value.
+ * Immutable, comparable by value, always valid on construction.
+ * Encoding the weights HERE means they cannot drift between call sites.
+ */</span>
+<span class="kw">const</span> GRADE_WEIGHTS = { A: <span class="nu">1.00</span>, B: <span class="nu">0.82</span>, C: <span class="nu">0.65</span>, D: <span class="nu">0.45</span> } <span class="kw">as const</span>
+<span class="kw">type</span> <span class="ty">GradeCode</span> = <span class="kw">keyof typeof</span> GRADE_WEIGHTS
+
+<span class="kw">export class</span> <span class="ty">EvidenceGrade</span> {
+  <span class="kw">private constructor</span>(
+    <span class="kw">readonly</span> code: <span class="ty">GradeCode</span>,
+    <span class="kw">readonly</span> weight: <span class="ty">number</span>
+  ) {}
+
+  <span class="kw">static</span> <span class="fn">from</span>(code: <span class="ty">string</span>): <span class="ty">EvidenceGrade</span> {
+    <span class="kw">if</span> (!(code <span class="kw">in</span> GRADE_WEIGHTS)) {
+      <span class="kw">throw new</span> <span class="ty">InvalidEvidenceGradeError</span>(code)
+    }
+    <span class="kw">return new</span> <span class="ty">EvidenceGrade</span>(code <span class="kw">as</span> <span class="ty">GradeCode</span>, GRADE_WEIGHTS[code <span class="kw">as</span> <span class="ty">GradeCode</span>])
+  }
+
+  <span class="cm">// Common pre-constructed instances (flyweight)</span>
+  <span class="kw">static readonly</span> COLD_START = <span class="kw">new</span> <span class="ty">EvidenceGrade</span>(<span class="st">'C'</span>, <span class="nu">0.65</span>)
+  <span class="kw">static readonly</span> UMLS_VERIFIED = <span class="kw">new</span> <span class="ty">EvidenceGrade</span>(<span class="st">'B'</span>, <span class="nu">0.82</span>)
+  <span class="kw">static readonly</span> FACULTY_CONFIRMED = <span class="kw">new</span> <span class="ty">EvidenceGrade</span>(<span class="st">'A'</span>, <span class="nu">1.00</span>)
+
+  <span class="fn">upgradedAfterP2</span>(): <span class="ty">EvidenceGrade</span> {
+    <span class="kw">return</span> this.code === <span class="st">'C'</span> ? <span class="ty">EvidenceGrade</span>.UMLS_VERIFIED : this
+  }
+
+  <span class="fn">upgradedAfterFacultyReview</span>(): <span class="ty">EvidenceGrade</span> {
+    <span class="kw">return</span> <span class="ty">EvidenceGrade</span>.FACULTY_CONFIRMED
+  }
+
+  <span class="fn">equals</span>(other: <span class="ty">EvidenceGrade</span>) { <span class="kw">return</span> this.code === other.code }
+  <span class="fn">toString</span>() { <span class="kw">return</span> this.code }
+  <span class="fn">toJSON</span>() { <span class="kw">return</span> { code: this.code, weight: this.weight } }
+}</pre>
+</div>
+
+<h3>Domain entity — rich model with enforced invariants</h3>
+<div class="file">
+<div class="fh"><span class="fn2">domain/entities/AssessmentItem.ts</span><span class="ft">Rich domain entity — not an anemic data bag</span></div>
+<pre><span class="kw">import</span> { <span class="ty">EvidenceGrade</span> } <span class="kw">from</span> <span class="st">'../value-objects/EvidenceGrade'</span>
+<span class="kw">import</span> { <span class="ty">QAScore</span> } <span class="kw">from</span> <span class="st">'../value-objects/QAScore'</span>
+<span class="kw">import</span> { <span class="ty">InsufficientHubConnectionsError</span> } <span class="kw">from</span> <span class="st">'../errors'</span>
+
+<span class="kw">interface</span> <span class="ty">HubConnections</span> {
+  subConceptUuid: <span class="ty">string</span>      <span class="cm">// knowledge hub</span>
+  sloUuid: <span class="ty">string</span>             <span class="cm">// pedagogical hub</span>
+  usmleSubtopicUuid: <span class="ty">string</span>   <span class="cm">// assessment hub</span>
+}
+
+<span class="kw">export class</span> <span class="ty">AssessmentItem</span> {
+  <span class="kw">private</span> _status: <span class="st">'draft'</span>|<span class="st">'pending_approval'</span>|<span class="st">'approved'</span>|<span class="st">'rejected'</span>
+
+  <span class="cm">// Private constructor — use factory methods</span>
+  <span class="kw">private constructor</span>(
+    <span class="kw">readonly</span> uuid: <span class="ty">string</span>,
+    <span class="kw">readonly</span> hubs: <span class="ty">HubConnections</span>,
+    <span class="kw">readonly</span> stem: <span class="ty">string</span>,
+    <span class="kw">readonly</span> qaScore: <span class="ty">QAScore</span>,
+    <span class="kw">readonly</span> evidenceGrade: <span class="ty">EvidenceGrade</span>,
+    status: <span class="st">'draft'</span> | <span class="st">'pending_approval'</span>
+  ) {
+    this._status = status
+  }
+
+  <span class="cm">/**
+   * Factory: creates an item from P3 generation output.
+   * Enforces Three-Hub Invariant (D06) at construction time.
+   */</span>
+  <span class="kw">static</span> <span class="fn">fromGeneration</span>(params: {
+    uuid: <span class="ty">string</span>; hubs: <span class="ty">HubConnections</span>;
+    stem: <span class="ty">string</span>; qaScore: <span class="ty">QAScore</span>
+  }): <span class="ty">AssessmentItem</span> {
+    <span class="cm">// Enforce the three-hub invariant — cannot be bypassed</span>
+    <span class="kw">if</span> (!params.hubs.subConceptUuid || !params.hubs.sloUuid || !params.hubs.usmleSubtopicUuid) {
+      <span class="kw">throw new</span> <span class="ty">InsufficientHubConnectionsError</span>(params.uuid, params.hubs)
+    }
+    <span class="kw">return new</span> <span class="ty">AssessmentItem</span>(
+      params.uuid, params.hubs, params.stem, params.qaScore,
+      <span class="ty">EvidenceGrade</span>.COLD_START, <span class="st">'pending_approval'</span>
+    )
+  }
+
+  <span class="cm">// Behavior methods — domain logic lives here, not in services</span>
+  <span class="fn">approve</span>(facultyId: <span class="ty">string</span>): void {
+    <span class="kw">if</span> (this._status !== <span class="st">'pending_approval'</span>) {
+      <span class="kw">throw new</span> <span class="ty">DomainError</span>(<span class="st">'INVALID_STATUS_TRANSITION'</span>, { from: this._status, to: <span class="st">'approved'</span> })
+    }
+    this._status = <span class="st">'approved'</span>
+  }
+
+  <span class="fn">isEligibleForPracticePool</span>(): <span class="ty">boolean</span> {
+    <span class="kw">return</span> this._status === <span class="st">'approved'</span> &&
+           this.qaScore.value >= <span class="nu">0.65</span> &&
+           this.hubs.subConceptUuid != <span class="kw">null</span>
+  }
+
+  <span class="kw">get</span> <span class="fn">status</span>() { <span class="kw">return</span> this._status }
+}</pre>
+</div>
+
+<h3>Domain errors — typed, contextual, not strings</h3>
+<div class="file">
+<div class="fh"><span class="fn2">domain/errors/DomainError.ts</span><span class="ft">Base error class</span></div>
+<pre><span class="kw">export class</span> <span class="ty">DomainError</span> <span class="kw">extends</span> <span class="ty">Error</span> {
+  <span class="kw">constructor</span>(
+    <span class="kw">readonly</span> code: <span class="ty">string</span>,
+    <span class="kw">readonly</span> context: <span class="ty">Record</span>&lt;<span class="ty">string</span>, <span class="kw">unknown</span>&gt; = {}
+  ) {
+    <span class="kw">super</span>(<span class="op">`[${code}] ${JSON.stringify(context)}`</span>)
+    this.name = <span class="st">'DomainError'</span>
+  }
+
+  <span class="fn">toHttpResponse</span>() {
+    <span class="kw">const</span> statusMap: <span class="ty">Record</span>&lt;<span class="ty">string</span>, <span class="ty">number</span>&gt; = {
+      INSUFFICIENT_HUB_CONNECTIONS: <span class="nu">422</span>,
+      INVALID_STATUS_TRANSITION: <span class="nu">409</span>,
+      INVALID_EVIDENCE_GRADE: <span class="nu">400</span>,
+    }
+    <span class="kw">return</span> { status: statusMap[this.code] ?? <span class="nu">500</span>, error: this.code, context: this.context }
+  }
+}
+
+<span class="kw">export class</span> <span class="ty">InsufficientHubConnectionsError</span> <span class="kw">extends</span> <span class="ty">DomainError</span> {
+  <span class="kw">constructor</span>(itemUuid: <span class="ty">string</span>, hubs: <span class="ty">Partial</span>&lt;<span class="ty">HubConnections</span>&gt;) {
+    <span class="kw">super</span>(<span class="st">'INSUFFICIENT_HUB_CONNECTIONS'</span>, {
+      itemUuid,
+      missing: <span class="ty">Object</span>.<span class="fn">entries</span>(hubs).<span class="fn">filter</span>(([_, v]) => !v).<span class="fn">map</span>(([k]) => k)
+    })
+  }
+}</pre>
+</div>
+</section>
+
+<!-- V: REPOSITORIES -->
+<section id="repo">
+<div class="sid">V / Repository Pattern</div>
+<h2>One class owns all data access for one aggregate — dual-write complexity stays here</h2>
+
+<p>The repository pattern is the answer to a specific Journey OS problem: every significant write operation must go to Supabase first, then Neo4j, then mark sync status. If this logic is scattered across route handlers and services, it will drift. It belongs in one place: the repository.</p>
+
+<div class="file">
+<div class="fh"><span class="fn2">features/item-generation/repositories/AssessmentItemRepository.ts</span><span class="ft">Repository — owns all data access for AssessmentItem</span></div>
+<pre><span class="kw">import</span> { <span class="ty">AssessmentItem</span> } <span class="kw">from</span> <span class="st">'@/domain/entities/AssessmentItem'</span>
+<span class="kw">import</span> { <span class="fn">neo4jQuery</span>, <span class="ty">RequestContext</span> } <span class="kw">from</span> <span class="st">'@journey/neo4j/client'</span>
+<span class="kw">import</span> { <span class="fn">createServerClient</span> } <span class="kw">from</span> <span class="st">'@journey/db/server'</span>
+
+<span class="kw">export class</span> <span class="ty">AssessmentItemRepository</span> {
+  <span class="kw">private</span> supabase = <span class="fn">createServerClient</span>()
+
+  <span class="kw">constructor</span>(<span class="kw">private</span> ctx: <span class="ty">RequestContext</span>) {}
+
+  <span class="cm">/**
+   * Persist a new AssessmentItem.
+   * Dual-write: Supabase first (source of truth), Neo4j second (graph).
+   * If Neo4j write fails: item is still persisted, sync status = 'pending'.
+   * The weekly reconciliation job re-syncs failed writes.
+   */</span>
+  <span class="kw">async</span> <span class="fn">save</span>(item: <span class="ty">AssessmentItem</span>): <span class="ty">Promise</span>&lt;<span class="kw">void</span>&gt; {
+    <span class="cm">// 1. Supabase — always first</span>
+    <span class="kw">const</span> { data, error } = <span class="kw">await</span> this.supabase
+      .<span class="fn">from</span>(<span class="st">'assessment_items'</span>)
+      .<span class="fn">upsert</span>({
+        uuid: item.uuid,
+        sub_concept_uuid: item.hubs.subConceptUuid,
+        slo_uuid: item.hubs.sloUuid,
+        usmle_subtopic_uuid: item.hubs.usmleSubtopicUuid,
+        stem: item.stem,
+        qa_score: item.qaScore.value,
+        evidence_grade: item.evidenceGrade.code,
+        status: item.status,
+        neo4j_sync_status: <span class="st">'pending'</span>  <span class="cm">// optimistic — will be updated below</span>
+      })
+      .<span class="fn">select</span>().<span class="fn">single</span>()
+
+    <span class="kw">if</span> (error) <span class="kw">throw</span> error
+
+    <span class="cm">// 2. Neo4j — second, never blocks user on failure</span>
+    <span class="kw">try</span> {
+      <span class="kw">await</span> <span class="fn">neo4jQuery</span>(`
+        <span class="kw">MERGE</span> (ai:AssessmentItem {uuid: $uuid})
+        <span class="kw">SET</span> ai.stem_preview = $stemPreview,
+            ai.qa_score = $qaScore,
+            ai.status = $status
+        <span class="kw">WITH</span> ai
+        <span class="kw">MATCH</span> (sc:SubConcept {uuid: $subConceptUuid, institution_id: $institution_id})
+        <span class="kw">MERGE</span> (ai)-[:INSTANTIATES]->(sc)
+        <span class="kw">WITH</span> ai
+        <span class="kw">MATCH</span> (slo:SLO {uuid: $sloUuid, institution_id: $institution_id})
+        <span class="kw">MERGE</span> (ai)-[:ASSESSED_VIA]->(slo)
+      `, {
+        uuid: item.uuid,
+        stemPreview: item.stem.<span class="fn">slice</span>(<span class="nu">0</span>, <span class="nu">120</span>),
+        qaScore: item.qaScore.value,
+        status: item.status,
+        subConceptUuid: item.hubs.subConceptUuid,
+        sloUuid: item.hubs.sloUuid,
+      }, this.ctx)
+
+      <span class="cm">// Mark sync success</span>
+      <span class="kw">await</span> this.supabase.<span class="fn">from</span>(<span class="st">'assessment_items'</span>)
+        .<span class="fn">update</span>({ neo4j_sync_status: <span class="st">'synced'</span>, neo4j_synced_at: <span class="kw">new</span> <span class="ty">Date</span>().<span class="fn">toISOString</span>() })
+        .<span class="fn">eq</span>(<span class="st">'uuid'</span>, item.uuid)
+    } <span class="kw">catch</span> (neo4jError) {
+      <span class="cm">// Mark sync failed — reconciliation job handles retry</span>
+      <span class="kw">await</span> this.supabase.<span class="fn">from</span>(<span class="st">'assessment_items'</span>)
+        .<span class="fn">update</span>({ neo4j_sync_status: <span class="st">'failed'</span> }).<span class="fn">eq</span>(<span class="st">'uuid'</span>, item.uuid)
+      logger.<span class="fn">warn</span>(<span class="st">'Neo4j sync failed for item'</span>, { uuid: item.uuid, error: neo4jError })
+      <span class="cm">// NOT rethrown — Supabase write succeeded, item is persisted</span>
+    }
+  }
+}</pre>
+</div>
+</section>
+
+<!-- VI: SERVICES -->
+<section id="services">
+<div class="sid">VI / Service Layer — Use Cases, Not Data Operations</div>
+<h2>A service method is one use case — it orchestrates, it doesn't implement</h2>
+
+<div class="two">
+<div>
+<div class="file">
+<div class="fh"><span class="fn2">features/item-generation/services/GenerationService.ts</span><span class="ft">Service — orchestrates use case</span></div>
+<pre><span class="cm">/**
+ * GenerationService orchestrates the "generate items" use case.
+ * It does not know how to call Claude or Supabase directly.
+ * It delegates to specialized collaborators.
+ */</span>
+<span class="kw">export class</span> <span class="ty">GenerationService</span> {
+  <span class="kw">constructor</span>(
+    <span class="kw">private</span> repo: <span class="ty">AssessmentItemRepository</span>,
+    <span class="kw">private</span> pipeline: <span class="ty">P3GenerationPipeline</span>,
+    <span class="kw">private</span> rateGuard: <span class="ty">GenerationRateGuard</span>,
+    <span class="kw">private</span> ctx: <span class="ty">RequestContext</span>
+  ) {}
+
+  <span class="kw">async</span> <span class="fn">generateBatch</span>(spec: <span class="ty">GenerationSpec</span>): <span class="ty">Promise</span>&lt;<span class="ty">BatchResult</span>&gt; {
+    <span class="cm">// 1. Rate guard (C10 — three-layer rate control)</span>
+    <span class="kw">await</span> this.rateGuard.<span class="fn">checkOrThrow</span>(this.ctx.actor_id, spec.count)
+
+    <span class="cm">// 2. Run generation pipeline (P3)</span>
+    <span class="kw">const</span> results = <span class="kw">await</span> this.pipeline.<span class="fn">run</span>(spec)
+
+    <span class="cm">// 3. Persist successful items</span>
+    <span class="kw">const</span> saved: <span class="ty">AssessmentItem</span>[] = []
+    <span class="kw">for</span> (<span class="kw">const</span> result <span class="kw">of</span> results) {
+      <span class="kw">if</span> (result.status === <span class="st">'fulfilled'</span>) {
+        <span class="kw">const</span> item = <span class="ty">AssessmentItem</span>.<span class="fn">fromGeneration</span>(result.value)
+        <span class="kw">await</span> this.repo.<span class="fn">save</span>(item)
+        saved.<span class="fn">push</span>(item)
+      }
+    }
+
+    <span class="kw">return</span> {
+      generated: saved.length,
+      failed: results.length - saved.length,
+      items: saved,
+    }
+  }
+}
+
+<span class="cm">// Dependency injection — services compose other services</span>
+<span class="kw">export function</span> <span class="fn">createGenerationService</span>(ctx: <span class="ty">RequestContext</span>) {
+  <span class="kw">return new</span> <span class="ty">GenerationService</span>(
+    <span class="kw">new</span> <span class="ty">AssessmentItemRepository</span>(ctx),
+    <span class="kw">new</span> <span class="ty">P3GenerationPipeline</span>(<span class="kw">new</span> <span class="ty">ClaudeClient</span>(), <span class="kw">new</span> <span class="ty">ContextAssembler</span>(ctx)),
+    <span class="kw">new</span> <span class="ty">GenerationRateGuard</span>(),
+    ctx
+  )
+}</pre>
+</div>
+</div>
+<div>
+<div class="call-gold"><div class="cl">Service rules</div>
+<p>A service method maps 1:1 to a user action or system event. It should fit on one screen. If it doesn't: it's doing too much, split it. Services receive collaborators as constructor arguments (dependency injection) — they never <code>new</code> their own database clients. This makes them testable in isolation.</p>
+</div>
+<table>
+<thead><tr><th>Goes in service</th><th>Doesn't go in service</th></tr></thead>
+<tbody>
+<tr><td>Use case orchestration</td><td>SQL / Cypher queries</td></tr>
+<tr><td>Business rule checks</td><td>HTTP request/response</td></tr>
+<tr><td>Cross-aggregate coordination</td><td>React component logic</td></tr>
+<tr><td>Triggering domain events</td><td>Claude API calls</td></tr>
+<tr><td>Rate limiting / quota checks</td><td>File system ops</td></tr>
+</tbody>
+</table>
+<div class="call-r"><div class="cl">The God Service anti-pattern</div>
+<p>A service that does everything: queries the database, calls Claude, updates Neo4j, sends notifications, updates metrics. This is the layer-based anti-pattern applied to services. Split by use case: <code>GenerationService</code>, <code>ApprovalService</code>, <code>CoverageService</code>, <code>MasteryService</code>. Each handles one slice of the domain.</p>
+</div>
+</div>
+</div>
+</section>
+
+<!-- VII: NO GOD COMPONENTS -->
+<section id="no-god">
+<div class="sid">VII / No God Components</div>
+<h2>Container/Presenter split — the pattern that prevents 800-line components</h2>
+
+<p>A god component is any component that fetches data, manages complex state, contains business logic, renders UI, and handles user interactions — all in one file. Journey OS has several natural god component traps: the coverage heatmap, the exam delivery page, the item generation wizard. The fix is always the same: split into a container (orchestrates) and a presenter (renders).</p>
+
+<h3>Worked example: Coverage Heatmap — before and after</h3>
+
+<div class="file">
+<div class="fh"><span class="fn2">❌ CoverageHeatmap.tsx — God Component (what not to build)</span><span class="ft">800+ lines, untestable</span></div>
+<pre class="bad"><span class="op">// ✗ BANNED: one component does everything</span>
+<span class="kw">export function</span> <span class="ty">CoverageHeatmap</span>() {
+  <span class="cm">// ✗ Data fetching</span>
+  <span class="kw">const</span> [cells, setCells] = <span class="fn">useState</span>([])
+  <span class="fn">useEffect</span>(() => {
+    supabase.<span class="fn">rpc</span>(<span class="st">'coverage_heatmap'</span>).<span class="fn">then</span>(setCells)
+  }, [])
+
+  <span class="cm">// ✗ Business logic in component</span>
+  <span class="kw">const</span> <span class="fn">handleCellClick</span> = <span class="kw">async</span> (system, bloom) => {
+    <span class="kw">if</span> (cells.<span class="fn">find</span>(c => c.system === system && c.bloom === bloom)?.state === <span class="st">'confirmed'</span>) {
+      <span class="kw">return</span>
+    }
+    <span class="cm">// ✗ Direct Supabase call in event handler</span>
+    <span class="kw">await</span> supabase.<span class="fn">from</span>(<span class="st">'generation_requests'</span>).<span class="fn">insert</span>({...})
+    <span class="cm">// ✗ Direct Neo4j call in component</span>
+    <span class="kw">await</span> <span class="fn">neo4jQuery</span>(`MATCH (sc:SubConcept)...`)
+    <span class="cm">// ...60 more lines of mixed logic, validation, error handling...</span>
+  }
+
+  <span class="cm">// ✗ Complex render logic with 18×6 nested maps</span>
+  <span class="kw">return</span> (
+    &lt;<span class="ty">div</span>&gt;
+      {USMLE_SYSTEMS.<span class="fn">map</span>(sys => <span class="cm">/* 50-line render block */</span>)}
+    &lt;/<span class="ty">div</span>&gt;
+  )
+}</pre>
+</div>
+
+<div class="file">
+<div class="fh"><span class="fn2">✅ Split correctly — four focused files</span><span class="ft">Each testable in isolation</span></div>
+<pre class="good"><span class="cm">// 1. PRESENTER — pure rendering, no data fetching, no side effects
+// features/coverage-blueprint/components/CoverageHeatmapGrid.tsx</span>
+<span class="kw">interface</span> <span class="ty">HeatmapGridProps</span> {
+  cells: <span class="ty">HeatmapCell</span>[]
+  onCellClick: (systemCode: <span class="ty">string</span>, bloomLevel: <span class="nu">1</span>|<span class="nu">2</span>|<span class="nu">3</span>|<span class="nu">4</span>|<span class="nu">5</span>|<span class="nu">6</span>) => <span class="kw">void</span>
+  isLoading?: <span class="ty">boolean</span>
+  highlightedSystem?: <span class="ty">string</span>
+}
+
+<span class="kw">export function</span> <span class="ty">CoverageHeatmapGrid</span>({ cells, onCellClick, isLoading }: <span class="ty">HeatmapGridProps</span>) {
+  <span class="cm">// Renders cells. That's it. Test with static data — no mocks needed.</span>
+  <span class="kw">return</span> (
+    &lt;<span class="ty">div</span> className=<span class="st">"grid grid-cols-7 gap-1"</span>&gt;
+      {cells.<span class="fn">map</span>(cell => (
+        &lt;<span class="ty">HeatmapCell</span> key={cell.id} cell={cell}
+          onClick={() => onCellClick(cell.systemCode, cell.bloomLevel)} /&gt;
+      ))}
+    &lt;/<span class="ty">div</span>&gt;
+  )
+}
+
+<span class="cm">// 2. HOOK / CONTROLLER — fetches data, manages state, handles interactions
+// features/coverage-blueprint/hooks/useCoverageHeatmap.ts</span>
+<span class="kw">export function</span> <span class="fn">useCoverageHeatmap</span>(courseId: <span class="ty">string</span>) {
+  <span class="kw">const</span> { data: cells, isLoading } = <span class="fn">useSWR</span>(
+    [<span class="st">'coverage-heatmap'</span>, courseId],
+    () => <span class="ty">CoverageReadService</span>.<span class="fn">getHeatmap</span>(courseId)
+  )
+
+  <span class="kw">const</span> <span class="fn">handleCellClick</span> = <span class="fn">useCallback</span>(
+    <span class="kw">async</span> (systemCode: <span class="ty">string</span>, bloomLevel: <span class="ty">number</span>) => {
+      <span class="cm">// Delegate to service — no business logic in hook</span>
+      <span class="kw">await</span> <span class="ty">CoverageService</span>.<span class="fn">openGenerationForGap</span>(courseId, systemCode, bloomLevel)
+    },
+    [courseId]
+  )
+
+  <span class="kw">return</span> { cells: cells ?? [], isLoading, <span class="fn">handleCellClick</span> }
+}
+
+<span class="cm">// 3. CONTAINER — composes hook and presenter
+// features/coverage-blueprint/components/CoverageHeatmapContainer.tsx</span>
+<span class="kw">export function</span> <span class="ty">CoverageHeatmapContainer</span>({ courseId }: { courseId: <span class="ty">string</span> }) {
+  <span class="kw">const</span> { cells, isLoading, <span class="fn">handleCellClick</span> } = <span class="fn">useCoverageHeatmap</span>(courseId)
+  <span class="kw">return</span> (
+    &lt;<span class="ty">ErrorBoundary</span> fallback={&lt;<span class="ty">HeatmapError</span> /&gt;}&gt;
+      &lt;<span class="ty">CoverageHeatmapGrid</span> cells={cells} onCellClick={<span class="fn">handleCellClick</span>}
+        isLoading={isLoading} /&gt;
+    &lt;/<span class="ty">ErrorBoundary</span>&gt;
+  )
+}</pre>
+</div>
+
+<h3>God component detection — warning signs</h3>
+<div class="badge-row">
+  <span class="badge bad">Over 200 lines</span>
+  <span class="badge bad">More than 5 useState hooks</span>
+  <span class="badge bad">useEffect that calls Supabase</span>
+  <span class="badge bad">Conditional renders 5+ deep</span>
+  <span class="badge bad">Business logic in onClick handlers</span>
+  <span class="badge bad">Multiple useQuery / useSWR calls</span>
+  <span class="badge bad">Renders AND fetches AND mutates</span>
+  <span class="badge good">Under 100 lines</span>
+  <span class="badge good">Props in, JSX out (presenter)</span>
+  <span class="badge good">1 responsibility per component</span>
+  <span class="badge good">Business logic in hook, not component</span>
+</div>
+</section>
+
+<!-- VIII: HOOKS AS CONTROLLERS -->
+<section id="hooks">
+<div class="sid">VIII / Custom Hooks as Controllers</div>
+<h2>The hook is the controller — it orchestrates, the component renders</h2>
+
+<div class="file">
+<div class="fh"><span class="fn2">features/exam-delivery/hooks/useExamSession.ts</span><span class="ft">Controller hook — complex state machine</span></div>
+<pre><span class="kw">export type</span> <span class="ty">ExamState</span> = <span class="st">'loading'</span>|<span class="st">'active'</span>|<span class="st">'paused'</span>|<span class="st">'submitting'</span>|<span class="st">'complete'</span>
+
+<span class="kw">export function</span> <span class="fn">useExamSession</span>(sessionId: <span class="ty">string</span>) {
+  <span class="cm">// State machine — not a pile of useState flags</span>
+  <span class="kw">const</span> [state, dispatch] = <span class="fn">useReducer</span>(examReducer, initialExamState)
+
+  <span class="cm">// Auto-save on every answer selection (C01 — exam auto-save)</span>
+  <span class="kw">const</span> <span class="fn">selectAnswer</span> = <span class="fn">useCallback</span>(<span class="kw">async</span> (itemId: <span class="ty">string</span>, optionId: <span class="ty">string</span>) => {
+    dispatch({ type: <span class="st">'SELECT_ANSWER'</span>, itemId, optionId })  <span class="cm">// optimistic UI update</span>
+    <span class="kw">await</span> <span class="ty">SessionAnswerRepository</span>.<span class="fn">upsert</span>(sessionId, itemId, optionId)  <span class="cm">// persist immediately</span>
+  }, [sessionId])
+
+  <span class="cm">// Submit exam — converts session_answers to immutable attempts</span>
+  <span class="kw">const</span> <span class="fn">submitExam</span> = <span class="fn">useCallback</span>(<span class="kw">async</span> () => {
+    dispatch({ type: <span class="st">'BEGIN_SUBMIT'</span> })
+    <span class="kw">try</span> {
+      <span class="kw">await</span> <span class="ty">ExamService</span>.<span class="fn">finalizeSession</span>(sessionId)
+      dispatch({ type: <span class="st">'SUBMIT_SUCCESS'</span> })
+    } <span class="kw">catch</span> (err) {
+      dispatch({ type: <span class="st">'SUBMIT_ERROR'</span>, error: err })
+    }
+  }, [sessionId])
+
+  <span class="cm">// Timer — isolated from render cycle</span>
+  <span class="kw">const</span> { timeRemaining, isExpired } = <span class="fn">useExamTimer</span>(state.endsAt)
+
+  <span class="kw">return</span> {
+    <span class="cm">// Read state (for presenter)</span>
+    items: state.items,
+    answers: state.answers,
+    currentIndex: state.currentIndex,
+    examState: state.phase <span class="kw">as</span> <span class="ty">ExamState</span>,
+    timeRemaining,
+    isExpired,
+    <span class="cm">// Write actions (delegates to services — no business logic in hook)</span>
+    <span class="fn">selectAnswer</span>,
+    <span class="fn">flagItem</span>: (itemId: <span class="ty">string</span>) => dispatch({ type: <span class="st">'FLAG_ITEM'</span>, itemId }),
+    <span class="fn">navigateTo</span>: (index: <span class="ty">number</span>) => dispatch({ type: <span class="st">'NAVIGATE'</span>, index }),
+    <span class="fn">submitExam</span>,
+  }
+}</pre>
+</div>
+
+<div class="call-b"><div class="cl">The reducer over useState rule</div>
+<p>Any component or hook with more than 3 related pieces of state should use <code>useReducer</code>. The exam session has: current item index, flagged items, answer map, phase (active/paused/submitting), error state. That's 5 related pieces — they belong in one reducer, not five independent <code>useState</code> calls. The reducer defines the valid state transitions. Impossible states (e.g., submitting while already complete) can be enforced in the reducer.</p>
+</div>
+</section>
+
+<!-- IX: COMPOUND COMPONENTS -->
+<section id="compound">
+<div class="sid">IX / Compound Components</div>
+<h2>Composable UI — not monolithic components with 20 boolean props</h2>
+
+<p>A component with props like <code>showTitle</code>, <code>showActions</code>, <code>showSubtitle</code>, <code>compactMode</code>, <code>withBorder</code>, <code>expandable</code> is a god component in disguise. Compound components give callers structural control without prop explosion.</p>
+
+<div class="two">
+<div class="file">
+<div class="fh"><span class="fn2">❌ Prop-explosion component</span><span class="ft">Anti-pattern</span></div>
+<pre class="bad"><span class="op">// ✗ 20-prop nightmare — untestable, fragile</span>
+&lt;<span class="ty">ItemCard</span>
+  showToumin={<span class="kw">true</span>}
+  showQaScore={<span class="kw">true</span>}
+  showActions={<span class="kw">false</span>}
+  compact={<span class="kw">false</span>}
+  expandable={<span class="kw">true</span>}
+  onApprove={...}
+  onReject={...}
+  onEdit={...}
+  showClinicalBadge={<span class="kw">true</span>}
+  mode=<span class="st">"review"</span>
+  <span class="cm">/* 10 more props... */</span>
+/&gt;</pre>
+</div>
+<div class="file">
+<div class="fh"><span class="fn2">✅ Compound component</span><span class="ft">Structural control, no prop explosion</span></div>
+<pre class="good"><span class="cm">// ✓ Callers compose what they need</span>
+&lt;<span class="ty">ItemCard</span> item={item}&gt;
+  &lt;<span class="ty">ItemCard</span>.<span class="ty">Header</span> /&gt;
+  &lt;<span class="ty">ItemCard</span>.<span class="ty">Stem</span> /&gt;
+  &lt;<span class="ty">ItemCard</span>.<span class="ty">ToulminChain</span> /&gt;
+  &lt;<span class="ty">ItemCard</span>.<span class="ty">QaScore</span> /&gt;
+  &lt;<span class="ty">ItemCard</span>.<span class="ty">Actions</span>&gt;
+    &lt;<span class="ty">ItemCard</span>.<span class="ty">ApproveButton</span> onApprove={handleApprove} /&gt;
+    &lt;<span class="ty">ItemCard</span>.<span class="ty">RejectButton</span> onReject={handleReject} /&gt;
+  &lt;/<span class="ty">ItemCard</span>.<span class="ty">Actions</span>&gt;
+&lt;/<span class="ty">ItemCard</span>&gt;</pre>
+</div>
+</div>
+<div class="file">
+<div class="fh"><span class="fn2">features/item-generation/components/ItemCard/index.tsx</span><span class="ft">Compound component implementation</span></div>
+<pre><span class="kw">import</span> { <span class="fn">createContext</span>, <span class="fn">useContext</span> } <span class="kw">from</span> <span class="st">'react'</span>
+<span class="kw">import</span> <span class="kw">type</span> { <span class="ty">AssessmentItemView</span> } <span class="kw">from</span> <span class="st">'../types'</span>
+
+<span class="kw">const</span> <span class="ty">ItemCardContext</span> = <span class="fn">createContext</span>&lt;<span class="ty">AssessmentItemView</span> | <span class="kw">null</span>&gt;(<span class="kw">null</span>)
+<span class="kw">const</span> <span class="fn">useItemCard</span> = () => {
+  <span class="kw">const</span> ctx = <span class="fn">useContext</span>(<span class="ty">ItemCardContext</span>)
+  <span class="kw">if</span> (!ctx) <span class="kw">throw new</span> <span class="ty">Error</span>(<span class="st">'ItemCard subcomponent used outside ItemCard'</span>)
+  <span class="kw">return</span> ctx
+}
+
+<span class="cm">// Root — provides context, no rendering logic</span>
+<span class="kw">function</span> <span class="ty">ItemCard</span>({ item, children }: { item: <span class="ty">AssessmentItemView</span>; children: <span class="ty">React.ReactNode</span> }) {
+  <span class="kw">return</span> (
+    &lt;<span class="ty">ItemCardContext</span>.Provider value={item}&gt;
+      &lt;<span class="ty">article</span> className=<span class="st">"border border-edge rounded p-4"</span>&gt;{children}&lt;/<span class="ty">article</span>&gt;
+    &lt;/<span class="ty">ItemCardContext</span>.Provider&gt;
+  )
+}
+
+<span class="cm">// Sub-components — each reads exactly what it needs from context</span>
+<span class="ty">ItemCard</span>.Header = <span class="kw">function</span> <span class="ty">ItemCardHeader</span>() {
+  <span class="kw">const</span> { uuid, bloomLevel, usmleSystem } = <span class="fn">useItemCard</span>()
+  <span class="kw">return</span> &lt;<span class="ty">header</span>&gt;&lt;<span class="ty">BloomBadge</span> level={bloomLevel} /&gt;&lt;<span class="ty">SystemBadge</span> system={usmleSystem} /&gt;&lt;/<span class="ty">header</span>&gt;
+}
+
+<span class="ty">ItemCard</span>.Stem = <span class="kw">function</span> <span class="ty">ItemCardStem</span>() {
+  <span class="kw">const</span> { stem } = <span class="fn">useItemCard</span>()
+  <span class="kw">return</span> &lt;<span class="ty">p</span> className=<span class="st">"text-sm leading-relaxed my-3"</span>&gt;{stem}&lt;/<span class="ty">p</span>&gt;
+}
+
+<span class="ty">ItemCard</span>.ToulminChain = <span class="kw">function</span> <span class="ty">ToulminChain</span>() {
+  <span class="kw">const</span> { toulminChain } = <span class="fn">useItemCard</span>()
+  <span class="kw">return</span> toulminChain ? &lt;<span class="ty">ToulminPanel</span> chain={toulminChain} /&gt; : <span class="kw">null</span>
+}
+
+<span class="ty">ItemCard</span>.QaScore = <span class="kw">function</span> <span class="ty">QaScore</span>() {
+  <span class="kw">const</span> { qaScore } = <span class="fn">useItemCard</span>()
+  <span class="kw">return</span> &lt;<span class="ty">QaScoreBadge</span> score={qaScore} /&gt;
+}
+
+<span class="ty">ItemCard</span>.Actions = <span class="kw">function</span> <span class="ty">Actions</span>({ children }: { children: <span class="ty">React.ReactNode</span> }) {
+  <span class="kw">return</span> &lt;<span class="ty">div</span> className=<span class="st">"flex gap-2 mt-4"</span>&gt;{children}&lt;/<span class="ty">div</span>&gt;
+}
+
+<span class="kw">export</span> { <span class="ty">ItemCard</span> }</pre>
+</div>
+</section>
+
+<!-- X: CQRS-LITE -->
+<section id="cqrs">
+<div class="sid">X / CQRS-lite</div>
+<h2>Separate read models from write models — coverage heatmap is not SubConcept</h2>
+
+<p>CQRS (Command Query Responsibility Segregation) at its simplest: the data shape you write is different from the data shape you read. In Journey OS, this is non-negotiable for the coverage heatmap: the write model is a Neo4j graph of <code>SubConcept → CoverageRecord</code> relationships. The read model is a 18×6 grid of cells with states. These should never share the same type.</p>
+
+<div class="two">
+<div class="file">
+<div class="fh"><span class="fn2">features/coverage-blueprint/services/CoverageReadService.ts</span><span class="ft">Read side — optimized for display</span></div>
+<pre><span class="kw">export interface</span> <span class="ty">HeatmapCell</span> {
+  id: <span class="ty">string</span>
+  systemCode: <span class="ty">string</span>
+  systemLabel: <span class="ty">string</span>
+  bloomLevel: <span class="nu">1</span>|<span class="nu">2</span>|<span class="nu">3</span>|<span class="nu">4</span>|<span class="nu">5</span>|<span class="nu">6</span>
+  state: <span class="st">'gap'</span>|<span class="st">'partial'</span>|<span class="st">'confirmed'</span>
+  confirmedCount: <span class="ty">number</span>
+  subConceptUuids: <span class="ty">string</span>[]  <span class="cm">// for click-to-generate</span>
+}
+
+<span class="kw">export class</span> <span class="ty">CoverageReadService</span> {
+  <span class="kw">static async</span> <span class="fn">getHeatmap</span>(courseId: <span class="ty">string</span>): <span class="ty">Promise</span>&lt;<span class="ty">HeatmapCell</span>[]&gt; {
+    <span class="cm">// Single denormalized read — Supabase view, not N+1 graph traversal</span>
+    <span class="cm">// The view is pre-computed: no Cypher at read time</span>
+    <span class="kw">const</span> { data } = <span class="kw">await</span> supabase
+      .<span class="fn">rpc</span>(<span class="st">'coverage_heatmap_for_course'</span>, { p_course_id: courseId })
+    <span class="kw">return</span> (data ?? []).<span class="fn">map</span>(<span class="fn">toHeatmapCell</span>)
+  }
+}
+
+<span class="cm">// Read model has no relationship to write model types</span>
+<span class="cm">// HeatmapCell ≠ SubConcept ≠ CoverageRecord</span></pre>
+</div>
+<div class="file">
+<div class="fh"><span class="fn2">features/coverage-blueprint/services/CoverageWriteService.ts</span><span class="ft">Write side — atomic graph operations</span></div>
+<pre><span class="kw">export class</span> <span class="ty">CoverageWriteService</span> {
+  <span class="kw">constructor</span>(<span class="kw">private</span> ctx: <span class="ty">RequestContext</span>) {}
+
+  <span class="cm">// Write model: operates on SubConcept + CoverageRecord nodes
+  // Atomic increment (C03) — not read-modify-write</span>
+  <span class="kw">async</span> <span class="fn">recordItemApproval</span>(subConceptUuid: <span class="ty">string</span>): <span class="ty">Promise</span>&lt;<span class="kw">void</span>&gt; {
+    <span class="kw">await</span> <span class="fn">neo4jQuery</span>(`
+      <span class="kw">MATCH</span> (sc:SubConcept {uuid:$uuid, institution_id:$institution_id})
+      <span class="kw">MERGE</span> (sc)-[:HAS_COVERAGE]->(cr:CoverageRecord)
+      <span class="kw">ON CREATE SET</span> cr.assessment_count = <span class="nu">0</span>
+      <span class="kw">SET</span> cr.assessment_count = cr.assessment_count + <span class="nu">1</span>,
+          cr.coverage_score = <span class="fn">toFloat</span>(<span class="fn">min</span>(cr.assessment_count + <span class="nu">1</span>, <span class="nu">3</span>)) / <span class="nu">3.0</span>
+    `, { uuid: subConceptUuid }, this.ctx)
+  }
+}
+<span class="cm">// After write: Supabase view auto-refreshes (materialized view + trigger)
+// Read model self-heals from write model — no manual sync</span></pre>
+</div>
+</div>
+</section>
+
+<!-- XI: CODE MANAGEMENT -->
+<section id="mgmt">
+<div class="sid">XI / Code Management Rules</div>
+<h2>The conventions that keep 9 epics from entangling</h2>
+
+<h3>Barrel files — use sparingly, with explicit rules</h3>
+<div class="two">
+<pre class="good"><span class="cm">// ✓ CORRECT: Barrel at feature boundary ONLY
+// features/item-generation/index.ts
+// Exports the PUBLIC API of the feature</span>
+
+<span class="kw">export</span> { <span class="ty">ItemCard</span> } <span class="kw">from</span> <span class="st">'./components/ItemCard'</span>
+<span class="kw">export</span> { <span class="ty">GenerationWizard</span> } <span class="kw">from</span> <span class="st">'./components/GenerationWizard'</span>
+<span class="kw">export</span> { <span class="fn">useItemGeneration</span> } <span class="kw">from</span> <span class="st">'./hooks/useItemGeneration'</span>
+<span class="kw">export type</span> { <span class="ty">GenerationSpec</span>, <span class="ty">BatchResult</span> } <span class="kw">from</span> <span class="st">'./types'</span>
+<span class="cm">// Does NOT export: services, repositories, internal utils
+// Internal code stays internal. Only the public API is exported.</span></pre>
+<pre class="bad"><span class="op">// ✗ BANNED: barrel at low-level directories</span>
+<span class="cm">// features/item-generation/components/index.ts</span>
+<span class="kw">export</span> * <span class="kw">from</span> <span class="st">'./ItemCard'</span>
+<span class="kw">export</span> * <span class="kw">from</span> <span class="st">'./ItemDrawer'</span>
+<span class="kw">export</span> * <span class="kw">from</span> <span class="st">'./ItemList'</span>
+<span class="kw">export</span> * <span class="kw">from</span> <span class="st">'./ItemFilter'</span>
+<span class="cm">// ✗ Re-exporting everything defeats the barrel's purpose.
+// Now changing any component breaks the entire barrel.
+// Tree-shaking can't eliminate unused exports.
+// Don't barrel below the feature boundary.</span></pre>
+</div>
+
+<h3>Naming conventions — consistent across all 9 epics</h3>
+<table>
+<thead><tr><th>Thing</th><th>Convention</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td>React components</td><td>PascalCase, noun</td><td><code>CoverageHeatmapGrid</code>, <code>ExamTimerBar</code></td></tr>
+<tr><td>Container components</td><td>PascalCase + "Container" suffix</td><td><code>CoverageHeatmapContainer</code></td></tr>
+<tr><td>Custom hooks</td><td>camelCase + "use" prefix</td><td><code>useExamSession</code>, <code>useCoverageHeatmap</code></td></tr>
+<tr><td>Services</td><td>PascalCase + "Service" suffix</td><td><code>GenerationService</code>, <code>CoverageWriteService</code></td></tr>
+<tr><td>Repositories</td><td>PascalCase + "Repository" suffix</td><td><code>AssessmentItemRepository</code></td></tr>
+<tr><td>Domain entities</td><td>PascalCase, singular noun</td><td><code>AssessmentItem</code>, <code>SubConcept</code></td></tr>
+<tr><td>Value objects</td><td>PascalCase, noun phrase</td><td><code>EvidenceGrade</code>, <code>QAScore</code></td></tr>
+<tr><td>Types/interfaces</td><td>PascalCase, noun. No "I" prefix, no "Type" suffix</td><td><code>HeatmapCell</code>, <code>GenerationSpec</code></td></tr>
+<tr><td>Event handlers (props)</td><td><code>on</code> + PascalCase verb</td><td><code>onCellClick</code>, <code>onApprove</code></td></tr>
+<tr><td>Event handlers (internal)</td><td><code>handle</code> + PascalCase verb</td><td><code>handleCellClick</code>, <code>handleApprove</code></td></tr>
+<tr><td>Boolean props</td><td><code>is</code>/<code>has</code>/<code>should</code> prefix</td><td><code>isLoading</code>, <code>hasError</code>, <code>isEligible</code></td></tr>
+<tr><td>Constants</td><td>SCREAMING_SNAKE_CASE</td><td><code>EVIDENCE_GRADE_WEIGHT</code>, <code>HAIKU_MODEL</code></td></tr>
+</tbody>
+</table>
+
+<h3>Import path rules — no relative path archaeology</h3>
+<pre class="neutral"><span class="cm">// Configure tsconfig.json paths for absolute imports:</span>
+<span class="st">"paths"</span>: {
+  <span class="st">"@/*"</span>: [<span class="st">"./src/*"</span>],
+  <span class="st">"@/features/*"</span>: [<span class="st">"./src/features/*"</span>],
+  <span class="st">"@/domain/*"</span>: [<span class="st">"./src/domain/*"</span>],
+  <span class="st">"@/shared/*"</span>: [<span class="st">"./src/shared/*"</span>]
+}
+
+<span class="cm">// Import rules:
+// ✓ From OUTSIDE the feature (cross-feature import) — use public API</span>
+<span class="kw">import</span> { <span class="ty">ItemCard</span> } <span class="kw">from</span> <span class="st">'@/features/item-generation'</span>
+
+<span class="cm">// ✓ From INSIDE the feature — use relative paths</span>
+<span class="kw">import</span> { <span class="ty">AssessmentItemRepository</span> } <span class="kw">from</span> <span class="st">'../repositories/AssessmentItemRepository'</span>
+
+<span class="cm">// ✓ Domain types — always absolute</span>
+<span class="kw">import</span> { <span class="ty">EvidenceGrade</span> } <span class="kw">from</span> <span class="st">'@/domain/value-objects/EvidenceGrade'</span>
+
+<span class="cm">// ✗ BANNED: cross-feature internal imports (breaks feature isolation)</span>
+<span class="kw">import</span> { <span class="ty">AssessmentItemRepository</span> } <span class="kw">from</span> <span class="st">'@/features/item-generation/repositories/...'</span>
+<span class="cm">// ✗ BANNED: deep relative paths</span>
+<span class="kw">import</span> { something } <span class="kw">from</span> <span class="st">''../../../../shared/utils/formatters'</span></pre>
+</section>
+
+<!-- XII: ERRORS + LOADING -->
+<section id="errors">
+<div class="sid">XII / Error Handling &amp; Loading States</div>
+<h2>Every async operation has three states — handle all three</h2>
+
+<div class="two">
+<div class="file">
+<div class="fh"><span class="fn2">shared/components/ErrorBoundary.tsx</span><span class="ft">Feature-level error isolation</span></div>
+<pre><span class="kw">import</span> { <span class="ty">Component</span>, <span class="ty">ErrorInfo</span>, <span class="ty">ReactNode</span> } <span class="kw">from</span> <span class="st">'react'</span>
+<span class="kw">import</span> { <span class="ty">DomainError</span> } <span class="kw">from</span> <span class="st">'@/domain/errors'</span>
+
+<span class="kw">interface</span> <span class="ty">Props</span> {
+  fallback: <span class="ty">ReactNode</span>
+  onError?: (error: <span class="ty">Error</span>, info: <span class="ty">ErrorInfo</span>) => <span class="kw">void</span>
+  children: <span class="ty">ReactNode</span>
+}
+
+<span class="kw">export class</span> <span class="ty">ErrorBoundary</span> <span class="kw">extends</span> <span class="ty">Component</span>&lt;<span class="ty">Props</span>, { hasError: <span class="ty">boolean</span> }&gt; {
+  state = { hasError: <span class="kw">false</span> }
+
+  <span class="kw">static</span> <span class="fn">getDerivedStateFromError</span>() { <span class="kw">return</span> { hasError: <span class="kw">true</span> } }
+
+  <span class="fn">componentDidCatch</span>(error: <span class="ty">Error</span>, info: <span class="ty">ErrorInfo</span>) {
+    <span class="cm">// Log domain errors with full context</span>
+    <span class="kw">if</span> (error <span class="kw">instanceof</span> <span class="ty">DomainError</span>) {
+      logger.<span class="fn">error</span>(<span class="st">'DomainError in component tree'</span>, {
+        code: error.code, context: error.context,
+        componentStack: info.componentStack
+      })
+    }
+    this.props.onError?.(error, info)
+  }
+
+  <span class="fn">render</span>() {
+    <span class="kw">return</span> this.state.hasError ? this.props.fallback : this.props.children
+  }
+}
+
+<span class="cm">// Usage: wrap each feature's container
+// The exam delivery page failing doesn't crash the nav or sidebar</span>
+&lt;<span class="ty">ErrorBoundary</span> fallback={&lt;<span class="ty">ExamErrorFallback</span> /&gt;}&gt;
+  &lt;<span class="ty">ExamSessionContainer</span> sessionId={sessionId} /&gt;
+&lt;/<span class="ty">ErrorBoundary</span>&gt;</pre>
+</div>
+<div class="file">
+<div class="fh"><span class="fn2">Loading state pattern — async state machine</span><span class="ft">Not boolean isLoading flags</span></div>
+<pre><span class="kw">type</span> <span class="ty">AsyncState</span>&lt;<span class="ty">T</span>&gt; =
+  | { status: <span class="st">'idle'</span> }
+  | { status: <span class="st">'loading'</span> }
+  | { status: <span class="st">'success'</span>; data: <span class="ty">T</span> }
+  | { status: <span class="st">'error'</span>; error: <span class="ty">Error</span> }
+
+<span class="kw">function</span> <span class="fn">usePipelineStatus</span>(lectureId: <span class="ty">string</span>) {
+  <span class="kw">const</span> [state, setState] = <span class="fn">useState</span>&lt;<span class="ty">AsyncState</span>&lt;<span class="ty">PipelineStatus</span>&gt;&gt;({ status: <span class="st">'idle'</span> })
+
+  <span class="fn">useEffect</span>(() => {
+    setState({ status: <span class="st">'loading'</span> })
+    <span class="kw">const</span> sub = supabase.<span class="fn">channel</span>(<span class="op">`lecture-${lectureId}`</span>)
+      .<span class="fn">on</span>(<span class="st">'postgres_changes'</span>, ..., (payload) => {
+        setState({ status: <span class="st">'success'</span>, data: payload.new <span class="kw">as</span> <span class="ty">PipelineStatus</span> })
+      })
+      .<span class="fn">subscribe</span>()
+    <span class="kw">return</span> () => { sub.<span class="fn">unsubscribe</span>() }
+  }, [lectureId])
+
+  <span class="kw">return</span> state
+}
+
+<span class="cm">// Render using exhaustive pattern matching</span>
+<span class="kw">const</span> status = <span class="fn">usePipelineStatus</span>(lectureId)
+<span class="kw">if</span> (status.status === <span class="st">'loading'</span>) <span class="kw">return</span> &lt;<span class="ty">PipelineSkeleton</span> /&gt;
+<span class="kw">if</span> (status.status === <span class="st">'error'</span>)   <span class="kw">return</span> &lt;<span class="ty">PipelineError</span> error={status.error} /&gt;
+<span class="kw">if</span> (status.status === <span class="st">'success'</span>) <span class="kw">return</span> &lt;<span class="ty">PipelineTracker</span> data={status.data} /&gt;
+<span class="kw">return</span> <span class="kw">null</span> <span class="cm">// idle</span></pre>
+</div>
+</div>
+
+<h3>Feature flags — ship incomplete features safely</h3>
+<pre class="neutral"><span class="cm">// features/mastery-tracking/flags.ts
+// Feature flags let you merge incomplete features to main without activating them</span>
+<span class="kw">import</span> { <span class="fn">getFeatureFlag</span> } <span class="kw">from</span> <span class="st">'@/shared/flags'</span>
+
+<span class="kw">export const</span> FLAGS = {
+  STUDYQUEUE_ENABLED: <span class="fn">getFeatureFlag</span>(<span class="st">'STUDYQUEUE_ENABLED'</span>, <span class="kw">false</span>),
+  IRT_CALIBRATION:    <span class="fn">getFeatureFlag</span>(<span class="st">'IRT_CALIBRATION'</span>, <span class="kw">false</span>),
+  GLOBAL_RAG:         <span class="fn">getFeatureFlag</span>(<span class="st">'GLOBAL_RAG'</span>, <span class="kw">false</span>),  <span class="cm">// T4+ only</span>
+}
+
+<span class="cm">// Usage in component:</span>
+<span class="kw">import</span> { FLAGS } <span class="kw">from</span> <span class="st">'../flags'</span>
+
+<span class="kw">export function</span> <span class="ty">MasteryDashboard</span>({ studentId }: { studentId: <span class="ty">string</span> }) {
+  <span class="kw">return</span> (
+    &lt;<span class="ty">div</span>&gt;
+      &lt;<span class="ty">MasteryRadarChart</span> studentId={studentId} /&gt;  {/* always shown */}
+      {<span class="ty">FLAGS</span>.STUDYQUEUE_ENABLED && &lt;<span class="ty">StudyQueuePanel</span> studentId={studentId} /&gt;}
+      {<span class="ty">FLAGS</span>.GLOBAL_RAG && &lt;<span class="ty">GlobalRAGSearch</span> /&gt;}
+    &lt;/<span class="ty">div</span>&gt;
+  )
+}</pre>
+</section>
+
+
+<!-- ══ XIII: ATOMIC DESIGN ══ -->
+<section id="atomic">
+<div class="sid">XIII / Atomic Design</div>
+<h2>Five levels — atoms to pages — with hard rules at every boundary</h2>
+
+<p>Atomic design gives the component library a dependency grammar: every level can only import from levels below it, never above, never sideways into other features. In Journey OS, this grammar does something specific: it determines where domain knowledge is allowed to enter the component tree. Atoms are domain-blind. Molecules carry domain semantics. Organisms are fully domain-aware. This boundary is the difference between a reusable design system and a monolithic component soup.</p>
+
+<div class="three">
+<div class="card">
+  <div class="card-l">Level 1 — Atoms</div>
+  <div class="card-t">Pure UI primitives — zero domain knowledge</div>
+  <p>Live in <code>shared/components/ui/atoms/</code>. <code>Button</code>, <code>Badge</code>, <code>Input</code>, <code>Label</code>, <code>Spinner</code>, <code>Avatar</code>, <code>Icon</code>, <code>Kbd</code>, <code>Separator</code>. Styled with Tailwind/Radix. No imports from <code>@/domain</code>, <code>@/features</code>, or any hooks. No business logic. Props are pure style and function: <code>variant</code>, <code>size</code>, <code>disabled</code>, <code>onClick</code>. An atom is reusable outside this project entirely.</p>
+</div>
+<div class="card">
+  <div class="card-l">Level 2 — Molecules</div>
+  <div class="card-t">Purposeful atom compositions — domain-typed props</div>
+  <p>Live in <code>shared/components/ui/molecules/</code> (if shared) or <code>features/[feature]/components/molecules/</code>. <code>BloomBadge</code>, <code>EvidenceGradeIndicator</code>, <code>QaScoreMeter</code>, <code>ClinicalConfidenceBadge</code>, <code>UsmleSystemChip</code>, <code>PipelineStatusBadge</code>. May import domain value object types for prop signatures. Must not call hooks, services, or repositories. Test with static domain-typed data.</p>
+</div>
+<div class="card">
+  <div class="card-l">Level 3 — Organisms</div>
+  <div class="card-t">Feature UI sections — fully domain-aware</div>
+  <p>Live in <code>features/[feature]/components/</code>. <code>ItemCard</code> (compound), <code>CoverageHeatmapGrid</code>, <code>ExamTimerBar</code>, <code>SubConceptReviewCard</code>, <code>MasteryRadarChart</code>, <code>ApprovalQueueTable</code>. Can use hooks, domain entities, feature context. Must still follow Container/Presenter split — organism = presenter. The container wraps it. Reusable within a feature, not across features (use the feature's public API to share).</p>
+</div>
+<div class="card">
+  <div class="card-l">Level 4 — Templates</div>
+  <div class="card-t">Page structure without data</div>
+  <p>Live in <code>shared/components/layouts/</code>. <code>FacultyLayout</code> (sidebar + main + breadcrumbs), <code>StudentExamLayout</code> (fixed timer header + question area + navigation panel), <code>AdminDashboardLayout</code> (sidebar nav + main + action queue). Structure only — no data fetching, no feature imports. Accept content as <code>children</code> or named slots. The page file decides which organisms fill the slots.</p>
+</div>
+<div class="card">
+  <div class="card-l">Level 5 — Pages</div>
+  <div class="card-t">Next.js page.tsx — the thinnest possible layer</div>
+  <p>Live in <code>app/</code>. One template + one or more container organisms. A page file should be under 30 lines. It reads route params, passes them to containers, wraps in a template. No business logic, no data fetching, no error handling (that's in ErrorBoundary wrapping the organism). The page is a composition spec.</p>
+</div>
+<div class="card">
+  <div class="card-l">The hard rule</div>
+  <div class="card-t">Dependencies flow DOWN only, never sideways</div>
+  <p>Atoms → nothing. Molecules → atoms. Organisms → molecules + atoms. Templates → nothing domain-specific. Pages → templates + organisms (via containers). <strong>Features never import from other features</strong> directly — they use the feature's public <code>index.ts</code> API. This rule is enforced by <code>eslint-plugin-import/no-restricted-paths</code> in CI.</p>
+</div>
+</div>
+
+<h3>Atoms — exact specification</h3>
+<div class="file">
+<div class="fh"><span class="fn2">shared/components/ui/atoms/Badge.tsx</span><span class="ft">Atom — zero domain knowledge</span></div>
+<pre><span class="kw">import</span> { cn } <span class="kw">from</span> <span class="st">'@/shared/utils/cn'</span>  <span class="cm">// only shared/utils — nothing else</span>
+
+<span class="kw">const</span> variants = {
+  default:  <span class="st">'bg-muted text-muted-foreground'</span>,
+  outline:  <span class="st">'border border-current'</span>,
+  primary:  <span class="st">'bg-primary text-primary-foreground'</span>,
+  success:  <span class="st">'bg-green-100 text-green-800'</span>,
+  warning:  <span class="st">'bg-yellow-100 text-yellow-800'</span>,
+  danger:   <span class="st">'bg-red-100 text-red-800'</span>,
+} <span class="kw">as const</span>
+
+<span class="kw">interface</span> <span class="ty">BadgeProps</span> {
+  variant?: <span class="kw">keyof typeof</span> variants
+  className?: <span class="ty">string</span>
+  children: <span class="ty">React.ReactNode</span>
+}
+
+<span class="kw">export function</span> <span class="ty">Badge</span>({ variant = <span class="st">'default'</span>, className, children }: <span class="ty">BadgeProps</span>) {
+  <span class="kw">return</span> (
+    &lt;<span class="ty">span</span> className={<span class="fn">cn</span>(<span class="st">'inline-flex items-center px-2 py-0.5 rounded text-xs font-mono font-medium'</span>,
+      variants[variant], className)}&gt;
+      {children}
+    &lt;/<span class="ty">span</span>&gt;
+  )
+}
+<span class="cm">// No domain imports. No EvidenceGrade, no BloomLevel. Just styling primitives.</span></pre>
+</div>
+
+<h3>Molecules — domain-typed props, static rendering</h3>
+<div class="two">
+<div class="file">
+<div class="fh"><span class="fn2">shared/components/ui/molecules/BloomBadge.tsx</span><span class="ft">Molecule — domain-typed props</span></div>
+<pre><span class="kw">import</span> { <span class="ty">Badge</span> } <span class="kw">from</span> <span class="st">'../atoms/Badge'</span>
+<span class="cm">// Domain VALUE TYPE only — not service, not repository</span>
+<span class="kw">import</span> <span class="kw">type</span> { <span class="ty">BloomLevelCode</span> } <span class="kw">from</span> <span class="st">'@/domain/value-objects/BloomLevel'</span>
+
+<span class="kw">const</span> BLOOM_CONFIG: <span class="ty">Record</span>&lt;<span class="ty">BloomLevelCode</span>, { label: <span class="ty">string</span>; variant: <span class="ty">string</span>; icon: <span class="ty">string</span> }&gt; = {
+  1: { label: <span class="st">'Remember'</span>, variant: <span class="st">'default'</span>,  icon: <span class="st">'●'</span> },
+  2: { label: <span class="st">'Understand'</span>, variant: <span class="st">'default'</span>, icon: <span class="st">'◉'</span> },
+  3: { label: <span class="st">'Apply'</span>,      variant: <span class="st">'outline'</span>, icon: <span class="st">'◎'</span> },
+  4: { label: <span class="st">'Analyze'</span>,   variant: <span class="st">'primary'</span>, icon: <span class="st">'◈'</span> },
+  5: { label: <span class="st">'Evaluate'</span>,  variant: <span class="st">'warning'</span>, icon: <span class="st">'◇'</span> },
+  6: { label: <span class="st">'Create'</span>,    variant: <span class="st">'success'</span>, icon: <span class="st">'◆'</span> },
+}
+
+<span class="kw">export function</span> <span class="ty">BloomBadge</span>({ level, showLabel = <span class="kw">true</span> }:
+  { level: <span class="ty">BloomLevelCode</span>; showLabel?: <span class="ty">boolean</span> }) {
+  <span class="kw">const</span> cfg = BLOOM_CONFIG[level]
+  <span class="kw">return</span> (
+    &lt;<span class="ty">Badge</span> variant={cfg.variant <span class="kw">as</span> <span class="kw">any</span>}&gt;
+      {cfg.icon} {showLabel && cfg.label}
+    &lt;/<span class="ty">Badge</span>&gt;
+  )
+}
+<span class="cm">// Props are domain-typed. Body uses atoms. No hooks, no fetching.</span></pre>
+</div>
+<div class="file">
+<div class="fh"><span class="fn2">shared/components/ui/molecules/EvidenceGradeIndicator.tsx</span><span class="ft">Molecule — renders value object</span></div>
+<pre><span class="kw">import</span> { <span class="ty">Badge</span> } <span class="kw">from</span> <span class="st">'../atoms/Badge'</span>
+<span class="kw">import</span> <span class="kw">type</span> { <span class="ty">EvidenceGrade</span> } <span class="kw">from</span> <span class="st">'@/domain/value-objects/EvidenceGrade'</span>
+
+<span class="kw">const</span> GRADE_STYLE = {
+  A: { variant: <span class="st">'success'</span>,  label: <span class="st">'A · 1.00'</span>, title: <span class="st">'Faculty confirmed'</span> },
+  B: { variant: <span class="st">'primary'</span>,  label: <span class="st">'B · 0.82'</span>, title: <span class="st">'UMLS verified'</span> },
+  C: { variant: <span class="st">'warning'</span>,  label: <span class="st">'C · 0.65'</span>, title: <span class="st">'Cold-start'</span> },
+  D: { variant: <span class="st">'danger'</span>,   label: <span class="st">'D · 0.45'</span>, title: <span class="st">'Unverified'</span> },
+} <span class="kw">as const</span>
+
+<span class="kw">export function</span> <span class="ty">EvidenceGradeIndicator</span>({ grade }: { grade: <span class="ty">EvidenceGrade</span> }) {
+  <span class="kw">const</span> style = GRADE_STYLE[grade.code]
+  <span class="kw">return</span> (
+    &lt;<span class="ty">Badge</span> variant={style.variant <span class="kw">as</span> <span class="kw">any</span>} title={style.title}&gt;
+      {style.label}
+    &lt;/<span class="ty">Badge</span>&gt;
+  )
+}</pre>
+</div>
+</div>
+
+<h3>Organisms — feature-level, fully domain-aware</h3>
+<div class="file">
+<div class="fh"><span class="fn2">features/lecture-ingestion/components/SubConceptReviewCard.tsx</span><span class="ft">Organism — uses molecules + atoms + domain types</span></div>
+<pre><span class="kw">import</span> { <span class="ty">BloomBadge</span> }             <span class="kw">from</span> <span class="st">'@/shared/components/ui/molecules/BloomBadge'</span>
+<span class="kw">import</span> { <span class="ty">EvidenceGradeIndicator</span> } <span class="kw">from</span> <span class="st">'@/shared/components/ui/molecules/EvidenceGradeIndicator'</span>
+<span class="kw">import</span> { <span class="ty">Badge</span>, <span class="ty">Button</span>, <span class="ty">Spinner</span> } <span class="kw">from</span> <span class="st">'@/shared/components/ui/atoms'</span>
+<span class="kw">import</span> <span class="kw">type</span> { <span class="ty">SubConceptDraft</span> }    <span class="kw">from</span> <span class="st">'../types'</span>  <span class="cm">// feature-local type</span>
+
+<span class="kw">interface</span> <span class="ty">Props</span> {
+  concept: <span class="ty">SubConceptDraft</span>
+  onApprove: (uuid: <span class="ty">string</span>) => <span class="kw">void</span>
+  onReject:  (uuid: <span class="ty">string</span>) => <span class="kw">void</span>
+  isActing?: <span class="ty">boolean</span>
+}
+
+<span class="kw">export function</span> <span class="ty">SubConceptReviewCard</span>({ concept, onApprove, onReject, isActing }: <span class="ty">Props</span>) {
+  <span class="cm">// Organism: renders using molecules and atoms. Props in, callbacks out.
+  // No hooks, no data fetching — that's the container's job.</span>
+  <span class="kw">return</span> (
+    &lt;<span class="ty">article</span> className=<span class="st">"border rounded p-3 flex flex-col gap-2"</span>&gt;
+      &lt;<span class="ty">header</span> className=<span class="st">"flex items-start justify-between gap-2"</span>&gt;
+        &lt;<span class="ty">h3</span> className=<span class="st">"font-medium text-sm leading-snug"</span>&gt;{concept.name}&lt;/<span class="ty">h3</span>&gt;
+        &lt;<span class="ty">div</span> className=<span class="st">"flex gap-1 flex-shrink-0"</span>&gt;
+          &lt;<span class="ty">EvidenceGradeIndicator</span> grade={concept.evidenceGrade} /&gt;
+          &lt;<span class="ty">BloomBadge</span> level={concept.bloomLevel} showLabel={<span class="kw">false</span>} /&gt;
+        &lt;/<span class="ty">div</span>&gt;
+      &lt;/<span class="ty">header</span>&gt;
+      &lt;<span class="ty">p</span> className=<span class="st">"text-xs text-muted-foreground line-clamp-2"</span>&gt;{concept.sourceChunkPreview}&lt;/<span class="ty">p</span>&gt;
+      &lt;<span class="ty">footer</span> className=<span class="st">"flex gap-2"</span>&gt;
+        &lt;<span class="ty">Button</span> variant=<span class="st">"primary"</span> size=<span class="st">"sm"</span> onClick={() => onApprove(concept.uuid)} disabled={isActing}&gt;
+          {isActing ? &lt;<span class="ty">Spinner</span> size=<span class="st">"xs"</span> /&gt; : <span class="st">'Approve'</span>}
+        &lt;/<span class="ty">Button</span>&gt;
+        &lt;<span class="ty">Button</span> variant=<span class="st">"ghost"</span> size=<span class="st">"sm"</span> onClick={() => onReject(concept.uuid)} disabled={isActing}&gt;
+          Reject
+        &lt;/<span class="ty">Button</span>&gt;
+      &lt;/<span class="ty">footer</span>&gt;
+    &lt;/<span class="ty">article</span>&gt;
+  )
+}</pre>
+</div>
+
+<h3>Templates — structural shells with content slots</h3>
+<div class="file">
+<div class="fh"><span class="fn2">shared/components/layouts/StudentExamLayout.tsx</span><span class="ft">Template — structure only, no data</span></div>
+<pre><span class="kw">interface</span> <span class="ty">StudentExamLayoutProps</span> {
+  timerSlot: <span class="ty">React.ReactNode</span>    <span class="cm">// slot for ExamTimerBar organism</span>
+  questionSlot: <span class="ty">React.ReactNode</span>  <span class="cm">// slot for QuestionPanel organism</span>
+  navSlot: <span class="ty">React.ReactNode</span>       <span class="cm">// slot for ExamNavPanel organism</span>
+  progressSlot: <span class="ty">React.ReactNode</span>  <span class="cm">// slot for ExamProgressBar organism</span>
+}
+
+<span class="kw">export function</span> <span class="ty">StudentExamLayout</span>({ timerSlot, questionSlot, navSlot, progressSlot }: <span class="ty">StudentExamLayoutProps</span>) {
+  <span class="kw">return</span> (
+    &lt;<span class="ty">div</span> className=<span class="st">"flex flex-col h-screen bg-background"</span>&gt;
+      {/* Fixed header — timer + progress */}
+      &lt;<span class="ty">header</span> className=<span class="st">"flex-shrink-0 border-b px-6 py-3 flex items-center gap-4"</span>&gt;
+        {timerSlot}
+        &lt;<span class="ty">div</span> className=<span class="st">"flex-1"</span>&gt;{progressSlot}&lt;/<span class="ty">div</span>&gt;
+      &lt;/<span class="ty">header</span>&gt;
+      {/* Body — question (main) + nav panel (sidebar) */}
+      &lt;<span class="ty">div</span> className=<span class="st">"flex flex-1 overflow-hidden"</span>&gt;
+        &lt;<span class="ty">main</span> className=<span class="st">"flex-1 overflow-y-auto px-8 py-6"</span>&gt;{questionSlot}&lt;/<span class="ty">main</span>&gt;
+        &lt;<span class="ty">aside</span> className=<span class="st">"w-56 border-l overflow-y-auto flex-shrink-0"</span>&gt;{navSlot}&lt;/<span class="ty">aside</span>&gt;
+      &lt;/<span class="ty">div</span>&gt;
+    &lt;/<span class="ty">div</span>&gt;
+  )
+}
+<span class="cm">// No domain imports. No data. No hooks.
+// The page file decides what goes in each slot.</span></pre>
+</div>
+
+<h3>Pages — the composition spec (30 lines max)</h3>
+<div class="file">
+<div class="fh"><span class="fn2">app/(student)/exams/[id]/page.tsx</span><span class="ft">Page — under 30 lines, pure composition</span></div>
+<pre><span class="kw">import</span> { <span class="ty">StudentExamLayout</span> }          <span class="kw">from</span> <span class="st">'@/shared/components/layouts/StudentExamLayout'</span>
+<span class="kw">import</span> { <span class="ty">ExamSessionContainer</span> }        <span class="kw">from</span> <span class="st">'@/features/exam-delivery'</span>
+<span class="kw">import</span> { <span class="ty">ExamTimerContainer</span> }          <span class="kw">from</span> <span class="st">'@/features/exam-delivery'</span>
+<span class="kw">import</span> { <span class="ty">ExamNavPanelContainer</span> }       <span class="kw">from</span> <span class="st">'@/features/exam-delivery'</span>
+<span class="kw">import</span> { <span class="ty">ExamProgressContainer</span> }       <span class="kw">from</span> <span class="st">'@/features/exam-delivery'</span>
+<span class="kw">import</span> { <span class="ty">ErrorBoundary</span> }               <span class="kw">from</span> <span class="st">'@/shared/components/ErrorBoundary'</span>
+<span class="kw">import</span> { <span class="ty">ExamCriticalErrorFallback</span> }   <span class="kw">from</span> <span class="st">'@/features/exam-delivery'</span>
+
+<span class="kw">export default function</span> <span class="ty">ExamPage</span>({ params }: { params: { id: <span class="ty">string</span> } }) {
+  <span class="kw">return</span> (
+    &lt;<span class="ty">ErrorBoundary</span> fallback={&lt;<span class="ty">ExamCriticalErrorFallback</span> sessionId={params.id} /&gt;}&gt;
+      &lt;<span class="ty">StudentExamLayout</span>
+        timerSlot={&lt;<span class="ty">ExamTimerContainer</span> sessionId={params.id} /&gt;}
+        progressSlot={&lt;<span class="ty">ExamProgressContainer</span> sessionId={params.id} /&gt;}
+        questionSlot={&lt;<span class="ty">ExamSessionContainer</span> sessionId={params.id} /&gt;}
+        navSlot={&lt;<span class="ty">ExamNavPanelContainer</span> sessionId={params.id} /&gt;}
+      /&gt;
+    &lt;/<span class="ty">ErrorBoundary</span>&gt;
+  )
+}
+<span class="cm">// 25 lines. No hooks. No data fetching. Just composition.
+// If this file grows beyond ~30 lines: something moved to the wrong level.</span></pre>
+</div>
+
+<h3>Atomic design directory map for Journey OS</h3>
+<div class="tree">
+<span class="d">shared/components/</span>
+<span class="hi">├── ui/atoms/</span>                     <span class="c">← Zero domain imports. Pure Tailwind/Radix.</span>
+<span class="f">│   ├── Button.tsx</span>
+<span class="f">│   ├── Badge.tsx</span>
+<span class="f">│   ├── Input.tsx</span>                 <span class="c">← controlled only (value + onChange)</span>
+<span class="f">│   ├── Label.tsx</span>
+<span class="f">│   ├── Spinner.tsx</span>               <span class="c">← size: xs | sm | md | lg</span>
+<span class="f">│   ├── Avatar.tsx</span>
+<span class="f">│   ├── Icon.tsx</span>                  <span class="c">← lucide-react wrapper</span>
+<span class="f">│   ├── Kbd.tsx</span>                   <span class="c">← keyboard shortcut display</span>
+<span class="f">│   └── index.ts</span>                  <span class="c">← barrel for atoms only</span>
+<span class="hi">├── ui/molecules/</span>                 <span class="c">← Domain-typed props. Atoms + domain types.</span>
+<span class="f">│   ├── BloomBadge.tsx</span>            <span class="c">← BloomLevelCode prop</span>
+<span class="f">│   ├── EvidenceGradeIndicator.tsx</span> <span class="c">← EvidenceGrade value object prop</span>
+<span class="f">│   ├── QaScoreMeter.tsx</span>          <span class="c">← 0-1 score + color thresholds (0.65, 0.75)</span>
+<span class="f">│   ├── ClinicalConfidenceBadge.tsx</span><span class="c">← unverified/self/peer/expert prop</span>
+<span class="f">│   ├── UsmleSystemChip.tsx</span>       <span class="c">← system code + specialty color map</span>
+<span class="f">│   ├── PipelineStatusBadge.tsx</span>   <span class="c">← phase enum prop + optional progress</span>
+<span class="f">│   ├── UserAvatar.tsx</span>            <span class="c">← Avatar + name + role badge</span>
+<span class="f">│   └── index.ts</span>
+<span class="hi">├── layouts/</span>                      <span class="c">← Templates. Structural shells. Named content slots.</span>
+<span class="f">│   ├── FacultyLayout.tsx</span>
+<span class="f">│   ├── StudentExamLayout.tsx</span>
+<span class="f">│   ├── AdminDashboardLayout.tsx</span>
+<span class="f">│   └── AppShell.tsx</span>              <span class="c">← Root: nav + sidebar + main content area</span>
+<span class="hi">├── ErrorBoundary.tsx</span>             <span class="c">← Used at organism level, not in atoms/molecules</span>
+<span class="hi">└── FeatureFlag.tsx</span>               <span class="c">← Conditional render wrapper by flag name</span>
+
+<span class="hi">features/[feature]/components/</span>   <span class="c">← Organisms. Feature-scoped. Fully domain-aware.</span>
+<span class="f">├── [FeatureName]Container.tsx</span>    <span class="c">← Container: fetches + orchestrates</span>
+<span class="f">├── [FeatureName]Grid.tsx</span>         <span class="c">← Presenter: renders organism props</span>
+<span class="f">├── [FeatureName]Card.tsx</span>         <span class="c">← Compound component if needed</span>
+<span class="f">└── molecules/</span>                    <span class="c">← Feature-specific molecules (not shared)</span>
+<span class="f">    └── [SpecificMolecule].tsx</span>    <span class="c">← Too specific to share, too small to be organism</span>
+</div>
+</section>
+
+<!-- ══ XIV: DATA LAYER CONTRACT ══ -->
+<section id="data-layer">
+<div class="sid">XIV / Data Layer Contract</div>
+<h2>Type-safe from database to UI — the contract that makes refactoring safe</h2>
+
+<div class="call-b"><div class="cl">The golden rule</div>
+<p>The database schema is the source of truth for types. Supabase generates TypeScript types directly from the schema. Every repository, every service, every React component that touches data operates on these generated types — never on hand-written interfaces that can drift. When the schema changes, TypeScript catches every broken call site automatically. This is the discipline that makes a 80-story codebase refactorable.</p>
+</div>
+
+<h3>Step 1 — Type generation (run after every migration)</h3>
+<pre class="neutral"><span class="cm"># Run after every Supabase migration to keep types in sync</span>
+pnpm supabase gen types typescript \
+  --project-id $SUPABASE_PROJECT_ID \
+  --schema public \
+  > packages/db/types/database.generated.ts
+
+<span class="cm"># In package.json scripts:</span>
+<span class="st">"db:types"</span>: <span class="st">"supabase gen types typescript --project-id $SUPABASE_PROJECT_ID > packages/db/types/database.generated.ts"</span>
+<span class="st">"db:types:local"</span>: <span class="st">"supabase gen types typescript --local > packages/db/types/database.generated.ts"</span>
+
+<span class="cm"># CI step: fail if generated types differ from committed types</span>
+<span class="st">"db:types:check"</span>: <span class="st">"supabase gen types typescript --local | diff - packages/db/types/database.generated.ts"</span></pre>
+
+<h3>Step 2 — Typed Supabase client</h3>
+<div class="file">
+<div class="fh"><span class="fn2">packages/db/client.ts — typed with Database schema</span><span class="ft">Type-safe from schema to call site</span></div>
+<pre><span class="kw">import</span> { <span class="fn">createServerClient</span> <span class="kw">as</span> <span class="fn">_createServerClient</span> } <span class="kw">from</span> <span class="st">'@supabase/ssr'</span>
+<span class="kw">import</span> { <span class="fn">createBrowserClient</span> <span class="kw">as</span> <span class="fn">_createBrowserClient</span> } <span class="kw">from</span> <span class="st">'@supabase/ssr'</span>
+<span class="kw">import</span> <span class="kw">type</span> { <span class="ty">Database</span> } <span class="kw">from</span> <span class="st">'./types/database.generated'</span>
+<span class="kw">import</span> { cookies } <span class="kw">from</span> <span class="st">'next/headers'</span>
+
+<span class="cm">// TYPE ALIASES for common table rows — use these everywhere, not inlined types</span>
+<span class="kw">export type</span> <span class="ty">Tables</span>    = <span class="ty">Database</span>[<span class="st">'public'</span>][<span class="st">'Tables'</span>]
+<span class="kw">export type</span> <span class="ty">Row</span>&lt;<span class="ty">T</span> <span class="kw">extends keyof</span> <span class="ty">Tables</span>&gt; = <span class="ty">Tables</span>[<span class="ty">T</span>][<span class="st">'Row'</span>]
+<span class="kw">export type</span> <span class="ty">Insert</span>&lt;<span class="ty">T</span> <span class="kw">extends keyof</span> <span class="ty">Tables</span>&gt; = <span class="ty">Tables</span>[<span class="ty">T</span>][<span class="st">'Insert'</span>]
+<span class="kw">export type</span> <span class="ty">Update</span>&lt;<span class="ty">T</span> <span class="kw">extends keyof</span> <span class="ty">Tables</span>&gt; = <span class="ty">Tables</span>[<span class="ty">T</span>][<span class="st">'Update'</span>]
+<span class="kw">export type</span> <span class="ty">Rpc</span>       = <span class="ty">Database</span>[<span class="st">'public'</span>][<span class="st">'Functions'</span>]
+
+<span class="cm">// CONCRETE TABLE ROW TYPES — import these in repositories and services</span>
+<span class="kw">export type</span> <span class="ty">AssessmentItemRow</span>     = <span class="ty">Row</span>&lt;<span class="st">'assessment_items'</span>&gt;
+<span class="kw">export type</span> <span class="ty">SubConceptRow</span>         = <span class="ty">Row</span>&lt;<span class="st">'subconcepts'</span>&gt;
+<span class="kw">export type</span> <span class="ty">LectureRow</span>            = <span class="ty">Row</span>&lt;<span class="st">'lectures'</span>&gt;
+<span class="kw">export type</span> <span class="ty">SessionAnswerRow</span>      = <span class="ty">Row</span>&lt;<span class="st">'session_answers'</span>&gt;
+<span class="kw">export type</span> <span class="ty">CoverageHeatmapResult</span> = <span class="ty">Rpc</span>[<span class="st">'coverage_heatmap_for_course'</span>][<span class="st">'Returns'</span>][<span class="nu">0</span>]
+
+<span class="cm">// SERVER client (service_role key — never expose to browser)</span>
+<span class="kw">export function</span> <span class="fn">createServerClient</span>() {
+  <span class="kw">const</span> cookieStore = <span class="fn">cookies</span>()
+  <span class="kw">return</span> <span class="fn">_createServerClient</span>&lt;<span class="ty">Database</span>&gt;(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,  <span class="cm">// service_role — bypasses RLS on server</span>
+    { cookies: { get: cookieStore.get, set: cookieStore.set, remove: cookieStore.delete } }
+  )
+}
+
+<span class="cm">// BROWSER client (anon key — RLS-enforced)</span>
+<span class="kw">export function</span> <span class="fn">createBrowserClient</span>() {
+  <span class="kw">return</span> <span class="fn">_createBrowserClient</span>&lt;<span class="ty">Database</span>&gt;(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!  <span class="cm">// anon key — RLS applies</span>
+  )
+}
+
+<span class="cm">// CONNECTION POOLER — use for serverless/edge functions (not for migrations)
+// SUPABASE_DB_URL = postgresql://postgres:[pass]@[project].pooler.supabase.com:6543/postgres?pgbouncer=true</span></pre>
+</div>
+
+<h3>Step 3 — Generic base repository</h3>
+<div class="file">
+<div class="fh"><span class="fn2">packages/db/BaseRepository.ts — typed generic base</span><span class="ft">All repositories extend this</span></div>
+<pre><span class="kw">import</span> { <span class="fn">createServerClient</span>, <span class="ty">Tables</span>, <span class="ty">Row</span>, <span class="ty">Insert</span>, <span class="ty">Update</span> } <span class="kw">from</span> <span class="st">'./client'</span>
+<span class="kw">import</span> <span class="kw">type</span> { <span class="ty">SupabaseClient</span> } <span class="kw">from</span> <span class="st">'@supabase/supabase-js'</span>
+<span class="kw">import</span> <span class="kw">type</span> { <span class="ty">Database</span> } <span class="kw">from</span> <span class="st">'./types/database.generated'</span>
+
+<span class="kw">export abstract class</span> <span class="ty">BaseRepository</span>&lt;<span class="ty">TTable</span> <span class="kw">extends keyof</span> <span class="ty">Tables</span>&gt; {
+  <span class="kw">protected</span> db: <span class="ty">SupabaseClient</span>&lt;<span class="ty">Database</span>&gt;
+
+  <span class="kw">constructor</span>(<span class="kw">protected</span> tableName: <span class="ty">TTable</span>) {
+    this.db = <span class="fn">createServerClient</span>()
+  }
+
+  <span class="kw">async</span> <span class="fn">findById</span>(id: <span class="ty">string</span>): <span class="ty">Promise</span>&lt;<span class="ty">Row</span>&lt;<span class="ty">TTable</span>&gt; | <span class="kw">null</span>&gt; {
+    <span class="kw">const</span> { data, error } = <span class="kw">await</span> this.db
+      .<span class="fn">from</span>(this.tableName)
+      .<span class="fn">select</span>(<span class="st">'*'</span>)
+      .<span class="fn">eq</span>(<span class="st">'id'</span>, id)
+      .<span class="fn">single</span>()
+    <span class="kw">if</span> (error?.code === <span class="st">'PGRST116'</span>) <span class="kw">return</span> <span class="kw">null</span>  <span class="cm">// not found — not an error</span>
+    <span class="kw">if</span> (error) <span class="kw">throw</span> <span class="kw">new</span> <span class="ty">RepositoryError</span>(this.tableName, <span class="st">'findById'</span>, error)
+    <span class="kw">return</span> data
+  }
+
+  <span class="kw">async</span> <span class="fn">insert</span>(record: <span class="ty">Insert</span>&lt;<span class="ty">TTable</span>&gt;): <span class="ty">Promise</span>&lt;<span class="ty">Row</span>&lt;<span class="ty">TTable</span>&gt;&gt; {
+    <span class="kw">const</span> { data, error } = <span class="kw">await</span> this.db
+      .<span class="fn">from</span>(this.tableName)
+      .<span class="fn">insert</span>(record)
+      .<span class="fn">select</span>().<span class="fn">single</span>()
+    <span class="kw">if</span> (error) <span class="kw">throw</span> <span class="kw">new</span> <span class="ty">RepositoryError</span>(this.tableName, <span class="st">'insert'</span>, error)
+    <span class="kw">return</span> data!
+  }
+
+  <span class="kw">async</span> <span class="fn">upsert</span>(record: <span class="ty">Insert</span>&lt;<span class="ty">TTable</span>&gt;): <span class="ty">Promise</span>&lt;<span class="ty">Row</span>&lt;<span class="ty">TTable</span>&gt;&gt; {
+    <span class="kw">const</span> { data, error } = <span class="kw">await</span> this.db
+      .<span class="fn">from</span>(this.tableName)
+      .<span class="fn">upsert</span>(record)
+      .<span class="fn">select</span>().<span class="fn">single</span>()
+    <span class="kw">if</span> (error) <span class="kw">throw</span> <span class="kw">new</span> <span class="ty">RepositoryError</span>(this.tableName, <span class="st">'upsert'</span>, error)
+    <span class="kw">return</span> data!
+  }
+}
+
+<span class="kw">export class</span> <span class="ty">RepositoryError</span> <span class="kw">extends</span> <span class="ty">Error</span> {
+  <span class="kw">constructor</span>(table: <span class="ty">string</span>, operation: <span class="ty">string</span>, cause: <span class="ty">unknown</span>) {
+    <span class="kw">super</span>(<span class="op">`Repository error: ${table}.${operation}`</span>)
+    this.name = <span class="st">'RepositoryError'</span>
+    this.cause = cause
+  }
+}</pre>
+</div>
+
+<h3>Step 4 — Typed concrete repository using the base</h3>
+<div class="file">
+<div class="fh"><span class="fn2">features/item-generation/repositories/AssessmentItemRepository.ts</span><span class="ft">Concrete — typed, thin, no business logic</span></div>
+<pre><span class="kw">import</span> { <span class="ty">BaseRepository</span> } <span class="kw">from</span> <span class="st">'@journey/db/BaseRepository'</span>
+<span class="kw">import</span> <span class="kw">type</span> { <span class="ty">AssessmentItemRow</span>, <span class="ty">Insert</span> } <span class="kw">from</span> <span class="st">'@journey/db/client'</span>
+<span class="kw">import</span> { <span class="fn">neo4jQuery</span>, <span class="ty">RequestContext</span> } <span class="kw">from</span> <span class="st">'@journey/neo4j/client'</span>
+
+<span class="kw">export class</span> <span class="ty">AssessmentItemRepository</span> <span class="kw">extends</span> <span class="ty">BaseRepository</span>&lt;<span class="st">'assessment_items'</span>&gt; {
+  <span class="kw">constructor</span>(<span class="kw">private</span> ctx: <span class="ty">RequestContext</span>) {
+    <span class="kw">super</span>(<span class="st">'assessment_items'</span>)
+  }
+
+  <span class="cm">// Typed: pending returns type AssessmentItemRow[]</span>
+  <span class="kw">async</span> <span class="fn">findPendingApproval</span>(facultyId: <span class="ty">string</span>): <span class="ty">Promise</span>&lt;<span class="ty">AssessmentItemRow</span>[]&gt; {
+    <span class="kw">const</span> { data, error } = <span class="kw">await</span> this.db
+      .<span class="fn">from</span>(<span class="st">'assessment_items'</span>)
+      .<span class="fn">select</span>(<span class="st">'*'</span>)
+      .<span class="fn">eq</span>(<span class="st">'status'</span>, <span class="st">'pending_approval'</span>)
+      .<span class="fn">eq</span>(<span class="st">'faculty_id'</span>, facultyId)
+      .<span class="fn">order</span>(<span class="st">'created_at'</span>, { ascending: <span class="kw">false</span> })
+    <span class="kw">if</span> (error) <span class="kw">throw</span> error
+    <span class="kw">return</span> data ?? []
+  }
+
+  <span class="cm">// Full dual-write: Supabase first, Neo4j second (G08)</span>
+  <span class="kw">async</span> <span class="fn">saveWithGraphSync</span>(record: <span class="ty">Insert</span>&lt;<span class="st">'assessment_items'</span>&gt;): <span class="ty">Promise</span>&lt;<span class="ty">AssessmentItemRow</span>&gt; {
+    <span class="kw">const</span> saved = <span class="kw">await</span> <span class="kw">super</span>.<span class="fn">insert</span>({ ...record, neo4j_sync_status: <span class="st">'pending'</span> })
+
+    <span class="kw">try</span> {
+      <span class="kw">await</span> <span class="fn">neo4jQuery</span>(NEO4J_UPSERT_ITEM_CYPHER, {
+        uuid: saved.uuid, stemPreview: saved.stem?.<span class="fn">slice</span>(<span class="nu">0</span>, <span class="nu">120</span>),
+        qaScore: saved.qa_score, status: saved.status,
+        subConceptUuid: saved.sub_concept_uuid, sloUuid: saved.slo_uuid,
+      }, this.ctx)
+
+      <span class="kw">await</span> this.db.<span class="fn">from</span>(<span class="st">'assessment_items'</span>)
+        .<span class="fn">update</span>({ neo4j_sync_status: <span class="st">'synced'</span>, neo4j_synced_at: <span class="kw">new</span> <span class="ty">Date</span>().<span class="fn">toISOString</span>() })
+        .<span class="fn">eq</span>(<span class="st">'uuid'</span>, saved.uuid)
+    } <span class="kw">catch</span> {
+      <span class="kw">await</span> this.db.<span class="fn">from</span>(<span class="st">'assessment_items'</span>)
+        .<span class="fn">update</span>({ neo4j_sync_status: <span class="st">'failed'</span> }).<span class="fn">eq</span>(<span class="st">'uuid'</span>, saved.uuid)
+    }
+    <span class="kw">return</span> saved
+  }
+}</pre>
+</div>
+
+<h3>Step 5 — Transaction boundaries for multi-table operations</h3>
+<div class="file">
+<div class="fh"><span class="fn2">packages/db/transactions.ts — atomic multi-table operations via Postgres RPC</span><span class="ft">Never chain individual .insert() calls for atomic operations</span></div>
+<pre><span class="kw">import</span> { <span class="fn">createServerClient</span> } <span class="kw">from</span> <span class="st">'./client'</span>
+
+<span class="cm">/**
+ * Exam session creation is an atomic operation:
+ * sessions + session_items must both succeed or both fail.
+ * Use a Postgres function (RPC) — never chain individual inserts.
+ * If session inserts but session_items fail → orphaned session → student can't start exam.
+ */</span>
+<span class="kw">export async function</span> <span class="fn">createExamSessionAtomic</span>(params: {
+  sessionId: <span class="ty">string</span>
+  examId: <span class="ty">string</span>
+  studentId: <span class="ty">string</span>
+  itemOrderSeed: <span class="ty">string</span>
+  optionShuffleSeed: <span class="ty">string</span>
+  timeLimitMins: <span class="ty">number</span>
+}) {
+  <span class="kw">const</span> db = <span class="fn">createServerClient</span>()
+  <span class="kw">const</span> { data, error } = <span class="kw">await</span> db
+    .<span class="fn">rpc</span>(<span class="st">'create_exam_session'</span>, {  <span class="cm">// Postgres function wraps in a transaction</span>
+      p_session_id:         params.sessionId,
+      p_exam_id:            params.examId,
+      p_student_id:         params.studentId,
+      p_item_order_seed:    params.itemOrderSeed,
+      p_option_shuffle_seed: params.optionShuffleSeed,
+      p_time_limit_mins:    params.timeLimitMins,
+    })
+  <span class="kw">if</span> (error) <span class="kw">throw new</span> <span class="ty">Error</span>(<span class="op">`create_exam_session RPC failed: ${error.message}`</span>)
+  <span class="kw">return</span> data
+}
+
+<span class="cm">// The SQL function:
+-- CREATE OR REPLACE FUNCTION create_exam_session(...) RETURNS sessions AS $$
+-- BEGIN
+--   INSERT INTO sessions (...) VALUES (...);
+--   INSERT INTO session_items SELECT ... FROM exam_items WHERE exam_id = p_exam_id;
+--   RETURN (SELECT * FROM sessions WHERE id = p_session_id);
+-- END;
+-- $$ LANGUAGE plpgsql;</span></pre>
+</div>
+
+<h3>Step 6 — Optimistic updates with typed rollback</h3>
+<div class="file">
+<div class="fh"><span class="fn2">shared/hooks/useOptimisticUpdate.ts — typed rollback on server error</span><span class="ft">Pattern for all mutations that need instant UI feedback</span></div>
+<pre><span class="kw">import</span> { <span class="fn">useState</span>, <span class="fn">useCallback</span> } <span class="kw">from</span> <span class="st">'react'</span>
+<span class="kw">import</span> { <span class="fn">mutate</span> } <span class="kw">from</span> <span class="st">'swr'</span>
+
+<span class="kw">export function</span> <span class="fn">useOptimisticUpdate</span>&lt;<span class="ty">T</span>&gt;(
+  cacheKey: <span class="ty">string</span>,
+  mutationFn: (data: <span class="ty">T</span>) => <span class="ty">Promise</span>&lt;<span class="kw">void</span>&gt;
+) {
+  <span class="kw">const</span> [isActing, setIsActing] = <span class="fn">useState</span>(<span class="kw">false</span>)
+  <span class="kw">const</span> [error, setError] = <span class="fn">useState</span>&lt;<span class="ty">Error</span> | <span class="kw">null</span>&gt;(<span class="kw">null</span>)
+
+  <span class="kw">const</span> <span class="fn">execute</span> = <span class="fn">useCallback</span>(<span class="kw">async</span> (
+    optimisticUpdate: (current: <span class="ty">T</span>[]) => <span class="ty">T</span>[],
+    actualData: <span class="ty">T</span>
+  ) => {
+    setIsActing(<span class="kw">true</span>); setError(<span class="kw">null</span>)
+
+    <span class="cm">// 1. Apply optimistic update instantly</span>
+    <span class="kw">await</span> <span class="fn">mutate</span>(cacheKey, optimisticUpdate, { revalidate: <span class="kw">false</span>, populateCache: <span class="kw">true</span> })
+
+    <span class="kw">try</span> {
+      <span class="cm">// 2. Perform the actual mutation</span>
+      <span class="kw">await</span> <span class="fn">mutationFn</span>(actualData)
+      <span class="cm">// 3. Revalidate from server to confirm</span>
+      <span class="kw">await</span> <span class="fn">mutate</span>(cacheKey)
+    } <span class="kw">catch</span> (err) {
+      <span class="cm">// 4. Rollback on failure — revalidate reverts to server state</span>
+      setError(err <span class="kw">as</span> <span class="ty">Error</span>)
+      <span class="kw">await</span> <span class="fn">mutate</span>(cacheKey)  <span class="cm">// triggers fresh fetch from server</span>
+    } <span class="kw">finally</span> {
+      setIsActing(<span class="kw">false</span>)
+    }
+  }, [cacheKey, mutationFn])
+
+  <span class="kw">return</span> { execute, isActing, error }
+}
+
+<span class="cm">// Usage — item approval with instant UI feedback:
+const { execute, isActing } = useOptimisticUpdate<AssessmentItemRow>(
+  ['items', 'pending', facultyId],
+  (item) => ApprovalService.approve(item.uuid)
+)
+
+const handleApprove = (item: AssessmentItemRow) => execute(
+  (current) => current.filter(i => i.uuid !== item.uuid),  // optimistic: remove from list
+  item                                                       // actual data for server call
+)</span></pre>
+</div>
+
+<h3>Step 7 — Typed Supabase Realtime subscriptions</h3>
+<div class="file">
+<div class="fh"><span class="fn2">shared/hooks/useRealtimeSubscription.ts</span><span class="ft">Typed Realtime — for pipeline status + mastery updates</span></div>
+<pre><span class="kw">import</span> { <span class="fn">useEffect</span>, <span class="fn">useState</span> } <span class="kw">from</span> <span class="st">'react'</span>
+<span class="kw">import</span> { <span class="fn">createBrowserClient</span> } <span class="kw">from</span> <span class="st">'@journey/db/client'</span>
+<span class="kw">import</span> <span class="kw">type</span> { <span class="ty">Tables</span>, <span class="ty">Row</span> } <span class="kw">from</span> <span class="st">'@journey/db/client'</span>
+
+<span class="cm">/**
+ * Type-safe Realtime subscription.
+ * T must be a table name that has Realtime enabled in Supabase dashboard.
+ * Journey OS: 'lectures', 'mastery_snapshots', 'session_answers'
+ */</span>
+<span class="kw">export function</span> <span class="fn">useRealtimeSubscription</span>&lt;<span class="ty">T</span> <span class="kw">extends keyof</span> <span class="ty">Tables</span>&gt;(
+  table: <span class="ty">T</span>,
+  filter: <span class="ty">string</span>,
+  callback: (payload: <span class="ty">Row</span>&lt;<span class="ty">T</span>&gt;) => <span class="kw">void</span>
+) {
+  <span class="kw">const</span> supabase = <span class="fn">createBrowserClient</span>()
+
+  <span class="fn">useEffect</span>(() => {
+    <span class="kw">const</span> channel = supabase
+      .<span class="fn">channel</span>(<span class="op">`${table}-${filter}`</span>)
+      .<span class="fn">on</span>(<span class="st">'postgres_changes'</span>, {
+        event: <span class="st">'UPDATE'</span>,
+        schema: <span class="st">'public'</span>,
+        table: table <span class="kw">as</span> <span class="ty">string</span>,
+        filter,
+      }, (payload) => {
+        callback(payload.new <span class="kw">as</span> <span class="ty">Row</span>&lt;<span class="ty">T</span>&gt;)
+      })
+      .<span class="fn">subscribe</span>()
+
+    <span class="kw">return</span> () => { supabase.<span class="fn">removeChannel</span>(channel) }
+  }, [table, filter])
+}
+
+<span class="cm">// Usage for pipeline status:
+// useRealtimeSubscription('lectures', `id=eq.${lectureId}`,
+//   (lecture) => setStatus(lecture.pipeline_status))</span></pre>
+</div>
+
+<h3>Data layer rules — enforced in CLAUDE.md</h3>
+<table>
+<thead><tr><th>Rule</th><th>Right</th><th>Wrong</th><th>Why</th></tr></thead>
+<tbody>
+<tr><td>Type generation</td><td>Import <code>Row&lt;'table'&gt;</code> from generated types</td><td>Hand-write <code>interface AssessmentItem { ... }</code></td><td>Schema changes silently break hand-written interfaces</td></tr>
+<tr><td>Client choice</td><td><code>createServerClient()</code> in API routes + RSC</td><td><code>createBrowserClient()</code> in API routes</td><td>Service role key must never reach the browser</td></tr>
+<tr><td>RLS stance</td><td>RLS on every table as the authority</td><td><code>WHERE institution_id = ?</code> as the only guard</td><td>App-level filters can be bypassed; RLS cannot</td></tr>
+<tr><td>Transactions</td><td><code>.rpc('fn_name')</code> for multi-table atomic ops</td><td>Sequential <code>.insert()</code> calls</td><td>Sequential inserts can partially succeed; RPC wraps in Postgres transaction</td></tr>
+<tr><td>Error handling</td><td><code>if (error) throw new RepositoryError(...)</code></td><td>Silently ignore <code>error</code> and use <code>data ?? []</code></td><td>Silent failures corrupt state; errors must surface</td></tr>
+<tr><td>PGRST116</td><td>Return <code>null</code> on not-found</td><td>Throw on PGRST116</td><td>Not-found is a valid domain state, not an error</td></tr>
+<tr><td>Realtime</td><td>Clean up subscription in <code>useEffect</code> return</td><td>Never calling <code>removeChannel()</code></td><td>Leaked subscriptions exhaust Supabase connection limits</td></tr>
+<tr><td>Pooler usage</td><td>Use pooler URL for serverless functions</td><td>Use direct URL for serverless</td><td>Serverless + direct connection = new Postgres connection per request</td></tr>
+</tbody>
+</table>
+</section>
+
+
+<div class="footer">
+  <span>Journey OS · Architecture Best Practices · Feature-slice · OOP · No God Components</span>
+  <span>Repository + Service + Domain · Container/Presenter · CQRS-lite · Compound components</span>
+</div>
+</body>
+</html>

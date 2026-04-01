@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Journey OS — Faculty Persona Product Specification</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap');
+:root{
+  --ink:#0c0c0c;--paper:#f4f1eb;--edge:#ddd6c4;
+  --r:#a82828;--g:#185230;--y:#6a4c14;--b:#162450;--gold:#8a6614;
+  --teal:#0a4c4c;--violet:#3a1060;
+  --pre:#080d12;--prefg:#c4bfb0;--tag:#e8e2d4;
+  --blue-50:#e6f1fb;--blue-800:#0c447c;
+  --teal-50:#e1f5ee;--teal-800:#085041;
+  --amber-50:#faeeda;--amber-800:#633806;
+  --purple-50:#eeedfe;--purple-800:#3c3489;
+  --green-50:#eaf3de;--green-800:#27500a;
+  --red-50:#fcebeb;--red-800:#791f1f;
+  --gray-50:#f1efe8;--gray-800:#444441;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);font-size:13.5px;line-height:1.8}
+
+/* COVER */
+.cover{background:var(--ink);min-height:80vh;padding:80px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+.cg{position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent,transparent 79px,rgba(22,36,80,.06) 80px),repeating-linear-gradient(0deg,transparent,transparent 79px,rgba(22,36,80,.05) 80px)}
+.cr{position:relative;z-index:1}
+.eye{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+h1{font-family:'Fraunces',serif;font-size:68px;font-weight:300;line-height:.9;letter-spacing:-2px;color:#ede8e0;margin-bottom:12px}
+h1 em{font-style:italic;color:#5dcaa5}
+.c-sub{font-family:'Fraunces',serif;font-style:italic;font-size:19px;color:#555;max-width:680px;margin-bottom:28px}
+.stat-row{display:flex;gap:1px;background:rgba(255,255,255,.05);margin-bottom:20px}
+.stat{padding:12px 20px}
+.stat-n{font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:600;display:block;line-height:1;color:#5dcaa5}
+.stat-l{font-size:9px;color:#444;font-family:'JetBrains Mono',monospace;letter-spacing:.04em;margin-top:3px}
+.chips{display:flex;gap:4px;flex-wrap:wrap}
+.c-chip{font-family:'JetBrains Mono',monospace;font-size:8px;padding:4px 10px;border:1px solid #1c1c1c;color:#555}
+.c-chip.ok{border-color:#1a3a1a;color:#5dcaa5}
+
+/* NAV */
+.nav{background:#060a06;border-bottom:1px solid #0f1a0f;padding:0 80px;display:flex;overflow-x:auto}
+.ni{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:#333;padding:10px 13px;border-right:1px solid #0f1a0f;white-space:nowrap;text-decoration:none;flex-shrink:0}
+.ni:hover{color:#5dcaa5}
+
+/* SECTIONS */
+section{padding:52px 80px;border-bottom:1px solid var(--edge)}
+.sid{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--r);margin-bottom:10px}
+h2{font-family:'Fraunces',serif;font-size:34px;font-weight:300;line-height:1.07;margin-bottom:18px}
+h3{font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#999;margin:26px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--edge)}
+h4{font-family:'Fraunces',serif;font-size:17px;font-weight:400;margin:12px 0 5px}
+p{margin-bottom:10px;max-width:840px;line-height:1.75}
+code{font-family:'JetBrains Mono',monospace;font-size:11px;background:var(--tag);padding:1px 5px;border-radius:2px}
+
+/* CALLOUTS */
+.call{padding:11px 15px;margin:10px 0;border-radius:0 2px 2px 0}
+.call .cl{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;margin-bottom:4px}
+.call p{font-size:12.5px;margin:0;max-width:none}
+.call-b{border-left:3px solid var(--b);background:var(--blue-50)}.call-b .cl{color:var(--b)}
+.call-g{border-left:3px solid var(--g);background:var(--green-50)}.call-g .cl{color:var(--g)}
+.call-gold{border-left:3px solid var(--gold);background:var(--amber-50)}.call-gold .cl{color:var(--gold)}
+.call-teal{border-left:3px solid var(--teal);background:var(--teal-50)}.call-teal .cl{color:var(--teal)}
+.call-v{border-left:3px solid var(--violet);background:var(--purple-50)}.call-v .cl{color:var(--violet)}
+
+/* LAYOUT */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:12px 0}
+.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:12px 0}
+.four{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin:12px 0}
+
+/* PILLS + BADGES */
+.pill{display:inline-block;padding:2px 7px;border-radius:2px;font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:600;vertical-align:middle;white-space:nowrap}
+.p-b{background:var(--blue-50);color:var(--blue-800)}.p-g{background:var(--green-50);color:var(--green-800)}
+.p-t{background:var(--teal-50);color:var(--teal-800)}.p-gold{background:var(--amber-50);color:var(--amber-800)}
+.p-v{background:var(--purple-50);color:var(--purple-800)}.p-r{background:var(--red-50);color:var(--red-800)}
+.p-gray{background:var(--gray-50);color:var(--gray-800)}.p-ink{background:var(--ink);color:#bbb}
+
+/* SCREEN MOCKUP */
+.screen{border:1px solid var(--edge);background:#fff;overflow:hidden;margin:14px 0;border-radius:4px}
+.screen-bar{background:var(--gray-50);padding:8px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--edge)}
+.screen-dots{display:flex;gap:5px}
+.screen-dot{width:10px;height:10px;border-radius:50%;background:var(--edge)}
+.screen-title{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.05em;color:#aaa;margin-left:8px}
+.screen-body{padding:0}
+
+/* NAV SIDEBAR */
+.mock-shell{display:grid;grid-template-columns:200px 1fr;min-height:400px}
+.mock-nav{background:var(--ink);padding:16px 0}
+.mock-logo{padding:12px 16px 16px;font-family:'Fraunces',serif;font-size:15px;font-style:italic;color:#ede8e0;border-bottom:1px solid #1a1a1a;margin-bottom:8px}
+.mock-nav-item{padding:7px 16px;font-size:12px;color:#666;cursor:pointer;display:flex;align-items:center;gap:8px}
+.mock-nav-item:hover{background:#111;color:#aaa}
+.mock-nav-item.active{background:#1a1a1a;color:#5dcaa5}
+.mock-nav-item .dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
+.mock-nav-section{padding:12px 16px 4px;font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#2a2a2a}
+.mock-main{padding:20px;background:#faf8f4;overflow:auto}
+
+/* STAT CARDS */
+.stat-card{border:1px solid var(--edge);padding:14px 16px;background:#fff;border-radius:4px}
+.stat-card .label{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#bbb;margin-bottom:3px}
+.stat-card .value{font-family:'Fraunces',serif;font-size:28px;font-weight:300;line-height:1;color:var(--ink)}
+.stat-card .sub{font-size:11px;color:#aaa;margin-top:2px}
+
+/* PROCESS PIPELINE */
+.pipeline{display:flex;align-items:center;gap:0;margin:10px 0;overflow-x:auto}
+.pipe-step{display:flex;align-items:center;gap:0;flex-shrink:0}
+.pipe-node{padding:5px 12px;font-family:'JetBrains Mono',monospace;font-size:9px;border:1px solid var(--edge);background:#fff;white-space:nowrap}
+.pipe-node.done{background:var(--green-50);color:var(--green-800);border-color:#97c459}
+.pipe-node.active{background:var(--blue-50);color:var(--blue-800);border-color:#85b7eb}
+.pipe-node.pending{color:#bbb}
+.pipe-arrow{width:20px;height:1px;background:var(--edge);flex-shrink:0;position:relative}
+.pipe-arrow::after{content:'';position:absolute;right:0;top:-3px;width:0;height:0;border-left:5px solid var(--edge);border-top:4px solid transparent;border-bottom:4px solid transparent}
+
+/* DOC CARD */
+.doc-card{border:1px solid var(--edge);padding:13px 14px;background:#fff;display:flex;align-items:flex-start;gap:12px;cursor:pointer;transition:border-color .15s}
+.doc-card:hover{border-color:#b4b2a9}
+.doc-icon{width:36px;height:36px;border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600}
+.doc-icon.pptx{background:var(--amber-50);color:var(--amber-800)}
+.doc-icon.pdf{background:var(--red-50);color:var(--red-800)}
+.doc-icon.docx{background:var(--blue-50);color:var(--blue-800)}
+.doc-meta{flex:1;min-width:0}
+.doc-name{font-size:12.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.doc-detail{font-size:11px;color:#aaa;margin-top:2px}
+
+/* WEEK VIEW */
+.week-card{border:1px solid var(--edge);background:#fff;border-radius:4px;overflow:hidden}
+.week-head{padding:10px 14px;border-bottom:1px solid var(--edge);display:flex;justify-content:space-between;align-items:center}
+.week-body{padding:12px 14px}
+.session-row{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--gray-50);align-items:flex-start}
+.session-row:last-child{border:none}
+.session-day{font-family:'JetBrains Mono',monospace;font-size:10px;color:#aaa;width:30px;flex-shrink:0;padding-top:1px}
+.session-body{flex:1}
+.session-title{font-size:12.5px;font-weight:500}
+.session-topics{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px}
+
+/* CONCEPT TAG */
+.concept-tag{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;background:var(--teal-50);color:var(--teal-800);border-radius:12px;font-size:11px;cursor:pointer}
+.concept-tag .cui{font-family:'JetBrains Mono',monospace;font-size:9px;opacity:.7}
+
+/* NLP FORM */
+.nlp-text-area{background:var(--gray-50);border:1px solid var(--edge);padding:14px;font-size:12.5px;line-height:1.8;border-radius:4px}
+.nlp-highlight{background:var(--teal-50);color:var(--teal-800);border-bottom:2px solid #1d9e75;cursor:pointer;border-radius:2px;padding:0 1px;position:relative}
+.nlp-highlight:hover{background:#9fe1cb}
+.gen-chip{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;background:var(--ink);color:#ede8e0;border-radius:4px;font-size:11px;margin:3px}
+.gen-chip .bloom{font-family:'JetBrains Mono',monospace;font-size:9px;opacity:.6}
+.gen-chip .count{background:#1a1a1a;border-radius:3px;padding:1px 5px;font-family:'JetBrains Mono',monospace;font-size:9px}
+
+/* TABLES */
+table{width:100%;border-collapse:collapse;font-size:12px;margin:8px 0 14px}
+th{background:var(--ink);color:var(--paper);padding:7px 11px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase}
+td{padding:7px 11px;border-bottom:1px solid var(--edge);vertical-align:top}
+tr:nth-child(even) td{background:#faf7f0}
+tr:hover td{background:#f5f2e8}
+.mono{font-family:'JetBrains Mono',monospace;font-size:10.5px}
+
+/* HEATMAP */
+.heatmap{display:grid;gap:2px;margin:10px 0}
+.hmap-cell{padding:6px 4px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:8px;border-radius:2px;cursor:pointer}
+.hmap-gap{background:var(--red-50);color:var(--red-800)}
+.hmap-partial{background:var(--amber-50);color:var(--amber-800)}
+.hmap-confirmed{background:var(--green-50);color:var(--green-800)}
+.hmap-label{font-size:10px;color:#888;padding:4px 0;text-align:right;padding-right:8px}
+
+/* ACTIVITY FEED */
+.feed-item{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--edge);align-items:flex-start}
+.feed-item:last-child{border:none}
+.feed-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.feed-body{flex:1}
+.feed-text{font-size:12.5px}
+.feed-time{font-family:'JetBrains Mono',monospace;font-size:10px;color:#bbb;margin-top:1px}
+
+/* QUICK ACTIONS */
+.qa-row{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
+.qa-btn{padding:6px 13px;border:1px solid var(--edge);background:#fff;font-size:12px;cursor:pointer;border-radius:2px;color:var(--ink)}
+.qa-btn:hover{background:var(--gray-50)}
+.qa-btn.primary{background:var(--ink);color:#ede8e0;border-color:var(--ink)}
+
+/* COURSE CARD */
+.course-card{border:1px solid var(--edge);padding:14px;background:#fff;border-radius:4px;cursor:pointer}
+.course-card:hover{border-color:#b4b2a9}
+.course-code{font-family:'JetBrains Mono',monospace;font-size:10px;color:#aaa}
+.course-name{font-size:13px;font-weight:500;margin:3px 0}
+.course-meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+
+/* ITEM CARD */
+.item-card{border:1px solid var(--edge);padding:12px 14px;background:#fff;border-radius:4px;margin:6px 0}
+.item-stem{font-size:12.5px;color:#444;line-height:1.7;margin:4px 0 8px}
+.item-meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+
+/* TAB BAR */
+.tab-bar{display:flex;border-bottom:1px solid var(--edge);background:#fff;overflow-x:auto}
+.tab{padding:8px 16px;font-size:12px;color:#888;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;flex-shrink:0}
+.tab.active{color:var(--b);border-bottom-color:var(--b);font-weight:500}
+.tab:hover:not(.active){color:var(--ink);background:var(--gray-50)}
+
+/* ONBOARDING */
+.onboard-step{display:flex;gap:14px;padding:12px 0;border-bottom:1px solid var(--edge)}
+.onboard-step:last-child{border:none}
+.step-num{width:28px;height:28px;border-radius:50%;background:var(--b);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:11px;flex-shrink:0;margin-top:1px}
+.step-num.done{background:var(--g)}
+.step-body{flex:1}
+.step-title{font-weight:500;font-size:13px}
+.step-desc{font-size:12px;color:#888;margin-top:2px}
+
+.footer{background:var(--ink);padding:24px 80px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-family:'JetBrains Mono',monospace;font-size:9px;color:#333}
+@media(max-width:900px){.cover,.nav,.footer,section{padding-left:24px;padding-right:24px}.two,.three,.four{grid-template-columns:1fr}h1{font-size:44px}h2{font-size:26px}.mock-shell{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+<div class="cg"></div>
+<div class="cr">
+  <div>
+    <div class="eye">Journey OS · Faculty Persona · Complete Product Specification</div>
+    <h1>Faculty<br>Experience<br><em>Design</em></h1>
+    <div class="c-sub">From first sign-up to LCME-ready assessment — the complete screen-by-screen specification for every tab, workflow, and interaction in the faculty persona</div>
+  </div>
+  <div>
+    <div class="stat-row">
+      <div class="stat"><span class="stat-n">9</span><div class="stat-l">Nav sections</div></div>
+      <div class="stat"><span class="stat-n">6</span><div class="stat-l">Course sub-tabs</div></div>
+      <div class="stat"><span class="stat-n">3</span><div class="stat-l">Generation modes</div></div>
+      <div class="stat"><span class="stat-n">1</span><div class="stat-l">NLP form spike</div></div>
+      <div class="stat"><span class="stat-n">14</span><div class="stat-l">User flows</div></div>
+    </div>
+    <div class="chips">
+      <span class="c-chip ok">✓ Onboarding flow</span>
+      <span class="c-chip ok">✓ Documents (Google Drive-like)</span>
+      <span class="c-chip ok">✓ NLP Topic Spotlight spike</span>
+      <span class="c-chip ok">✓ This Week intelligence view</span>
+      <span class="c-chip ok">✓ Course dashboard 6 sub-tabs</span>
+      <span class="c-chip ok">✓ Item bank + assessments + students</span>
+      <span class="c-chip ok">✓ Analytics — coverage + performance</span>
+      <span class="c-chip ok">✓ Activity feed content model</span>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="nav">
+  <a class="ni" href="#nav-arch">I · Nav Architecture</a>
+  <a class="ni" href="#onboarding">II · Onboarding</a>
+  <a class="ni" href="#home">III · Home</a>
+  <a class="ni" href="#documents">IV · Documents</a>
+  <a class="ni" href="#courses">V · Courses</a>
+  <a class="ni" href="#course-dash">VI · Course Dashboard</a>
+  <a class="ni" href="#generation">VII · Generation</a>
+  <a class="ni" href="#items">VIII · Items</a>
+  <a class="ni" href="#assessments">IX · Assessments</a>
+  <a class="ni" href="#students">X · Students</a>
+  <a class="ni" href="#analytics">XI · Analytics</a>
+  <a class="ni" href="#activity">XII · Activity</a>
+</div>
+
+<!-- I: NAV ARCHITECTURE -->
+<section id="nav-arch">
+<div class="sid">I / Navigation Architecture</div>
+<h2>The full faculty information architecture — what lives where and why</h2>
+
+<p>The faculty sidebar is the map of the product. The ordering reflects the natural workflow: documents come in, get processed, get associated with courses, generate items, assemble into assessments, get taken by students, and produce analytics. Every tab is a noun, every action within it is a verb.</p>
+
+<h3>Primary navigation — left sidebar (persistent)</h3>
+<div class="screen">
+  <div class="screen-bar"><div class="screen-dots"><div class="screen-dot"></div><div class="screen-dot"></div><div class="screen-dot"></div></div><span class="screen-title">journey os — faculty view</span></div>
+  <div class="mock-shell">
+    <div class="mock-nav">
+      <div class="mock-logo">Journey OS</div>
+      <div class="mock-nav-section">Main</div>
+      <div class="mock-nav-item active"><span class="dot"></span> Home</div>
+      <div class="mock-nav-item"><span class="dot"></span> Documents</div>
+      <div class="mock-nav-item"><span class="dot"></span> Courses</div>
+      <div class="mock-nav-section">Assessment</div>
+      <div class="mock-nav-item"><span class="dot"></span> Items</div>
+      <div class="mock-nav-item"><span class="dot"></span> Assessments</div>
+      <div class="mock-nav-item"><span class="dot"></span> Students</div>
+      <div class="mock-nav-section">Insights</div>
+      <div class="mock-nav-item"><span class="dot"></span> Analytics</div>
+      <div class="mock-nav-item"><span class="dot"></span> Gen. History</div>
+      <div class="mock-nav-item"><span class="dot"></span> Activity</div>
+    </div>
+    <div class="mock-main">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:16px">
+        <div class="stat-card"><div class="label">Courses</div><div class="value">4</div><div class="sub">2 active this week</div></div>
+        <div class="stat-card"><div class="label">Documents</div><div class="value">28</div><div class="sub">3 processing</div></div>
+        <div class="stat-card"><div class="label">Items</div><div class="value">312</div><div class="sub">14 pending review</div></div>
+        <div class="stat-card"><div class="label">Students</div><div class="value">87</div><div class="sub">Across all sections</div></div>
+      </div>
+      <p style="font-size:12px;color:#aaa;font-style:italic">← Home dashboard content shown below in §III</p>
+    </div>
+  </div>
+</div>
+
+<h3>Navigation design decisions</h3>
+<table>
+<thead><tr><th>Tab</th><th>Primary content</th><th>Badge count</th><th>Key action from here</th></tr></thead>
+<tbody>
+<tr><td><strong>Home</strong></td><td>System overview, this week, recent activity</td><td>—</td><td>Quick generate, upload document</td></tr>
+<tr><td><strong>Documents</strong></td><td>All uploaded files + processing status</td><td>Processing count</td><td>Upload, view concepts, associate course</td></tr>
+<tr><td><strong>Courses</strong></td><td>All courses + This Week intelligence view</td><td>Active section count</td><td>Open course dashboard, view week</td></tr>
+<tr><td><strong>Items</strong></td><td>Full item bank — approved, pending, collections</td><td>Pending review count</td><td>Review, create exam, generate questions</td></tr>
+<tr><td><strong>Assessments</strong></td><td>All exams, results, quality stats, drafts</td><td>Draft count</td><td>Create exam, view results, analyze quality</td></tr>
+<tr><td><strong>Students</strong></td><td>All students, USMLE coverage by student</td><td>—</td><td>View profile, track USMLE Step 1/2 progress</td></tr>
+<tr><td><strong>Analytics</strong></td><td>Coverage, performance, generation stats</td><td>—</td><td>Identify gaps, export report</td></tr>
+<tr><td><strong>Gen. History</strong></td><td>All generation sessions, results, remix</td><td>—</td><td>Remix session, view generated items</td></tr>
+<tr><td><strong>Activity</strong></td><td>System activity feed, relevant events</td><td>Unread count</td><td>—</td></tr>
+</tbody>
+</table>
+</section>
+
+<!-- II: ONBOARDING -->
+<section id="onboarding">
+<div class="sid">II / Onboarding Flow</div>
+<h2>From sign-up to first generated item — 7 steps, under 15 minutes</h2>
+
+<p>Onboarding for faculty is different from students. Faculty come in with existing materials and existing courses. The goal is to get them to their first generated item as fast as possible — ideally within the same session they sign up. The onboarding wizard should never feel like a gate; it should feel like a shortcut.</p>
+
+<h3>Onboarding wizard — 7 steps</h3>
+
+<div class="onboard-step">
+  <div class="step-num done">1</div>
+  <div class="step-body">
+    <div class="step-title">Account setup — name, specialty, institution</div>
+    <div class="step-desc">First name, last name, MSM email (verified via SAML/SSO or magic link). Specialty dropdown (pre-populated from UMLS semantic types: Cardiology, Pharmacology, Pathology, etc.). Role: Course Director, Lecturer, or Teaching Faculty. This data configures the default USMLE topic filters and generation defaults.</div>
+  </div>
+</div>
+<div class="onboard-step">
+  <div class="step-num">2</div>
+  <div class="step-body">
+    <div class="step-title">Upload your first document — syllabus or lecture</div>
+    <div class="step-desc">Full-page drag-and-drop area. Accepts PPTX, PDF, DOCX. Two labeled zones: "Syllabus" (creates a course structure) and "Lecture" (creates content for generation). Copy: "Start with a syllabus to create your course in one step, or upload a lecture to jump straight to questions." Minimum: one file to proceed.</div>
+  </div>
+</div>
+<div class="onboard-step">
+  <div class="step-num">3</div>
+  <div class="step-body">
+    <div class="step-title">Watch processing — transparent pipeline with real-time steps</div>
+    <div class="step-desc">Full-screen processing animation. Shows each pipeline step as it completes: Extracting text → Chunking → Embedding → UMLS enrichment → Building concept graph → Ready. Small explanatory sentence under each step ("We're linking your content to 3.4M medical concepts"). Not a spinner — actual progress with meaning. Faculty learn what the system does while they wait.</div>
+  </div>
+</div>
+<div class="onboard-step">
+  <div class="step-num">4</div>
+  <div class="step-body">
+    <div class="step-title">Review extracted concepts — first look at the knowledge graph</div>
+    <div class="step-desc">Shows top 15-20 extracted SubConcepts with UMLS links and evidence grades. Faculty can approve, merge duplicates, or flag incorrect extractions. This is the first "wow moment" — seeing their lecture content transformed into a structured knowledge map. Action: "These look right, continue" or "Let me clean these up." Brief copy explaining that better-reviewed concepts = better questions.</div>
+  </div>
+</div>
+<div class="onboard-step">
+  <div class="step-num">5</div>
+  <div class="step-body">
+    <div class="step-title">Create or confirm your course — one click if syllabus was uploaded</div>
+    <div class="step-desc">If a syllabus was uploaded: system proposes a course name (extracted from document), course code (MEDI-601 format), and week structure. Faculty confirm or edit. If lecture only: fill in course name and code manually. This step takes 30 seconds when a syllabus is present. Creates the CatalogCourse + first Block + first section.</div>
+  </div>
+</div>
+<div class="onboard-step">
+  <div class="step-num">6</div>
+  <div class="step-body">
+    <div class="step-title">Generate your first 5 questions — instant gratification</div>
+    <div class="step-desc">Auto-selects the 5 highest-confidence SubConcepts from the uploaded lecture. Shows a generation spec with defaults (Bloom level 2-3, NBME format, 5 items). One big "Generate 5 questions — ~$0.60" button. Processing takes 60-90 seconds. This is intentionally fast and low-friction — the goal is for faculty to see actual questions from their lecture content before leaving the onboarding flow.</div>
+  </div>
+</div>
+<div class="onboard-step">
+  <div class="step-num">7</div>
+  <div class="step-body">
+    <div class="step-title">Review first questions — celebrate, then go to dashboard</div>
+    <div class="step-desc">Shows the 5 generated questions in a compact card list. Simple approve/reject per question. Copy: "These 5 questions came from your lecture. Approve any you like — they'll be added to your item bank." Completion screen shows items added count and takes faculty directly to their course dashboard with a tooltip tour of key features.</div>
+  </div>
+</div>
+
+<h3>Onboarding success metrics</h3>
+<div class="four">
+  <div class="stat-card"><div class="label">Target completion</div><div class="value">85%</div><div class="sub">Faculty finish all 7 steps</div></div>
+  <div class="stat-card"><div class="label">Time to first item</div><div class="value">&lt;15m</div><div class="sub">From sign-up to approved question</div></div>
+  <div class="stat-card"><div class="label">Step 2 abandonment</div><div class="value">&lt;10%</div><div class="sub">Upload friction must be minimal</div></div>
+  <div class="stat-card"><div class="label">Step 6 to 7</div><div class="value">&gt;90%</div><div class="sub">Generate → review conversion</div></div>
+</div>
+</section>
+
+<!-- III: HOME DASHBOARD -->
+<section id="home">
+<div class="sid">III / Home Dashboard</div>
+<h2>The landing view — overview of everything, entry to everything</h2>
+
+<p>Home is a control center, not a homepage. Every visit should answer: what needs my attention right now, what am I teaching this week, and what does my overall progress look like. It is not a marketing page — it assumes the faculty member already knows what Journey OS is and is here to work.</p>
+
+<h3>Layout — four zones</h3>
+<div class="screen">
+  <div class="screen-bar"><div class="screen-dots"><div class="screen-dot"></div><div class="screen-dot"></div><div class="screen-dot"></div></div><span class="screen-title">home dashboard</span></div>
+  <div class="mock-main" style="padding:16px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <div style="font-family:'Fraunces',serif;font-size:18px">Good morning, Dr. Williams</div>
+      <div class="qa-row" style="margin:0">
+        <button class="qa-btn primary">+ Upload document</button>
+        <button class="qa-btn">Generate questions</button>
+        <button class="qa-btn">Create exam</button>
+      </div>
+    </div>
+
+    <!-- Zone 1: Stats bar -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">
+      <div class="stat-card"><div class="label">Active courses</div><div class="value">4</div><div class="sub">2 meet this week</div></div>
+      <div class="stat-card"><div class="label">Items pending review</div><div class="value" style="color:var(--y)">14</div><div class="sub">3 high-priority</div></div>
+      <div class="stat-card"><div class="label">Item bank</div><div class="value">312</div><div class="sub">287 approved</div></div>
+      <div class="stat-card"><div class="label">USMLE coverage</div><div class="value">64%</div><div class="sub">Across all courses</div></div>
+    </div>
+
+    <!-- Zone 2: Two-column main -->
+    <div style="display:grid;grid-template-columns:1.5fr 1fr;gap:12px">
+      <div>
+        <div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#999;margin-bottom:8px">This week</div>
+        <div class="week-card">
+          <div class="week-head">
+            <span style="font-size:12.5px;font-weight:500">Feb 3–7 · Week 4 of Spring Semester</span>
+            <span class="pill p-b">3 sessions</span>
+          </div>
+          <div class="week-body">
+            <div class="session-row">
+              <div class="session-day">Mon</div>
+              <div class="session-body">
+                <div class="session-title">MEDI-601 · Cardiovascular II — Heart Failure</div>
+                <div class="session-topics">
+                  <span class="concept-tag">Heart failure <span class="cui">C0018801</span></span>
+                  <span class="concept-tag">BNP <span class="cui">C0086930</span></span>
+                  <span class="concept-tag">Ejection fraction</span>
+                </div>
+                <div style="margin-top:5px;display:flex;gap:6px">
+                  <span class="pill p-b">6 items ready</span>
+                  <span class="pill p-gold">2 gaps</span>
+                  <button class="qa-btn" style="padding:2px 8px;font-size:11px">Generate gaps</button>
+                </div>
+              </div>
+            </div>
+            <div class="session-row">
+              <div class="session-day">Wed</div>
+              <div class="session-body">
+                <div class="session-title">PHRM-701 · Drug Mechanisms — β-blockers</div>
+                <div class="session-topics">
+                  <span class="concept-tag">Metoprolol <span class="cui">C0025859</span></span>
+                  <span class="concept-tag">β1-adrenergic receptor</span>
+                  <span class="concept-tag">Carvedilol</span>
+                </div>
+                <div style="margin-top:5px"><span class="pill p-gray">No items yet</span> <button class="qa-btn" style="padding:2px 8px;font-size:11px;margin-left:4px">Generate now</button></div>
+              </div>
+            </div>
+            <div class="session-row">
+              <div class="session-day">Fri</div>
+              <div class="session-body">
+                <div class="session-title">MEDI-601 · Clinical — Case presentations</div>
+                <div class="session-topics"><span class="concept-tag">HFrEF diagnosis</span><span class="concept-tag">NYHA classification</span></div>
+                <div style="margin-top:5px"><span class="pill p-g">12 items ready</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:12px">
+          <div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#999;margin-bottom:8px">Recent courses</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div class="course-card">
+              <div class="course-code">MEDI-601</div>
+              <div class="course-name">Clinical Medicine I</div>
+              <div class="course-meta"><span class="pill p-b">Section A · 42 students</span><span class="pill p-g">74% coverage</span></div>
+            </div>
+            <div class="course-card">
+              <div class="course-code">PHRM-701</div>
+              <div class="course-name">Pharmacology I</div>
+              <div class="course-meta"><span class="pill p-b">Section B · 38 students</span><span class="pill p-gold">41% coverage</span></div>
+            </div>
+          </div>
+          <a style="font-size:11px;color:var(--b);display:block;margin-top:6px;text-decoration:none">View all courses →</a>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#999;margin-bottom:8px">Activity feed</div>
+        <div style="border:1px solid var(--edge);background:#fff;padding:10px 14px;border-radius:4px">
+          <div class="feed-item"><div class="feed-dot" style="background:#1d9e75"></div><div class="feed-body"><div class="feed-text"><strong>14 items</strong> generated for Heart Failure lecture</div><div class="feed-time">2 hours ago · P3 pipeline</div></div></div>
+          <div class="feed-item"><div class="feed-dot" style="background:#185fa5"></div><div class="feed-body"><div class="feed-text"><strong>β-blockers lecture</strong> finished processing — 23 concepts extracted</div><div class="feed-time">Yesterday · P1 pipeline</div></div></div>
+          <div class="feed-item"><div class="feed-dot" style="background:#ba7517"></div><div class="feed-body"><div class="feed-text"><strong>3 items</strong> need your review before they can be used in exams</div><div class="feed-time">2 days ago · Action required</div></div></div>
+          <div class="feed-item"><div class="feed-dot" style="background:#639922"></div><div class="feed-body"><div class="feed-text"><strong>Sarah Chen</strong> completed Assessment 2 · Score: 82%</div><div class="feed-time">3 days ago · Exam completed</div></div></div>
+          <div class="feed-item"><div class="feed-dot" style="background:#a82828"></div><div class="feed-body"><div class="feed-text">Renal system coverage below 30% — <strong>18 topics unassessed</strong></div><div class="feed-time">Weekly digest · Coverage alert</div></div></div>
+          <a style="font-size:11px;color:var(--b);display:block;margin-top:6px;text-decoration:none">View all activity →</a>
+        </div>
+
+        <div style="margin-top:12px">
+          <div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#999;margin-bottom:8px">Documents processing</div>
+          <div style="border:1px solid var(--edge);background:#fff;padding:10px 14px;border-radius:4px">
+            <div class="doc-card" style="padding:8px 0;border:none;border-bottom:1px solid var(--edge)">
+              <div class="doc-icon pptx">PPTX</div>
+              <div class="doc-meta">
+                <div class="doc-name">Week5-Renal-Physiology.pptx</div>
+                <div class="pipeline" style="margin-top:4px">
+                  <div class="pipe-step"><div class="pipe-node done">Extract</div><div class="pipe-arrow"></div></div>
+                  <div class="pipe-step"><div class="pipe-node done">Chunk</div><div class="pipe-arrow"></div></div>
+                  <div class="pipe-step"><div class="pipe-node active">Enrich</div><div class="pipe-arrow"></div></div>
+                  <div class="pipe-step"><div class="pipe-node pending">Ready</div></div>
+                </div>
+              </div>
+            </div>
+            <div class="doc-card" style="padding:8px 0;border:none">
+              <div class="doc-icon pdf">PDF</div>
+              <div class="doc-meta">
+                <div class="doc-name">GI-Pathology-Syllabus.pdf</div>
+                <div style="margin-top:4px"><span class="pill p-b">Queued · starts in ~3 min</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- IV: DOCUMENTS TAB -->
+<section id="documents">
+<div class="sid">IV / Documents Tab</div>
+<h2>The faculty's personal document library — Google Drive meets medical knowledge graph</h2>
+
+<p>Documents is where content enters the system. It should feel like a familiar file manager that happens to do something extraordinary when you upload a file. The processing pipeline is fully transparent — faculty can see exactly what stage each document is in and what was extracted from it. A processed document is a knowledge asset, not just a file.</p>
+
+<h3>Document list view</h3>
+<div class="screen">
+  <div class="screen-bar"><div class="screen-dots"><div class="screen-dot"></div><div class="screen-dot"></div><div class="screen-dot"></div></div><span class="screen-title">documents</span></div>
+  <div class="mock-main" style="padding:16px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div>
+        <span class="pill p-gray" style="margin-right:4px;cursor:pointer">All (28)</span>
+        <span class="pill p-b" style="margin-right:4px;cursor:pointer">Syllabi (4)</span>
+        <span class="pill p-gray" style="margin-right:4px;cursor:pointer">Lectures (22)</span>
+        <span class="pill p-gold" style="margin-right:4px;cursor:pointer">Processing (2)</span>
+        <span class="pill p-r" style="cursor:pointer">Failed (1)</span>
+      </div>
+      <button class="qa-btn primary">+ Upload document</button>
+    </div>
+
+    <!-- Upload zone (when empty) / compact upload strip (when documents exist) -->
+    <div style="border:1px dashed var(--edge);padding:14px;text-align:center;margin-bottom:12px;border-radius:4px;background:var(--gray-50)">
+      <div style="font-size:12.5px;color:#888">Drop PPTX, PDF, or DOCX here — or click to browse · Syllabi and lectures both accepted</div>
+    </div>
+
+    <!-- Documents in processing state -->
+    <div class="doc-card" style="margin-bottom:8px;border-radius:4px">
+      <div class="doc-icon pptx">PPTX</div>
+      <div class="doc-meta" style="flex:1">
+        <div class="doc-name">Week5-Renal-Physiology.pptx</div>
+        <div class="doc-detail">Uploaded 14 min ago · 52 slides · 4.2 MB</div>
+        <div class="pipeline" style="margin-top:6px">
+          <div class="pipe-step"><div class="pipe-node done">Upload</div><div class="pipe-arrow"></div></div>
+          <div class="pipe-step"><div class="pipe-node done">Extract text</div><div class="pipe-arrow"></div></div>
+          <div class="pipe-step"><div class="pipe-node done">OCR images</div><div class="pipe-arrow"></div></div>
+          <div class="pipe-step"><div class="pipe-node done">Chunk</div><div class="pipe-arrow"></div></div>
+          <div class="pipe-step"><div class="pipe-node done">Embed</div><div class="pipe-arrow"></div></div>
+          <div class="pipe-step"><div class="pipe-node active">UMLS enrich</div><div class="pipe-arrow"></div></div>
+          <div class="pipe-step"><div class="pipe-node pending">Ready</div></div>
+        </div>
+      </div>
+      <div style="text-align:right;font-size:11px;color:#aaa;flex-shrink:0">~2 min remaining</div>
+    </div>
+
+    <!-- Processed documents -->
+    <div class="doc-card" style="margin-bottom:4px;border-radius:4px;cursor:pointer">
+      <div class="doc-icon pptx">PPTX</div>
+      <div class="doc-meta" style="flex:1">
+        <div class="doc-name">Week4-CardiovascularII-HeartFailure.pptx</div>
+        <div class="doc-detail">3 days ago · 48 slides · Lecture</div>
+        <div style="margin-top:4px;display:flex;gap:6px;flex-wrap:wrap">
+          <span class="pill p-g">Ready</span>
+          <span class="pill p-t">31 concepts extracted</span>
+          <span class="pill p-b">Associated: MEDI-601 Week 4</span>
+        </div>
+      </div>
+      <div style="font-size:11px;color:#aaa;flex-shrink:0">View concepts →</div>
+    </div>
+    <div class="doc-card" style="margin-bottom:4px;border-radius:4px;cursor:pointer">
+      <div class="doc-icon pdf">PDF</div>
+      <div class="doc-meta" style="flex:1">
+        <div class="doc-name">MEDI-601-Syllabus-Spring2025.pdf</div>
+        <div class="doc-detail">Jan 15 · 22 pages · Syllabus</div>
+        <div style="margin-top:4px;display:flex;gap:6px;flex-wrap:wrap">
+          <span class="pill p-g">Ready</span>
+          <span class="pill p-b">14 weeks extracted</span>
+          <span class="pill p-b">Associated: MEDI-601 (3 sections)</span>
+        </div>
+      </div>
+      <div style="font-size:11px;color:#aaa;flex-shrink:0">View structure →</div>
+    </div>
+    <div class="doc-card" style="border-radius:4px;cursor:pointer">
+      <div class="doc-icon pptx">PPTX</div>
+      <div class="doc-meta" style="flex:1">
+        <div class="doc-name">Week3-BetaBlockers-Mechanisms.pptx</div>
+        <div class="doc-detail">5 days ago · 36 slides · Lecture</div>
+        <div style="margin-top:4px;display:flex;gap:6px;flex-wrap:wrap">
+          <span class="pill p-g">Ready</span>
+          <span class="pill p-t">23 concepts extracted</span>
+          <span class="pill p-gold">Not yet associated with a course</span>
+        </div>
+      </div>
+      <div style="font-size:11px;color:#aaa;flex-shrink:0">Associate course →</div>
+    </div>
+  </div>
+</div>
+
+<h3>Document detail view — click any processed document</h3>
+
+<div class="call-b"><div class="cl">The key interaction</div>
+<p>Clicking a processed document reveals a two-pane view: left shows the document overview (metadata, processing summary, extracted concepts with UMLS links), right shows course association controls. This is where the knowledge graph becomes tangible — faculty see their lecture content transformed into a structured list of linked concepts for the first time.</p>
+</div>
+
+<div class="screen">
+  <div class="screen-bar"><div class="screen-dots"><div class="screen-dot"></div><div class="screen-dot"></div><div class="screen-dot"></div></div><span class="screen-title">document detail — Week4-CardiovascularII-HeartFailure.pptx</span></div>
+  <div class="mock-main" style="padding:16px">
+    <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:16px">
+      <div>
+        <div style="display:flex;gap:10px;align-items:center;margin-bottom:14px">
+          <div class="doc-icon pptx" style="width:44px;height:44px;font-size:11px">PPTX</div>
+          <div>
+            <div style="font-size:14px;font-weight:500">Week4-CardiovascularII-HeartFailure.pptx</div>
+            <div style="font-size:11px;color:#aaa">48 slides · 3.4 MB · Uploaded 3 days ago</div>
+          </div>
+          <span class="pill p-g" style="margin-left:auto">Ready</span>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px">
+          <div class="stat-card"><div class="label">Concepts</div><div class="value">31</div><div class="sub">12 UMLS-verified</div></div>
+          <div class="stat-card"><div class="label">Chunks</div><div class="value">94</div><div class="sub">avg 210 tokens</div></div>
+          <div class="stat-card"><div class="label">Items generated</div><div class="value">14</div><div class="sub">8 approved</div></div>
+        </div>
+
+        <div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#999;margin-bottom:8px">Extracted concepts <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#bbb">— click to view linked data</span></div>
+        <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px">
+          <span class="concept-tag">Heart failure (HF) <span class="cui">C0018801</span></span>
+          <span class="concept-tag">BNP / NT-proBNP <span class="cui">C0086930</span></span>
+          <span class="concept-tag">Ejection fraction <span class="cui">C0428772</span></span>
+          <span class="concept-tag">HFrEF <span class="cui">C4017266</span></span>
+          <span class="concept-tag">HFpEF <span class="cui">C4017267</span></span>
+          <span class="concept-tag">Loop diuretics <span class="cui">C0012283</span></span>
+          <span class="concept-tag">Furosemide <span class="cui">C0016860</span></span>
+          <span class="concept-tag">ACE inhibitors <span class="cui">C0003015</span></span>
+          <span class="concept-tag">RAAS <span class="cui">C0034181</span></span>
+          <span class="concept-tag">Afterload reduction <span class="cui">C0522506</span></span>
+          <span class="concept-tag">Pulmonary edema <span class="cui">C0034063</span></span>
+          <span class="concept-tag">NYHA classification <span class="cui">C0028895</span></span>
+          <span class="concept-tag">Cardiac output <span class="cui">C0007165</span></span>
+          <span class="concept-tag">Starling curve <span class="cui">C0205374</span></span>
+          <span class="concept-tag">Cardiomegaly <span class="cui">C0018800</span></span>
+        </div>
+
+        <div style="font-size:11px;color:#888;margin-bottom:10px">+ 16 more concepts — <a style="color:var(--b)">show all 31</a></div>
+
+        <div class="qa-row">
+          <button class="qa-btn primary">Generate questions from this lecture</button>
+          <button class="qa-btn">View in Topic Spotlight</button>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#999;margin-bottom:8px">Course association</div>
+        <div style="border:1px solid var(--edge);background:#fff;padding:14px;border-radius:4px;margin-bottom:10px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+            <span style="font-size:12.5px;font-weight:500">MEDI-601 · Clinical Medicine I</span>
+            <span class="pill p-g">Associated</span>
+          </div>
+          <div style="font-size:11px;color:#888;margin-bottom:10px">Section A · Week 4 · Session 2 of 3</div>
+          <div class="qa-row" style="margin:0">
+            <button class="qa-btn" style="font-size:11px">Change week/session</button>
+            <button class="qa-btn" style="font-size:11px">Remove association</button>
+          </div>
+        </div>
+
+        <div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#999;margin-bottom:8px">Associate with another course</div>
+        <div style="border:1px dashed var(--edge);padding:14px;border-radius:4px;background:var(--gray-50)">
+          <p style="font-size:12px;color:#888;margin-bottom:8px">This lecture can be associated with multiple courses. Students in each course will have access to questions generated from it.</p>
+          <select style="width:100%;margin-bottom:8px;font-size:12px;padding:6px">
+            <option>Select a course...</option>
+            <option>PHRM-701 · Pharmacology I</option>
+            <option>PATH-602 · Pathology</option>
+            <option>PHSL-501 · Physiology</option>
+          </select>
+          <select style="width:100%;margin-bottom:8px;font-size:12px;padding:6px">
+            <option>Select week...</option>
+            <option>Week 1 — Introduction</option>
+            <option>Week 4 — Cardiovascular</option>
+            <option>Week 7 — Renal</option>
+          </select>
+          <button class="qa-btn primary" style="width:100%;justify-content:center">Associate with this course</button>
+        </div>
+
+        <div style="margin-top:14px">
+          <div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#999;margin-bottom:8px">Create course section from syllabus</div>
+          <div style="border:1px solid var(--edge);background:#fff;padding:12px;border-radius:4px">
+            <div style="font-size:12px;color:#888;margin-bottom:8px">Only available when this document is a <strong>syllabus</strong>. Creates a new section with the week structure extracted from the document.</div>
+            <button class="qa-btn" style="width:100%;opacity:.4;cursor:not-allowed">Create section from syllabus (lecture file)</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- V: COURSES TAB -->
+<section id="courses">
+<div class="sid">V / Courses Tab</div>
+<h2>All courses + the "This Week" intelligence view</h2>
+
+<p>The Courses tab has two sub-views: All Courses (filtered list with status) and This Week (the intelligence layer that shows what the faculty is actually teaching right now, enriched with USMLE topics and LOD data from the knowledge graph).</p>
+
+<h3>All courses view — tabs: Active · Pending Review · Drafts · Archived</h3>
+<div class="screen">
+  <div class="screen-bar"><div class="screen-dots"><div class="screen-dot"></div><div class="screen-dot"></div><div class="screen-dot"></div></div><span class="screen-title">courses — all courses</span></div>
+  <div class="mock-main" style="padding:16px">
+    <div class="tab-bar" style="margin-bottom:14px;border-radius:4px 4px 0 0">
+      <div class="tab active">All Courses</div>
+      <div class="tab">This Week</div>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:12px;align-items:center">
+      <span class="pill p-g" style="cursor:pointer">Active (4)</span>
+      <span class="pill p-gold" style="cursor:pointer">Pending Review (1)</span>
+      <span class="pill p-gray" style="cursor:pointer">Drafts (2)</span>
+      <span class="pill p-gray" style="cursor:pointer">Archived (3)</span>
+      <div style="margin-left:auto"><button class="qa-btn primary">+ New course</button></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="course-card">
+        <div style="display:flex;justify-content:space-between"><div class="course-code">MEDI-601</div><span class="pill p-g">Active</span></div>
+        <div class="course-name">Clinical Medicine I</div>
+        <div style="font-size:11px;color:#aaa;margin-bottom:8px">Year 2 · Pre-clerkship · 48 students · 3 sections</div>
+        <div class="course-meta">
+          <span class="pill p-b">74% USMLE coverage</span>
+          <span class="pill p-t">287 approved items</span>
+        </div>
+        <div class="qa-row" style="margin-top:8px">
+          <button class="qa-btn primary" style="font-size:11px">Open dashboard</button>
+          <button class="qa-btn" style="font-size:11px">Generate questions</button>
+        </div>
+      </div>
+      <div class="course-card">
+        <div style="display:flex;justify-content:space-between"><div class="course-code">PHRM-701</div><span class="pill p-g">Active</span></div>
+        <div class="course-name">Pharmacology I</div>
+        <div style="font-size:11px;color:#aaa;margin-bottom:8px">Year 2 · Pre-clerkship · 38 students · 2 sections</div>
+        <div class="course-meta">
+          <span class="pill p-gold">41% USMLE coverage</span>
+          <span class="pill p-t">94 approved items</span>
+        </div>
+        <div class="qa-row" style="margin-top:8px">
+          <button class="qa-btn primary" style="font-size:11px">Open dashboard</button>
+          <button class="qa-btn" style="font-size:11px">Fill coverage gaps</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h3>This Week view — the intelligence layer</h3>
+<div class="call-teal"><div class="cl">What makes This Week special</div>
+<p>This Week isn't a calendar. It's a briefing. For each teaching session this week, it shows: what lecture content maps to it, which USMLE topics are covered by that content, the LOD-enriched facts from the knowledge graph (drug mechanisms, disease associations, pathway links), how many assessment items are ready for those topics, and what gaps exist. It answers "am I prepared to assess what I'm teaching this week?" in a single view.</p>
+</div>
+
+<div class="screen">
+  <div class="screen-bar"><div class="screen-dots"><div class="screen-dot"></div><div class="screen-dot"></div><div class="screen-dot"></div></div><span class="screen-title">courses — this week (Feb 3–7)</span></div>
+  <div class="mock-main" style="padding:16px">
+    <div class="tab-bar" style="margin-bottom:14px;border-radius:4px 4px 0 0">
+      <div class="tab">All Courses</div>
+      <div class="tab active">This Week</div>
+    </div>
+
+    <!-- Week strip -->
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:16px">
+      <div style="border:1px solid var(--edge);padding:8px;text-align:center;border-radius:4px;background:#fff">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#aaa">MON</div>
+        <div style="font-size:16px;font-weight:500">3</div>
+        <div class="pill p-b" style="font-size:8px;margin-top:3px">1 session</div>
+      </div>
+      <div style="border:1px solid var(--edge);padding:8px;text-align:center;border-radius:4px;background:var(--blue-50)">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#aaa">TUE</div>
+        <div style="font-size:16px;font-weight:500">4</div>
+        <div class="pill p-gray" style="font-size:8px;margin-top:3px">No sessions</div>
+      </div>
+      <div style="border:1px solid var(--edge);padding:8px;text-align:center;border-radius:4px;background:#fff">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#aaa">WED</div>
+        <div style="font-size:16px;font-weight:500">5</div>
+        <div class="pill p-b" style="font-size:8px;margin-top:3px">1 session</div>
+      </div>
+      <div style="border:1px solid var(--edge);padding:8px;text-align:center;border-radius:4px;background:#fff">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#aaa">THU</div>
+        <div style="font-size:16px;font-weight:500">6</div>
+        <div class="pill p-gray" style="font-size:8px;margin-top:3px">No sessions</div>
+      </div>
+      <div style="border:1px solid var(--edge);padding:8px;text-align:center;border-radius:4px;background:#fff">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#aaa">FRI</div>
+        <div style="font-size:16px;font-weight:500">7</div>
+        <div class="pill p-b" style="font-size:8px;margin-top:3px">1 session</div>
+      </div>
+    </div>
+
+    <!-- Session card (full intelligence) -->
+    <div style="border:1px solid var(--b);border-radius:4px;overflow:hidden;margin-bottom:12px">
+      <div style="background:var(--blue-50);padding:10px 14px;border-bottom:1px solid #b5d4f4;display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--b)">MONDAY · FEB 3 · 10:00 AM</span>
+          <div style="font-size:13.5px;font-weight:500;color:var(--blue-800);margin-top:2px">MEDI-601 · Week 4, Session 2 — Heart Failure: Diagnosis &amp; Management</div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <span class="pill p-g">6 items ready</span>
+          <span class="pill p-gold">2 gaps</span>
+        </div>
+      </div>
+      <div style="padding:12px 14px;background:#fff">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div>
+            <div style="font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#999;margin-bottom:7px">USMLE topics covered this session</div>
+            <div style="display:flex;flex-direction:column;gap:4px">
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:5px 8px;background:var(--green-50);border-radius:3px">
+                <span style="font-size:12px">Heart failure pathophysiology</span>
+                <div style="display:flex;gap:4px"><span class="pill p-g">3 items</span><span class="pill p-b">Bloom 2-3</span></div>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:5px 8px;background:var(--green-50);border-radius:3px">
+                <span style="font-size:12px">Diuretics — mechanism of action</span>
+                <div style="display:flex;gap:4px"><span class="pill p-g">2 items</span><span class="pill p-b">Bloom 3</span></div>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:5px 8px;background:var(--amber-50);border-radius:3px">
+                <span style="font-size:12px;color:var(--amber-800)">NYHA classification — clinical application</span>
+                <div style="display:flex;gap:4px"><span class="pill p-gold">1 item</span><span class="pill p-r">Gap: Bloom 4</span></div>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:5px 8px;background:var(--red-50);border-radius:3px">
+                <span style="font-size:12px;color:var(--red-800)">ACE inhibitor adverse effects</span>
+                <div><span class="pill p-r">No items</span></div>
+              </div>
+            </div>
+            <button class="qa-btn primary" style="margin-top:10px;width:100%;justify-content:center">Generate 4 missing items — ~$0.48</button>
+          </div>
+
+          <div>
+            <div style="font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#999;margin-bottom:7px">Linked knowledge — LOD enrichment</div>
+            <div style="font-size:11.5px;color:#666;line-height:1.7;border:1px solid var(--edge);padding:10px;border-radius:3px;background:var(--gray-50)">
+              <div style="margin-bottom:6px"><strong>Furosemide</strong> (loop diuretic) — inhibits Na⁺/K⁺/2Cl⁻ cotransporter in thick ascending limb. Hetionet: treats Heart Failure (strength 0.82), causes Hypokalemia, causes Ototoxicity.</div>
+              <div style="margin-bottom:6px"><strong>BNP</strong> — released by ventricular myocytes in response to wall stress. Clinical threshold: &gt;100 pg/mL for HF diagnosis (sensitivity 90%, specificity 76%).</div>
+              <div><strong>NYHA Class II</strong> → comfortable at rest, slight limitation with ordinary activity. Maps to USMLE topic: "Clinical features of CHF" under Cardiovascular system.</div>
+            </div>
+            <div style="font-size:10px;color:#aaa;margin-top:4px">Source: UMLS · Hetionet · MeSH · DrugBank</div>
+
+            <div style="margin-top:10px">
+              <div style="font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#999;margin-bottom:6px">Pre-flight checklist</div>
+              <div style="font-size:12px;display:flex;flex-direction:column;gap:4px">
+                <div style="color:var(--g)">✓ Lecture uploaded and processed</div>
+                <div style="color:var(--g)">✓ Concepts reviewed (31 confirmed)</div>
+                <div style="color:var(--g)">✓ 6 items ready for exam use</div>
+                <div style="color:var(--y)">⚠ 2 USMLE topics not yet covered</div>
+                <div style="color:var(--r)">✗ No assessment created for this session</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- VI: COURSE DASHBOARD -->
+<section id="course-dash">
+<div class="sid">VI / Course Dashboard</div>
+<h2>The nerve center for a single course — six tabs, every data dimension</h2>
+
+<h3>Course dashboard — tab overview</h3>
+<div class="tab-bar" style="border:1px solid var(--edge);border-radius:4px;overflow:hidden">
+  <div class="tab active">Overview</div>
+  <div class="tab">Syllabus weeks</div>
+  <div class="tab">Questions</div>
+  <div class="tab">Coverage</div>
+  <div class="tab">Assessments</div>
+  <div class="tab">Students</div>
+</div>
+
+<h3>Tab 1 — Overview</h3>
+<div class="screen">
+  <div class="screen-bar"><div class="screen-dots"><div class="screen-dot"></div><div class="screen-dot"></div><div class="screen-dot"></div></div><span class="screen-title">MEDI-601 · Clinical Medicine I — Overview</span></div>
+  <div class="mock-main" style="padding:16px">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px">
+      <div>
+        <div class="course-code" style="font-size:11px">MEDI-601 · Year 2 · Pre-clerkship · Spring 2025</div>
+        <div style="font-family:'Fraunces',serif;font-size:22px;margin-top:2px">Clinical Medicine I</div>
+        <div style="font-size:11px;color:#aaa;margin-top:2px">3 sections · 48 students · 14 weeks · USMLE Step 1</div>
+      </div>
+      <div class="qa-row" style="margin:0">
+        <button class="qa-btn primary">Generate questions</button>
+        <button class="qa-btn">Create assessment</button>
+        <button class="qa-btn">Upload lecture</button>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:14px">
+      <div class="stat-card"><div class="label">USMLE coverage</div><div class="value">74%</div><div class="sub">Step 1 system topics</div></div>
+      <div class="stat-card"><div class="label">Total items</div><div class="value">287</div><div class="sub">34 pending review</div></div>
+      <div class="stat-card"><div class="label">Assessments</div><div class="value">6</div><div class="sub">2 completed this semester</div></div>
+      <div class="stat-card"><div class="label">Avg item quality</div><div class="value">0.81</div><div class="sub">QA score mean</div></div>
+      <div class="stat-card"><div class="label">Lectures processed</div><div class="value">12 / 14</div><div class="sub">2 weeks remaining</div></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div>
+        <div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#999;margin-bottom:8px">Topics covered — by USMLE system</div>
+        <div style="border:1px solid var(--edge);background:#fff;padding:12px;border-radius:4px">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid var(--gray-50)"><span style="font-size:12px">Cardiovascular</span><div style="display:flex;align-items:center;gap:8px"><div style="width:80px;height:6px;background:var(--edge);border-radius:3px;overflow:hidden"><div style="width:88%;height:100%;background:#1d9e75;border-radius:3px"></div></div><span style="font-size:11px;font-family:'JetBrains Mono',monospace;color:#888">88%</span></div></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid var(--gray-50)"><span style="font-size:12px">Pulmonary</span><div style="display:flex;align-items:center;gap:8px"><div style="width:80px;height:6px;background:var(--edge);border-radius:3px;overflow:hidden"><div style="width:72%;height:100%;background:#1d9e75;border-radius:3px"></div></div><span style="font-size:11px;font-family:'JetBrains Mono',monospace;color:#888">72%</span></div></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid var(--gray-50)"><span style="font-size:12px">Renal</span><div style="display:flex;align-items:center;gap:8px"><div style="width:80px;height:6px;background:var(--edge);border-radius:3px;overflow:hidden"><div style="width:28%;height:100%;background:#ba7517;border-radius:3px"></div></div><span style="font-size:11px;font-family:'JetBrains Mono',monospace;color:#888;color:var(--y)">28%</span></div></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid var(--gray-50)"><span style="font-size:12px">Gastrointestinal</span><div style="display:flex;align-items:center;gap:8px"><div style="width:80px;height:6px;background:var(--edge);border-radius:3px;overflow:hidden"><div style="width:65%;height:100%;background:#1d9e75;border-radius:3px"></div></div><span style="font-size:11px;font-family:'JetBrains Mono',monospace;color:#888">65%</span></div></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0"><span style="font-size:12px">Musculoskeletal</span><div style="display:flex;align-items:center;gap:8px"><div style="width:80px;height:6px;background:var(--edge);border-radius:3px;overflow:hidden"><div style="width:45%;height:100%;background:#ba7517;border-radius:3px"></div></div><span style="font-size:11px;font-family:'JetBrains Mono',monospace;color:#888">45%</span></div></div>
+        </div>
+        <button class="qa-btn" style="margin-top:8px;width:100%;justify-content:center;font-size:11px">View full coverage heatmap</button>
+      </div>
+      <div>
+        <div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#999;margin-bottom:8px">Quick actions</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+          <button class="qa-btn primary" style="padding:12px;text-align:center;display:block;height:auto;line-height:1.4;font-size:12px">Generate questions<br><span style="font-size:10px;opacity:.7;font-weight:400">from lecture or topic</span></button>
+          <button class="qa-btn" style="padding:12px;text-align:center;display:block;height:auto;line-height:1.4;font-size:12px">Create assessment<br><span style="font-size:10px;opacity:.7;font-weight:400">from item bank</span></button>
+          <button class="qa-btn" style="padding:12px;text-align:center;display:block;height:auto;line-height:1.4;font-size:12px">Upload lecture<br><span style="font-size:10px;opacity:.7;font-weight:400">add to course</span></button>
+          <button class="qa-btn" style="padding:12px;text-align:center;display:block;height:auto;line-height:1.4;font-size:12px">Fill coverage gaps<br><span style="font-size:10px;opacity:.7;font-weight:400">target weak systems</span></button>
+        </div>
+        <div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#999;margin-bottom:8px">Recent activity</div>
+        <div style="border:1px solid var(--edge);background:#fff;padding:10px;border-radius:4px">
+          <div class="feed-item"><div class="feed-dot" style="background:#1d9e75"></div><div class="feed-body"><div class="feed-text">14 items generated for Week 4 — Heart Failure</div><div class="feed-time">2 hours ago</div></div></div>
+          <div class="feed-item"><div class="feed-dot" style="background:#185fa5"></div><div class="feed-body"><div class="feed-text">Exam 2 results available — avg score 76%</div><div class="feed-time">Yesterday</div></div></div>
+          <div class="feed-item"><div class="feed-dot" style="background:#ba7517"></div><div class="feed-body"><div class="feed-text">Week 5 lecture processing complete — 29 concepts</div><div class="feed-time">2 days ago</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h3>Tab 2 — Syllabus weeks</h3>
+<p>Full week-by-week view of the course. Each week expands to show: session names (from syllabus), associated lecture documents, extracted USMLE topics, item count per topic, and coverage percentage. Faculty can click any session to jump to its concepts, generate questions for that session, or see the pre-flight checklist. Dragging weeks reorders them. Adding a session creates a blank slot that can be associated with a lecture.</p>
+
+<h3>Tab 3 — Questions</h3>
+<p>All items associated with this course, with rich filtering: by USMLE system, Bloom level, QA score, status (approved/pending/rejected), week, generation session, or search by keyword. Bulk actions: approve all, export selected, add to collection, create exam from selection. Each item shows a stem preview, Bloom badge, USMLE system badge, QA score, and approval status. Click to open the full item with Toulmin chain and distractor rationale.</p>
+
+<h3>Tab 4 — Coverage</h3>
+<p>The USMLE coverage heatmap scoped to this specific course. 18 systems × 6 Bloom levels. Three states: gap (red), partial (amber), confirmed (green). Click any cell to see the SubConcepts in that cell, generate items for that gap, or view existing items. Header row shows overall system percentages. Side column shows Bloom level distribution. Quick filter: "Show gaps only" collapses to only red/amber cells.</p>
+
+<h3>Tab 5 — Assessments</h3>
+<p>All exams created for this course. Cards show: exam name, date, student count, average score, KR-20 reliability, item count, and status (draft/deployed/completed/archived). Click to open the assessment detail view with full item-by-item statistics. Actions: create new exam, duplicate, export to QTI, archive. Completed exams show: p-value distribution chart, discrimination index summary, and any flagged low-quality items.</p>
+
+<h3>Tab 6 — Students (course view)</h3>
+<p>All students enrolled in this course (across sections). Table view: name, section, assessments taken, average score, USMLE Step 1 estimated coverage based on their question responses, last active date. Click student to go to their full profile. Sort by: name, section, score, coverage, last active. Filter by section.</p>
+</section>
+
+<!-- VII: GENERATION -->
+<section id="generation">
+<div class="sid">VII / Generation</div>
+<h2>Three modes — Quick Generate, Topic Spotlight (NLP form spike), and Blueprint</h2>
+
+<h3>Mode 1 — Quick Generate (from course context)</h3>
+<p>Available from course dashboard, This Week view, or the Items tab. A right-side drawer slides in showing: selected course/week (pre-filled from context), top 5 SubConcepts sorted by coverage gap, Bloom level defaults, item count per concept. One-click generate. Shows cost estimate before triggering. Target: under 10 seconds from decision to generation started.</p>
+
+<h3>Mode 2 — Topic Spotlight (NLP form spike)</h3>
+<div class="call-v"><div class="cl">The design innovation</div>
+<p>Topic Spotlight is the novel UX in Journey OS. Instead of navigating menus to specify what you want to generate, you interact directly with your lecture content. Terms that MetaMap/UMLS has recognized get a subtle underline. Click any underlined term and a smart dropdown shows the matched UMLS concept, its USMLE system, related LOD data, and a one-click "add to generation targets." The result feels like annotating your own slides — natural, fast, and medically precise. This is the generation flow that will make faculty say "I've never seen anything like this."</p>
+</div>
+
+<div class="screen">
+  <div class="screen-bar"><div class="screen-dots"><div class="screen-dot"></div><div class="screen-dot"></div><div class="screen-dot"></div></div><span class="screen-title">generate — topic spotlight</span></div>
+  <div class="mock-main" style="padding:16px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <!-- Left: lecture text with highlighted terms -->
+      <div>
+        <div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#999;margin-bottom:8px">Lecture content — click any underlined term to add as generation target</div>
+        <div class="nlp-text-area">
+          <p style="margin-bottom:12px">Heart failure represents a complex clinical syndrome where the heart cannot pump sufficient blood to meet the body's metabolic demands. The hallmark of <span class="nlp-highlight">systolic heart failure</span> (HFrEF) is a reduced <span class="nlp-highlight">ejection fraction</span> below 40%, while <span class="nlp-highlight">HFpEF</span> presents with preserved ejection fraction but impaired diastolic function.</p>
+          <p style="margin-bottom:12px">The neurohormonal response activates the <span class="nlp-highlight">renin-angiotensin-aldosterone system (RAAS)</span> and <span class="nlp-highlight">sympathetic nervous system</span>, leading to sodium retention, vasoconstriction, and ventricular remodeling. This maladaptive response initially compensatory becomes detrimental over time.</p>
+          <p>First-line treatment includes <span class="nlp-highlight">ACE inhibitors</span> or <span class="nlp-highlight">ARBs</span> for afterload reduction, <span class="nlp-highlight">beta-blockers</span> for rate control and reverse remodeling, and <span class="nlp-highlight">loop diuretics</span> (e.g., furosemide) for symptom relief through volume reduction.</p>
+        </div>
+        <div style="font-size:11px;color:#aaa;margin-top:6px">Underlined terms recognized by UMLS · 8 terms detected · Click to add any</div>
+
+        <div style="margin-top:12px">
+          <div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#999;margin-bottom:6px">Or search for any topic</div>
+          <input type="text" placeholder="Type a concept, drug, disease, or USMLE topic..." style="width:100%;padding:8px 12px;border:1px solid var(--edge);border-radius:4px;font-size:12.5px">
+          <div style="font-size:11px;color:#aaa;margin-top:4px">Searches across all processed lectures, UMLS, and USMLE taxonomy</div>
+        </div>
+      </div>
+
+      <!-- Right: generation targets + settings -->
+      <div>
+        <div style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#999;margin-bottom:8px">Generation targets <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#bbb">— 4 selected</span></div>
+
+        <div style="margin-bottom:10px">
+          <div class="gen-chip">Heart failure (HFrEF) <span class="bloom">Bloom 3</span> <span class="count">3 items</span> <span style="opacity:.4;cursor:pointer;margin-left:4px">✕</span></div>
+          <div class="gen-chip">Ejection fraction <span class="bloom">Bloom 2</span> <span class="count">2 items</span> <span style="opacity:.4;cursor:pointer;margin-left:4px">✕</span></div>
+          <div class="gen-chip">RAAS activation <span class="bloom">Bloom 4</span> <span class="count">2 items</span> <span style="opacity:.4;cursor:pointer;margin-left:4px">✕</span></div>
+          <div class="gen-chip">Loop diuretics <span class="bloom">Bloom 3</span> <span class="count">3 items</span> <span style="opacity:.4;cursor:pointer;margin-left:4px">✕</span></div>
+        </div>
+
+        <div style="border:1px solid var(--edge);padding:12px;border-radius:4px;background:#fff;margin-bottom:10px">
+          <div style="font-size:11px;color:#888;margin-bottom:8px">Defaults for all targets</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+            <div>
+              <div style="font-size:10px;color:#aaa;margin-bottom:3px">Question format</div>
+              <select style="width:100%;padding:5px;font-size:12px;border:1px solid var(--edge)"><option selected>NBME vignette (clinical)</option><option>Direct recall</option><option>Image-based</option></select>
+            </div>
+            <div>
+              <div style="font-size:10px;color:#aaa;margin-bottom:3px">Clinical confidence</div>
+              <select style="width:100%;padding:5px;font-size:12px;border:1px solid var(--edge)"><option selected>Self-review before use</option><option>Peer review required</option><option>Expert review</option></select>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:10px;color:#aaa;margin-bottom:3px">Distractor style</div>
+            <select style="width:100%;padding:5px;font-size:12px;border:1px solid var(--edge)"><option selected>Common misconceptions (AI-grounded)</option><option>Related but incorrect concepts</option><option>Plausible wrong treatments</option></select>
+          </div>
+        </div>
+
+        <div style="border:1px solid var(--edge);padding:12px;border-radius:4px;background:var(--ink);color:#ede8e0;margin-bottom:10px">
+          <div style="font-size:10px;font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#5dcaa5;margin-bottom:6px">Generation summary</div>
+          <div style="font-size:12.5px;margin-bottom:4px">10 items from 4 topics</div>
+          <div style="font-size:11px;color:#888">~90 seconds · ~$1.20</div>
+          <div style="font-size:11px;color:#888;margin-top:4px">Items go to pending review — you approve before students see them</div>
+        </div>
+
+        <button class="qa-btn primary" style="width:100%;padding:12px;font-size:13px;justify-content:center">Generate 10 items — $1.20</button>
+        <button class="qa-btn" style="width:100%;padding:8px;font-size:12px;justify-content:center;margin-top:6px">Preview generation spec before running</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h3>Mode 3 — Blueprint Generator (structured by USMLE system + Bloom)</h3>
+<p>For faculty who want precise control over coverage distribution. Select USMLE system, Bloom level distribution (slider bars for each level), item count, and topic depth. The system shows a coverage preview (what percentage of Step 1 topics will be covered if generated). Output is a structured batch generation — suitable for creating an entire exam's worth of items from a specified topic domain. Best for: department chairs building a comprehensive item bank, or faculty preparing for a high-stakes summative exam.</p>
+</section>
+
+<!-- VIII: ITEMS TAB -->
+<section id="items">
+<div class="sid">VIII / Items Tab</div>
+<h2>The item bank — approve, search, organize, act</h2>
+
+<div class="screen">
+  <div class="screen-bar"><div class="screen-dots"><div class="screen-dot"></div><div class="screen-dot"></div><div class="screen-dot"></div></div><span class="screen-title">items — item bank</span></div>
+  <div class="mock-main" style="padding:16px">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">
+      <div class="stat-card"><div class="label">Total items</div><div class="value">312</div></div>
+      <div class="stat-card"><div class="label">Approved</div><div class="value" style="color:var(--g)">287</div></div>
+      <div class="stat-card"><div class="label">Pending review</div><div class="value" style="color:var(--y)">14</div></div>
+      <div class="stat-card"><div class="label">Collections</div><div class="value">8</div></div>
+    </div>
+
+    <div class="tab-bar" style="margin-bottom:12px;border-radius:4px 4px 0 0">
+      <div class="tab active">All items</div>
+      <div class="tab">Pending review <span class="pill p-gold" style="margin-left:4px">14</span></div>
+      <div class="tab">Collections</div>
+    </div>
+
+    <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center">
+      <input type="text" placeholder="Search items by keyword, concept, or USMLE topic..." style="flex:1;min-width:200px;padding:6px 10px;border:1px solid var(--edge);border-radius:4px;font-size:12px">
+      <select style="padding:6px;border:1px solid var(--edge);font-size:12px"><option>All systems</option><option>Cardiovascular</option><option>Renal</option></select>
+      <select style="padding:6px;border:1px solid var(--edge);font-size:12px"><option>All Bloom levels</option><option>Bloom 1-2 (Recall)</option><option>Bloom 3-4 (Apply/Analyze)</option></select>
+      <select style="padding:6px;border:1px solid var(--edge);font-size:12px"><option>All statuses</option><option>Approved</option><option>Pending review</option></select>
+    </div>
+
+    <div class="qa-row" style="margin-bottom:12px">
+      <button class="qa-btn">Create collection</button>
+      <button class="qa-btn">Review pending items</button>
+      <button class="qa-btn">Generate questions</button>
+      <button class="qa-btn primary">Create exam from selection</button>
+    </div>
+
+    <div class="item-card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div class="item-stem">A 68-year-old man with a history of hypertension and diabetes presents to the ED with shortness of breath and bilateral lower extremity edema. His BNP is 820 pg/mL and chest X-ray shows cardiomegaly with pulmonary vascular congestion. Which of the following is the MOST appropriate initial pharmacological intervention?</div>
+        <span class="pill p-g" style="flex-shrink:0;margin-left:8px">Approved</span>
+      </div>
+      <div class="item-meta">
+        <span class="pill p-b">Cardiovascular</span>
+        <span class="pill p-t">Bloom 3 — Apply</span>
+        <span class="pill p-gray">QA 0.84</span>
+        <span class="pill p-v">MEDI-601 · Week 4</span>
+        <span class="pill p-gray">Self-verified</span>
+      </div>
+    </div>
+    <div class="item-card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div class="item-meta" style="margin-bottom:6px">
+          <span class="pill p-gold">Pending review</span>
+          <span class="pill p-gray">Action required before exam use</span>
+        </div>
+      </div>
+      <div class="item-stem">A 55-year-old woman with systolic heart failure (EF 30%) is started on carvedilol. What is the mechanism by which beta-blockers improve long-term survival in heart failure?</div>
+      <div class="item-meta">
+        <span class="pill p-b">Cardiovascular</span>
+        <span class="pill p-t">Bloom 4 — Analyze</span>
+        <span class="pill p-gray">QA 0.78</span>
+        <div style="margin-left:auto;display:flex;gap:6px">
+          <button class="qa-btn" style="font-size:11px;padding:3px 8px">Approve</button>
+          <button class="qa-btn" style="font-size:11px;padding:3px 8px">Edit</button>
+          <button class="qa-btn" style="font-size:11px;padding:3px 8px;color:var(--r)">Reject</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- IX: ASSESSMENTS TAB -->
+<section id="assessments">
+<div class="sid">IX / Assessments Tab</div>
+<h2>All exams — from draft to deployed to quality analysis</h2>
+
+<table>
+<thead><tr><th>Sub-tab</th><th>Content</th><th>Key data shown</th><th>Primary action</th></tr></thead>
+<tbody>
+<tr><td><strong>All assessments</strong></td><td>Every exam created, all statuses</td><td>Name, course, date, student count, avg score, status</td><td>Open detail, duplicate, export</td></tr>
+<tr><td><strong>Drafts</strong></td><td>Exams in progress / not deployed</td><td>Item count, coverage profile, blueprint completion %</td><td>Continue editing, deploy to students</td></tr>
+<tr><td><strong>Active</strong></td><td>Exams currently open for students</td><td>Response count, time remaining, real-time completion rate</td><td>Close early, extend time for student</td></tr>
+<tr><td><strong>Completed</strong></td><td>Exams with all submissions</td><td>Score distribution, KR-20, item discrimination, flagged items</td><td>Release results, review quality, archive</td></tr>
+<tr><td><strong>Archived</strong></td><td>Past exams removed from active use</td><td>Historical data retained for analytics</td><td>Restore, export data</td></tr>
+</tbody>
+</table>
+
+<h3>Assessment detail view — completed exam quality panel</h3>
+<p>Each completed assessment shows a full psychometric breakdown: score distribution histogram, KR-20 reliability coefficient (with target ≥0.70 flagged), item-by-item p-values and discrimination indices, any items flagged as low quality (p &lt; 0.20 or discrimination &lt; 0.20), and a comparison of this exam's results against the item bank's expected difficulty. Flagged low-quality items link back to the source lecture chunk — helping faculty understand whether the item was poor or whether the lecture content was unclear.</p>
+
+<h3>Assessment creation flow</h3>
+<p>Three entry paths: (1) Blueprint-first (specify USMLE system distribution, Bloom distribution, item count → system assembles from bank), (2) Topic-first (select specific concepts/weeks → system fills blueprint), (3) Manual assembly (search item bank and hand-pick). All three paths produce a blueprint preview showing coverage gaps before finalizing. The proximity constraint (no two items from the same SubConcept within 3 consecutive positions) is enforced automatically.</p>
+</section>
+
+<!-- X: STUDENTS TAB -->
+<section id="students">
+<div class="sid">X / Students Tab</div>
+<h2>Student profiles + USMLE Step 1/2 coverage by question response history</h2>
+
+<div class="screen">
+  <div class="screen-bar"><div class="screen-dots"><div class="screen-dot"></div><div class="screen-dot"></div><div class="screen-dot"></div></div><span class="screen-title">students — all students</span></div>
+  <div class="mock-main" style="padding:16px">
+    <div style="display:flex;gap:8px;margin-bottom:12px;align-items:center">
+      <input type="text" placeholder="Search by name or student ID..." style="flex:1;padding:6px 10px;border:1px solid var(--edge);border-radius:4px;font-size:12px">
+      <select style="padding:6px;border:1px solid var(--edge);font-size:12px"><option>All courses</option><option>MEDI-601</option><option>PHRM-701</option></select>
+      <select style="padding:6px;border:1px solid var(--edge);font-size:12px"><option>All sections</option><option>Section A</option><option>Section B</option></select>
+    </div>
+    <table>
+      <thead><tr><th>Student</th><th>Section</th><th>Exams taken</th><th>Avg score</th><th>Step 1 USMLE coverage</th><th>Last active</th><th></th></tr></thead>
+      <tbody>
+        <tr><td><strong>Chen, Sarah</strong></td><td class="mono">MEDI-601 A</td><td>4 / 5</td><td><span class="pill p-g">84%</span></td><td><div style="display:flex;align-items:center;gap:6px"><div style="width:60px;height:6px;background:var(--edge);border-radius:3px;overflow:hidden"><div style="width:72%;height:100%;background:#1d9e75;border-radius:3px"></div></div><span style="font-size:11px">72%</span></div></td><td class="mono" style="font-size:11px">Today</td><td><a style="font-size:11px;color:var(--b);cursor:pointer">Profile</a></td></tr>
+        <tr><td><strong>Johnson, Marcus</strong></td><td class="mono">MEDI-601 B</td><td>3 / 5</td><td><span class="pill p-gold">71%</span></td><td><div style="display:flex;align-items:center;gap:6px"><div style="width:60px;height:6px;background:var(--edge);border-radius:3px;overflow:hidden"><div style="width:58%;height:100%;background:#ba7517;border-radius:3px"></div></div><span style="font-size:11px">58%</span></div></td><td class="mono" style="font-size:11px">2 days ago</td><td><a style="font-size:11px;color:var(--b);cursor:pointer">Profile</a></td></tr>
+        <tr><td><strong>Patel, Priya</strong></td><td class="mono">PHRM-701 A</td><td>2 / 3</td><td><span class="pill p-g">91%</span></td><td><div style="display:flex;align-items:center;gap:6px"><div style="width:60px;height:6px;background:var(--edge);border-radius:3px;overflow:hidden"><div style="width:85%;height:100%;background:#1d9e75;border-radius:3px"></div></div><span style="font-size:11px">85%</span></div></td><td class="mono" style="font-size:11px">Yesterday</td><td><a style="font-size:11px;color:var(--b);cursor:pointer">Profile</a></td></tr>
+      </tbody>
+    </table>
+
+    <h4 style="margin-top:16px;margin-bottom:10px">Student profile — Sarah Chen</h4>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div style="border:1px solid var(--edge);padding:14px;background:#fff;border-radius:4px">
+        <div style="font-size:12.5px;font-weight:500;margin-bottom:10px">USMLE Step 1 coverage — by question responses</div>
+        <div style="font-size:11px;color:#888;margin-bottom:10px">Based on 287 answered questions across exam + self-test. Shows which Step 1 systems have been tested and how Sarah performed.</div>
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 8px;background:var(--green-50);border-radius:3px"><span style="font-size:12px">Cardiovascular</span><div><span class="pill p-g">34 questions</span> <span class="pill p-b">avg 81%</span></div></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 8px;background:var(--green-50);border-radius:3px"><span style="font-size:12px">Pharmacology</span><div><span class="pill p-g">22 questions</span> <span class="pill p-b">avg 88%</span></div></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 8px;background:var(--amber-50);border-radius:3px"><span style="font-size:12px;color:var(--amber-800)">Renal</span><div><span class="pill p-gold">8 questions</span> <span class="pill p-gold">avg 62%</span></div></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 8px;background:var(--red-50);border-radius:3px"><span style="font-size:12px;color:var(--red-800)">Musculoskeletal</span><div><span class="pill p-r">2 questions only</span></div></div>
+        </div>
+      </div>
+      <div style="border:1px solid var(--edge);padding:14px;background:#fff;border-radius:4px">
+        <div style="font-size:12.5px;font-weight:500;margin-bottom:10px">Question response history</div>
+        <div class="tab-bar" style="margin-bottom:8px">
+          <div class="tab active" style="padding:5px 10px;font-size:11px">Exam questions</div>
+          <div class="tab" style="padding:5px 10px;font-size:11px">Self-test</div>
+        </div>
+        <table style="font-size:11px">
+          <thead><tr><th>Exam</th><th>Date</th><th>Score</th><th>Items</th></tr></thead>
+          <tbody>
+            <tr><td>Cardio Midterm</td><td class="mono">Jan 24</td><td><span class="pill p-g">86%</span></td><td>40</td></tr>
+            <tr><td>Pharmacology Quiz 1</td><td class="mono">Jan 31</td><td><span class="pill p-g">91%</span></td><td>20</td></tr>
+            <tr><td>GI Assessment</td><td class="mono">Feb 2</td><td><span class="pill p-gold">74%</span></td><td>35</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- XI: ANALYTICS -->
+<section id="analytics">
+<div class="sid">XI / Analytics Tab</div>
+<h2>Four views — coverage, student performance, item quality, generation efficiency</h2>
+
+<h3>Analytics sub-tabs</h3>
+<table>
+<thead><tr><th>Sub-tab</th><th>What it shows</th><th>Key charts/views</th><th>Primary insight</th></tr></thead>
+<tbody>
+<tr><td><strong>Coverage</strong></td><td>USMLE topic coverage across the institution and by course</td><td>18-system heatmap (institution-wide), coverage over time trend, gaps vs. total topics by system</td><td>"Your institution covers 74% of Step 1 Cardiovascular — Renal is 28%"</td></tr>
+<tr><td><strong>Student performance</strong></td><td>Aggregate student outcomes across exams and self-test</td><td>Score distribution histogram, performance by USMLE system, top/bottom 10% topic breakdown, cohort comparison</td><td>"Students score 15% lower on Renal pharmacology items than Cardiovascular"</td></tr>
+<tr><td><strong>Item quality</strong></td><td>Item bank health — QA scores, p-values, discrimination, flagged items</td><td>QA score distribution, p-value distribution, discrimination scatter plot, low-quality items list</td><td>"14 items have discrimination index below 0.20 — review or regenerate"</td></tr>
+<tr><td><strong>Generation</strong></td><td>Item production efficiency and usage</td><td>Items generated over time, approval rate trend, cost per item, items used in exams vs. never used</td><td>"82% of generated items approved · avg $0.11/item · 34% of bank never used in exam"</td></tr>
+</tbody>
+</table>
+
+<h3>Coverage analytics — the institution view</h3>
+<p>The institution-level heatmap shows aggregate coverage across all courses taught by this faculty member. Each cell in the 18×6 grid shows total items available for that system/Bloom combination. Mouse hover shows: item count, avg QA score, avg p-value from student responses. Click any red cell to jump directly to the gap-fill generation flow with that system/Bloom pre-selected. A "coverage report" export generates a one-page PDF suitable for LCME DCI submission.</p>
+
+<h3>Item quality analytics — flagged items panel</h3>
+<p>Items with p-value &lt;0.20 (too hard) or &gt;0.80 (too easy), discrimination index &lt;0.20, or QA score &lt;0.65 appear in the flagged items list. Each flagged item shows: why it was flagged, which student cohort it was tested on, the source lecture chunk, and one-click actions: regenerate (creates a replacement with the same topic/Bloom), edit, or archive. Running this analysis after every exam improves the item bank over time.</p>
+</section>
+
+<!-- XII: ACTIVITY FEED -->
+<section id="activity">
+<div class="sid">XII / Generation History + Activity Feed</div>
+<h2>Every generation session — reviewable, remixable, and traceable</h2>
+
+<h3>Generation history — all sessions</h3>
+<div class="screen">
+  <div class="screen-bar"><div class="screen-dots"><div class="screen-dot"></div><div class="screen-dot"></div><div class="screen-dot"></div></div><span class="screen-title">generation history</span></div>
+  <div class="mock-main" style="padding:16px">
+    <div style="display:flex;gap:8px;margin-bottom:12px">
+      <span class="pill p-gray" style="cursor:pointer">All (24)</span>
+      <span class="pill p-g" style="cursor:pointer">Completed (20)</span>
+      <span class="pill p-r" style="cursor:pointer">Failed (2)</span>
+      <span class="pill p-gray" style="cursor:pointer">Archived (2)</span>
+    </div>
+    <table>
+      <thead><tr><th>Session</th><th>Course / context</th><th>Requested</th><th>Generated</th><th>Approved</th><th>Cost</th><th>Actions</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><div style="font-size:12px;font-weight:500">Heart Failure — Week 4</div><div class="mono" style="font-size:10px;color:#aaa">Feb 3, 2:14pm</div></td>
+          <td>MEDI-601 · Week 4</td>
+          <td>14 items</td>
+          <td><span class="pill p-g">14</span></td>
+          <td><span class="pill p-g">11 / 14</span></td>
+          <td class="mono" style="font-size:11px">$1.68</td>
+          <td>
+            <div style="display:flex;gap:4px">
+              <button class="qa-btn" style="font-size:10px;padding:2px 7px">View items</button>
+              <button class="qa-btn" style="font-size:10px;padding:2px 7px">Remix</button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><div style="font-size:12px;font-weight:500">β-blockers mechanisms</div><div class="mono" style="font-size:10px;color:#aaa">Jan 29, 11:02am</div></td>
+          <td>PHRM-701 · Week 3</td>
+          <td>10 items</td>
+          <td><span class="pill p-g">10</span></td>
+          <td><span class="pill p-gold">7 / 10</span></td>
+          <td class="mono" style="font-size:11px">$1.20</td>
+          <td>
+            <div style="display:flex;gap:4px">
+              <button class="qa-btn" style="font-size:10px;padding:2px 7px">View items</button>
+              <button class="qa-btn" style="font-size:10px;padding:2px 7px">Remix</button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><div style="font-size:12px;font-weight:500">Renal physiology batch</div><div class="mono" style="font-size:10px;color:#aaa">Jan 22, 9:44am</div></td>
+          <td>MEDI-601 · Week 7</td>
+          <td>20 items</td>
+          <td><span class="pill p-r">12 (8 failed)</span></td>
+          <td><span class="pill p-gold">9 / 12</span></td>
+          <td class="mono" style="font-size:11px">$1.44</td>
+          <td>
+            <div style="display:flex;gap:4px">
+              <button class="qa-btn" style="font-size:10px;padding:2px 7px">View items</button>
+              <button class="qa-btn primary" style="font-size:10px;padding:2px 7px">Retry failed 8</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="margin-top:12px;padding:10px 14px;border:1px solid var(--edge);background:#fff;border-radius:4px">
+      <div style="font-size:11px;font-weight:500;margin-bottom:4px">What "Remix" does</div>
+      <div style="font-size:11px;color:#888">Remix opens the generation session with its original topics, Bloom levels, and context pre-loaded. You can change the clinical scenario angle, swap Bloom levels, increase item count, or change the distractor strategy — then re-run to generate a new set from the same source material. Useful for: creating harder versions of existing questions, generating more items when you've used up the approved ones, or trying a different clinical presentation angle.</div>
+    </div>
+  </div>
+</div>
+
+<h3>Activity feed — content model</h3>
+<table>
+<thead><tr><th>Event type</th><th>Triggered by</th><th>Color dot</th><th>Action available</th></tr></thead>
+<tbody>
+<tr><td>Items generated</td><td>P3 pipeline completion</td><td style="color:#1d9e75">●</td><td>Review now</td></tr>
+<tr><td>Document processed</td><td>P1/P2 pipeline completion</td><td style="color:#185fa5">●</td><td>View concepts</td></tr>
+<tr><td>Items pending review</td><td>Approval deadline approaching</td><td style="color:#ba7517">●</td><td>Review now</td></tr>
+<tr><td>Student exam completed</td><td>Student session finalized</td><td style="color:#639922">●</td><td>View results</td></tr>
+<tr><td>Coverage alert</td><td>Weekly coverage digest job</td><td style="color:#a82828">●</td><td>Generate gaps</td></tr>
+<tr><td>Generation failed</td><td>P3 dead letter</td><td style="color:#a82828">●</td><td>Retry / contact support</td></tr>
+<tr><td>Item bank milestone</td><td>Count threshold crossed</td><td style="color:#1d9e75">●</td><td>—</td></tr>
+<tr><td>Exam deployed</td><td>Admin or self action</td><td style="color:#185fa5">●</td><td>View exam</td></tr>
+<tr><td>Low-quality item flagged</td><td>Post-exam analytics job</td><td style="color:#ba7517">●</td><td>Review item</td></tr>
+</tbody>
+</table>
+</section>
+
+<div class="footer">
+  <span>Journey OS · Faculty Persona Product Specification · MSM · 2025</span>
+  <span>9 nav sections · 6 course sub-tabs · 3 generation modes · NLP Topic Spotlight spike</span>
+</div>
+</body>
+</html>

@@ -1,0 +1,8 @@
+{
+  "source": "MSM Quest internal definition",
+  "levels": [
+    { "name": "Easy", "description": "Recall or straightforward application", "target_correct_pct": 80 },
+    { "name": "Medium", "description": "Requires analysis or multi-step reasoning", "target_correct_pct": 60 },
+    { "name": "Hard", "description": "Complex integration across concepts", "target_correct_pct": 40 }
+  ]
+}

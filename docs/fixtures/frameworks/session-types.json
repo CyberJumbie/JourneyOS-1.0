@@ -1,0 +1,14 @@
+{
+  "source": "MSM Quest internal definition — medical education session formats",
+  "types": [
+    { "name": "Lecture", "expected_bloom_range": "1-3", "typical_duration": "50-75 min", "description": "Traditional didactic lecture" },
+    { "name": "Lab", "expected_bloom_range": "3-5", "typical_duration": "120-180 min", "description": "Hands-on laboratory session" },
+    { "name": "PBL", "expected_bloom_range": "4-6", "typical_duration": "90-120 min", "description": "Problem-based learning small group session" },
+    { "name": "Small Group", "expected_bloom_range": "3-5", "typical_duration": "60-90 min", "description": "Facilitated small group discussion" },
+    { "name": "Clinical Skills", "expected_bloom_range": "3-5", "typical_duration": "90-120 min", "description": "Standardized patient or clinical skills practice" },
+    { "name": "Simulation", "expected_bloom_range": "4-6", "typical_duration": "60-120 min", "description": "High-fidelity simulation exercise" },
+    { "name": "Online Module", "expected_bloom_range": "1-3", "typical_duration": "30-60 min", "description": "Self-paced online learning module" },
+    { "name": "Self-Directed Study", "expected_bloom_range": "1-4", "typical_duration": "variable", "description": "Independent study period" },
+    { "name": "Exam Review", "expected_bloom_range": "2-4", "typical_duration": "60-90 min", "description": "Post-exam review and feedback session" }
+  ]
+}

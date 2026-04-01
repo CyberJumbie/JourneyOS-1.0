@@ -1,0 +1,8 @@
+{
+  "source": "MSM Quest internal definition — health equity in vignette generation",
+  "profiles": [
+    { "category": "age_groups", "values": ["Neonate", "Infant", "Child", "Adolescent", "Young Adult", "Middle-Aged Adult", "Elderly"] },
+    { "category": "sex", "values": ["Male", "Female"] },
+    { "category": "ethnicity", "values": ["African American", "Hispanic/Latino", "White", "Asian", "Native American", "Pacific Islander", "Middle Eastern", "Mixed/Other"] }
+  ]
+}

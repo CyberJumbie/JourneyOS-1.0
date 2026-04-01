@@ -1,0 +1,58 @@
+name: Canonical Violations Check
+
+on:
+  pull_request:
+    branches: [develop, main]
+
+jobs:
+  scan:
+    name: Scan changed files for canonical violations
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - name: Check AP-01 — no raw neo4j-driver imports
+        run: |
+          VIOLATIONS=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | \
+            xargs grep -l "from 'neo4j-driver'" 2>/dev/null | \
+            grep -v "packages/neo4j/driver.ts" || true)
+          if [ -n "$VIOLATIONS" ]; then
+            echo "❌ AP-01: Raw neo4j-driver imports found in:"
+            echo "$VIOLATIONS"
+            echo "Use @journey/neo4j/client instead (Rule 1 / C05)"
+            exit 1
+          fi
+          echo "✓ AP-01: No raw neo4j-driver imports"
+      - name: Check AP-02 — no raw JSON.parse
+        run: |
+          VIOLATIONS=$(git diff origin/${{ github.base_ref }}...HEAD -- '*.ts' '*.tsx' | \
+            grep '^\+' | grep 'JSON\.parse(' | grep -v 'safeJsonParse' || true)
+          if [ -n "$VIOLATIONS" ]; then
+            echo "❌ AP-02: Raw JSON.parse found (use safeJsonParse):"
+            echo "$VIOLATIONS"
+            exit 1
+          fi
+          echo "✓ AP-02: No raw JSON.parse"
+      - name: Check AP-03 — no Promise.all in pipeline code
+        run: |
+          VIOLATIONS=$(git diff origin/${{ github.base_ref }}...HEAD -- 'apps/inngest/**/*.ts' | \
+            grep '^\+' | grep 'Promise\.all(' | grep -v 'allSettled' || true)
+          if [ -n "$VIOLATIONS" ]; then
+            echo "❌ AP-03: Promise.all found in pipeline code (use Promise.allSettled):"
+            echo "$VIOLATIONS"
+            exit 1
+          fi
+          echo "✓ AP-03: No Promise.all in pipeline code"
+      - name: Check AP-04 — no hardcoded model strings
+        run: |
+          VIOLATIONS=$(git diff origin/${{ github.base_ref }}...HEAD -- '*.ts' '*.tsx' | \
+            grep '^\+' | grep -E "'claude-(sonnet|haiku)-[0-9]'" | \
+            grep -v "constants.ts" || true)
+          if [ -n "$VIOLATIONS" ]; then
+            echo "❌ AP-04: Hardcoded model string found (use SONNET_MODEL/HAIKU_MODEL):"
+            echo "$VIOLATIONS"
+            exit 1
+          fi
+          echo "✓ AP-04: No hardcoded model strings"
+      - name: All canonical checks passed
+        run: echo "✓ All canonical violation checks passed"

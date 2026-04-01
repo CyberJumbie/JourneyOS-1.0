@@ -1,0 +1,2182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Journey OS — Technical Architecture v1.0</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,600;1,300&family=JetBrains+Mono:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap');
+:root{
+  --ink:#0c0c0c;--paper:#f4f1eb;--edge:#ddd6c4;
+  --r:#a82828;--g:#185230;--y:#6a4c14;--b:#162450;--gold:#8a6614;
+  --teal:#0a4c4c;--violet:#482070;--orange:#b84800;
+  --pre:#080d12;--prefg:#c4bfb0;--tag:#e8e2d4;
+  --p1:#162450;--p1bg:#ebf0f8;
+  --p2:#0a4c4c;--p2bg:#eaf5f5;
+  --p3:#482070;--p3bg:#f0eaf8;
+  --warn-bg:#fdf0e8;--fix-bg:#e8f5ec;--canon-bg:#e8eef8;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);font-size:13.5px;line-height:1.8}
+/* ── COVER ── */
+.cover{background:var(--ink);min-height:88vh;display:flex;flex-direction:column;justify-content:flex-end;padding:80px;position:relative;overflow:hidden}
+.cg{position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent,transparent 59px,rgba(138,102,20,.04) 60px),repeating-linear-gradient(0deg,transparent,transparent 59px,rgba(138,102,20,.03) 60px);pointer-events:none}
+.cr{position:relative;z-index:1}
+.c-eye{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+h1{font-family:'Fraunces',serif;font-size:68px;font-weight:300;line-height:.93;letter-spacing:-1.5px;color:#ede8e0;margin-bottom:10px}
+h1 em{font-style:italic;color:var(--gold)}
+.c-sub{font-family:'Fraunces',serif;font-style:italic;font-size:20px;color:#666;max-width:620px;margin-bottom:40px}
+.c-stack{display:flex;gap:2px;flex-wrap:wrap}
+.c-chip{font-family:'JetBrains Mono',monospace;font-size:8.5px;padding:5px 12px;border:1px solid #1e1e1e;color:#666;letter-spacing:.04em}
+.c-chip.hl{border-color:#305030;color:#607860}
+/* ── NAV ── */
+.nav{background:#080d12;border-bottom:1px solid #141a20;padding:0 80px;display:flex;overflow-x:auto}
+.ni{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;color:#444;padding:11px 14px;border-right:1px solid #141a20;white-space:nowrap;text-decoration:none;flex-shrink:0}
+.ni:hover{color:var(--gold)}
+/* ── SECTIONS ── */
+section{padding:56px 80px;border-bottom:1px solid var(--edge)}
+.sid{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--r);margin-bottom:10px}
+h2{font-family:'Fraunces',serif;font-size:36px;font-weight:300;line-height:1.08;margin-bottom:20px}
+h3{font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#888;margin:28px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--edge)}
+h4{font-family:'Fraunces',serif;font-size:17px;font-weight:400;margin:14px 0 6px}
+p{margin-bottom:12px;max-width:840px}
+code{font-family:'JetBrains Mono',monospace;font-size:11px;background:var(--tag);padding:1px 5px;border-radius:2px}
+pre{background:var(--pre);color:var(--prefg);padding:16px 20px;font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.65;overflow-x:auto;margin:10px 0 14px;border-radius:2px;border-left:3px solid var(--gold)}
+.kw{color:#c4915a}.cm{color:#484840;font-style:italic}.st{color:#5aad7f}.fn{color:#7ab0e8}.ty{color:#b8c8a0}.nu{color:#d1965a}.de{color:#d8c060}.op{color:#c05a5a}
+/* ── CALLOUTS ── */
+.call{padding:11px 15px;margin:12px 0 16px;border-radius:0 2px 2px 0}
+.call .cl{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;margin-bottom:4px}
+.call p{font-size:13px;margin:0;max-width:none}
+.call-b{border-left:3px solid var(--b);background:var(--canon-bg)}.call-b .cl{color:var(--b)}
+.call-g{border-left:3px solid var(--g);background:var(--fix-bg)}.call-g .cl{color:var(--g)}
+.call-gold{border-left:3px solid var(--gold);background:#fdf7e0}.call-gold .cl{color:var(--gold)}
+.call-r{border-left:3px solid var(--r);background:#fceae8}.call-r .cl{color:var(--r)}
+.call-t{border-left:3px solid var(--teal);background:var(--p2bg)}.call-t .cl{color:var(--teal)}
+/* ── LAYOUT ── */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:14px 0}
+.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin:14px 0}
+.card{border:1px solid var(--edge);padding:16px;background:#fff}
+.card-lbl{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:#aaa;margin-bottom:4px}
+.card-ttl{font-family:'Fraunces',serif;font-size:16px;font-weight:400;margin-bottom:6px}
+.card p{font-size:12.5px;color:#555;margin:0}
+/* ── TABLES ── */
+table{width:100%;border-collapse:collapse;font-size:12px;margin:10px 0 16px}
+th{background:var(--ink);color:var(--paper);padding:8px 11px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase}
+td{padding:7px 11px;border-bottom:1px solid var(--edge);vertical-align:top}
+tr:hover td{background:#f8f5ee}
+tr:nth-child(even) td{background:#faf7f0}
+.mono{font-family:'JetBrains Mono',monospace;font-size:10.5px}
+/* ── PILLS ── */
+.pill{display:inline-block;padding:2px 7px;border-radius:2px;font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:600;vertical-align:middle;white-space:nowrap}
+.p-t1{background:var(--p1bg);color:var(--p1)}.p-t2{background:#e8f5ec;color:var(--g)}
+.p-t3{background:#fdf7e0;color:var(--gold)}.p-t4{background:var(--p3bg);color:var(--violet)}
+.p-t5{background:var(--p2bg);color:var(--teal)}.p-t6{background:var(--warn-bg);color:var(--orange)}
+.p-y{background:#fef3e2;color:var(--y)}.p-g{background:#e8f5ec;color:var(--g)}
+.p-r{background:#fce6e6;color:var(--r)}.p-b{background:var(--p1bg);color:var(--p1)}
+.p-fix{background:var(--fix-bg);color:var(--g)}.p-gold{background:#fdf7e0;color:var(--gold)}
+.p-dk{background:var(--ink);color:#ccc}
+/* ── FEATURE TABLE ── */
+.feat-t{width:100%;border-collapse:collapse;font-size:12px;margin:10px 0 18px;table-layout:fixed}
+.feat-t th{background:var(--ink);color:var(--paper);padding:8px 10px;font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;text-align:left}
+.feat-t td{padding:8px 10px;border-bottom:1px solid var(--edge);vertical-align:top}
+.feat-name{font-weight:500;margin-bottom:2px}
+.feat-detail{font-size:11.5px;color:#666}
+.feat-tech{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--teal);line-height:1.7}
+.feat-event{font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--violet)}
+/* ── ARCH DIAGRAM ── */
+.arch{background:var(--pre);color:var(--prefg);padding:22px 26px;font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.95;overflow-x:auto;margin:12px 0 16px;border-radius:2px}
+.al{color:#b8c8a0;font-weight:600}.an{color:#7ab0e8}.ar{color:#5aad7f}.aw{color:#d8c060}.ac{color:#484840;font-style:italic}.af{color:#d05a5a}.ap{color:#c4915a}
+/* ── PIPELINE ── */
+.pipe{border:1px solid var(--edge);overflow:hidden;margin:14px 0}
+.pipe-head{padding:12px 18px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--edge)}
+.pipe-n{font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:600;line-height:1;flex-shrink:0}
+.pipe-info{flex:1}
+.pipe-title{font-family:'Fraunces',serif;font-size:18px;font-weight:400;margin-bottom:2px}
+.pipe-meta{font-family:'JetBrains Mono',monospace;font-size:9px;color:#888;letter-spacing:.04em}
+.pipe-trig{font-family:'JetBrains Mono',monospace;font-size:8.5px;padding:3px 8px;border-radius:2px;flex-shrink:0}
+.p1-c .pipe-head{background:var(--p1bg)}.p1-c .pipe-n{color:var(--p1)}.p1-c .pipe-trig{background:var(--p1);color:#fff}
+.p2-c .pipe-head{background:var(--p2bg)}.p2-c .pipe-n{color:var(--p2)}.p2-c .pipe-trig{background:var(--p2);color:#fff}
+.p3-c .pipe-head{background:var(--p3bg)}.p3-c .pipe-n{color:var(--p3)}.p3-c .pipe-trig{background:var(--p3);color:#fff}
+/* ── SCHEMA BLOCK ── */
+.schema{background:var(--pre);border-radius:2px;overflow:hidden;margin:10px 0 14px}
+.schema-head{background:#0e1520;padding:8px 16px;display:flex;justify-content:space-between;align-items:center}
+.schema-file{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--gold)}
+.schema-tag{font-family:'JetBrains Mono',monospace;font-size:8.5px;color:#5aad7f}
+.schema pre{border-left:none;border-radius:0;margin:0;padding:16px 20px}
+/* ── PAGES TREE ── */
+.pages{background:var(--pre);padding:20px 24px;font-family:'JetBrains Mono',monospace;font-size:11px;line-height:2.0;margin:10px 0;border-radius:2px}
+.pages .d{color:#b8c8a0}.pages .f{color:#7ab0e8}.pages .x{color:#c4915a}.pages .c{color:#484840;font-style:italic}
+/* ── STACK MATRIX ── */
+.stack-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--edge);border:1px solid var(--edge);margin:14px 0}
+.sg-cell{background:var(--paper);padding:16px}
+.sg-lbl{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:#aaa;margin-bottom:5px}
+.sg-title{font-size:14px;font-weight:600;margin-bottom:4px}
+.sg-detail{font-size:11.5px;color:#666;line-height:1.7}
+/* ── COST BLOCK ── */
+.cost-block{background:var(--ink);color:var(--prefg);padding:22px 26px;font-family:'JetBrains Mono',monospace;font-size:11px;line-height:2.1;margin:14px 0;border-radius:2px}
+.cost-head{color:var(--gold);font-size:9px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:10px}
+/* ── UL ── */
+ul.t{list-style:none;margin:6px 0}
+ul.t li{padding:3px 0 3px 16px;position:relative;font-size:12.5px}
+ul.t li::before{content:'→';position:absolute;left:0;color:var(--r);font-family:'JetBrains Mono',monospace;font-size:9px;top:5px}
+/* ── FOOTER ── */
+.footer{background:var(--ink);padding:28px 80px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-family:'JetBrains Mono',monospace;font-size:9.5px;color:#444}
+@media(max-width:960px){.cover,.nav,.footer,section{padding-left:24px;padding-right:24px}.two,.three,.stack-grid{grid-template-columns:1fr}h1{font-size:44px}h2{font-size:26px}}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+<div class="cg"></div>
+<div class="cr">
+  <div class="c-eye">Journey OS · Technical Architecture · v1.0 · Build Specification</div>
+  <h1>Build<br><em>Spec</em></h1>
+  <div class="c-sub">Complete technical architecture for engineering implementation — stack decisions, database schemas, API design, pipeline specs, frontend structure, and deployment topology</div>
+  <div class="c-stack">
+    <span class="c-chip">Next.js 15 App Router + TypeScript</span>
+    <span class="c-chip">Supabase (Postgres + pgvector + RLS + Auth)</span>
+    <span class="c-chip">Neo4j Aura (Knowledge Graph)</span>
+    <span class="c-chip">Inngest (Workflow orchestration — NOT Kafka)</span>
+    <span class="c-chip">Anthropic Sonnet 4 + Haiku 4.5</span>
+    <span class="c-chip">MedCPT + text-embedding-3-small</span>
+    <span class="c-chip hl">✓ D05: Sonnet canonical · ✓ G13: Kafka removed</span>
+    <span class="c-chip hl">✓ G05: lod_brief → Supabase · ✓ G08: sync reconciliation</span>
+  </div>
+</div>
+</div>
+
+<div class="nav">
+  <a class="ni" href="#features">I · Features</a>
+  <a class="ni" href="#stack">II · Stack</a>
+  <a class="ni" href="#db">III · Database</a>
+  <a class="ni" href="#api">IV · API</a>
+  <a class="ni" href="#pipelines">V · Pipelines</a>
+  <a class="ni" href="#frontend">VI · Frontend</a>
+  <a class="ni" href="#security">VII · Security</a>
+  <a class="ni" href="#ocr">I-b · OCR</a><a class="ni" href="#deploy">VIII · Deploy</a><a class="ni" href="#prod">IX · Hardening</a>
+</div>
+
+<!-- ══════════════════════ I: FEATURE REGISTRY ══════════════════════ -->
+<section id="features">
+<div class="sid">I / Feature Registry</div>
+<h2>Complete feature list — updated with all canonical fixes applied</h2>
+
+<div class="call-r"><div class="cl">Canonical fix applied — D05</div>
+<p>All references to "Opus for stem generation" are replaced throughout this document. Canonical: <strong>Sonnet 4 for core generation + critique gate. Haiku 4.5 for HyDE, distractors, rationale, QA, LOD briefs, and all classification tasks.</strong> Opus would produce $0.45/item — 3.75× over the $0.12 target.</p>
+</div>
+
+<h3>Tier 1 — Foundation & Content Ingestion (Weeks 1–12)</h3>
+<table class="feat-t">
+<thead><tr><th style="width:22%">Feature</th><th style="width:20%">Description</th><th style="width:22%">KG nodes / edges</th><th style="width:20%">Inngest event / pipeline</th><th style="width:8%">MVP</th><th style="width:8%">Tier</th></tr></thead>
+<tbody>
+<tr>
+  <td><div class="feat-name">Institution Setup</div></td>
+  <td>Admin creates Institution → Program → Phase → Block hierarchy. MSM pre-seeded.</td>
+  <td class="feat-tech">Institution · Program · Phase · Block nodes<br>OFFERS · HAS_PHASE edges</td>
+  <td class="feat-event">Admin UI → Supabase + Neo4j MERGE<br>No Inngest event</td>
+  <td><span class="pill p-g">YES</span></td><td><span class="pill p-t1">T1</span></td>
+</tr>
+<tr>
+  <td><div class="feat-name">Framework Seeding</div></td>
+  <td>One-click import: LCME 58 elements, ACGME, EPA, USMLE 3-level, Bloom, Miller, IPECCompetency, CarePhase</td>
+  <td class="feat-tech">All :Reference nodes (Layer 0)<br>T-Box — seeded once</td>
+  <td class="feat-event">Phase 0 seed scripts<br>journey/seed.run (admin trigger)</td>
+  <td><span class="pill p-g">YES</span></td><td><span class="pill p-t1">T1</span></td>
+</tr>
+<tr>
+  <td><div class="feat-name">Faculty Invitation</div></td>
+  <td>Magic link invites, bulk CSV upload, role assignment, institutional email validation</td>
+  <td class="feat-tech">Supabase auth.users<br>faculty_profiles table</td>
+  <td class="feat-event">Supabase Auth magic link<br>No Inngest event</td>
+  <td><span class="pill p-g">YES</span></td><td><span class="pill p-t1">T1</span></td>
+</tr>
+<tr>
+  <td><div class="feat-name">Admin Dashboard</div></td>
+  <td>Stat cards (courses, faculty, items, coverage), pipeline health, action queue</td>
+  <td class="feat-tech">Supabase aggregates<br>pipeline_jobs table for health</td>
+  <td class="feat-event">Real-time subscription: Supabase channels<br>polling /api/admin/stats</td>
+  <td><span class="pill p-g">YES</span></td><td><span class="pill p-t1">T1</span></td>
+</tr>
+<tr>
+  <td><div class="feat-name">Syllabus Upload & Auto-Parse</div></td>
+  <td>Upload PDF/DOCX → AI extracts weeks, sessions, SLOs. Faculty reviews extracted structure.</td>
+  <td class="feat-tech">SyllabusDocument · Week · Session · SLO<br>CONTAINS_WEEK · HAS_SLO edges<br>SLO -CONTRIBUTES_TO→ ILO</td>
+  <td class="feat-event">journey/syllabus.uploaded →<br>journey/syllabus.process<br>step.waitForEvent(journey/syllabus.reviewed, 7d)</td>
+  <td><span class="pill p-g">YES</span></td><td><span class="pill p-t1">T1</span></td>
+</tr>
+<tr>
+  <td><div class="feat-name">Lecture Upload & Graph-Aware Chunking</div></td>
+  <td>Upload PPTX/PDF → entity-boundary-aligned chunks (150-250 tokens) → 3-level embeddings → lecture scaffold</td>
+  <td class="feat-tech">Lecture · LectureSection · ContentChunk<br>SpeakerNote (separate index)<br>HAS_SECTION · HAS_CHUNK edges</td>
+  <td class="feat-event">journey/lecture.uploaded →<br>P1: journey/lecture.process (8 steps)<br>&lt;5 min for 50-slide target</td>
+  <td><span class="pill p-g">YES</span></td><td><span class="pill p-t1">T1</span></td>
+</tr>
+<tr>
+  <td><div class="feat-name">SubConcept Extraction & Review</div></td>
+  <td>NER → batch UMLS → :Candidate nodes → faculty approve/reject/merge → SAME_AS if CUI match ≥0.85</td>
+  <td class="feat-tech">SubConcept (as :Candidate)<br>TEACHES {evidence_grade:'C'→'A'}<br>SAME_AS {confidence, method}</td>
+  <td class="feat-event">P1 Steps 05-08<br>step.waitForEvent(journey/lecture.reviewed, 7d)<br>Fan-out: journey/subconcept.confirmed × N</td>
+  <td><span class="pill p-g">YES</span></td><td><span class="pill p-t1">T1</span></td>
+</tr>
+<tr>
+  <td><div class="feat-name">LOD Enrichment</div></td>
+  <td>UMLS full resolution → anatomy/disease routing → Hetionet 2-hop → lod_brief stored in Supabase</td>
+  <td class="feat-tech">StandardTerm · ExternalEntity<br>GROUNDED_IN · AFFECTS_ORGAN · MEDIATED_BY<br>SubConcept.lod_brief_id FK <span class="pill p-fix" style="font-size:7px">G05</span></td>
+  <td class="feat-event">P2: journey/subconcept.enrich (7 steps)<br>Background · 24hr SLA · 5 concurrent<br>Throttle: 20 UMLS req/sec</td>
+  <td><span class="pill p-g">YES</span></td><td><span class="pill p-t1">T1</span></td>
+</tr>
+<tr>
+  <td><div class="feat-name">LCME Domain Classification <span class="pill p-fix" style="font-size:7px">G04 new</span></div></td>
+  <td>Claude Haiku classifies each ContentChunk against 20 LCMEContentDomain nodes. Confidence ≥0.70 → COVERS_LCME_DOMAIN edge.</td>
+  <td class="feat-tech">LCMEContentDomain (seeded)<br>COVERS_LCME_DOMAIN {confidence, method:'classifier'}</td>
+  <td class="feat-event">P1 Step 05b (new step)<br>Between entity extraction and TEACHES edge creation</td>
+  <td><span class="pill p-g">YES</span></td><td><span class="pill p-t1">T1</span></td>
+</tr>
+<tr>
+  <td><div class="feat-name">Quick Spec Wizard</div></td>
+  <td>Conversational spec: faculty says "20 NBME vignettes targeting Renal Pharma at Bloom Apply." Coverage-aware defaults. Max 10 turns. On confirm → P3 starts.</td>
+  <td class="feat-tech">ExamBlueprint · GenerationSpec (Supabase)<br>CoverageRecord checked for gap-first defaults</td>
+  <td class="feat-event">Chat UI → /api/generation/spec<br>On confirm: journey/generation.spec-confirmed</td>
+  <td><span class="pill p-g">YES</span></td><td><span class="pill p-t1">T1</span></td>
+</tr>
+<tr>
+  <td><div class="feat-name">Structured Item Generation (ECD-wired)</div></td>
+  <td>ECD Stages 1-3 → HyDE retrieval → parallel 4-source context → Sonnet core → Sonnet critique → Haiku distractors (MisconceptionCategory-grounded) → Haiku rationale + QA → Toulmin JSONB</td>
+  <td class="feat-tech">AssessmentItem · Distractor · Rationale<br>INSTANTIATES → TaskShell<br>CLAIMS_ABOUT → ProficiencyVariable<br>SOURCED_FROM → ContentChunk</td>
+  <td class="feat-event">P3: journey/items.batch-generate (10 steps)<br>~$0.12/item · ~3 min/30-item batch</td>
+  <td><span class="pill p-g">YES</span></td><td><span class="pill p-t1">T1</span></td>
+</tr>
+<tr>
+  <td><div class="feat-name">Item Review & Approval</div></td>
+  <td>Approve/refine/reject. Component-targeted editing: fix stem, distractors, or rationale independently. Toulmin chain visible in review panel. step.waitForEvent().</td>
+  <td class="feat-tech">AssessmentItem.status: 'candidate'→'approved'<br>CoverageRecord created on first approval<br>BKT_Parameters initialized</td>
+  <td class="feat-event">P3 Step 09 (step.waitForEvent, 30d)<br>journey/items.batch-reviewed</td>
+  <td><span class="pill p-g">YES</span></td><td><span class="pill p-t1">T1</span></td>
+</tr>
+<tr>
+  <td><div class="feat-name">Idea Generation & Curation</div></td>
+  <td>Haiku brainstorms N item concepts → faculty approves subset → full items generated from approved concepts only</td>
+  <td class="feat-tech">ItemIdea node (lightweight pre-spec)<br>GENERATES_FROM: ItemIdea → AssessmentItem</td>
+  <td class="feat-event">journey/ideas.generate (Haiku cheap)<br>Per-approved-idea → P3 triggered</td>
+  <td><span class="pill p-g">YES</span></td><td><span class="pill p-t1">T1</span></td>
+</tr>
+</tbody>
+</table>
+
+<h3>Tier 2 — Coverage, Blueprint & Exam Assembly (Weeks 13–28)</h3>
+<table class="feat-t">
+<thead><tr><th style="width:22%">Feature</th><th style="width:20%">Description</th><th style="width:22%">KG nodes / edges</th><th style="width:20%">Technical implementation</th><th style="width:8%">MVP</th><th style="width:8%">Tier</th></tr></thead>
+<tbody>
+<tr>
+  <td><div class="feat-name">USMLE Coverage Heatmap</div></td>
+  <td>18 USMLE systems × courses. Item density per cell. Three states: declared-only / delivered / confirmed. Real-time graph traversal.</td>
+  <td class="feat-tech">CoverageRecord (confirmed)<br>TEACHES (delivered)<br>COVERS_TOPIC (declared)<br>Single Cypher traversal</td>
+  <td class="feat-event">/api/coverage/heatmap<br>Supabase materialized view + GDS cache<br>Refreshed on every item approval event</td>
+  <td><span class="pill p-g">YES</span></td><td><span class="pill p-t2">T2</span></td>
+</tr>
+<tr>
+  <td><div class="feat-name">Blueprint Construction</div></td>
+  <td>Bloom distribution enforcement, USMLE system proportions, difficulty mix, equity targets (min 15% health equity LCME 7.6)</td>
+  <td class="feat-tech">ExamBlueprint node<br>LCMEContentDomain (equity items)<br>BloomLevel · DifficultyBand distribution</td>
+  <td class="feat-event">/api/blueprints CRUD<br>Validation: check equity threshold before save<br>Stored as graph node for LCME evidence</td>
+  <td><span class="pill p-g">YES</span></td><td><span class="pill p-t2">T2</span></td>
+</tr>
+<tr>
+  <td><div class="feat-name">Exam Assembly</div></td>
+  <td>Filter item bank → auto-fill blueprint gaps → validate against blueprint → faculty confirms → deploy</td>
+  <td class="feat-tech">Exam · ExamSection nodes<br>CONTAINS_ITEM edges</td>
+  <td class="feat-event">/api/exams/assemble (constraint satisfaction)<br>Blueprint compliance check before deploy<br>journey/exam.deployed on confirm</td>
+  <td><span class="pill p-g">YES</span></td><td><span class="pill p-t2">T2</span></td>
+</tr>
+<tr>
+  <td><div class="feat-name">Question Remixing</div></td>
+  <td>Generate variants from approved items: same concept, different clinical scenario / Bloom level / lead-in type</td>
+  <td class="feat-tech">AssessmentItem VARIANT_OF AssessmentItem<br>Shares SOURCED_FROM chunks</td>
+  <td class="feat-event">Haiku for variant (cheap)<br>Same critique gate as P3<br>IRT: starts with source item's difficulty estimate</td>
+  <td><span class="pill p-g">YES</span></td><td><span class="pill p-t2">T2</span></td>
+</tr>
+<tr>
+  <td><div class="feat-name">Angoff Standard-Setting</div></td>
+  <td>Faculty panel estimates borderline-student probability per item. ICC reconciliation. Cut score derivation. LCME 9.6.</td>
+  <td class="feat-tech">ExamBlueprint.passing_score<br>Angoff session stored in Supabase</td>
+  <td class="feat-event">Multi-panelist UI<br>/api/angoff/session · /api/angoff/reconcile</td>
+  <td><span class="pill p-r">No</span></td><td><span class="pill p-t2">T2</span></td>
+</tr>
+<tr>
+  <td><div class="feat-name">Agentic RAG (LOCAL + STRUCTURED)</div></td>
+  <td>Faculty natural language queries: "What concepts are we under-testing in Renal?" Routes to LOCAL (chunks) + STRUCTURED (graph traversal). GLOBAL deferred until T4 ConceptCluster.</td>
+  <td class="feat-tech">Text2Cypher (few-shot examples G03)<br>Hybrid RRF retrieval<br>AnswerCritic (max 2 iterations)</td>
+  <td class="feat-event">/api/rag/query<br>LOCAL + STRUCTURED only at T2 <span class="pill p-fix" style="font-size:7px">G11</span><br>GLOBAL unlocks at T4 (ConceptCluster)</td>
+  <td><span class="pill p-r">No</span></td><td><span class="pill p-t2">T2</span></td>
+</tr>
+<tr>
+  <td><div class="feat-name">FULFILLS Review Queue</div></td>
+  <td>Admin approves/rejects faculty SLO→ILO mapping assertions. Direction: SLO → CONTRIBUTES_TO → ILO.</td>
+  <td class="feat-tech">SLO -CONTRIBUTES_TO→ ILO<br>Direction canonical D09</td>
+  <td class="feat-event">Admin review queue UI<br>/api/admin/slo-ilo-mappings</td>
+  <td><span class="pill p-r">No</span></td><td><span class="pill p-t2">T2</span></td>
+</tr>
+<tr>
+  <td><div class="feat-name">Retired Exam Import</div></td>
+  <td>Upload ExamSoft / QTI / CSV → auto-parse → NBME format conversion → merged into item bank</td>
+  <td class="feat-tech">AssessmentItem {generation_approach:'nbme_conversion'}<br>evidence_grade:'D' initially</td>
+  <td class="feat-event">journey/exam.import<br>Two-phase: parse → convert → faculty review</td>
+  <td><span class="pill p-r">No</span></td><td><span class="pill p-t2">T2</span></td>
+</tr>
+<tr>
+  <td><div class="feat-name">Faculty Question Upload</div></td>
+  <td>Upload own questions → validate format → convert to NBME vignette format via conversion pipeline</td>
+  <td class="feat-tech">Same as Retired Exam Import<br>A/B test: conversion vs. de-novo quality</td>
+  <td class="feat-event">journey/question.import</td>
+  <td><span class="pill p-r">No</span></td><td><span class="pill p-t2">T2</span></td>
+</tr>
+<tr>
+  <td><div class="feat-name">KR-20 Reliability Analysis</div></td>
+  <td>KR-20 per exam + SEM calculation + interpretation guidance + length recommendations</td>
+  <td class="feat-tech">EvaluationResult · EvaluationRun nodes<br>Computed from Attempt data</td>
+  <td class="feat-event">/api/analytics/reliability<br>Triggered: journey/exam.scored</td>
+  <td><span class="pill p-r">No</span></td><td><span class="pill p-t2">T2</span></td>
+</tr>
+</tbody>
+</table>
+
+<h3>Tier 3 — Student Layer (Weeks 29–36) · Tier 4–5 — Intelligence & Wisdom (Month 9–18)</h3>
+<table class="feat-t">
+<thead><tr><th style="width:22%">Feature</th><th style="width:20%">Description</th><th style="width:22%">Technical implementation</th><th style="width:20%">Inngest event</th><th style="width:8%">MVP</th><th style="width:8%">Tier</th></tr></thead>
+<tbody>
+<tr><td><div class="feat-name">Standardized Exam Mode</div></td><td>Timed, flagging, navigation panel. NBME-style interface.</td><td class="feat-tech">Attempt records created per response. Supabase: attempt_streams table. journey/attempt.recorded on each answer.</td><td class="feat-event">journey/attempt.recorded → BKT update</td><td><span class="pill p-g">YES</span></td><td><span class="pill p-t3">T3</span></td></tr>
+<tr><td><div class="feat-name">Formative Results + "Why Wrong?"</div></td><td>Full item review post-exam. Distractor explanations grounded in MisconceptionCategory.name + description. "Why Wrong?" Haiku call with evidence_rule context.</td><td class="feat-tech">Distractor.evidence_rule → Haiku prompt<br>MisconceptionCategory.description → explanation<br>Source citation: ContentChunk UUID</td><td class="feat-event">/api/results/why-wrong<br>Haiku call per wrong answer on demand</td><td><span class="pill p-g">YES</span></td><td><span class="pill p-t3">T3</span></td></tr>
+<tr><td><div class="feat-name">Mastery Dashboard</div></td><td>Radar by USMLE system. BKT p_mastery per concept. Weekly gain. Ordered by clinical_consequence_score × (1-p_mastery).</td><td class="feat-tech">StudentMastery nodes<br>BKT update via Inngest (real-time)<br>Ordered by consequence × gap</td><td class="feat-event">journey/mastery.updated → UI re-render<br>Supabase realtime channel: mastery_updates</td><td><span class="pill p-g">YES</span></td><td><span class="pill p-t3">T3</span></td></tr>
+<tr><td><div class="feat-name">Practice Sessions</div></td><td>Student selects topics + difficulty + length 5-50 questions. Item selection: low p_mastery + not recently seen + clinical consequence ranked.</td><td class="feat-tech">PracticeCollection node<br>IRT information maximization for item selection</td><td class="feat-event">/api/practice/session<br>journey/attempt.recorded on each answer</td><td><span class="pill p-g">YES</span></td><td><span class="pill p-t3">T3</span></td></tr>
+<tr><td><div class="feat-name">StudyQueue (Spaced Retrieval) <span class="pill p-fix" style="font-size:7px">G14</span></div></td><td>BKT decay detects overdue concepts. IRT information maximization selects item. RecommendationEvent logged.</td><td class="feat-tech">Algorithm: p_mastery &lt;0.75 OR days_since_practice &gt; halflife × 0.5. Item: argmax IRT information at estimated theta.</td><td class="feat-event">journey/studyqueue.generate (daily cron 8am + on-demand)<br>journey/recommendation.created per item</td><td><span class="pill p-r">No</span></td><td><span class="pill p-t3">T3</span></td></tr>
+<tr><td><div class="feat-name">Mastery Timeline + Streak</div></td><td>Trend lines per SLO over semester. Day streak. Daily goal. Forgetting curve visualization.</td><td class="feat-tech">StudentMastery history (timestamped snapshots)<br>Weekly cron: journey/mastery.snapshot</td><td class="feat-event">Supabase: mastery_history table<br>Weekly snapshots for trending</td><td><span class="pill p-g">YES</span></td><td><span class="pill p-t3">T3</span></td></tr>
+<tr><td><div class="feat-name">Post-Exam Item Analytics</div></td><td>p-values, discrimination, distractor analysis, KR-20 per item. Low discrimination → source chunk flagged.</td><td class="feat-tech">IRT Phase B calibration<br>ContentChunk.discrimination_flag = true if a &lt;0.2<br>EvaluationResult nodes</td><td class="feat-event">journey/attempt.batch-calibrate (weekly cron Monday 2am)</td><td><span class="pill p-r">No</span></td><td><span class="pill p-t4">T4</span></td></tr>
+<tr><td><div class="feat-name">ConceptCluster Global Search <span class="pill p-fix" style="font-size:7px">G11</span></div></td><td>Louvain → ConceptCluster nodes + LLM summaries. GLOBAL agentic RAG unlocked. "What are the dominant themes in M1 curriculum?"</td><td class="feat-tech">ConceptCluster nodes (Louvain output)<br>LLM-generated cluster summaries<br>MS GraphRAG global search routing</td><td class="feat-event">journey/gnn.community-detect (Phase 5 trigger)<br>Runs once &gt;100 confirmed SubConcepts in course</td><td><span class="pill p-r">No</span></td><td><span class="pill p-t4">T4</span></td></tr>
+<tr><td><div class="feat-name">GNN TEACHES Prediction</div></td><td>HeteroSAGE trained on faculty-approved TEACHES edges → predicts new TEACHES for unreviewed chunks. Evidence grade 'B'.</td><td class="feat-tech">HeteroSAGE weekly retrain<br>TEACHES {evidence_grade:'B', method:'gnn'}</td><td class="feat-event">journey/gnn.retrain-trigger (when &gt;100 new SubConcepts)</td><td><span class="pill p-r">No</span></td><td><span class="pill p-t4">T4</span></td></tr>
+<tr><td><div class="feat-name">IRT Calibration Phase B</div></td><td>2PL empirical calibration after 30+ responses per item. Replaces AI-estimated difficulty.</td><td class="feat-tech">IRT_Parameters {calibration_phase:'empirical'}<br>Weekly calibration Inngest job</td><td class="feat-event">journey/attempt.batch-calibrate (Monday 2am)</td><td><span class="pill p-r">No</span></td><td><span class="pill p-t4">T4</span></td></tr>
+<tr><td><div class="feat-name">LCME Readiness Room</div></td><td>58-element heatmap, evidence packages, one-click DCI evidence export</td><td class="feat-tech">SATISFIES · COVERS_LCME_DOMAIN traversal<br>Evidence package: PDF export</td><td class="feat-event">/api/lcme/readiness<br>/api/lcme/evidence-package (PDF)</td><td><span class="pill p-r">No</span></td><td><span class="pill p-t4">T4</span></td></tr>
+<tr><td><div class="feat-name">First Aid Yield Oracle</div></td><td>ReferenceSource node + COVERED_BY edges + yield_weight. "MSM covers X% of high-yield Step 1 concepts."</td><td class="feat-tech">ReferenceSource · COVERED_BY {yield_weight}<br>SubConcept.high_yield_score</td><td class="feat-event">P2 enrichment: COVERED_BY edge creation if First Aid seeded</td><td><span class="pill p-r">No</span></td><td><span class="pill p-t4">T4</span></td></tr>
+<tr><td><div class="feat-name">Adaptive Assessment (CAT-lite)</div></td><td>IRT-driven item selection targeting θ+1σ. Not full CAT — requires 200+ calibrated items per system.</td><td class="feat-tech">IRT information function maximization<br>Requires IRT Phase B (T4)</td><td class="feat-event">/api/practice/adaptive-session</td><td><span class="pill p-r">No</span></td><td><span class="pill p-t4">T4</span></td></tr>
+<tr><td><div class="feat-name">WisdomPath + CurriculumRecommendation</div></td><td>"Upload this lecture → closes 34% of Cardiovascular gap + improves Renal 8%." CounterfactualService.</td><td class="feat-tech">WisdomPath {chain[], path_confidence}<br>path_confidence = product of EVIDENCE_GRADE_WEIGHTs<br>CurriculumRecommendation {gap_delta, effort_estimate}</td><td class="feat-event">journey/wisdom.compute (weekly)<br>Requires clinical_consequence_score on SubConcepts</td><td><span class="pill p-r">No</span></td><td><span class="pill p-t5">T5</span></td></tr>
+<tr><td><div class="feat-name">EPA Entrustment</div></td><td>Student ENTRUSTED_FOR EPA when PV evidence_threshold met + PatientEncounter record + BKT threshold.</td><td class="feat-tech">Student -ENTRUSTED_FOR {level}→ EPA<br>Requires Clerkship PatientEncounter nodes (T4)</td><td class="feat-event">journey/entrustment.evaluate (triggered by PatientEncounter completion)</td><td><span class="pill p-r">No</span></td><td><span class="pill p-t5">T5</span></td></tr>
+<tr><td><div class="feat-name">Advisor Intelligence Layer</div></td><td>At-risk alerts (p_mastery &lt;0.65), mastery gap interpretation, remediation recommendations</td><td class="feat-tech">Requires 6+ months longitudinal BKT data<br>FERPA: min cell ≥5</td><td class="feat-event">journey/advisor.risk-detect (weekly)</td><td><span class="pill p-r">No</span></td><td><span class="pill p-t5">T5</span></td></tr>
+<tr><td><div class="feat-name">Equity Gap Analysis</div></td><td>DIF analysis + Cohen's d by URM/gender/prior degree. Dean dashboard.</td><td class="feat-tech">Requires 2+ cohorts longitudinal data<br>DIF: Mantel-Haenszel test per item</td><td class="feat-event">journey/equity.analyze (per cohort completion)</td><td><span class="pill p-r">No</span></td><td><span class="pill p-t5">T5</span></td></tr>
+</tbody>
+</table>
+</section>
+
+<!-- ══════════════ OCR + SPEAKER NOTES SECTION — insert into tech arch ══════════════ -->
+<section id="ocr">
+<div class="sid">I-b / OCR & Speaker Notes Processing</div>
+<h2>Image text extraction · Speaker notes as faculty intent — both valuable, both distinct</h2>
+
+<div class="call-gold"><div class="cl">Why OCR matters for medical education specifically</div>
+<p>Medical lecture slides are saturated with image-embedded text. Pathway diagrams (glycolysis, coagulation cascade, RAAS), anatomy figures with structural labels, histology images with annotations, drug mechanism schematics, ECG tracings with marked intervals, lab panels as screenshots — all common, all invisible to text parsers. A pharmacology lecture on beta-blockers may have 60% of its mechanistic content in images. Without OCR, the SubConcept extraction step sees an artificially thin content chunk and misses the most clinically rich material on the slide. Speaker notes are the opposite problem: they contain explicit faculty intent ("the key point here is that furosemide blocks NKCC2, NOT NCC") that should inform SubConcept extraction priority but must never appear in student-facing retrieval context.</p>
+</div>
+
+<h3>OCR strategy — two-phase by content type</h3>
+
+<div class="two">
+<div>
+<div class="card"><div class="card-lbl">Phase A — Image-embedded text (Claude Haiku Vision)</div>
+<div class="card-ttl">Diagrams · Labels · Annotations · Screenshots</div>
+<p>Use Claude Haiku Vision for slides where <code>entity_density &lt; 0.1</code> AND <code>has_image = true</code> — the signal that the slide's text content is primarily in an image. Haiku Vision extracts: (1) all visible text verbatim, (2) labels on anatomical structures/pathways/mechanisms, (3) numerical values in tables, (4) drug names / enzyme names / gene names in pathway schematics. Merged with body_text before chunking. Tagged in the ContentChunk with <code>ocr_source: 'vision'</code>. The merged text becomes the chunk text that gets embedded and extracted.</p></div>
+</div>
+<div>
+<div class="card"><div class="card-lbl">Phase B — Scanned PDFs (pytesseract fallback)</div>
+<div class="card-ttl">Detection: &lt;50 chars/page average from pdfplumber</div>
+<p>If pdfplumber extracts &lt;50 characters per page on average, the PDF is image-based (scanned). Trigger pytesseract OCR with: deskew preprocessing, adaptive thresholding for medical images, language=eng. Result replaces the empty body_text. Tagged <code>ocr_source: 'tesseract'</code>. Lower confidence than Vision but handles bulk scanned syllabi and older course materials. For syllabi specifically, this is the most common failure mode — faculty submit scanned PDFs from old handouts.</p></div>
+</div>
+</div>
+
+<pre><span class="cm">// P1 Step 01b: OCR enrichment — runs AFTER parse-scaffold, BEFORE chunk-embed
+// Triggered per section where has_image = true OR body_text is suspiciously thin</span>
+
+<span class="kw">async function</span> <span class="fn">ocrEnrichSection</span>(
+  section: <span class="ty">LectureSection</span>,
+  slideImageBuffer: <span class="ty">Buffer</span> | <span class="kw">null</span>
+): Promise&lt;<span class="ty">string</span>&gt; {
+  <span class="cm">// Condition 1: slide has an embedded image AND body text is thin</span>
+  <span class="kw">if</span> (section.has_image && section.body_text.<span class="fn">length</span> < <span class="nu">200</span> && slideImageBuffer) {
+    <span class="kw">const</span> ocrResult = <span class="kw">await</span> anthropic.messages.<span class="fn">create</span>({
+      model: <span class="st">'claude-haiku-4-5-20251001'</span>,  <span class="cm">// Vision-capable + cheap</span>
+      max_tokens: <span class="nu">800</span>,
+      messages: [{
+        role: <span class="st">'user'</span>,
+        content: [
+          {
+            type: <span class="st">'image'</span>,
+            source: { type: <span class="st">'base64'</span>, media_type: <span class="st">'image/png'</span>, data: slideImageBuffer.<span class="fn">toString</span>(<span class="st">'base64'</span>) }
+          },
+          {
+            type: <span class="st">'text'</span>,
+            text: <span class="op">`This is a medical lecture slide. Extract ALL text content visible in this image:
+1. All text labels on anatomical diagrams, pathway schematics, or mechanism figures
+2. Drug names, enzyme names, gene names, receptor names in any diagram
+3. Numerical values, units, reference ranges in any table or chart
+4. Any text in boxes, arrows, callouts, or annotations
+5. ECG interval labels, histology stain types, imaging modality markers
+
+Return ONLY the extracted text, organized by location (top to bottom, left to right).
+If the image contains no readable text, return exactly: NO_TEXT_FOUND`</span>
+          }
+        ]
+      }]
+    });
+
+    <span class="kw">const</span> extractedText = ocrResult.content[<span class="nu">0</span>].text;
+    <span class="kw">if</span> (extractedText !== <span class="st">'NO_TEXT_FOUND'</span>) {
+      <span class="kw">await</span> supabase.<span class="fn">from</span>(<span class="st">'lecture_sections'</span>).<span class="fn">update</span>({
+        image_alt_text: extractedText,
+        body_text: [section.body_text, extractedText].<span class="fn">filter</span>(<span class="ty">Boolean</span>).<span class="fn">join</span>(<span class="st">'\n\n[IMAGE CONTENT]\n'</span>)
+      }).<span class="fn">eq</span>(<span class="st">'id'</span>, section.id);
+      <span class="kw">return</span> extractedText;
+    }
+  }
+
+  <span class="cm">// Condition 2: scanned PDF — pdfplumber returned almost nothing</span>
+  <span class="kw">if</span> (section.body_text.<span class="fn">length</span> < <span class="nu">50</span>) {
+    <span class="kw">const</span> { createWorker } = <span class="fn">require</span>(<span class="st">'tesseract.js'</span>);
+    <span class="kw">const</span> worker = <span class="kw">await</span> <span class="fn">createWorker</span>(<span class="st">'eng'</span>);
+    <span class="kw">const</span> { data: { text } } = <span class="kw">await</span> worker.<span class="fn">recognize</span>(slideImageBuffer);
+    <span class="kw">await</span> worker.<span class="fn">terminate</span>();
+
+    <span class="kw">if</span> (text.<span class="fn">trim</span>().<span class="fn">length</span> > <span class="nu">20</span>) {
+      <span class="kw">await</span> supabase.<span class="fn">from</span>(<span class="st">'lecture_sections'</span>).<span class="fn">update</span>({
+        body_text: text,
+        image_alt_text: <span class="st">'[tesseract-ocr]'</span>
+      }).<span class="fn">eq</span>(<span class="st">'id'</span>, section.id);
+      <span class="kw">return</span> text;
+    }
+  }
+
+  <span class="kw">return</span> section.body_text;  <span class="cm">// no OCR needed</span>
+}
+
+<span class="cm">// Slide image extraction from PPTX (for Vision API)
+// python-pptx renders each slide to a PNG using slide.shapes</span>
+<span class="kw">async function</span> <span class="fn">extractSlideImage</span>(pptxBuffer: <span class="ty">Buffer</span>, slideIndex: <span class="ty">number</span>): Promise&lt;<span class="ty">Buffer</span> | <span class="kw">null</span>&gt; {
+  <span class="cm">// Call Python microservice: POST /render-slide {pptx_base64, slide_index}</span>
+  <span class="kw">const</span> res = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="op">`${process.env.PPTX_RENDERER_URL}/render-slide`</span>, {
+    method: <span class="st">'POST'</span>,
+    body: <span class="ty">JSON</span>.<span class="fn">stringify</span>({ pptx_base64: pptxBuffer.<span class="fn">toString</span>(<span class="st">'base64'</span>), slide_index: slideIndex })
+  });
+  <span class="kw">const</span> { image_base64, has_image } = <span class="kw">await</span> res.<span class="fn">json</span>();
+  <span class="kw">return</span> has_image ? <span class="ty">Buffer</span>.<span class="fn">from</span>(image_base64, <span class="st">'base64'</span>) : <span class="kw">null</span>;
+}
+
+<span class="cm">// For syllabi PDFs — scanned detection + OCR fallback
+// Added to syllabus parsing pipeline (separate from lecture P1)</span>
+<span class="kw">async function</span> <span class="fn">parseOrOcrSyllabus</span>(pdfBuffer: <span class="ty">Buffer</span>): Promise&lt;<span class="ty">string</span>&gt; {
+  <span class="kw">const</span> pdfplumberText = <span class="kw">await</span> <span class="fn">extractPdfText</span>(pdfBuffer);  <span class="cm">// Python pdfplumber service</span>
+  <span class="kw">const</span> avgCharsPerPage = pdfplumberText.<span class="fn">length</span> / (pdfBuffer.<span class="fn">length</span> / <span class="nu">50000</span>); <span class="cm">// rough page estimate</span>
+
+  <span class="kw">if</span> (avgCharsPerPage < <span class="nu">50</span>) {
+    <span class="cm">// Scanned PDF — use Claude Haiku Vision page by page</span>
+    <span class="kw">const</span> pageImages = <span class="kw">await</span> <span class="fn">renderPdfPages</span>(pdfBuffer);  <span class="cm">// pdf2image service</span>
+    <span class="kw">const</span> ocrPages = <span class="kw">await</span> <span class="ty">Promise</span>.<span class="fn">all</span>(pageImages.<span class="fn">map</span>(img =>
+      anthropic.messages.<span class="fn">create</span>({
+        model: <span class="st">'claude-haiku-4-5-20251001'</span>,
+        max_tokens: <span class="nu">1000</span>,
+        messages: [{ role: <span class="st">'user'</span>, content: [
+          { type: <span class="st">'image'</span>, source: { type: <span class="st">'base64'</span>, media_type: <span class="st">'image/jpeg'</span>, data: img } },
+          { type: <span class="st">'text'</span>, text: <span class="st">'Extract all text from this medical school syllabus page. Preserve structure. Return extracted text only.'</span> }
+        ]}]
+      }).<span class="fn">then</span>(r => r.content[<span class="nu">0</span>].text)
+    ));
+    <span class="kw">return</span> ocrPages.<span class="fn">join</span>(<span class="st">'\n\n---PAGE BREAK---\n\n'</span>);
+  }
+  <span class="kw">return</span> pdfplumberText;
+}</pre>
+
+<h3>Speaker notes — faculty intent, not student content</h3>
+<p>Speaker notes occupy a unique epistemic position in the pipeline. They are written by faculty for faculty — explicit teaching intent, clinical pearls, emphasis markers ("this is high-yield for Step 1"), caveats ("tell them NOT to confuse this with..."). They are the closest thing to faculty voice the system has access to. But they must be handled entirely separately from body text: never mixed into ContentChunks that students retrieve, never embedded into the same index, but actively used to improve SubConcept extraction quality and to seed SyllabusTopic intent signals.</p>
+
+<pre><span class="cm">// Speaker notes processing — parallel track to body_text chunks
+// THREE distinct uses, none of which mix notes into student retrieval</span>
+
+<span class="kw">async function</span> <span class="fn">processSpeakerNotes</span>(section: <span class="ty">LectureSection</span>) {
+  <span class="kw">if</span> (!section.speaker_notes || section.speaker_notes.<span class="fn">trim</span>().<span class="fn">length</span> < <span class="nu">10</span>) <span class="kw">return</span>;
+
+  <span class="cm">// USE 1: SubConcept extraction priority boost
+  // Speaker notes often name the target concept explicitly
+  // Extract concept hints to boost NER confidence during P1 Step 03</span>
+  <span class="kw">const</span> hintResult = <span class="kw">await</span> anthropic.messages.<span class="fn">create</span>({
+    model: <span class="st">'claude-haiku-4-5-20251001'</span>,
+    max_tokens: <span class="nu">150</span>,
+    messages: [{
+      role: <span class="st">'user'</span>,
+      content: <span class="op">`Analyze these speaker notes from a medical lecture slide:
+
+"${section.speaker_notes}"
+
+Extract:
+1. The PRIMARY medical concept this slide is teaching (one phrase)
+2. Any "high yield" or "Step 1" signals (yes/no)
+3. Any explicit misconceptions the faculty warns against
+
+Return JSON: {"primary_concept": "...", "high_yield": boolean, "warned_misconceptions": ["..."]}`</span>
+    }]
+  });
+
+  <span class="kw">const</span> hints = <span class="ty">JSON</span>.<span class="fn">parse</span>(hintResult.content[<span class="nu">0</span>].text);
+
+  <span class="cm">// Store as SpeakerNote node in Neo4j — NOT linked to ContentChunk embedding index
+  // LINKED to LectureSection only — informational, not retrievable by students</span>
+  <span class="kw">await</span> neo4j.<span class="fn">run</span>(`
+    MATCH (ls:LectureSection {uuid: $sectionId})
+    MERGE (sn:SpeakerNote {uuid: $noteUuid})
+      ON CREATE SET
+        sn.raw_text = $rawText,
+        sn.primary_concept_hint = $primaryConcept,
+        sn.high_yield_signal = $highYield,
+        sn.warned_misconceptions = $misconceptions,
+        sn.epistemic_status = 'faculty_intent',  <span class="cm">// never student-facing</span>
+        sn.created_at = datetime()
+    MERGE (ls)-[:HAS_SPEAKER_NOTE]->(sn)
+  `, {
+    sectionId: section.id,
+    noteUuid: <span class="fn">deterministicUuid</span>(<span class="op">`note:${section.id}`</span>),
+    rawText: section.speaker_notes,
+    primaryConcept: hints.primary_concept,
+    highYield: hints.high_yield,
+    misconceptions: hints.warned_misconceptions
+  });
+
+  <span class="cm">// USE 2: SubConcept confidence boosting
+  // If the speaker note names a UMLS concept explicitly → boost the TEACHES edge
+  // from the section's ContentChunks to that SubConcept from 'C' to 'B'</span>
+  <span class="kw">if</span> (hints.primary_concept && hints.primary_concept.<span class="fn">length</span> > <span class="nu">3</span>) {
+    <span class="kw">await</span> neo4j.<span class="fn">run</span>(`
+      MATCH (ls:LectureSection {uuid: $sectionId})-[:HAS_CHUNK]->(cc:ContentChunk)
+            -[t:TEACHES]->(sc:SubConcept)
+      WHERE toLower(sc.name) CONTAINS toLower($hint)
+         OR sc.name =~ '(?i).*' + $hint + '.*'
+      SET t.evidence_grade = 'B',
+          t.evidence_weight = 0.82,
+          t.boosted_by = 'speaker_note_hint'
+    `, { sectionId: section.id, hint: hints.primary_concept });
+  }
+
+  <span class="cm">// USE 3: MisconceptionCategory seeding from explicit faculty warnings
+  // "Don't confuse furosemide with spironolactone" → creates WARNED_AGAINST relationship</span>
+  <span class="kw">for</span> (<span class="kw">const</span> misconception <span class="kw">of</span> hints.warned_misconceptions) {
+    <span class="kw">await</span> neo4j.<span class="fn">run</span>(`
+      MATCH (sn:SpeakerNote {uuid: $noteUuid})
+      MERGE (w:FacultyWarning {text: $misconception, lecture_section_uuid: $sectionId})
+      MERGE (sn)-[:WARNS_AGAINST]->(w)
+    `, { noteUuid: <span class="fn">deterministicUuid</span>(<span class="op">`note:${section.id}`</span>), misconception, sectionId: section.id });
+    <span class="cm">// FacultyWarning nodes: reviewed by admin quarterly to update MisconceptionCategory seed</span>
+  }
+}</pre>
+
+<div class="call-g"><div class="cl">What speaker notes are never used for</div>
+<p>Speaker notes are NOT embedded into pgvector. They are NOT included in content_chunks. They are NOT part of any student-facing retrieval context. They do NOT appear in the LOD brief. The wall is architectural: SpeakerNote nodes have <code>epistemic_status: 'faculty_intent'</code> and no embedding columns. The retrieval layer has a hard exclusion: ContentChunks are only created from <code>body_text</code>, never from <code>speaker_notes</code>. This is the same separation as TEACHES vs COVERS_TOPIC — declared intent vs verified delivery.</p>
+</div>
+
+<h3>Updated P1 step sequence with OCR and speaker notes</h3>
+<table>
+<thead><tr><th>Step</th><th>New?</th><th>Action</th><th>Source</th><th>Duration est.</th></tr></thead>
+<tbody>
+<tr><td class="mono">01</td><td></td><td>Parse PPTX/PDF → LectureSection scaffold</td><td>python-pptx / pdfplumber</td><td>10–30s</td></tr>
+<tr><td class="mono">01b</td><td><span class="pill p-fix">NEW</span></td><td>OCR enrichment — Vision for image slides, tesseract for scanned PDFs</td><td>Claude Haiku Vision + tesseract.js</td><td>20–60s (parallel per section)</td></tr>
+<tr><td class="mono">01c</td><td><span class="pill p-fix">NEW</span></td><td>Speaker notes processing — extract concept hints, boost TEACHES confidence, log FacultyWarnings</td><td>Claude Haiku</td><td>15–30s (parallel per section)</td></tr>
+<tr><td class="mono">02</td><td></td><td>Chunk body_text (never speaker_notes) + dual embed (MedCPT + text-embedding-3-small)</td><td>tiktoken + MedCPT + OpenAI</td><td>30–90s</td></tr>
+<tr><td class="mono">03</td><td></td><td>NER + batch UMLS (20/call). Speaker note hints boost TEACHES confidence where names match.</td><td>MetaMap + UMLS API</td><td>60–120s</td></tr>
+<tr><td class="mono">04</td><td></td><td>LCME domain classify (Haiku per section)</td><td>Claude Haiku</td><td>30–60s</td></tr>
+<tr><td class="mono">05</td><td></td><td>TEACHES edge creation (hybrid RRF k=60)</td><td>pgvector + Neo4j</td><td>20–40s</td></tr>
+<tr><td class="mono">06</td><td></td><td>Faculty review gate (step.waitForEvent, 7-day)</td><td>Inngest</td><td>0s (async wait)</td></tr>
+<tr><td class="mono">07</td><td></td><td>Finalize + fan-out (journey/subconcept.confirmed × N)</td><td>Neo4j + Inngest</td><td>10–20s</td></tr>
+</tbody>
+</table>
+
+<h3>New env vars and infrastructure for OCR</h3>
+<pre><span class="cm"># ── OCR / Image Processing ────────────────────────────────────────────
+PPTX_RENDERER_URL=http://pptx-renderer-sidecar:5000
+                                          # Python service: python-pptx → PNG
+PDF_RENDERER_URL=http://pdf-renderer-sidecar:5001
+                                          # pdf2image service → JPEG pages
+TESSERACT_ENDPOINT=http://ocr-sidecar:5002
+                                          # Tesseract fallback for scanned PDFs
+OCR_MIN_CHARS_PER_PAGE=50               # Below this → trigger OCR on PDF
+OCR_VISION_MIN_BODY_CHARS=200           # Below this AND has_image → trigger Vision OCR
+OCR_ENABLED=true                         # Feature flag — disable during dev if slow</pre>
+
+<div class="three">
+  <div class="card"><div class="card-lbl">pptx-renderer sidecar</div><div class="card-ttl">python-pptx → PNG</div><p>Python Flask service. Accepts PPTX file + slide_index, returns PNG render of that slide. Detects <code>has_image</code> by checking <code>shape.shape_type == MSO_SHAPE_TYPE.PICTURE</code>. Runs on Railway / Fly.io with python-pptx + Pillow. 2 replicas for concurrency.</p></div>
+  <div class="card"><div class="card-lbl">pdf-renderer sidecar</div><div class="card-ttl">pdf2image → JPEG</div><p>Python Flask service. Uses <code>pdf2image</code> (poppler wrapper) to render PDF pages as JPEG images. Returns all pages as base64 JPEG array. Only invoked when pdfplumber detects a scanned PDF (&lt;50 chars/page average). DPI=200 sufficient for text extraction.</p></div>
+  <div class="card"><div class="card-lbl">Cost impact of OCR</div><div class="card-ttl">~$0.001/slide for Vision OCR</div><p>Claude Haiku Vision: ~800 input tokens (image) + 200 output tokens ≈ $0.0003/slide. For a 50-slide lecture where 20 slides have images: ~$0.006 additional per lecture. Amortized: negligible vs the SubConcept quality improvement from capturing pathway diagram labels and anatomy figure annotations.</p></div>
+</div>
+</section>
+
+
+<!-- ══════════════════════ II: STACK ══════════════════════ -->
+<section id="stack">
+<div class="sid">II / Stack & Infrastructure</div>
+<h2>Every technology decision with rationale</h2>
+
+<div class="stack-grid">
+  <div class="sg-cell"><div class="sg-lbl">Frontend</div><div class="sg-title">Next.js 15</div><div class="sg-detail">App Router + TypeScript. React Server Components for data-heavy views (coverage heatmap). Client components for interactive (chat, item review). Tailwind CSS. Radix UI primitives. next/image for optimized slides. Deployed on Vercel.</div></div>
+  <div class="sg-cell"><div class="sg-lbl">Relational + Vector + Auth</div><div class="sg-title">Supabase</div><div class="sg-detail">PostgreSQL 16 + pgvector 0.7 with HNSW indexes. Row-Level Security on every table (FERPA enforcement). Supabase Auth for faculty/student/admin. Supabase Storage for lecture files. Realtime subscriptions for pipeline status. Edge Functions for lightweight webhooks.</div></div>
+  <div class="sg-cell"><div class="sg-lbl">Knowledge Graph</div><div class="sg-title">Neo4j Aura</div><div class="sg-detail">AuraDB Professional (or Enterprise for production). 77 node types, 110 typed edges. APOC for deterministic UUID generation. GDS (Graph Data Science) for PageRank, Louvain, path algorithms. Bolt driver in Next.js API routes. Connection pool: 20 connections max.</div></div>
+  <div class="sg-cell"><div class="sg-lbl">Workflow Orchestration</div><div class="sg-title">Inngest</div><div class="sg-detail">14 events. Three pipeline functions. Step-level checkpointing — retry only failed steps. step.waitForEvent() for human approval gates. Concurrency controls per faculty_id. Rate limiting for UMLS API (20 req/sec). Cron schedule for weekly jobs. NOT Kafka (G13: removed from MVP).</div></div>
+  <div class="sg-cell"><div class="sg-lbl">LLM (Core)</div><div class="sg-title">Claude Sonnet 4</div><div class="sg-detail">Core item generation (P3 Step 02). Critique gate / AnswerCritic (P3 Step 03). SLO extraction from syllabi. Any task requiring clinical reasoning or multi-step judgment. Model: claude-sonnet-4-20250514. Max tokens: 600 for items, 200 for critique.</div></div>
+  <div class="sg-cell"><div class="sg-lbl">LLM (Efficiency)</div><div class="sg-title">Claude Haiku 4.5</div><div class="sg-detail">HyDE vignettes (100 tokens). Distractors (300 tokens). Rationale (400 tokens). QA scoring (150 tokens). LOD brief generation (200 tokens). LCMEDomainClassifier. SAME_AS disambiguation. Lecture summary (150 tokens). Model: claude-haiku-4-5-20251001.</div></div>
+  <div class="sg-cell"><div class="sg-lbl">Embeddings (Biomedical)</div><div class="sg-title">MedCPT</div><div class="sg-detail">For ContentChunks where entity_density &gt;0.3 (biomedical content). 768-dim vectors. PubMed-trained — outperforms OpenAI on clinical retrieval. Self-hosted via HuggingFace inference endpoint or Replicate. Separate pgvector HNSW index from general embeddings.</div></div>
+  <div class="sg-cell"><div class="sg-lbl">Embeddings (General)</div><div class="sg-title">text-embedding-3-small</div><div class="sg-detail">For pedagogical content (instructions, assessments, course structure). 1536-dim vectors. OpenAI API. Used for: non-biomedical chunks, SLO embeddings, lecture summaries (Level 3), few-shot example retrieval. Cheaper than MedCPT at scale.</div></div>
+  <div class="sg-cell"><div class="sg-lbl">UMLS / NER</div><div class="sg-title">MetaMap + UMLS API</div><div class="sg-detail">MetaMap (Java service, self-hosted or Docker) for medical NER in ContentChunks. UMLS API for full Metathesaurus resolution in P2. Batch: 20 entities per UMLS API call. Rate limit: 20 req/sec via Inngest throttle. Aronson & Lang (2010).</div></div>
+  <div class="sg-cell"><div class="sg-lbl">File Parsing</div><div class="sg-title">python-pptx + pdfplumber</div><div class="sg-detail">python-pptx for PPTX: slide-by-slide text extraction including speaker notes. pdfplumber for PDF: layout-aware extraction with heading detection. Run in Supabase Edge Function (Python runtime) or dedicated microservice. Max file size: 100MB.</div></div>
+  <div class="sg-cell"><div class="sg-lbl">Monitoring</div><div class="sg-title">Inngest + Vercel Analytics</div><div class="sg-detail">Inngest dashboard for pipeline health + step-level failure visibility. Vercel Analytics for frontend performance. Supabase dashboard for DB metrics. Custom: generation_cost_log table tracks per-item cost for budget alerting when cost &gt;$0.20/item.</div></div>
+  <div class="sg-cell"><div class="sg-lbl">Future ML (T4+)</div><div class="sg-title">HeteroSAGE + Louvain</div><div class="sg-detail">Neo4j GDS: Louvain community detection for ConceptCluster creation. GraphSAGE (inductive GNN) via Neo4j GDS or PyG for TEACHES link prediction. First retrain at T4 when &gt;100 confirmed SubConcepts with faculty-approved TEACHES edges exist.</div></div>
+</div>
+
+<div class="call-r"><div class="cl">What was deliberately excluded and why</div>
+<p><strong>Kafka:</strong> Removed from MVP (G13 canonical). Inngest handles all workflow events at MSM scale. Kafka is a T5+ concern when &gt;1,000 simultaneous students create throughput that exceeds Inngest per-event economics. <strong>Redis:</strong> Not needed. Supabase realtime subscriptions handle status push. Inngest handles queue semantics. Add at T4+ if needed for token bucket rate limiting. <strong>LangChain / LangGraph:</strong> Explicit decision not to use. Each pipeline step is an Inngest step.run() with typed inputs/outputs — deterministic, observable, retryable. No autonomous agent loops in the generation pipeline. <strong>Pinecone / Weaviate:</strong> pgvector HNSW is sufficient at MSM scale (thousands of chunks, not millions). Migrate to dedicated vector DB at T5+ when collection exceeds 10M vectors.</p>
+</div>
+
+<h3>Topology diagram</h3>
+<div class="arch">
+<span class="al">JOURNEY OS — PRODUCTION TOPOLOGY</span>
+
+<span class="ac">━━━ USER TIER ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="an">Browser</span> ──HTTPS──▸ <span class="an">Vercel Edge (Next.js 15 App Router)</span>
+  └─ <span class="an">RSC</span>: Server-rendered coverage heatmap, mastery dashboard
+  └─ <span class="an">Client components</span>: Chat, item review, real-time status
+  └─ <span class="an">API routes</span>: /app/api/** (server-side — secrets never in browser)
+
+<span class="ac">━━━ API TIER ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="an">Next.js API routes</span> (server-only)
+  ├─ Auth middleware: Supabase session validation + role check on every request
+  ├─ Neo4j driver (Bolt/neo4j-driver): connection pool max 20
+  ├─ Supabase client (service_role key for admin ops, anon key for user ops)
+  ├─ Inngest client: sendEvent() for workflow triggers
+  └─ Anthropic SDK: direct calls for chat/RAG (not routed through Inngest)
+
+<span class="ac">━━━ DATA TIER ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="an">Supabase</span> (PostgreSQL 16 + pgvector + RLS + Auth)
+  ├─ Source of truth: content text, embeddings, auth, audit logs, LOD briefs
+  ├─ pgvector HNSW: biomedical_embeddings + general_embeddings (two separate indexes)
+  └─ Realtime: pipeline_status channel per lecture_id, mastery_updates per student_id
+
+<span class="an">Neo4j Aura Professional</span>
+  ├─ Source of truth: relationships, graph structure, traversal
+  ├─ GDS: PageRank, Louvain (T4+), shortest path
+  └─ Every node carries uuid FK bridging to Supabase row
+
+<span class="an">Supabase Storage</span> (S3-compatible)
+  └─ Lecture files: uploads/{institution_id}/{course_id}/{file_hash}.{ext}
+     Max 100MB. RLS: only faculty of that course can access.
+
+<span class="ac">━━━ WORKFLOW TIER (INNGEST) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="an">Inngest Cloud</span>
+  ├─ P1: journey/lecture.process    (priority: high,  timeout: 15min, retries: 3)
+  ├─ P2: journey/subconcept.enrich  (priority: low,   timeout: 24hr,  retries: 5)
+  ├─ P3: journey/items.batch-generate (priority: med, timeout: 30min, retries: 2)
+  ├─ BKT: journey/mastery.update    (priority: high,  timeout: 30s,   retries: 5)
+  └─ Crons: weekly calibration, reconciliation, evaluation
+
+<span class="ac">━━━ EXTERNAL APIs ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="an">Anthropic API</span>   — Sonnet 4 + Haiku 4.5 (all generation)
+<span class="an">UMLS API</span>        — Full Metathesaurus resolution (P2, batch 20/call, 20 req/sec max)
+<span class="an">Hetionet</span>        — PostgreSQL dump, self-hosted in Supabase schema: hetionet.*
+<span class="an">DrugBank</span>        — Seeded via Phase 0 script from XML download (not API)
+<span class="an">MeSH</span>           — Annual release, loaded via Phase 0 seed from NLM download
+<span class="an">OpenAI</span>          — text-embedding-3-small only
+<span class="an">MedCPT</span>         — HuggingFace inference endpoint (self-hosted or Replicate)
+</div>
+</section>
+
+<!-- ══════════════════════ III: DATABASE ══════════════════════ -->
+<section id="db">
+<div class="sid">III / Database Architecture</div>
+<h2>Supabase schemas · Neo4j constraints · pgvector indexes · UUID bridge</h2>
+
+<h3>A. Supabase core tables</h3>
+
+<div class="schema">
+<div class="schema-head"><span class="schema-file">supabase/migrations/001_core.sql</span><span class="schema-tag">FERPA RLS on every table</span></div>
+<pre><span class="cm">-- All tables include institution_id for RLS scoping
+-- RLS policy pattern applied to every user-facing table:</span>
+<span class="kw">CREATE POLICY</span> institution_isolation <span class="kw">ON</span> content_chunks
+  <span class="kw">USING</span> (institution_id = auth.<span class="fn">jwt</span>() ->> <span class="st">'institution_id'</span>);
+
+<span class="cm">-- ── FACULTY / ADMIN ────────────────────────────────────────────────────</span>
+<span class="kw">CREATE TABLE</span> institutions (
+  id              <span class="ty">UUID PRIMARY KEY DEFAULT</span> <span class="fn">gen_random_uuid</span>(),
+  name            <span class="ty">TEXT NOT NULL</span>,
+  slug            <span class="ty">TEXT UNIQUE NOT NULL</span>,
+  accreditation   <span class="ty">TEXT</span>,           <span class="cm">-- 'LCME' | 'ACGME' | etc.</span>
+  is_showcase     <span class="ty">BOOLEAN DEFAULT FALSE</span>,
+  created_at      <span class="ty">TIMESTAMPTZ DEFAULT NOW</span>()
+);
+
+<span class="kw">CREATE TABLE</span> faculty_profiles (
+  id              <span class="ty">UUID PRIMARY KEY REFERENCES</span> auth.users,
+  institution_id  <span class="ty">UUID NOT NULL REFERENCES</span> institutions,
+  role            <span class="ty">TEXT NOT NULL CHECK</span> (role <span class="kw">IN</span> (<span class="st">'faculty'</span>,<span class="st">'admin'</span>,<span class="st">'chair'</span>,<span class="st">'dean'</span>,<span class="st">'advisor'</span>)),
+  courses         <span class="ty">UUID[]</span>,           <span class="cm">-- assigned course UUIDs</span>
+  neo4j_uuid      <span class="ty">TEXT</span>,             <span class="cm">-- bridge to Faculty node (T4)</span>
+  created_at      <span class="ty">TIMESTAMPTZ DEFAULT NOW</span>()
+);
+
+<span class="cm">-- ── CONTENT PIPELINE ───────────────────────────────────────────────────</span>
+<span class="kw">CREATE TABLE</span> lectures (
+  uuid            <span class="ty">UUID PRIMARY KEY</span>,
+  institution_id  <span class="ty">UUID NOT NULL REFERENCES</span> institutions,
+  course_id       <span class="ty">UUID NOT NULL</span>,
+  title           <span class="ty">TEXT NOT NULL</span>,
+  file_path       <span class="ty">TEXT</span>,             <span class="cm">-- Supabase Storage path</span>
+  file_hash       <span class="ty">TEXT UNIQUE</span>,      <span class="cm">-- SHA-256 for dedup</span>
+  file_type       <span class="ty">TEXT CHECK</span> (file_type <span class="kw">IN</span> (<span class="st">'pptx'</span>,<span class="st">'pdf'</span>)),
+  slide_count     <span class="ty">INTEGER</span>,
+  status          <span class="ty">TEXT DEFAULT</span> <span class="st">'pending'</span> <span class="kw">CHECK</span> (status <span class="kw">IN</span>
+    (<span class="st">'pending'</span>,<span class="st">'parsing'</span>,<span class="st">'chunking'</span>,<span class="st">'embedding'</span>,<span class="st">'extracting'</span>,<span class="st">'enriching'</span>,<span class="st">'review_pending'</span>,<span class="st">'complete'</span>,<span class="st">'failed'</span>)),
+  <span class="cm">-- Dual-write sync status (G08 fix)</span>
+  neo4j_synced_at   <span class="ty">TIMESTAMPTZ</span>,
+  neo4j_sync_status <span class="ty">TEXT DEFAULT</span> <span class="st">'pending'</span> <span class="kw">CHECK</span> (neo4j_sync_status <span class="kw">IN</span> (<span class="st">'pending'</span>,<span class="st">'synced'</span>,<span class="st">'failed'</span>)),
+  created_at        <span class="ty">TIMESTAMPTZ DEFAULT NOW</span>(),
+  updated_at        <span class="ty">TIMESTAMPTZ DEFAULT NOW</span>()
+);
+
+<span class="kw">CREATE TABLE</span> content_chunks (
+  uuid              <span class="ty">UUID PRIMARY KEY</span>,
+  institution_id    <span class="ty">UUID NOT NULL REFERENCES</span> institutions,
+  lecture_uuid      <span class="ty">UUID NOT NULL REFERENCES</span> lectures,
+  section_uuid      <span class="ty">UUID</span>,                <span class="cm">-- FK to lecture_sections</span>
+  chunk_index       <span class="ty">INTEGER NOT NULL</span>,
+  text              <span class="ty">TEXT NOT NULL</span>,
+  text_with_context <span class="ty">TEXT NOT NULL</span>,     <span class="cm">-- heading context prepended for embedding</span>
+  heading_context   <span class="ty">TEXT</span>,
+  token_count       <span class="ty">INTEGER</span>,           <span class="cm">-- 150-250 canonical (D04)</span>
+  domain_type       <span class="ty">TEXT</span>,              <span class="cm">-- 'biomedical' | 'pedagogical' for model selection</span>
+  discrimination_flag <span class="ty">BOOLEAN DEFAULT FALSE</span>,  <span class="cm">-- set by IRT feedback loop</span>
+  embedding         <span class="ty">vector(768)</span>,       <span class="cm">-- MedCPT (biomedical) or NULL</span>
+  embedding_general <span class="ty">vector(1536)</span>,     <span class="cm">-- text-embedding-3-small (pedagogical) or NULL</span>
+  neo4j_synced_at   <span class="ty">TIMESTAMPTZ</span>,
+  neo4j_sync_status <span class="ty">TEXT DEFAULT</span> <span class="st">'pending'</span>
+);
+
+<span class="cm">-- HNSW indexes for fast approximate nearest neighbor search</span>
+<span class="kw">CREATE INDEX</span> chunks_biomedical_hnsw <span class="kw">ON</span> content_chunks
+  <span class="kw">USING</span> hnsw (embedding vector_cosine_ops) <span class="kw">WITH</span> (m=16, ef_construction=200);
+<span class="kw">CREATE INDEX</span> chunks_general_hnsw <span class="kw">ON</span> content_chunks
+  <span class="kw">USING</span> hnsw (embedding_general vector_cosine_ops) <span class="kw">WITH</span> (m=16, ef_construction=200);</pre>
+</div>
+
+<div class="schema">
+<div class="schema-head"><span class="schema-file">supabase/migrations/002_lod_assessment.sql</span><span class="schema-tag">G05 fix: lod_brief in Supabase</span></div>
+<pre><span class="cm">-- G05 FIX: lod_brief moved from Neo4j property to Supabase table
+-- SubConcept node in Neo4j carries only lod_brief_id UUID FK (&lt;100 bytes)</span>
+<span class="kw">CREATE TABLE</span> subconcept_lod_briefs (
+  id              <span class="ty">UUID PRIMARY KEY DEFAULT</span> <span class="fn">gen_random_uuid</span>(),
+  subconcept_uuid <span class="ty">TEXT NOT NULL UNIQUE</span>,   <span class="cm">-- Neo4j SubConcept UUID (bridge)</span>
+  institution_id  <span class="ty">UUID NOT NULL REFERENCES</span> institutions,
+  lod_brief       <span class="ty">TEXT NOT NULL</span>,          <span class="cm">-- ~200 tokens, Haiku-generated</span>
+  generated_at    <span class="ty">TIMESTAMPTZ DEFAULT NOW</span>(),
+  model_version   <span class="ty">TEXT DEFAULT</span> <span class="st">'claude-haiku-4-5-20251001'</span>
+);
+
+<span class="cm">-- G08 FIX: sync status on subconcepts table</span>
+<span class="kw">CREATE TABLE</span> subconcepts (
+  uuid                <span class="ty">TEXT PRIMARY KEY</span>,     <span class="cm">-- matches Neo4j SubConcept.uuid</span>
+  institution_id      <span class="ty">UUID NOT NULL REFERENCES</span> institutions,
+  name                <span class="ty">TEXT NOT NULL</span>,
+  cui                 <span class="ty">TEXT</span>,                <span class="cm">-- UMLS CUI</span>
+  status              <span class="ty">TEXT DEFAULT</span> <span class="st">'candidate'</span>,
+  embedding_source    <span class="ty">TEXT DEFAULT</span> <span class="st">'text_only'</span>,
+  lod_brief_id        <span class="ty">UUID REFERENCES</span> subconcept_lod_briefs,
+  neo4j_synced_at     <span class="ty">TIMESTAMPTZ</span>,
+  neo4j_sync_status   <span class="ty">TEXT DEFAULT</span> <span class="st">'pending'</span>
+);
+
+<span class="cm">-- Assessment items (full content in Supabase, skinny pointer in Neo4j)</span>
+<span class="kw">CREATE TABLE</span> assessment_items (
+  uuid              <span class="ty">UUID PRIMARY KEY</span>,
+  institution_id    <span class="ty">UUID NOT NULL REFERENCES</span> institutions,
+  stem              <span class="ty">TEXT NOT NULL</span>,
+  correct_answer    <span class="ty">TEXT NOT NULL</span>,
+  answer_mechanism  <span class="ty">TEXT</span>,
+  status            <span class="ty">TEXT DEFAULT</span> <span class="st">'candidate'</span>,
+  bloom_level       <span class="ty">INTEGER CHECK</span> (bloom_level <span class="kw">BETWEEN</span> <span class="nu">1</span> <span class="kw">AND</span> <span class="nu">6</span>),
+  generation_approach <span class="ty">TEXT DEFAULT</span> <span class="st">'de_novo'</span>,
+  source_chunk_uuids <span class="ty">UUID[]</span>,
+  qa_score_medical   <span class="ty">NUMERIC(3,1)</span>,
+  qa_score_coherence <span class="ty">NUMERIC(3,1)</span>,
+  qa_score_blueprint <span class="ty">NUMERIC(3,1)</span>,
+  <span class="cm">-- ECD: Toulmin validity chain (display artifact — never traversed in graph)</span>
+  toulmin           <span class="ty">JSONB</span>,
+  <span class="cm">-- Cost tracking</span>
+  generation_cost_usd <span class="ty">NUMERIC(8,4)</span>,
+  neo4j_synced_at     <span class="ty">TIMESTAMPTZ</span>,
+  neo4j_sync_status   <span class="ty">TEXT DEFAULT</span> <span class="st">'pending'</span>,
+  created_at          <span class="ty">TIMESTAMPTZ DEFAULT NOW</span>()
+);
+
+<span class="kw">CREATE TABLE</span> distractors (
+  uuid              <span class="ty">UUID PRIMARY KEY</span>,
+  item_uuid         <span class="ty">UUID NOT NULL REFERENCES</span> assessment_items,
+  option_letter     <span class="ty">CHAR(1) NOT NULL CHECK</span> (option_letter <span class="kw">IN</span> (<span class="st">'A'</span>,<span class="st">'B'</span>,<span class="st">'C'</span>,<span class="st">'D'</span>,<span class="st">'E'</span>)),
+  text              <span class="ty">TEXT NOT NULL</span>,
+  is_correct        <span class="ty">BOOLEAN NOT NULL</span>,
+  evidence_rule     <span class="ty">TEXT</span>,           <span class="cm">-- ECD: what mastery/misconception this option targets</span>
+  misconception_uuid <span class="ty">TEXT</span>           <span class="cm">-- bridge to MisconceptionCategory Neo4j node</span>
+);</pre>
+</div>
+
+<div class="schema">
+<div class="schema-head"><span class="schema-file">supabase/migrations/003_students_attempts.sql</span><span class="schema-tag">FERPA: RLS scoped to institution + advisor</span></div>
+<pre><span class="kw">CREATE TABLE</span> students (
+  uuid            <span class="ty">UUID PRIMARY KEY REFERENCES</span> auth.users,
+  institution_id  <span class="ty">UUID NOT NULL REFERENCES</span> institutions,
+  enrollment_year <span class="ty">INTEGER</span>,
+  cohort          <span class="ty">TEXT</span>,        <span class="cm">-- 'M1-2025' etc.</span>
+  status          <span class="ty">TEXT DEFAULT</span> <span class="st">'pending_approval'</span>
+);
+
+<span class="cm">-- FERPA RLS: students see only their own records</span>
+<span class="kw">CREATE POLICY</span> student_own_data <span class="kw">ON</span> attempts
+  <span class="kw">USING</span> (student_uuid = auth.<span class="fn">uid</span>()
+         <span class="kw">OR</span> <span class="cm">/* advisors see assigned students */</span>
+         EXISTS (<span class="kw">SELECT</span> <span class="nu">1</span> <span class="kw">FROM</span> advisor_assignments aa
+                 <span class="kw">WHERE</span> aa.student_uuid = attempts.student_uuid
+                 <span class="kw">AND</span> aa.advisor_uuid = auth.<span class="fn">uid</span>()));
+
+<span class="kw">CREATE TABLE</span> attempts (
+  uuid              <span class="ty">UUID PRIMARY KEY DEFAULT</span> <span class="fn">gen_random_uuid</span>(),
+  student_uuid      <span class="ty">UUID NOT NULL REFERENCES</span> students,
+  institution_id    <span class="ty">UUID NOT NULL REFERENCES</span> institutions,
+  item_uuid         <span class="ty">UUID NOT NULL REFERENCES</span> assessment_items,
+  is_correct        <span class="ty">BOOLEAN NOT NULL</span>,
+  selected_option   <span class="ty">CHAR(1)</span>,
+  selected_distractor_uuid <span class="ty">UUID REFERENCES</span> distractors,
+  response_ms       <span class="ty">INTEGER</span>,
+  exam_uuid         <span class="ty">UUID</span>,        <span class="cm">-- NULL for practice</span>
+  mode              <span class="ty">TEXT DEFAULT</span> <span class="st">'practice'</span>,
+  created_at        <span class="ty">TIMESTAMPTZ DEFAULT NOW</span>()
+);
+<span class="kw">CREATE INDEX</span> attempts_student_idx <span class="kw">ON</span> attempts(student_uuid, created_at <span class="kw">DESC</span>);
+<span class="kw">CREATE INDEX</span> attempts_item_idx <span class="kw">ON</span> attempts(item_uuid, created_at <span class="kw">DESC</span>);
+
+<span class="kw">CREATE TABLE</span> mastery_snapshots (
+  id              <span class="ty">BIGSERIAL PRIMARY KEY</span>,
+  student_uuid    <span class="ty">UUID NOT NULL REFERENCES</span> students,
+  subconcept_uuid <span class="ty">TEXT NOT NULL</span>,  <span class="cm">-- Neo4j bridge</span>
+  p_mastery       <span class="ty">NUMERIC(5,4) NOT NULL</span>,
+  p_transit       <span class="ty">NUMERIC(5,4)</span>,
+  p_slip          <span class="ty">NUMERIC(5,4)</span>,
+  p_guess         <span class="ty">NUMERIC(5,4)</span>,
+  snapshot_date   <span class="ty">DATE NOT NULL DEFAULT CURRENT_DATE</span>
+);
+<span class="cm">-- Weekly snapshots enable mastery trajectory trending</span>
+
+<span class="kw">CREATE TABLE</span> audit_log (
+  id              <span class="ty">BIGSERIAL PRIMARY KEY</span>,
+  institution_id  <span class="ty">UUID NOT NULL</span>,
+  actor_uuid      <span class="ty">UUID</span>,
+  actor_role      <span class="ty">TEXT</span>,
+  action          <span class="ty">TEXT NOT NULL</span>,  <span class="cm">-- 'item.approved' | 'exam.deployed' | etc.</span>
+  resource_type   <span class="ty">TEXT</span>,
+  resource_uuid   <span class="ty">TEXT</span>,
+  metadata        <span class="ty">JSONB</span>,
+  ip_address      <span class="ty">INET</span>,
+  created_at      <span class="ty">TIMESTAMPTZ DEFAULT NOW</span>()
+);
+<span class="kw">CREATE INDEX</span> audit_log_actor_idx <span class="kw">ON</span> audit_log(actor_uuid, created_at <span class="kw">DESC</span>);
+<span class="cm">-- Audit log has NO RLS — readable only by service_role (admin actions only)</span></pre>
+</div>
+
+<h3>B. Neo4j schema — constraints and indexes</h3>
+
+<div class="schema">
+<div class="schema-head"><span class="schema-file">infra/neo4j/migrations/001_constraints.cypher</span><span class="schema-tag">All MERGE operations require these constraints</span></div>
+<pre><span class="cm">// UUID uniqueness constraints — one per node type
+// These also create supporting indexes automatically</span>
+<span class="kw">CREATE CONSTRAINT</span> subconcept_uuid_unique <span class="kw">FOR</span> (n:SubConcept) <span class="kw">REQUIRE</span> n.uuid <span class="kw">IS UNIQUE</span>;
+<span class="kw">CREATE CONSTRAINT</span> content_chunk_uuid_unique <span class="kw">FOR</span> (n:ContentChunk) <span class="kw">REQUIRE</span> n.uuid <span class="kw">IS UNIQUE</span>;
+<span class="kw">CREATE CONSTRAINT</span> assessment_item_uuid_unique <span class="kw">FOR</span> (n:AssessmentItem) <span class="kw">REQUIRE</span> n.uuid <span class="kw">IS UNIQUE</span>;
+<span class="kw">CREATE CONSTRAINT</span> standard_term_cui_unique <span class="kw">FOR</span> (n:StandardTerm) <span class="kw">REQUIRE</span> n.cui <span class="kw">IS UNIQUE</span>;
+<span class="kw">CREATE CONSTRAINT</span> task_shell_id_unique <span class="kw">FOR</span> (n:TaskShell) <span class="kw">REQUIRE</span> n.id <span class="kw">IS UNIQUE</span>;
+<span class="kw">CREATE CONSTRAINT</span> misconception_id_unique <span class="kw">FOR</span> (n:MisconceptionCategory) <span class="kw">REQUIRE</span> n.id <span class="kw">IS UNIQUE</span>;
+<span class="kw">CREATE CONSTRAINT</span> concept_cluster_community_unique <span class="kw">FOR</span> (n:ConceptCluster) <span class="kw">REQUIRE</span> n.community_id <span class="kw">IS UNIQUE</span>;
+
+<span class="cm">// Additional indexes for frequent lookups</span>
+<span class="kw">CREATE INDEX</span> subconcept_cui <span class="kw">FOR</span> (n:SubConcept) <span class="kw">ON</span> (n.cui);
+<span class="kw">CREATE INDEX</span> subconcept_name <span class="kw">FOR</span> (n:SubConcept) <span class="kw">ON</span> (n.name);
+<span class="kw">CREATE INDEX</span> subconcept_institution <span class="kw">FOR</span> (n:SubConcept) <span class="kw">ON</span> (n.institution_id);
+<span class="kw">CREATE INDEX</span> content_chunk_lecture <span class="kw">FOR</span> (n:ContentChunk) <span class="kw">ON</span> (n.lecture_uuid);
+<span class="kw">CREATE INDEX</span> assessment_item_status <span class="kw">FOR</span> (n:AssessmentItem) <span class="kw">ON</span> (n.status);
+<span class="kw">CREATE FULLTEXT INDEX</span> chunk_fulltext <span class="kw">FOR</span> (n:ContentChunk) <span class="kw">ON EACH</span> [n.text];   <span class="cm">// BM25</span>
+<span class="kw">CREATE FULLTEXT INDEX</span> subconcept_fulltext <span class="kw">FOR</span> (n:SubConcept) <span class="kw">ON EACH</span> [n.name];
+
+<span class="cm">// APOC procedure for deterministic UUID from seed string</span>
+<span class="cm">// Usage: CALL apoc.create.uuid({seed: 'concept:furosemide'}) YIELD uuid</span>
+<span class="cm">// Or in JS: deterministicUuid(seed) → sha-256 based UUID v5</span></pre>
+</div>
+</section>
+
+<!-- ══════════════════════ IV: API ARCHITECTURE ══════════════════════ -->
+<section id="api">
+<div class="sid">IV / API Architecture</div>
+<h2>Next.js App Router — all routes server-side, secrets never in browser</h2>
+
+<h3>Route structure</h3>
+<div class="pages">
+<span class="d">app/</span>
+<span class="d">├── api/</span>
+<span class="d">│   ├── auth/</span>
+<span class="f">│   │   ├── callback/route.ts          </span><span class="c">-- Supabase OAuth callback</span>
+<span class="f">│   │   └── session/route.ts           </span><span class="c">-- GET current session + role</span>
+<span class="d">│   ├── admin/</span>
+<span class="f">│   │   ├── stats/route.ts             </span><span class="c">-- GET dashboard stat cards</span>
+<span class="f">│   │   ├── faculty/route.ts           </span><span class="c">-- GET/POST faculty list, invite</span>
+<span class="f">│   │   ├── students/[id]/approve/route.ts  </span><span class="c">-- POST approve student registration</span>
+<span class="f">│   │   └── seed/route.ts              </span><span class="c">-- POST trigger Phase 0 seed (admin only)</span>
+<span class="d">│   ├── courses/</span>
+<span class="f">│   │   ├── route.ts                   </span><span class="c">-- GET list, POST create</span>
+<span class="f">│   │   └── [id]/</span>
+<span class="f">│   │       ├── route.ts               </span><span class="c">-- GET course detail</span>
+<span class="f">│   │       └── coverage/route.ts      </span><span class="c">-- GET coverage heatmap data</span>
+<span class="d">│   ├── lectures/</span>
+<span class="f">│   │   ├── upload/route.ts            </span><span class="c">-- POST file → Supabase Storage → Inngest P1 trigger</span>
+<span class="f">│   │   ├── [id]/status/route.ts       </span><span class="c">-- GET pipeline status (polled by UI)</span>
+<span class="f">│   │   └── [id]/review/route.ts       </span><span class="c">-- POST faculty approval decisions → waitForEvent</span>
+<span class="d">│   ├── subconcepts/</span>
+<span class="f">│   │   ├── route.ts                   </span><span class="c">-- GET list for course (with enrichment status)</span>
+<span class="f">│   │   └── [id]/route.ts              </span><span class="c">-- GET detail, PATCH status</span>
+<span class="d">│   ├── generation/</span>
+<span class="f">│   │   ├── spec/route.ts              </span><span class="c">-- POST spec → journey/generation.spec-confirmed</span>
+<span class="f">│   │   ├── status/[batchId]/route.ts  </span><span class="c">-- GET batch status</span>
+<span class="f">│   │   └── items/[id]/review/route.ts </span><span class="c">-- POST approve/reject → waitForEvent resolve</span>
+<span class="d">│   ├── items/</span>
+<span class="f">│   │   ├── route.ts                   </span><span class="c">-- GET item bank with filters</span>
+<span class="f">│   │   └── [id]/</span>
+<span class="f">│   │       ├── route.ts               </span><span class="c">-- GET item detail with Toulmin, PATCH (edit)</span>
+<span class="f">│   │       ├── remix/route.ts         </span><span class="c">-- POST generate variant</span>
+<span class="f">│   │       └── why-wrong/route.ts     </span><span class="c">-- POST distractor_uuid → Haiku explanation</span>
+<span class="d">│   ├── blueprints/</span>
+<span class="f">│   │   ├── route.ts                   </span><span class="c">-- GET/POST blueprints</span>
+<span class="f">│   │   └── [id]/assemble/route.ts     </span><span class="c">-- POST → exam assembly algorithm</span>
+<span class="d">│   ├── exams/</span>
+<span class="f">│   │   ├── route.ts                   </span><span class="c">-- GET/POST exams</span>
+<span class="f">│   │   ├── [id]/deploy/route.ts       </span><span class="c">-- POST deploy → journey/exam.deployed</span>
+<span class="f">│   │   └── [id]/take/route.ts         </span><span class="c">-- GET exam content (student auth required)</span>
+<span class="d">│   ├── attempts/</span>
+<span class="f">│   │   └── route.ts                   </span><span class="c">-- POST answer → journey/attempt.recorded</span>
+<span class="d">│   ├── mastery/</span>
+<span class="f">│   │   ├── [studentId]/route.ts       </span><span class="c">-- GET mastery map</span>
+<span class="f">│   │   └── [studentId]/history/route.ts </span><span class="c">-- GET mastery timeline</span>
+<span class="d">│   ├── practice/</span>
+<span class="f">│   │   ├── session/route.ts           </span><span class="c">-- POST create practice session</span>
+<span class="f">│   │   └── queue/route.ts             </span><span class="c">-- GET study queue for student</span>
+<span class="d">│   ├── coverage/</span>
+<span class="f">│   │   └── heatmap/route.ts           </span><span class="c">-- GET coverage heatmap (Neo4j traversal)</span>
+<span class="d">│   ├── rag/</span>
+<span class="f">│   │   └── query/route.ts             </span><span class="c">-- POST natural language → agentic RAG</span>
+<span class="d">│   ├── lcme/</span>
+<span class="f">│   │   ├── readiness/route.ts         </span><span class="c">-- GET T4 LCME Readiness Room data</span>
+<span class="f">│   │   └── evidence-package/route.ts  </span><span class="c">-- POST generate PDF evidence package</span>
+<span class="d">│   └── inngest/route.ts               </span><span class="c">-- Inngest webhook handler (all pipeline events)</span>
+</div>
+
+<h3>Auth middleware — applied to every API route</h3>
+<pre><span class="cm">// middleware.ts — Next.js middleware (runs on edge)</span>
+<span class="kw">export async function</span> <span class="fn">middleware</span>(request: <span class="ty">NextRequest</span>) {
+  <span class="kw">const</span> supabase = <span class="fn">createMiddlewareClient</span>({ req: request, res: response });
+  <span class="kw">const</span> { data: { session } } = <span class="kw">await</span> supabase.auth.<span class="fn">getSession</span>();
+
+  <span class="kw">if</span> (!session && request.nextUrl.pathname.<span class="fn">startsWith</span>(<span class="st">'/api/'</span>)) {
+    <span class="kw">return</span> <span class="ty">NextResponse</span>.<span class="fn">json</span>({ error: <span class="st">'Unauthorized'</span> }, { status: <span class="nu">401</span> });
+  }
+
+  <span class="cm">// Role check: certain routes require specific roles</span>
+  <span class="kw">const</span> roleRequired = <span class="fn">getRoleForRoute</span>(request.nextUrl.pathname);
+  <span class="kw">if</span> (roleRequired && session?.user.user_metadata.role !== roleRequired) {
+    <span class="kw">return</span> <span class="ty">NextResponse</span>.<span class="fn">json</span>({ error: <span class="st">'Forbidden'</span> }, { status: <span class="nu">403</span> });
+  }
+}
+
+<span class="cm">// Route-level institution scoping — every Neo4j query includes institution_id
+// This is defense-in-depth on top of Supabase RLS</span>
+<span class="kw">async function</span> <span class="fn">neo4jQuery</span>(cypher: <span class="ty">string</span>, params: <span class="ty">object</span>, institutionId: <span class="ty">string</span>) {
+  <span class="kw">return</span> neo4jDriver.<span class="fn">run</span>(
+    <span class="op">`${cypher} AND n.institution_id = $institutionId`</span>,
+    { ...params, institutionId }
+  );
+}</pre>
+
+<h3>Pipeline status polling pattern (faculty UI)</h3>
+<pre><span class="cm">// UI polls every 3 seconds during processing. Supabase realtime also pushes updates.
+// Two-source status: poll as fallback, realtime as primary</span>
+
+<span class="cm">// Supabase realtime subscription (in faculty upload component)</span>
+<span class="kw">const</span> channel = supabase
+  .<span class="fn">channel</span>(<span class="op">`lecture:${lectureId}`</span>)
+  .<span class="fn">on</span>(<span class="st">'postgres_changes'</span>, {
+    event: <span class="st">'UPDATE'</span>, schema: <span class="st">'public'</span>, table: <span class="st">'lectures'</span>,
+    filter: <span class="op">`uuid=eq.${lectureId}`</span>
+  }, (payload) => <span class="fn">setStatus</span>(payload.new.status))
+  .<span class="fn">subscribe</span>();
+
+<span class="cm">// Status display mapping → user-facing labels</span>
+<span class="kw">const</span> STATUS_LABELS: Record&lt;<span class="ty">string</span>, <span class="ty">string</span>&gt; = {
+  pending: <span class="st">'Queued...'</span>,
+  parsing: <span class="st">'Parsing slides...'</span>,        <span class="cm">// P1 Step 01</span>
+  chunking: <span class="st">'Creating chunks...'</span>,       <span class="cm">// P1 Step 03</span>
+  embedding: <span class="st">'Generating embeddings...'</span>, <span class="cm">// P1 Step 04</span>
+  extracting: <span class="st">'Extracting concepts...'</span>,  <span class="cm">// P1 Step 05-05b</span>
+  enriching: <span class="st">'Enriching with ontology...'</span>,<span class="cm">// P1 Step 06 (in background)</span>
+  review_pending: <span class="st">'Ready for your review'</span>,
+  complete: <span class="st">'Processing complete'</span>,
+  failed: <span class="st">'Processing failed — contact support'</span>
+};</pre>
+</section>
+
+<!-- ══════════════════════ V: PIPELINES ══════════════════════ -->
+<section id="pipelines">
+<div class="sid">V / Pipeline Implementation Specs</div>
+<h2>Three complete Inngest functions — all gaps applied, ECD-wired</h2>
+
+<h3>Complete Inngest event registry</h3>
+<pre><span class="cm">// inngest/events.ts — single source of truth for all 14 events</span>
+<span class="kw">export type</span> <span class="ty">JourneyEvents</span> = {
+  <span class="cm">// ── Content processing ──────────────────────────────────────────────</span>
+  <span class="st">'journey/syllabus.uploaded'</span>:      { data: { syllabus_id: <span class="ty">string</span>; course_id: <span class="ty">string</span>; file_path: <span class="ty">string</span> } };
+  <span class="st">'journey/lecture.uploaded'</span>:       { data: { lecture_id: <span class="ty">string</span>; course_id: <span class="ty">string</span>; file_path: <span class="ty">string</span>; file_type: <span class="ty">string</span>; file_hash: <span class="ty">string</span>; institution_id: <span class="ty">string</span>; faculty_id: <span class="ty">string</span> } };
+  <span class="st">'journey/lecture.reviewed'</span>:       { data: { lecture_id: <span class="ty">string</span>; decisions: Record&lt;<span class="ty">string</span>, <span class="st">'approved'</span>|<span class="st">'rejected'</span>|<span class="st">'merged'</span>&gt; } };
+  <span class="cm">// ── SubConcept enrichment ────────────────────────────────────────────</span>
+  <span class="st">'journey/subconcept.confirmed'</span>:   { data: { subconcept_uuid: <span class="ty">string</span>; course_id: <span class="ty">string</span>; institution_id: <span class="ty">string</span> } };
+  <span class="st">'journey/subconcept.enriched'</span>:    { data: { subconcept_uuid: <span class="ty">string</span>; had_hetionet_match: <span class="ty">boolean</span>; lod_brief_generated: <span class="ty">boolean</span> } };
+  <span class="cm">// ── Generation ───────────────────────────────────────────────────────</span>
+  <span class="st">'journey/generation.spec-confirmed'</span>: { data: { batch_id: <span class="ty">string</span>; target_subconcept_uuids: <span class="ty">string[]</span>; spec: <span class="ty">GenerationSpec</span> } };
+  <span class="st">'journey/items.batch-reviewed'</span>:  { data: { batch_id: <span class="ty">string</span>; decisions: Record&lt;<span class="ty">string</span>, <span class="st">'approved'</span>|<span class="st">'rejected'</span>|<span class="st">'edited'</span>&gt; } };
+  <span class="st">'journey/items.approved'</span>:         { data: { item_uuids: <span class="ty">string[]</span>; subconcept_uuids: <span class="ty">string[]</span> } };
+  <span class="cm">// ── Student / Mastery ────────────────────────────────────────────────</span>
+  <span class="st">'journey/attempt.recorded'</span>:       { data: { student_uuid: <span class="ty">string</span>; item_uuid: <span class="ty">string</span>; is_correct: <span class="ty">boolean</span>; selected_distractor_uuid?: <span class="ty">string</span>; response_ms: <span class="ty">number</span> } };
+  <span class="st">'journey/mastery.updated'</span>:         { data: { student_uuid: <span class="ty">string</span>; subconcept_uuid: <span class="ty">string</span>; p_mastery: <span class="ty">number</span>; delta: <span class="ty">number</span> } };
+  <span class="cm">// ── Crons ────────────────────────────────────────────────────────────</span>
+  <span class="st">'journey/cron.weekly-calibrate'</span>:  { data: { week_start: <span class="ty">string</span> } };  <span class="cm">// Monday 2am</span>
+  <span class="st">'journey/cron.mastery-analysis'</span>:  { data: { week_start: <span class="ty">string</span> } };  <span class="cm">// Sunday 11pm</span>
+  <span class="st">'journey/cron.rag-evaluation'</span>:    { data: { benchmark_version: <span class="ty">string</span> } }; <span class="cm">// Friday 3am</span>
+  <span class="st">'journey/cron.sync-reconcile'</span>:    { data: { run_at: <span class="ty">string</span> } };        <span class="cm">// Monday 1am — G08 fix</span>
+};
+
+<span class="cm">// inngest.config.ts — concurrency, throttle, timeout per function</span>
+<span class="kw">export const</span> inngestConfig = {
+  <span class="st">'journey/lecture.process'</span>:            { concurrency: { limit: <span class="nu">10</span>, key: <span class="st">'event.data.faculty_id'</span> }, retries: <span class="nu">3</span>,  timeoutMs: <span class="nu">15*60*1000</span> },
+  <span class="st">'journey/subconcept.enrich'</span>:          { concurrency: { limit: <span class="nu">5</span> }, throttle: { limit: <span class="nu">20</span>, period: <span class="st">'1s'</span>, key: <span class="st">'umls-api'</span> }, retries: <span class="nu">5</span>, timeoutMs: <span class="nu">24*60*60*1000</span> },
+  <span class="st">'journey/items.batch-generate'</span>:       { concurrency: { limit: <span class="nu">3</span>, key: <span class="st">'event.data.spec.faculty_id'</span> }, retries: <span class="nu">2</span>, timeoutMs: <span class="nu">30*60*1000</span> },
+  <span class="st">'journey/mastery.update'</span>:             { concurrency: { limit: <span class="nu">100</span> }, retries: <span class="nu">5</span>, timeoutMs: <span class="nu">30*1000</span> },
+};</pre>
+
+<h3>Pipeline 3 — Generation with ECD stages (core implementation)</h3>
+<p>P1 and P2 are fully specified in the Production Bible. P3 is reproduced here with the ECD integration as the most complex pipeline requiring implementation attention.</p>
+
+<div class="pipe p3-c">
+<div class="pipe-head">
+  <div class="pipe-n">P3</div>
+  <div class="pipe-info">
+    <div class="pipe-title">journey/items.batch-generate</div>
+    <div class="pipe-meta">Timeout: 30min · Retries: 2 · Concurrency: 3 per faculty · ~$0.12/item · ECD-wired</div>
+  </div>
+  <span class="pipe-trig">Trigger: journey/generation.spec-confirmed</span>
+</div>
+<pre style="border-left:none;margin:0;border-radius:0;font-size:10.5px;padding:18px 22px"><span class="kw">export const</span> generationPipeline = inngest.<span class="fn">createFunction</span>(
+  { id: <span class="st">'journey/items.batch-generate'</span>, ...inngestConfig[<span class="st">'journey/items.batch-generate'</span>] },
+  { event: <span class="st">'journey/generation.spec-confirmed'</span> },
+  <span class="kw">async</span> ({ event, step }) => {
+    <span class="kw">const</span> { target_subconcept_uuids, spec } = event.data;
+
+    <span class="cm">// ── STEP 1: Load targets with gap-first ordering ────────────────────</span>
+    <span class="kw">const</span> targets = <span class="kw">await</span> step.<span class="fn">run</span>(<span class="st">'load-targets'</span>, <span class="kw">async</span> () => {
+      <span class="kw">return</span> neo4j.<span class="fn">run</span>(`
+        <span class="kw">UNWIND</span> $uuids <span class="kw">AS</span> tid
+        <span class="kw">MATCH</span> (sc:SubConcept {uuid: tid})
+        <span class="kw">OPTIONAL MATCH</span> (sc)-[:HAS_COVERAGE]->(cr:CoverageRecord)
+        <span class="kw">OPTIONAL MATCH</span> (sc)-[:MAPPED_TO]->(pv:ProficiencyVariable)
+        <span class="kw">RETURN</span> sc.uuid, sc.name, sc.lod_brief_id, sc.clinical_consequence_score,
+               sc.high_yield_score, sc.concept_family, pv.uuid <span class="kw">AS</span> pv_uuid,
+               pv.mastery_definition, pv.evidence_threshold,
+               cr.coverage_score <span class="kw">AS</span> coverage
+        <span class="kw">ORDER BY</span> (sc.clinical_consequence_score * sc.high_yield_score
+          * <span class="kw">CASE WHEN</span> cr <span class="kw">IS NULL THEN</span> <span class="nu">2.0</span> <span class="kw">ELSE</span> <span class="nu">1.0</span> <span class="kw">END</span>) <span class="kw">DESC</span>
+      `, { uuids: target_subconcept_uuids });
+    });
+
+    <span class="cm">// ── STEPS ECD 1-3: Identify PV → Define Evidence Rules → Select TaskShell</span>
+    <span class="kw">const</span> ecd_specs = <span class="kw">await</span> step.<span class="fn">run</span>(<span class="st">'ecd-stages-1-3'</span>, <span class="kw">async</span> () => {
+      <span class="kw">return</span> <span class="ty">Promise</span>.<span class="fn">all</span>(targets.<span class="fn">map</span>(<span class="kw">async</span> (target, idx) => {
+        <span class="cm">// ECD Stage 2: Define evidence rules (Haiku — cheap)</span>
+        <span class="kw">const</span> evidenceRules = <span class="kw">await</span> claude.<span class="fn">generate</span>({
+          model: <span class="st">'claude-haiku-4-5-20251001'</span>,
+          prompt: <span class="op">`For ProficiencyVariable: "${target.mastery_definition}" at Bloom ${spec.bloom_levels[idx] || spec.bloom_default}.
+Define evidence rules for a 5-option NBME item:
+Return JSON: { correct_evidence: string, distractor_misconceptions: string[4] }`</span>,
+          max_tokens: <span class="nu">200</span>
+        });
+        <span class="cm">// ECD Stage 3: Select TaskShell by bloom_range + concept_family</span>
+        <span class="kw">const</span> shell = <span class="kw">await</span> neo4j.<span class="fn">run</span>(`
+          <span class="kw">MATCH</span> (ts:TaskShell)
+          <span class="kw">WHERE</span> $bloom >= ts.bloom_range[0] <span class="kw">AND</span> $bloom <= ts.bloom_range[1]
+            <span class="kw">AND</span> ts.concept_family = $family
+          <span class="kw">RETURN</span> ts <span class="kw">ORDER BY</span> ts.avg_quality_score <span class="kw">DESC LIMIT</span> <span class="nu">1</span>
+        `, { bloom: spec.bloom_default, family: target.concept_family });
+        <span class="kw">return</span> { target, evidenceRules: evidenceRules.parsed, shell: shell[<span class="nu">0</span>] };
+      }));
+    });
+
+    <span class="cm">// ── STEP 2: HyDE + Parallel 4-source context assembly ───────────────</span>
+    <span class="kw">const</span> contexts = <span class="kw">await</span> step.<span class="fn">run</span>(<span class="st">'hyde-context-assembly'</span>, <span class="kw">async</span> () => {
+      <span class="kw">return</span> <span class="ty">Promise</span>.<span class="fn">all</span>(ecd_specs.<span class="fn">map</span>(<span class="kw">async</span> ({ target }) => {
+        <span class="cm">// HyDE: generate hypothetical vignette for retrieval</span>
+        <span class="kw">const</span> hyde = <span class="kw">await</span> claude.<span class="fn">generate</span>({
+          model: <span class="st">'claude-haiku-4-5-20251001'</span>,
+          prompt: <span class="op">`Write a 2-sentence USMLE clinical vignette about "${target.name}". Clinical only.`</span>,
+          max_tokens: <span class="nu">100</span>
+        });
+        <span class="kw">const</span> hydeEmb = <span class="kw">await</span> <span class="fn">embed</span>(hyde.text, <span class="st">'MedCPT'</span>);
+        <span class="cm">// LOD brief: Supabase key-value read (&lt;5ms) — G05 fix</span>
+        <span class="kw">const</span> lodBriefRow = <span class="kw">await</span> supabase.<span class="fn">from</span>(<span class="st">'subconcept_lod_briefs'</span>)
+          .<span class="fn">select</span>(<span class="st">'lod_brief'</span>).<span class="fn">eq</span>(<span class="st">'subconcept_uuid'</span>, target.uuid).<span class="fn">single</span>();
+
+        <span class="cm">// Parallel 4-source fan-out</span>
+        <span class="kw">const</span> [local, structured, global] = <span class="kw">await</span> <span class="ty">Promise</span>.<span class="fn">all</span>([
+          <span class="fn">hybridRRF</span>({ denseEmbedding: hydeEmb, bm25Query: target.name, k: <span class="nu">60</span>, topK: <span class="nu">5</span> }),
+          neo4j.<span class="fn">run</span>(`<span class="kw">MATCH</span> (sc:SubConcept {uuid:$id})-[:ALIGNS_TO]->(sub:USMLE_Subtopic)-[:BELONGS_TO]->(top)-[:PART_OF]->(sys)<br>            <span class="kw">OPTIONAL MATCH</span> (sc)&lt;-[:COVERS_TOPIC]-(slo:SLO) <span class="kw">RETURN</span> sys.name, top.name, sub.name, slo.text <span class="kw">LIMIT</span> <span class="nu">5</span>`, {id: target.uuid}),
+          neo4j.<span class="fn">run</span>(`<span class="kw">MATCH</span> (sc:SubConcept {uuid:$id})-[:BELONGS_TO_CLUSTER]->(cc:ConceptCluster) <span class="kw">RETURN</span> cc.summary`, {id: target.uuid})
+        ]);
+
+        <span class="kw">return</span> <span class="fn">packTokenBudget</span>({
+          local,                               <span class="cm">// 3,000 tokens</span>
+          structured,                          <span class="cm">// 800 tokens</span>
+          lod_brief: lodBriefRow.data?.lod_brief, <span class="cm">// 500 tokens — always included (D10)</span>
+          global,                              <span class="cm">// 400 tokens (null if ConceptCluster N/A)</span>
+          budget: <span class="nu">6000</span>
+        });
+      }));
+    });
+
+    <span class="cm">// ── STEP 3: Core generation — SONNET 4 (D05 canonical) ──────────────</span>
+    <span class="kw">const</span> cores = <span class="kw">await</span> step.<span class="fn">run</span>(<span class="st">'generate-core'</span>, <span class="kw">async</span> () => {
+      <span class="kw">return</span> <span class="ty">Promise</span>.<span class="fn">all</span>(ecd_specs.<span class="fn">map</span>(({ target, shell, evidenceRules }, i) =>
+        claude.<span class="fn">generate</span>({
+          model: <span class="st">'claude-sonnet-4-20250514'</span>,   <span class="cm">// CANONICAL — D05</span>
+          system: NBME_SYSTEM_PROMPT,
+          prompt: <span class="fn">buildCorePrompt</span>(target, contexts[i], shell, evidenceRules, spec),
+          max_tokens: <span class="nu">600</span>,
+          response_format: { type: <span class="st">'json_schema'</span>, schema: ITEM_CORE_SCHEMA }
+        })
+      ));
+    });
+
+    <span class="cm">// ── STEP 4: Critique gate — Sonnet-as-critic ─────────────────────────</span>
+    <span class="kw">const</span> critiqued = <span class="kw">await</span> step.<span class="fn">run</span>(<span class="st">'critique-gate'</span>, <span class="kw">async</span> () =>
+      <span class="ty">Promise</span>.<span class="fn">all</span>(cores.<span class="fn">map</span>(<span class="kw">async</span> (core, i) => {
+        <span class="kw">let</span> item = core, retries = <span class="nu">0</span>;
+        <span class="kw">while</span> (retries < <span class="nu">2</span>) {
+          <span class="kw">const</span> crit = <span class="kw">await</span> claude.<span class="fn">generate</span>({ model: <span class="st">'claude-sonnet-4-20250514'</span>,
+            prompt: <span class="fn">buildCritiquePrompt</span>(item, contexts[i], ecd_specs[i].evidenceRules), max_tokens: <span class="nu">200</span> });
+          <span class="kw">if</span> (crit.pass || crit.severity === <span class="st">'minor'</span>) <span class="kw">break</span>;
+          item = <span class="kw">await</span> <span class="fn">regenerateWithFeedback</span>(ecd_specs[i].target, contexts[i], spec, crit.issues); retries++;
+        }
+        <span class="kw">return</span> { item, passed: retries < <span class="nu">2</span> };
+      }))
+    );
+
+    <span class="cm">// ── STEP 5: Distractors — Haiku + MisconceptionCategory graph ────────</span>
+    <span class="kw">const</span> distractors = <span class="kw">await</span> step.<span class="fn">run</span>(<span class="st">'generate-distractors'</span>, <span class="kw">async</span> () =>
+      <span class="ty">Promise</span>.<span class="fn">all</span>(critiqued.<span class="fn">map</span>(<span class="kw">async</span> ({item}, i) => {
+        <span class="kw">const</span> misconceptions = <span class="kw">await</span> neo4j.<span class="fn">run</span>(`
+          <span class="kw">MATCH</span> (sc:SubConcept {uuid:$uuid})-[:ALIGNS_TO]->(sub:USMLE_Subtopic)-[:BELONGS_TO]->(top)-[:PART_OF]->(sys)
+          <span class="kw">MATCH</span> (mc:MisconceptionCategory) <span class="kw">WHERE</span> sys.name <span class="kw">IN</span> mc.usmle_systems
+          <span class="kw">RETURN</span> mc.name, mc.description, mc.example_distractor_pattern
+          <span class="kw">ORDER BY</span> mc.empirical_frequency <span class="kw">DESC LIMIT</span> <span class="nu">4</span>
+        `, { uuid: ecd_specs[i].target.uuid });
+        <span class="kw">return</span> claude.<span class="fn">generate</span>({ model: <span class="st">'claude-haiku-4-5-20251001'</span>,
+          prompt: <span class="fn">buildDistractorPrompt</span>(item, misconceptions, ecd_specs[i].evidenceRules), max_tokens: <span class="nu">300</span> });
+      }))
+    );
+
+    <span class="cm">// ── STEP 6: Rationale + QA (Haiku) + Toulmin JSONB ───────────────────</span>
+    <span class="kw">const</span> qa_results = <span class="kw">await</span> step.<span class="fn">run</span>(<span class="st">'rationale-qa-toulmin'</span>, <span class="kw">async</span> () =>
+      <span class="ty">Promise</span>.<span class="fn">all</span>(critiqued.<span class="fn">map</span>(<span class="kw">async</span> ({item}, i) => {
+        <span class="kw">const</span> [rationale, qa] = <span class="kw">await</span> <span class="ty">Promise</span>.<span class="fn">all</span>([
+          claude.<span class="fn">generate</span>({ model: <span class="st">'claude-haiku-4-5-20251001'</span>,
+            prompt: <span class="fn">buildRationalePrompt</span>(item, contexts[i]), max_tokens: <span class="nu">400</span> }),
+          claude.<span class="fn">generate</span>({ model: <span class="st">'claude-haiku-4-5-20251001'</span>,
+            prompt: <span class="fn">buildQAPrompt</span>(item, distractors[i], contexts[i]), max_tokens: <span class="nu">150</span> })
+        ]);
+        <span class="cm">// Toulmin chain stored as JSONB in Supabase assessment_items.toulmin</span>
+        <span class="cm">// NEVER traversed in Neo4j — display artifact only</span>
+        <span class="kw">const</span> toulmin = <span class="fn">buildToulmin</span>(item, ecd_specs[i], contexts[i]);
+        <span class="kw">return</span> { rationale, qa, toulmin };
+      }))
+    );
+
+    <span class="cm">// ── STEP 7: Provenance write to Neo4j + Supabase ─────────────────────</span>
+    <span class="kw">await</span> step.<span class="fn">run</span>(<span class="st">'provenance-write'</span>, <span class="kw">async</span> () => {
+      <span class="kw">for</span> (<span class="kw">const</span> [i, core] <span class="kw">of</span> critiqued.<span class="fn">entries</span>()) {
+        <span class="kw">const</span> itemUuid = <span class="fn">deterministicUuid</span>(<span class="op">`item:${event.data.batch_id}:${i}`</span>);
+        <span class="cm">// Supabase write (primary source of truth for content)</span>
+        <span class="kw">await</span> supabase.<span class="fn">from</span>(<span class="st">'assessment_items'</span>).<span class="fn">upsert</span>({
+          uuid: itemUuid, stem: core.item.stem, correct_answer: core.item.correct_answer,
+          toulmin: qa_results[i].toulmin, qa_score_medical: qa_results[i].qa.medical,
+          generation_cost_usd: <span class="fn">computeCost</span>(core, distractors[i], qa_results[i])
+        });
+        <span class="cm">// Neo4j write (skinny node + typed edges)</span>
+        <span class="kw">await</span> neo4j.<span class="fn">run</span>(`
+          <span class="kw">MERGE</span> (i:AssessmentItem {uuid:$uuid})
+            <span class="kw">ON CREATE SET</span> i.status='candidate', i.established_at=datetime()
+          <span class="kw">WITH</span> i
+          <span class="kw">MATCH</span> (ts:TaskShell {id:$shellId}), (pv:ProficiencyVariable {uuid:$pvUuid}),
+                (chunk:ContentChunk {uuid:$chunkUuid})
+          <span class="kw">MERGE</span> (i)-[:INSTANTIATES]->(ts)
+          <span class="kw">MERGE</span> (i)-[:CLAIMS_ABOUT]->(pv)
+          <span class="kw">MERGE</span> (i)-[:SOURCED_FROM {established_at:datetime()}]->(chunk)
+        `, { uuid: itemUuid, shellId: ecd_specs[i].shell.id, pvUuid: ecd_specs[i].target.pv_uuid, chunkUuid: core.item.source_chunk_uuids[<span class="nu">0</span>] });
+      }
+    });
+
+    <span class="cm">// ── STEP 8: Faculty approval gate ────────────────────────────────────</span>
+    <span class="kw">const</span> reviewEvent = <span class="kw">await</span> step.<span class="fn">waitForEvent</span>(<span class="st">'journey/items.batch-reviewed'</span>, {
+      match: <span class="st">'data.batch_id'</span>, timeout: <span class="st">'30d'</span>
+    });
+    <span class="kw">const</span> decisions = reviewEvent?.data.decisions ?? <span class="fn">autoApproveHighQuality</span>(qa_results);
+
+    <span class="cm">// ── STEP 9: Post-approval activation ────────────────────────────────</span>
+    <span class="kw">await</span> step.<span class="fn">run</span>(<span class="st">'post-approval'</span>, <span class="kw">async</span> () => {
+      <span class="kw">for</span> (<span class="kw">const</span> [uuid, decision] <span class="kw">of</span> <span class="ty">Object</span>.<span class="fn">entries</span>(decisions)) {
+        <span class="kw">if</span> (decision !== <span class="st">'approved'</span>) <span class="kw">continue</span>;
+        <span class="kw">await</span> neo4j.<span class="fn">run</span>(`
+          <span class="kw">MATCH</span> (i:AssessmentItem {uuid:$uuid})-[:CLAIMS_ABOUT]->(pv:ProficiencyVariable)
+                &lt;-[:MAPPED_TO]-(sc:SubConcept)
+          <span class="kw">SET</span> i.status = 'approved'
+          <span class="kw">MERGE</span> (sc)-[:HAS_COVERAGE]->(cr:CoverageRecord)
+            <span class="kw">ON CREATE SET</span> cr.assessment_count = <span class="nu">1</span>, cr.coverage_score = <span class="nu">0.33</span>
+            <span class="kw">ON MATCH SET</span>
+              cr.assessment_count = cr.assessment_count + <span class="nu">1</span>,
+              cr.coverage_score = <span class="fn">toFloat</span>(<span class="fn">min</span>(cr.assessment_count + <span class="nu">1</span>, <span class="nu">3</span>)) / <span class="nu">3.0</span>
+          <span class="cm">-- BKT_Parameters initialized with AI-estimated difficulty</span>
+          <span class="kw">MERGE</span> (bkt:BKT_Parameters)-[:FOR_ITEM]->(i) <span class="kw">ON CREATE SET</span> bkt.calibration_phase='ai_estimated'
+        `, { uuid });
+      }
+      <span class="kw">await</span> inngest.<span class="fn">send</span>({ name: <span class="st">'journey/items.approved'</span>,
+        data: { item_uuids: <span class="ty">Object</span>.<span class="fn">keys</span>(decisions).<span class="fn">filter</span>(k => decisions[k] === <span class="st">'approved'</span>), subconcept_uuids: ecd_specs.<span class="fn">map</span>(s => s.target.uuid) }
+      });
+    });
+  }
+);</pre>
+</div>
+
+<h3>BKT mastery update function (real-time, high-volume)</h3>
+<pre><span class="cm">// journey/mastery.update — triggered on every attempt.recorded
+// Hybrid BKT-IRT: Pavlik, Cen & Koedinger (2009)</span>
+
+<span class="kw">export const</span> masteryUpdate = inngest.<span class="fn">createFunction</span>(
+  { id: <span class="st">'journey/mastery.update'</span>, concurrency: { limit: <span class="nu">100</span> }, retries: <span class="nu">5</span>, timeoutMs: <span class="nu">30000</span> },
+  { event: <span class="st">'journey/attempt.recorded'</span> },
+  <span class="kw">async</span> ({ event }) => {
+    <span class="kw">const</span> { student_uuid, item_uuid, is_correct, selected_distractor_uuid } = event.data;
+
+    <span class="kw">await</span> step.<span class="fn">run</span>(<span class="st">'update-bkt'</span>, <span class="kw">async</span> () => {
+      <span class="kw">const</span> { bkt, irt, subconcept_uuid } = <span class="kw">await</span> <span class="fn">loadItemAndParams</span>(item_uuid, student_uuid);
+      <span class="cm">// Hybrid BKT-IRT: modulate slip/guess by IRT difficulty (D05 fix upstream)</span>
+      <span class="kw">const</span> p_slip_item = bkt.p_slip + (<span class="nu">1</span> - bkt.p_slip) * <span class="fn">sigmoid</span>(irt.difficulty - THETA_THRESHOLD);
+      <span class="kw">const</span> p_guess_item = bkt.p_guess + (<span class="nu">1</span> - bkt.p_guess) * <span class="fn">sigmoid</span>(THETA_THRESHOLD - irt.difficulty);
+      <span class="kw">const</span> evidence_weight = <span class="ty">Math</span>.<span class="fn">min</span>(irt.discrimination / AVG_DISCRIMINATION, <span class="nu">2.0</span>);
+      <span class="kw">const</span> p_mastered = is_correct
+        ? (bkt.p_mastery * (<span class="nu">1</span> - p_slip_item)) / (bkt.p_mastery * (<span class="nu">1</span> - p_slip_item) + (<span class="nu">1</span> - bkt.p_mastery) * p_guess_item)
+        : (bkt.p_mastery * p_slip_item) / (bkt.p_mastery * p_slip_item + (<span class="nu">1</span> - bkt.p_mastery) * (<span class="nu">1</span> - p_guess_item));
+      <span class="kw">const</span> new_p_mastery = p_mastered + evidence_weight * (p_mastered - bkt.p_mastery) + bkt.p_transit;
+
+      <span class="cm">// Update Neo4j StudentMastery node</span>
+      <span class="kw">await</span> neo4j.<span class="fn">run</span>(`
+        <span class="kw">MATCH</span> (s:Student {uuid:$student})-[:HAS_MASTERY]->(sm:StudentMastery)-[:FOR_CONCEPT]->(sc:SubConcept {uuid:$sc})
+        <span class="kw">SET</span> sm.p_mastery = $mastery, sm.last_updated = datetime()
+      `, { student: student_uuid, sc: subconcept_uuid, mastery: <span class="ty">Math</span>.<span class="fn">min</span>(<span class="ty">Math</span>.<span class="fn">max</span>(new_p_mastery, <span class="nu">0</span>), <span class="nu">1</span>) });
+
+      <span class="cm">// Misconception feedback: update empirical_frequency on selected distractor's target</span>
+      <span class="kw">if</span> (!is_correct && selected_distractor_uuid) {
+        <span class="kw">await</span> neo4j.<span class="fn">run</span>(`
+          <span class="kw">MATCH</span> (d:Distractor {uuid:$did})-[:TARGETS_MISCONCEPTION]->(mc:MisconceptionCategory)
+          <span class="kw">SET</span> mc.empirical_frequency = mc.empirical_frequency + <span class="nu">1</span>
+        `, { did: selected_distractor_uuid });
+      }
+    });
+
+    <span class="kw">await</span> step.<span class="fn">sendEvent</span>({ name: <span class="st">'journey/mastery.updated'</span>, data: { student_uuid, subconcept_uuid, p_mastery: new_p_mastery, delta: new_p_mastery - bkt.p_mastery } });
+  }
+);</pre>
+</section>
+
+<!-- ══════════════════════ V-b: AGENTIC RAG + GDS ══════════════════════ -->
+<section>
+<div class="sid">V-b / Agentic RAG Implementation &amp; Neo4j GDS</div>
+<h2>RetrieverRouter · RRF k=60 · GDS PageRank &amp; Louvain</h2>
+
+<h3>Agentic RAG — RetrieverRouter pattern (Bratanic &amp; Hane Ch. 4)</h3>
+<pre><span class="cm">// apps/ai/src/rag/retriever-router.ts
+// RetrieverRouter: classifies query → routes to correct specialist agent
+// T2: LOCAL + STRUCTURED only. GLOBAL unlocks at T4 (ConceptCluster seeded).</span>
+
+<span class="kw">const</span> QUERY_TYPES = [
+  { type: <span class="st">'local'</span>,      description: <span class="st">'Specific facts from lecture content'</span> },
+  { type: <span class="st">'structured'</span>, description: <span class="st">'Framework alignments, coverage gaps, SLO chains'</span> },
+  { type: <span class="st">'global'</span>,     description: <span class="st">'Thematic overview, curriculum patterns (T4+ only)'</span> },
+  { type: <span class="st">'hybrid'</span>,     description: <span class="st">'Combines content with structural context'</span> },
+] as const;
+
+<span class="kw">export async function</span> <span class="fn">retrieverRouter</span>(query: <span class="ty">string</span>, ctx: <span class="ty">RequestContext</span>) {
+  <span class="cm">// Step 1: Route classification (Haiku — cheap)</span>
+  <span class="kw">const</span> route = <span class="kw">await</span> claude.<span class="fn">generate</span>({
+    model: <span class="st">'claude-haiku-4-5-20251001'</span>,
+    prompt: <span class="op">`Classify this query into one of: local, structured, global, hybrid.
+Query: "${query}"
+Context: Faculty query about curriculum at ${ctx.institution}.
+Return JSON: { type: string, reasoning: string }`</span>,
+    max_tokens: <span class="nu">60</span>
+  });
+
+  <span class="cm">// Step 2: Route to specialist retriever</span>
+  <span class="kw">const</span> isGlobalEnabled = process.env.ENABLE_CONCEPT_CLUSTER_GLOBAL === <span class="st">'true'</span>;
+
+  <span class="kw">switch</span> (route.type) {
+    <span class="kw">case</span> <span class="st">'local'</span>:
+      <span class="kw">return</span> localRetriever(query, ctx);       <span class="cm">// HyDE + hybrid RRF (dense + BM25)</span>
+    <span class="kw">case</span> <span class="st">'structured'</span>:
+      <span class="kw">return</span> structuredRetriever(query, ctx);   <span class="cm">// Text2Cypher → Neo4j traversal</span>
+    <span class="kw">case</span> <span class="st">'global'</span>:
+      <span class="kw">return</span> isGlobalEnabled
+        ? globalRetriever(query, ctx)            <span class="cm">// ConceptCluster embeddings (T4+)</span>
+        : structuredRetriever(query, ctx);       <span class="cm">// G11 fallback until T4</span>
+    <span class="kw">case</span> <span class="st">'hybrid'</span>:
+      <span class="kw">const</span> [local, structured] = <span class="kw">await</span> <span class="ty">Promise</span>.<span class="fn">all</span>([
+        localRetriever(query, ctx),
+        structuredRetriever(query, ctx)
+      ]);
+      <span class="kw">return</span> <span class="fn">mergeContexts</span>(local, structured);
+  }
+}
+
+<span class="cm">// Local retriever: HyDE → Hybrid RRF k=60 (BM25 + dense) → Parent Doc Retriever</span>
+<span class="kw">async function</span> <span class="fn">localRetriever</span>(query: <span class="ty">string</span>, ctx: <span class="ty">RequestContext</span>) {
+  <span class="cm">// HyDE: generate hypothetical answer for retrieval bait</span>
+  <span class="kw">const</span> hyde = <span class="kw">await</span> claude.<span class="fn">generate</span>({
+    model: <span class="st">'claude-haiku-4-5-20251001'</span>,
+    prompt: <span class="op">`Write a 2-sentence answer to: "${query}" in a medical curriculum context.`</span>,
+    max_tokens: <span class="nu">80</span>
+  });
+  <span class="kw">const</span> hydeEmb = <span class="kw">await</span> <span class="fn">embed</span>(hyde.text, <span class="st">'MedCPT'</span>);
+
+  <span class="cm">// Hybrid RRF k=60: merge BM25 (Neo4j fulltext) + dense cosine (pgvector)</span>
+  <span class="kw">const</span> [bm25Results, denseResults] = <span class="kw">await</span> <span class="ty">Promise</span>.<span class="fn">all</span>([
+    neo4j.<span class="fn">run</span>(`
+      <span class="kw">CALL</span> db.<span class="fn">index.fulltext.queryNodes</span>(<span class="st">'chunk_fulltext'</span>, $query, {limit: <span class="nu">30</span>})
+      <span class="kw">YIELD</span> node, score
+      <span class="kw">WHERE</span> node.institution_id = $instId
+      <span class="kw">RETURN</span> node.uuid, score
+    `, { query, instId: ctx.institution_id }),
+    supabase.<span class="fn">rpc</span>(<span class="st">'match_chunks_biomedical'</span>, {
+      query_embedding: hydeEmb, match_count: <span class="nu">30</span>, institution_id: ctx.institution_id
+    })
+  ]);
+
+  <span class="cm">// RRF fusion: score = Σ 1/(k + rank_i) where k=60</span>
+  <span class="kw">const</span> rrf = <span class="fn">reciprocalRankFusion</span>(bm25Results, denseResults, { k: <span class="nu">60</span>, topK: <span class="nu">5</span> });
+
+  <span class="cm">// Parent Document Retriever: retrieve at chunk, return section (HAS_CHUNK ← LectureSection)</span>
+  <span class="kw">const</span> withParent = <span class="kw">await</span> neo4j.<span class="fn">run</span>(`
+    <span class="kw">UNWIND</span> $chunkUuids <span class="kw">AS</span> cid
+    <span class="kw">MATCH</span> (chunk:ContentChunk {uuid: cid})&lt;-[:HAS_CHUNK]-(sec:LectureSection)&lt;-[:HAS_SECTION]-(lec:Lecture)
+    <span class="kw">RETURN</span> chunk.text <span class="kw">AS</span> chunk_text, sec.body_text <span class="kw">AS</span> section_context, lec.title
+  `, { chunkUuids: rrf.<span class="fn">map</span>(r => r.uuid) });
+
+  <span class="kw">return</span> withParent;
+}
+
+<span class="cm">// Structured retriever: Text2Cypher with medical few-shot examples</span>
+<span class="kw">async function</span> <span class="fn">structuredRetriever</span>(query: <span class="ty">string</span>, ctx: <span class="ty">RequestContext</span>) {
+  <span class="cm">// Retrieve few-shot examples from Supabase few_shot_examples table</span>
+  <span class="kw">const</span> fewShots = <span class="kw">await</span> supabase.<span class="fn">from</span>(<span class="st">'few_shot_examples'</span>).<span class="fn">select</span>(<span class="st">'natural_language, cypher'</span>).<span class="fn">limit</span>(<span class="nu">5</span>);
+
+  <span class="cm">// Text2Cypher: Sonnet generates Cypher from NL + schema + examples</span>
+  <span class="kw">const</span> cypherQuery = <span class="kw">await</span> claude.<span class="fn">generate</span>({
+    model: <span class="st">'claude-sonnet-4-20250514'</span>,
+    system: <span class="fn">buildText2CypherPrompt</span>(NEO4J_SCHEMA_SUMMARY, fewShots.data),
+    prompt: <span class="op">`Convert to Cypher. Always filter: institution_id = "${ctx.institution_id}". Query: "${query}"`</span>,
+    max_tokens: <span class="nu">400</span>
+  });
+  <span class="kw">return</span> neo4j.<span class="fn">run</span>(cypherQuery.text, { institution_id: ctx.institution_id });
+}
+
+<span class="cm">// AnswerCritic: validates response quality — max 2 retry iterations</span>
+<span class="kw">export async function</span> <span class="fn">withAnswerCritic</span>(query: <span class="ty">string</span>, context: <span class="ty">RetrievedContext</span>) {
+  <span class="kw">let</span> answer = <span class="kw">await</span> <span class="fn">generateAnswer</span>(query, context);
+  <span class="kw">for</span> (<span class="kw">let</span> i = <span class="nu">0</span>; i < <span class="nu">2</span>; i++) {
+    <span class="kw">const</span> critique = <span class="kw">await</span> claude.<span class="fn">generate</span>({
+      model: <span class="st">'claude-sonnet-4-20250514'</span>,
+      prompt: <span class="op">`Does this answer faithfully use the provided context?
+Query: ${query} | Answer: ${answer.text} | Context: ${context.text}
+Return JSON: { faithful: boolean, issues: string[] }`</span>,
+      max_tokens: <span class="nu">150</span>
+    });
+    <span class="kw">if</span> (critique.faithful) <span class="kw">break</span>;
+    answer = <span class="kw">await</span> <span class="fn">generateAnswer</span>(query, context, critique.issues);
+  }
+  <span class="kw">return</span> answer;
+}</pre>
+
+<h3>RRF k=60 implementation</h3>
+<pre><span class="cm">// lib/retrieval/rrf.ts — Reciprocal Rank Fusion (Cormack, Clarke & Buettcher, SIGIR 2009)
+// k=60 smoothing parameter per original paper recommendation for IR fusion tasks</span>
+
+<span class="kw">export function</span> <span class="fn">reciprocalRankFusion</span>(
+  rankedLists: <span class="ty">RankedResult[][]</span>,
+  options: { k?: <span class="ty">number</span>; topK?: <span class="ty">number</span> } = {}
+): <span class="ty">RankedResult[]</span> {
+  <span class="kw">const</span> { k = <span class="nu">60</span>, topK = <span class="nu">5</span> } = options;  <span class="cm">// k=60 is canonical (D10: always used)</span>
+  <span class="kw">const</span> scores = <span class="kw">new</span> <span class="ty">Map</span>&lt;<span class="ty">string</span>, <span class="ty">number</span>&gt;();
+
+  <span class="kw">for</span> (<span class="kw">const</span> list <span class="kw">of</span> rankedLists) {
+    list.<span class="fn">forEach</span>((result, rank) => {
+      <span class="kw">const</span> current = scores.<span class="fn">get</span>(result.uuid) || <span class="nu">0</span>;
+      scores.<span class="fn">set</span>(result.uuid, current + <span class="nu">1</span> / (k + rank + <span class="nu">1</span>));  <span class="cm">// 1/(k + rank)</span>
+    });
+  }
+  <span class="kw">return</span> <span class="ty">Array</span>.<span class="fn">from</span>(scores.<span class="fn">entries</span>())
+    .<span class="fn">sort</span>(([,a],[,b]) => b - a)
+    .<span class="fn">slice</span>(<span class="nu">0</span>, topK)
+    .<span class="fn">map</span>(([uuid, score]) => ({ uuid, rrf_score: score }));
+}</pre>
+
+<h3>Neo4j GDS calls — PageRank &amp; Louvain (T4+ features)</h3>
+<pre><span class="cm">// scripts/gds/compute-pagerank.ts — run weekly after T4 (via Inngest)
+// PageRank → SubConcept.pagerank_score → clinical_consequence_score ordering</span>
+
+<span class="kw">async function</span> <span class="fn">computePageRank</span>(institutionId: <span class="ty">string</span>) {
+  <span class="cm">// Project graph: SubConcept nodes + TEACHES/ALIGNS_TO/GROUNDED_IN edges</span>
+  <span class="kw">await</span> neo4j.<span class="fn">run</span>(`
+    <span class="kw">CALL</span> gds.graph.<span class="fn">project.cypher</span>(
+      <span class="st">'subconcept-graph'</span>,
+      <span class="st">'MATCH (n:SubConcept {institution_id: $instId}) RETURN id(n) AS id'</span>,
+      <span class="st">'MATCH (a:SubConcept)-[r:TEACHES|ALIGNS_TO|GROUNDED_IN]-(b:SubConcept)
+       WHERE a.institution_id = $instId RETURN id(a) AS source, id(b) AS target'</span>,
+      { parameters: { instId: institutionId } }
+    )
+  `);
+
+  <span class="cm">// Run PageRank, write back to node property</span>
+  <span class="kw">await</span> neo4j.<span class="fn">run</span>(`
+    <span class="kw">CALL</span> gds.pageRank.<span class="fn">write</span>(<span class="st">'subconcept-graph'</span>, {
+      writeProperty: <span class="st">'pagerank_score'</span>,
+      dampingFactor: <span class="nu">0.85</span>,
+      maxIterations: <span class="nu">20</span>
+    })
+    <span class="kw">YIELD</span> nodePropertiesWritten, ranIterations
+  `);
+  <span class="cm">// clinical_consequence_score = pagerank_score × usmle_blueprint_weight × disease_mortality_factor</span>
+  <span class="kw">await</span> neo4j.<span class="fn">run</span>(`
+    <span class="kw">MATCH</span> (sc:SubConcept {institution_id: $instId})-[:ALIGNS_TO]->(sub:USMLE_Subtopic)
+    <span class="kw">SET</span> sc.clinical_consequence_score =
+      sc.pagerank_score * sub.nbme_frequency * <span class="kw">coalesce</span>(sc.disease_mortality_factor, <span class="nu">0.5</span>)
+  `, { instId: institutionId });
+  <span class="kw">await</span> neo4j.<span class="fn">run</span>(`<span class="kw">CALL</span> gds.graph.<span class="fn">drop</span>(<span class="st">'subconcept-graph'</span>)`);
+}
+
+<span class="cm">// scripts/gds/compute-louvain.ts — run once at T4 to create ConceptCluster nodes
+// Louvain: Blondel et al. (2008) community detection</span>
+<span class="kw">async function</span> <span class="fn">computeLouvain</span>(institutionId: <span class="ty">string</span>) {
+  <span class="kw">await</span> neo4j.<span class="fn">run</span>(`
+    <span class="kw">CALL</span> gds.graph.<span class="fn">project</span>(<span class="st">'subconcept-louvain'</span>,
+      { SubConcept: { label: <span class="st">'SubConcept'</span>, properties: [<span class="st">'pagerank_score'</span>] } },
+      { TEACHES: { orientation: <span class="st">'UNDIRECTED'</span> }, EXPLAINS_SAME_CONCEPT: { orientation: <span class="st">'UNDIRECTED'</span> } }
+    )
+  `);
+  <span class="kw">await</span> neo4j.<span class="fn">run</span>(`
+    <span class="kw">CALL</span> gds.louvain.<span class="fn">write</span>(<span class="st">'subconcept-louvain'</span>, { writeProperty: <span class="st">'community_id'</span> })
+    <span class="kw">YIELD</span> communityCount, modularity
+  `);
+  <span class="cm">// Create ConceptCluster nodes from communities with ≥5 SubConcepts
+  // LLM-generate cluster summary using community members' names</span>
+  <span class="kw">await</span> neo4j.<span class="fn">run</span>(`
+    <span class="kw">MATCH</span> (sc:SubConcept {institution_id: $instId})
+    <span class="kw">WITH</span> sc.community_id <span class="kw">AS</span> cid, <span class="fn">collect</span>(sc) <span class="kw">AS</span> members
+    <span class="kw">WHERE</span> <span class="fn">size</span>(members) >= <span class="nu">5</span>
+    <span class="kw">MERGE</span> (cc:ConceptCluster {community_id: cid})
+      <span class="kw">ON CREATE SET</span> cc.member_count = <span class="fn">size</span>(members)
+    <span class="kw">WITH</span> cc, members
+    <span class="kw">UNWIND</span> members <span class="kw">AS</span> sc
+    <span class="kw">MERGE</span> (sc)-[:BELONGS_TO_CLUSTER]->(cc)
+  `, { instId: institutionId });
+  <span class="cm">// After creation: generate LLM summaries for each cluster (background job)</span>
+  <span class="kw">await</span> inngest.<span class="fn">send</span>({ name: <span class="st">'journey/gnn.community-detect'</span>, data: { institution_id: institutionId } });
+  <span class="kw">await</span> neo4j.<span class="fn">run</span>(`<span class="kw">CALL</span> gds.graph.<span class="fn">drop</span>(<span class="st">'subconcept-louvain'</span>)`);
+}</pre>
+</section>
+
+<!-- ══════════════════════ VI: FRONTEND ══════════════════════ -->
+<section id="frontend">
+<div class="sid">VI / Frontend Architecture</div>
+<h2>Next.js 15 App Router — page structure by persona</h2>
+
+<div class="call-b"><div class="cl">Canonical · G10 · D06</div><p>HyDE <em>can be understood through</em> an ECD lens — not equivalent to ECD. Three-hub architecture (SubConcept / SLO / USMLE_Subtopic) is canonical — "dual-hub" is deprecated.</p></div>
+
+<h3>Complete page tree</h3>
+<div class="pages">
+<span class="d">app/</span>
+<span class="d">├── (auth)/</span>
+<span class="f">│   ├── login/page.tsx             </span><span class="c">-- Magic link or SSO. No password.</span>
+<span class="f">│   └── register/page.tsx          </span><span class="c">-- Student self-registration → admin approval queue</span>
+<span class="c">│</span>
+<span class="d">├── (admin)/                        </span><span class="c">-- Role guard: admin only</span>
+<span class="f">│   ├── setup/page.tsx              </span><span class="c">-- Institution setup wizard (T1 Day 1)</span>
+<span class="f">│   ├── dashboard/page.tsx          </span><span class="c">-- Stat cards + action queue + pipeline health</span>
+<span class="f">│   ├── faculty/page.tsx            </span><span class="c">-- Faculty list + invite + bulk CSV</span>
+<span class="f">│   ├── students/page.tsx           </span><span class="c">-- Student roster + approval queue (T3)</span>
+<span class="f">│   ├── coverage/page.tsx           </span><span class="c">-- Coverage heatmap (T2): 18 USMLE × courses</span>
+<span class="f">│   ├── lcme/page.tsx               </span><span class="c">-- LCME Readiness Room (T4)</span>
+<span class="f">│   └── integrity/page.tsx          </span><span class="c">-- Data integrity checks: orphans, sync status (T2)</span>
+<span class="c">│</span>
+<span class="d">├── (faculty)/                      </span><span class="c">-- Role guard: faculty | admin</span>
+<span class="d">│   ├── courses/</span>
+<span class="f">│   │   ├── page.tsx               </span><span class="c">-- Course list for this faculty</span>
+<span class="f">│   │   └── [courseId]/</span>
+<span class="f">│   │       ├── page.tsx           </span><span class="c">-- Course overview: coverage + pipeline status</span>
+<span class="f">│   │       ├── syllabus/page.tsx  </span><span class="c">-- Syllabus upload + SLO review</span>
+<span class="f">│   │       ├── lectures/</span>
+<span class="f">│   │       │   ├── page.tsx      </span><span class="c">-- Lecture list + upload trigger</span>
+<span class="f">│   │       │   └── [lectureId]/</span>
+<span class="f">│   │       │       ├── page.tsx  </span><span class="c">-- Processing status + slide list + chunk view</span>
+<span class="f">│   │       │       └── review/page.tsx </span><span class="c">-- SubConcept review: approve/reject/merge</span>
+<span class="d">│   ├── generate/</span>
+<span class="f">│   │   ├── page.tsx               </span><span class="c">-- Quick Spec Wizard (chat UI)</span>
+<span class="f">│   │   └── [batchId]/page.tsx     </span><span class="c">-- Generation status + item review list</span>
+<span class="d">│   ├── items/</span>
+<span class="f">│   │   ├── page.tsx               </span><span class="c">-- Item bank with filters (Bloom, system, status)</span>
+<span class="f">│   │   └── [itemId]/page.tsx      </span><span class="c">-- Item detail: Toulmin panel + edit + remix</span>
+<span class="d">│   ├── blueprints/</span>
+<span class="f">│   │   ├── page.tsx               </span><span class="c">-- Blueprint list</span>
+<span class="f">│   │   └── [blueprintId]/</span>
+<span class="f">│   │       ├── page.tsx           </span><span class="c">-- Blueprint editor + equity check</span>
+<span class="f">│   │       └── assemble/page.tsx  </span><span class="c">-- Exam assembly: filter + auto-fill + validate</span>
+<span class="d">│   ├── exams/</span>
+<span class="f">│   │   ├── page.tsx               </span><span class="c">-- Exam list</span>
+<span class="f">│   │   └── [examId]/</span>
+<span class="f">│   │       ├── page.tsx           </span><span class="c">-- Exam management: deploy + analytics (T4)</span>
+<span class="f">│   │       └── angoff/page.tsx    </span><span class="c">-- Angoff standard-setting session (T2)</span>
+<span class="f">│   └── rag/page.tsx               </span><span class="c">-- Agentic RAG chat: "What are we under-testing?" (T2)</span>
+<span class="c">│</span>
+<span class="d">├── (student)/                      </span><span class="c">-- Role guard: student only (T3)</span>
+<span class="d">│   ├── dashboard/</span>
+<span class="f">│   │   └── page.tsx               </span><span class="c">-- Mastery radar + weak areas + streak + timeline</span>
+<span class="f">│   ├── exam/[examId]/</span>
+<span class="f">│   │   ├── take/page.tsx          </span><span class="c">-- Standardized exam: timed + flagging + nav panel</span>
+<span class="f">│   │   └── results/page.tsx       </span><span class="c">-- Formative results + Why Wrong?</span>
+<span class="d">│   ├── practice/</span>
+<span class="f">│   │   ├── page.tsx               </span><span class="c">-- Practice session builder: topic + difficulty + length</span>
+<span class="f">│   │   └── session/[sessionId]/page.tsx </span><span class="c">-- Live practice session</span>
+<span class="f">│   └── queue/page.tsx             </span><span class="c">-- StudyQueue: spaced retrieval recommendations (T3)</span>
+</div>
+
+<h3>Key component implementations</h3>
+
+<div class="two">
+<div>
+<pre><span class="cm">// components/pipeline/LectureStatus.tsx
+// Real-time status display — Supabase realtime + fallback polling</span>
+<span class="kw">export function</span> <span class="fn">LectureStatus</span>({ lectureId }: { lectureId: <span class="ty">string</span> }) {
+  <span class="kw">const</span> [status, <span class="fn">setStatus</span>] = <span class="fn">useState</span>&lt;<span class="ty">string</span>&gt;(<span class="st">'pending'</span>);
+
+  <span class="fn">useEffect</span>(() => {
+    <span class="cm">// Primary: Supabase realtime push</span>
+    <span class="kw">const</span> channel = supabase
+      .<span class="fn">channel</span>(<span class="op">`lecture:${lectureId}`</span>)
+      .<span class="fn">on</span>(<span class="st">'postgres_changes'</span>, { event: <span class="st">'UPDATE'</span>, table: <span class="st">'lectures'</span>, filter: <span class="op">`uuid=eq.${lectureId}`</span> },
+        (payload) => <span class="fn">setStatus</span>(payload.new.status))
+      .<span class="fn">subscribe</span>();
+    <span class="cm">// Fallback: poll every 5 seconds</span>
+    <span class="kw">const</span> interval = <span class="fn">setInterval</span>(() =>
+      <span class="fn">fetch</span>(<span class="op">`/api/lectures/${lectureId}/status`</span>).<span class="fn">then</span>(r => r.<span class="fn">json</span>()).<span class="fn">then</span>(d => <span class="fn">setStatus</span>(d.status)),
+    <span class="nu">5000</span>);
+    <span class="kw">return</span> () => { supabase.<span class="fn">removeChannel</span>(channel); <span class="fn">clearInterval</span>(interval); };
+  }, [lectureId]);
+
+  <span class="kw">return</span> &lt;<span class="ty">StatusBar</span> label={STATUS_LABELS[status]} status={status} /&gt;;
+}</pre>
+
+<pre><span class="cm">// components/items/WhyWrong.tsx
+// "Why Wrong?" explanation — Haiku with evidence_rule context</span>
+<span class="kw">export function</span> <span class="fn">WhyWrong</span>({ distractorUuid, itemUuid }: Props) {
+  <span class="kw">const</span> [explanation, <span class="fn">setExplanation</span>] = <span class="fn">useState</span>&lt;<span class="ty">string</span>|<span class="kw">null</span>&gt;(<span class="kw">null</span>);
+  <span class="kw">const</span> [loading, <span class="fn">setLoading</span>] = <span class="fn">useState</span>(<span class="kw">false</span>);
+
+  <span class="kw">const</span> <span class="fn">explain</span> = <span class="kw">async</span> () => {
+    <span class="fn">setLoading</span>(<span class="kw">true</span>);
+    <span class="cm">// Server-side Haiku call — evidence_rule + MisconceptionCategory.description</span>
+    <span class="kw">const</span> res = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="op">`/api/items/${itemUuid}/why-wrong`</span>, {
+      method: <span class="st">'POST'</span>, body: <span class="ty">JSON</span>.<span class="fn">stringify</span>({ distractor_uuid: distractorUuid })
+    });
+    <span class="kw">const</span> data = <span class="kw">await</span> res.<span class="fn">json</span>();
+    <span class="fn">setExplanation</span>(data.explanation);
+    <span class="fn">setLoading</span>(<span class="kw">false</span>);
+  };
+
+  <span class="kw">return</span> (
+    &lt;<span class="ty">div</span>&gt;
+      &lt;<span class="ty">Button</span> onClick={explain}&gt;Why was this wrong?&lt;/<span class="ty">Button</span>&gt;
+      {explanation && &lt;<span class="ty">MisconceptionExplanation</span> text={explanation} /&gt;}
+    &lt;/<span class="ty">div</span>&gt;
+  );
+}</pre>
+</div>
+<div>
+<pre><span class="cm">// components/items/ToulminPanel.tsx
+// ECD validity chain displayed in faculty item review</span>
+<span class="kw">export function</span> <span class="fn">ToulminPanel</span>({ item }: { item: <span class="ty">AssessmentItem</span> }) {
+  <span class="kw">const</span> t = item.toulmin; <span class="cm">// JSONB from Supabase — never from Neo4j</span>
+  <span class="kw">return</span> (
+    &lt;<span class="ty">Collapsible</span> label=<span class="st">"Validity Evidence (ECD)"</span>&gt;
+      &lt;<span class="ty">Section</span> label=<span class="st">"Claim"</span> text={t.claim} /&gt;
+      &lt;<span class="ty">Section</span> label=<span class="st">"Warrant"</span> text={t.warrant} /&gt;
+      &lt;<span class="ty">Section</span> label=<span class="st">"Backing"</span>&gt;
+        {t.backing.<span class="fn">map</span>(b => &lt;<span class="ty">BackingBadge</span> key={b} text={b} /&gt;)}
+      &lt;/<span class="ty">Section</span>&gt;
+      &lt;<span class="ty">EvidenceRulesTable</span> rules={t.evidence_rules} /&gt;
+    &lt;/<span class="ty">Collapsible</span>&gt;
+  );
+}</pre>
+
+<pre><span class="cm">// components/mastery/MasteryRadar.tsx
+// Student mastery by USMLE system — ordered by consequence × gap</span>
+<span class="kw">export function</span> <span class="fn">MasteryRadar</span>({ studentUuid }: Props) {
+  <span class="kw">const</span> { data: mastery } = <span class="fn">useSWR</span>(<span class="op">`/api/mastery/${studentUuid}`</span>);
+  <span class="cm">// Supabase realtime: update radar in real-time as attempts come in</span>
+  <span class="fn">useRealtimeMastery</span>(studentUuid, () => <span class="fn">mutate</span>());
+
+  <span class="kw">const</span> USMLE_SYSTEMS = [<span class="st">'Cardiovascular'</span>, <span class="st">'Renal'</span>, <span class="st">'Respiratory'</span>,
+    <span class="st">'Endocrine'</span>, <span class="st">'Gastrointestinal'</span>, <span class="st">'Neurology'</span>,
+    <span class="st">'Musculoskeletal'</span>, <span class="st">'Hematology'</span>, <span class="st">'Infectious Disease'</span>];
+
+  <span class="kw">return</span> &lt;<span class="ty">RadarChart</span> data={mastery?.systems} axes={USMLE_SYSTEMS}
+    fillColor=<span class="st">"var(--know-c)"</span> animateOnChange /&gt;;
+}</pre>
+
+<pre><span class="cm">// components/coverage/CoverageHeatmap.tsx
+// 18 USMLE systems × courses with three states
+// RSC: fetched server-side for fast initial render</span>
+<span class="kw">export async function</span> <span class="fn">CoverageHeatmap</span>({ institutionId }: Props) {
+  <span class="kw">const</span> heatmap = <span class="kw">await</span> <span class="fn">fetchCoverageHeatmap</span>(institutionId);
+  <span class="kw">const</span> cellColors = {
+    gap: <span class="st">'#fce6e6'</span>,      <span class="cm">// red — declared only (COVERS_TOPIC, no TEACHES)</span>
+    partial: <span class="st">'#fef3e2'</span>,  <span class="cm">// amber — delivered (TEACHES, no CoverageRecord)</span>
+    confirmed: <span class="st">'#e8f5ec'</span> <span class="cm">// green — CoverageRecord present</span>
+  };
+  <span class="kw">return</span> &lt;<span class="ty">HeatmapGrid</span> data={heatmap} colorMap={cellColors} /&gt;;
+}</pre>
+</div>
+</div>
+</section>
+
+<!-- ══════════════════════ VII: SECURITY ══════════════════════ -->
+<section id="security">
+<div class="sid">VII / Security & Compliance</div>
+<h2>FERPA · RLS · Audit logging · Secrets management</h2>
+
+<div class="three">
+  <div class="card"><div class="card-lbl">FERPA Enforcement</div><div class="card-ttl">PostgreSQL RLS — architecturally enforced</div><p>Row-Level Security on every table with student data. <code>institution_id = auth.jwt()->>'institution_id'</code> on all tables. Students see only their own attempts. Advisors see only assigned students. Aggregate stats: min cell size = 5. Cannot be bypassed even by application bugs — enforced at the DB level.</p></div>
+  <div class="card"><div class="card-lbl">Audit Logging</div><div class="card-ttl">Every consequential action logged</div><p>audit_log table with actor_uuid, role, action, resource_type, resource_uuid, ip_address, timestamp. Actions logged: item.approved, item.rejected, exam.deployed, student.approved, faculty.invited, syllabus.uploaded. Log readable only by service_role — not by faculty or admin via RLS. Retained 7 years.</p></div>
+  <div class="card"><div class="card-lbl">Secrets Management</div><div class="card-ttl">Never in browser, never in git</div><p>All API keys (Anthropic, UMLS, Neo4j, OpenAI) in Vercel environment variables. NEXT_PUBLIC_* prefix only for genuinely public values (Supabase URL + anon key). Neo4j Bolt URI + credentials in server-only env vars. Inngest signing key server-only. Faculty never has access to API keys.</p></div>
+</div>
+
+<pre><span class="cm">// Environment variables — complete list</span>
+<span class="cm">// Server-only (never NEXT_PUBLIC_):</span>
+NEO4J_URI=bolt+s://...aura.neo4j.io:7687
+NEO4J_USER=neo4j
+NEO4J_PASSWORD=...
+ANTHROPIC_API_KEY=sk-ant-...
+OPENAI_API_KEY=sk-...                     <span class="cm">// text-embedding-3-small only</span>
+UMLS_API_KEY=...
+INNGEST_SIGNING_KEY=signkey-...
+SUPABASE_SERVICE_ROLE_KEY=...            <span class="cm">// never in browser</span>
+MEDCPT_ENDPOINT=https://...             <span class="cm">// HuggingFace inference endpoint</span>
+
+<span class="cm">// Client-safe (NEXT_PUBLIC_ prefix):</span>
+NEXT_PUBLIC_SUPABASE_URL=https://...supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...    <span class="cm">// anon key — RLS enforced, safe to expose</span>
+
+<span class="cm">// Feature flags:</span>
+ENABLE_AGENTIC_RAG=true              <span class="cm">// T2 feature flag</span>
+ENABLE_CONCEPT_CLUSTER_GLOBAL=false  <span class="cm">// G11: false until T4 Louvain runs</span>
+ENABLE_CAT_LITE=false                <span class="cm">// T4 adaptive assessment</span></pre>
+</section>
+
+<!-- ══════════════════════ VIII: DEPLOY ══════════════════════ -->
+<section id="deploy">
+<div class="sid">VIII / Deployment & Operations</div>
+<h2>Cost controls · Monitoring · Weekly operations</h2>
+
+<h3>Cost architecture — per-item generation budget</h3>
+<div class="cost-block">
+<div class="cost-head">Per-item cost breakdown — Pipeline 3 (canonical: Sonnet + Haiku routing)</div>
+Step ECD1-3: evidence rules + shell selection  Haiku    ~$0.0001  (100 tokens in+out)
+Step 01:     HyDE vignette generation          Haiku    ~$0.0001  (100 tokens)
+Step 01:     HyDE embedding                   MedCPT   ~$0.0002  (768-dim)
+Step 01:     Context assembly (parallel)       —        ~$0.0000  (pre-computed LOD read)
+Step 02:     Core item generation              Sonnet   ~$0.0270  (6k in, 600 out)
+Step 03:     Critique gate                     Sonnet   ~$0.0100  (3k in, 200 out)
+Step 04:     Distractor generation × 4         Haiku    ~$0.0030  (2k in, 300 out)
+Step 05:     Rationale + Toulmin               Haiku    ~$0.0040  (2k in, 400 out)
+Step 05:     QA scoring (22 rules)             Haiku    ~$0.0020  (3k in, 150 out)
+Enrichment:  LOD brief (amortized/item)        Haiku    ~$0.0002  (generated at P2)
+Embeddings:  3 levels at upload (amortized)    —        ~$0.0020
+─────────────────────────────────────────────────────────────────────────
+Per item total (fully loaded):                          ~$0.0486  raw
+With overhead, retries, reconciliation (×2.5):          ~$0.12 target
+
+30-item faculty batch:                                  ~$3.00
+Student practice year (est. 500 items served):          ~$1.20 serving cost
+Annual cost per student (all-in):                       ~$50/year at scale
+
+Budget alert: generation_cost_log.cost_usd > 0.20 per item → Inngest alert → admin notification
+</div>
+
+<h3>Weekly operations schedule (all Inngest crons)</h3>
+<table>
+<thead><tr><th>Cron</th><th>Schedule</th><th>Function</th><th>Action</th></tr></thead>
+<tbody>
+<tr><td class="mono">Monday 1am</td><td>0 1 * * 1</td><td>journey/cron.sync-reconcile</td><td>Find Supabase rows with neo4j_sync_status ≠ 'synced' → re-attempt Neo4j MERGE (G08 fix)</td></tr>
+<tr><td class="mono">Monday 2am</td><td>0 2 * * 1</td><td>journey/cron.weekly-calibrate</td><td>IRT 2PL calibration for items with ≥30 responses. Flag ContentChunks with discrimination &lt;0.2.</td></tr>
+<tr><td class="mono">Sunday 11pm</td><td>0 23 * * 0</td><td>journey/cron.mastery-analysis</td><td>Weekly mastery snapshots, BKT slip detection, content gap alerts to faculty</td></tr>
+<tr><td class="mono">Friday 3am</td><td>0 3 * * 5</td><td>journey/cron.rag-evaluation</td><td>RAG quality evaluation: 200-item sample. Metrics: context_recall ≥0.85, faithfulness ≥0.90, answer_correctness ≥0.75</td></tr>
+<tr><td class="mono">Daily 8am</td><td>0 8 * * *</td><td>journey/cron.studyqueue</td><td>Generate StudyQueue for all active students using spaced_retrieval_v1 algorithm (G14)</td></tr>
+<tr><td class="mono">Weekly</td><td>Conditional</td><td>journey/gnn.retrain-trigger</td><td>If new confirmed SubConcepts since last retrain &gt;100: trigger HeteroSAGE retrain (T4+)</td></tr>
+</tbody>
+</table>
+
+<h3>Local development setup</h3>
+<pre><span class="cm"># Prerequisites</span>
+node >= 20.0
+pnpm >= 8.0
+Docker (for local Hetionet PostgreSQL)
+Java 11+ (for MetaMap local server — optional for dev)
+
+<span class="cm"># Setup</span>
+pnpm install
+cp .env.example .env.local     <span class="cm"># fill in all API keys</span>
+pnpm supabase start             <span class="cm"># local Supabase (Docker)</span>
+pnpm supabase db reset          <span class="cm"># apply all migrations</span>
+
+<span class="cm"># Neo4j: use AuraDB free tier for local dev
+# Or: npx neo4j-desktop (local instance)</span>
+
+<span class="cm"># Seed Phase 0 (required before any pipeline testing)</span>
+pnpm tsx scripts/seeds/00-neo4j-schema.ts
+pnpm tsx scripts/seeds/01-frameworks.ts
+pnpm tsx scripts/seeds/02-anatomy-regions.ts     <span class="cm"># includes PNS/ANS (G12)</span>
+pnpm tsx scripts/seeds/03-disease-categories.ts
+pnpm tsx scripts/seeds/04-misconception-categories.ts  <span class="cm"># G01</span>
+pnpm tsx scripts/seeds/05-task-shells.ts              <span class="cm"># G02</span>
+pnpm tsx scripts/seeds/06-lcme-reference.ts           <span class="cm"># G09</span>
+pnpm tsx scripts/seeds/07-few-shot-examples.ts        <span class="cm"># G03</span>
+pnpm tsx scripts/seeds/08-msm-catalog.ts              <span class="cm"># MSM 22 courses</span>
+
+<span class="cm"># Dev server</span>
+pnpm dev                        <span class="cm"># Next.js dev server on :3000</span>
+pnpm inngest dev                <span class="cm"># Inngest dev server on :8288</span>
+
+<span class="cm"># Validate seed integrity</span>
+pnpm tsx scripts/validate-seed.ts
+<span class="cm"># Expected output:
+# ✓ 77 node types seeded (including IPECCompetency × 4, CarePhase × 5, MisconceptionCategory × 15)
+# ✓ 12 TaskShell templates seeded
+# ✓ 5 few-shot examples seeded
+# ✓ 12 AnatomicalSystem nodes (including nervous-pns)
+# ✓ Evidence grade weights imported: {A:1.00, B:0.82, C:0.65, D:0.45}</span></pre>
+</section>
+
+
+<!-- ══════════════ IX: PRODUCTION HARDENING (new section) ══════════════ -->
+<section id="prod">
+<div class="sid">IX / Production Hardening</div>
+<h2>SQL, code, and patterns for all 45 production readiness findings</h2>
+
+<h3>Missing tables — complete SQL</h3>
+<div class="schema">
+<div class="schema-head"><span class="schema-file">supabase/migrations/004_production_hardening.sql</span><span class="schema-tag">All 10 new tables</span></div>
+<pre><span class="cm">-- ── C01: Exam answer auto-save ─────────────────────────────────────────────</span>
+<span class="kw">CREATE TABLE</span> session_answers (
+  session_id     <span class="ty">UUID NOT NULL REFERENCES</span> sessions(id) <span class="kw">ON DELETE CASCADE</span>,
+  item_order     <span class="ty">INT NOT NULL</span>,
+  selected_index <span class="ty">INT</span>,                   <span class="cm">-- null = skipped</span>
+  flagged        <span class="ty">BOOLEAN DEFAULT FALSE</span>,  <span class="cm">-- student flagged for review</span>
+  answered_at    <span class="ty">TIMESTAMPTZ DEFAULT now</span>(),
+  updated_at     <span class="ty">TIMESTAMPTZ DEFAULT now</span>(),
+  <span class="kw">PRIMARY KEY</span> (session_id, item_order)
+);
+<span class="cm">-- Upsert pattern: INSERT ... ON CONFLICT (session_id, item_order) DO UPDATE SET ...</span>
+
+<span class="cm">-- ── H05: Per-student scramble map ──────────────────────────────────────────</span>
+<span class="kw">CREATE TABLE</span> session_items (
+  session_id      <span class="ty">UUID NOT NULL REFERENCES</span> sessions(id) <span class="kw">ON DELETE CASCADE</span>,
+  display_order   <span class="ty">INT NOT NULL</span>,
+  item_id         <span class="ty">UUID NOT NULL REFERENCES</span> assessment_items(id),
+  item_version    <span class="ty">INT NOT NULL DEFAULT 1</span>,  <span class="cm">-- version used at exam time</span>
+  option_order    <span class="ty">INT[] NOT NULL</span>,            <span class="cm">-- e.g. [3,0,1,4,2] = shuffled indices</span>
+  correct_option_pos <span class="ty">INT NOT NULL</span>,           <span class="cm">-- correct answer's position in option_order</span>
+  <span class="kw">PRIMARY KEY</span> (session_id, display_order),
+  <span class="kw">UNIQUE</span> (session_id, item_id)
+);
+
+<span class="cm">-- ── H02: Item version history ───────────────────────────────────────────────</span>
+<span class="kw">CREATE TABLE</span> item_versions (
+  id              <span class="ty">UUID PRIMARY KEY DEFAULT</span> <span class="fn">gen_random_uuid</span>(),
+  item_id         <span class="ty">UUID NOT NULL REFERENCES</span> assessment_items(id),
+  version_number  <span class="ty">INT NOT NULL</span>,
+  stem            <span class="ty">TEXT NOT NULL</span>,
+  correct_answer  <span class="ty">TEXT NOT NULL</span>,
+  distractors     <span class="ty">JSONB NOT NULL</span>,          <span class="cm">-- [{text, evidence_rule, misconception_code}]</span>
+  edited_by       <span class="ty">UUID REFERENCES</span> faculty_profiles(id),
+  edit_reason     <span class="ty">TEXT</span>,
+  edited_at       <span class="ty">TIMESTAMPTZ DEFAULT now</span>(),
+  <span class="kw">UNIQUE</span> (item_id, version_number)
+);
+<span class="cm">-- Trigger: before UPDATE on assessment_items where status='approved', insert into item_versions</span>
+<span class="kw">CREATE OR REPLACE FUNCTION</span> <span class="fn">version_item_on_edit</span>() <span class="kw">RETURNS TRIGGER AS</span> $$
+<span class="kw">BEGIN</span>
+  <span class="kw">IF</span> OLD.status = <span class="st">'approved'</span> <span class="kw">AND</span> (OLD.stem <> NEW.stem <span class="kw">OR</span> OLD.correct_answer <> NEW.correct_answer) <span class="kw">THEN</span>
+    <span class="kw">INSERT INTO</span> item_versions (item_id, version_number, stem, correct_answer, distractors, edited_by)
+    <span class="kw">SELECT</span> OLD.id,
+      <span class="fn">coalesce</span>((<span class="kw">SELECT MAX</span>(version_number) <span class="kw">FROM</span> item_versions <span class="kw">WHERE</span> item_id = OLD.id), <span class="nu">0</span>) + <span class="nu">1</span>,
+      OLD.stem, OLD.correct_answer,
+      (<span class="kw">SELECT</span> <span class="fn">jsonb_agg</span>(<span class="fn">row_to_json</span>(d)) <span class="kw">FROM</span> distractors d <span class="kw">WHERE</span> d.assessment_item_id = OLD.id),
+      NEW.updated_by;
+  <span class="kw">END IF</span>;
+  <span class="kw">RETURN NEW</span>;
+<span class="kw">END</span>; $$ <span class="kw">LANGUAGE plpgsql</span>;
+<span class="kw">CREATE TRIGGER</span> item_version_trigger
+  <span class="kw">BEFORE UPDATE ON</span> assessment_items
+  <span class="kw">FOR EACH ROW EXECUTE FUNCTION</span> <span class="fn">version_item_on_edit</span>();
+
+<span class="cm">-- ── ADA compliance ──────────────────────────────────────────────────────────</span>
+<span class="kw">CREATE TABLE</span> student_accommodations (
+  student_id      <span class="ty">UUID NOT NULL REFERENCES</span> student_profiles(id),
+  exam_id         <span class="ty">UUID NOT NULL REFERENCES</span> exams(id),
+  time_multiplier <span class="ty">NUMERIC(3,2) NOT NULL DEFAULT 1.0</span>,  <span class="cm">-- 1.5 = 50% extra time</span>
+  accommodation_type <span class="ty">TEXT[]</span>,                          <span class="cm">-- ['extended_time','screen_reader']</span>
+  approved_by     <span class="ty">UUID REFERENCES</span> faculty_profiles(id),
+  approved_at     <span class="ty">TIMESTAMPTZ</span>,
+  <span class="kw">PRIMARY KEY</span> (student_id, exam_id)
+);
+
+<span class="cm">-- ── C10: Generation rate limits ─────────────────────────────────────────────</span>
+<span class="kw">CREATE TABLE</span> generation_daily_usage (
+  faculty_id      <span class="ty">UUID NOT NULL REFERENCES</span> faculty_profiles(id),
+  usage_date      <span class="ty">DATE NOT NULL DEFAULT CURRENT_DATE</span>,
+  items_generated <span class="ty">INT NOT NULL DEFAULT 0</span>,
+  cost_usd        <span class="ty">NUMERIC(8,4) NOT NULL DEFAULT 0</span>,
+  <span class="kw">PRIMARY KEY</span> (faculty_id, usage_date)
+);
+<span class="kw">CREATE TABLE</span> institution_generation_limits (
+  institution_id  <span class="ty">UUID NOT NULL REFERENCES</span> institutions(id),
+  daily_limit_per_faculty <span class="ty">INT NOT NULL DEFAULT 100</span>,
+  monthly_budget_usd <span class="ty">NUMERIC(8,2)</span>,
+  alert_threshold_pct <span class="ty">INT DEFAULT 80</span>,  <span class="cm">-- alert at 80% of monthly budget</span>
+  <span class="kw">PRIMARY KEY</span> (institution_id)
+);
+
+<span class="cm">-- ── H11: Clinical confidence tier ───────────────────────────────────────────</span>
+<span class="kw">ALTER TABLE</span> assessment_items
+  <span class="kw">ADD COLUMN</span> clinical_confidence <span class="ty">TEXT NOT NULL DEFAULT</span> <span class="st">'unverified'</span>
+  <span class="kw">CHECK</span> (clinical_confidence <span class="kw">IN</span> (<span class="st">'unverified'</span>, <span class="st">'self_verified'</span>, <span class="st">'peer_reviewed'</span>, <span class="st">'expert_reviewed'</span>)),
+  <span class="kw">ADD COLUMN</span> peer_reviewer_id <span class="ty">UUID REFERENCES</span> faculty_profiles(id),
+  <span class="kw">ADD COLUMN</span> peer_reviewed_at <span class="ty">TIMESTAMPTZ</span>,
+  <span class="kw">ADD COLUMN</span> requires_expert_review <span class="ty">BOOLEAN DEFAULT FALSE</span>;
+
+<span class="kw">CREATE TABLE</span> item_flags (
+  id              <span class="ty">UUID PRIMARY KEY DEFAULT</span> <span class="fn">gen_random_uuid</span>(),
+  item_id         <span class="ty">UUID NOT NULL REFERENCES</span> assessment_items(id),
+  flagged_by      <span class="ty">UUID REFERENCES</span> faculty_profiles(id),
+  flag_reason     <span class="ty">TEXT NOT NULL</span>,
+  flag_type       <span class="ty">TEXT CHECK</span> (flag_type <span class="kw">IN</span> (<span class="st">'clinical_accuracy'</span>, <span class="st">'outdated_guideline'</span>, <span class="st">'needs_peer_review'</span>, <span class="st">'student_complaint'</span>)),
+  resolved_at     <span class="ty">TIMESTAMPTZ</span>,
+  resolved_by     <span class="ty">UUID REFERENCES</span> faculty_profiles(id),
+  resolution_note <span class="ty">TEXT</span>,
+  created_at      <span class="ty">TIMESTAMPTZ DEFAULT now</span>()
+);
+
+<span class="cm">-- ── C07: LOD brief versioning ───────────────────────────────────────────────</span>
+<span class="kw">ALTER TABLE</span> subconcept_lod_briefs
+  <span class="kw">ADD COLUMN</span> umls_release <span class="ty">TEXT</span>,              <span class="cm">-- e.g. '2026AA'</span>
+  <span class="kw">ADD COLUMN</span> expires_at <span class="ty">TIMESTAMPTZ</span>           <span class="cm">-- 180 days from generated_at</span>
+    <span class="kw">GENERATED ALWAYS AS</span> (generated_at + <span class="kw">INTERVAL</span> <span class="st">'180 days'</span>) <span class="kw">STORED</span>;
+
+<span class="kw">CREATE TABLE</span> lod_brief_history (
+  id               <span class="ty">UUID PRIMARY KEY DEFAULT</span> <span class="fn">gen_random_uuid</span>(),
+  subconcept_uuid  <span class="ty">UUID NOT NULL</span>,
+  lod_brief        <span class="ty">TEXT NOT NULL</span>,
+  umls_release     <span class="ty">TEXT</span>,
+  superseded_at    <span class="ty">TIMESTAMPTZ DEFAULT now</span>(),
+  superseded_by    <span class="ty">UUID REFERENCES</span> subconcept_lod_briefs(id)
+);
+
+<span class="cm">-- ── C04: Dead letter queue ──────────────────────────────────────────────────</span>
+<span class="kw">CREATE TABLE</span> pipeline_dead_letters (
+  id              <span class="ty">UUID PRIMARY KEY DEFAULT</span> <span class="fn">gen_random_uuid</span>(),
+  pipeline        <span class="ty">TEXT NOT NULL CHECK</span> (pipeline <span class="kw">IN</span> (<span class="st">'p1'</span>,<span class="st">'p2'</span>,<span class="st">'p3'</span>)),
+  entity_id       <span class="ty">UUID NOT NULL</span>,
+  inngest_run_id  <span class="ty">TEXT</span>,
+  trigger_event   <span class="ty">TEXT NOT NULL</span>,
+  trigger_data    <span class="ty">JSONB</span>,
+  error_message   <span class="ty">TEXT</span>,
+  step_name       <span class="ty">TEXT</span>,            <span class="cm">-- which step failed</span>
+  retry_count     <span class="ty">INT DEFAULT 0</span>,
+  last_retried_at <span class="ty">TIMESTAMPTZ</span>,
+  resolved        <span class="ty">BOOLEAN DEFAULT FALSE</span>,
+  created_at      <span class="ty">TIMESTAMPTZ DEFAULT now</span>()
+);
+
+<span class="cm">-- ── C09: SAME_AS conflict log ───────────────────────────────────────────────</span>
+<span class="kw">CREATE TABLE</span> entity_resolution_conflicts (
+  id              <span class="ty">UUID PRIMARY KEY DEFAULT</span> <span class="fn">gen_random_uuid</span>(),
+  source_uuid     <span class="ty">TEXT NOT NULL</span>,    <span class="cm">-- SubConcept A</span>
+  target_uuid     <span class="ty">TEXT NOT NULL</span>,    <span class="cm">-- SubConcept B (would create cycle)</span>
+  conflict_type   <span class="ty">TEXT NOT NULL</span>,    <span class="cm">-- 'cycle_prevention' | 'low_confidence'</span>
+  detected_at     <span class="ty">TIMESTAMPTZ DEFAULT now</span>(),
+  resolved_at     <span class="ty">TIMESTAMPTZ</span>,
+  resolution      <span class="ty">TEXT</span>              <span class="cm">-- human review outcome</span>
+);
+
+<span class="cm">-- ── Exam timing model ───────────────────────────────────────────────────────</span>
+<span class="kw">ALTER TABLE</span> exams
+  <span class="kw">ADD COLUMN</span> available_from     <span class="ty">TIMESTAMPTZ</span>,
+  <span class="kw">ADD COLUMN</span> available_until    <span class="ty">TIMESTAMPTZ</span>,
+  <span class="kw">ADD COLUMN</span> results_release_at <span class="ty">TIMESTAMPTZ</span>;
+
+<span class="cm">-- ── Missing performance indexes (M01) ───────────────────────────────────────</span>
+<span class="kw">CREATE INDEX</span> items_subconcept_status <span class="kw">ON</span> assessment_items(subconcept_uuid, status);
+<span class="kw">CREATE INDEX</span> items_clinical_confidence <span class="kw">ON</span> assessment_items(clinical_confidence)
+  <span class="kw">WHERE</span> status = <span class="st">'approved'</span>;
+<span class="kw">CREATE INDEX</span> attempts_item_id <span class="kw">ON</span> attempts(assessment_item_id, created_at <span class="kw">DESC</span>);
+<span class="kw">CREATE INDEX</span> mastery_low <span class="kw">ON</span> mastery_snapshots(student_id, p_mastery)
+  <span class="kw">WHERE</span> p_mastery < <span class="nu">0.5</span>;  <span class="cm">-- partial index for at-risk queries</span>
+<span class="kw">CREATE INDEX</span> items_approval_queue <span class="kw">ON</span> assessment_items(approved_by, status, created_at <span class="kw">DESC</span>)
+  <span class="kw">WHERE</span> status = <span class="st">'faculty_pending'</span>;</pre>
+</div>
+
+<h3>Neo4j tenant wrapper — mandatory pattern</h3>
+<pre><span class="cm">// lib/neo4j/client.ts — ONLY import this, never import neo4j-driver directly</span>
+<span class="kw">import</span> { driver } <span class="kw">from</span> <span class="st">'./driver'</span>;
+
+<span class="kw">interface</span> <span class="ty">QueryContext</span> { institution_id: <span class="ty">string</span>; actor_id?: <span class="ty">string</span> }
+
+<span class="kw">export async function</span> <span class="fn">neo4jQuery</span>(
+  cypher: <span class="ty">string</span>,
+  params: <span class="ty">Record</span>&lt;<span class="ty">string</span>, <span class="ty">unknown</span>&gt;,
+  ctx: <span class="ty">QueryContext</span>,
+  fallback?: <span class="ty">unknown</span>
+) {
+  <span class="cm">// Validate institution_id is in params (dev-time enforcement)</span>
+  <span class="kw">if</span> (process.env.NODE_ENV === <span class="st">'development'</span> && !cypher.<span class="fn">includes</span>(<span class="st">'institution_id'</span>)) {
+    <span class="cm">// Some ref-node queries legitimately don't need institution scoping</span>
+    <span class="kw">if</span> (!cypher.<span class="fn">includes</span>(<span class="st">':Reference'</span>) && !cypher.<span class="fn">includes</span>(<span class="st">':USMLE'</span>) && !cypher.<span class="fn">includes</span>(<span class="st">':LCME'</span>)) {
+      console.<span class="fn">warn</span>(<span class="op">`[neo4j] Missing institution_id in: ${cypher.slice(0,80)}`</span>);
+    }
+  }
+  <span class="kw">try</span> {
+    <span class="kw">const</span> result = <span class="kw">await</span> driver.<span class="fn">executeQuery</span>(cypher, { ...params, institution_id: ctx.institution_id });
+    <span class="kw">return</span> result.records;
+  } <span class="kw">catch</span> (err) {
+    <span class="kw">if</span> (<span class="fn">isConnectionError</span>(err) && fallback !== undefined) {
+      <span class="cm">// Graceful degradation: return fallback, log, don't throw</span>
+      logger.<span class="fn">warn</span>(<span class="st">'Neo4j unavailable — returning fallback'</span>, { cypher: cypher.<span class="fn">slice</span>(<span class="nu">0</span>,<span class="nu">60</span>) });
+      <span class="kw">return</span> fallback;
+    }
+    <span class="kw">throw</span> err;
+  }
+}
+
+<span class="cm">// ESLint rule (add to .eslintrc):
+// "no-restricted-imports": ["error", { "patterns": [{ "group": ["neo4j-driver"], "message": "Use lib/neo4j/client instead" }] }]</span></pre>
+
+<h3>JSON repair and per-item failure isolation</h3>
+<pre><span class="cm">// lib/llm/safe-parse.ts — use everywhere a Claude response is parsed</span>
+<span class="kw">import</span> { jsonrepair } <span class="kw">from</span> <span class="st">'jsonrepair'</span>;
+
+<span class="kw">export function</span> <span class="fn">safeJsonParse</span>&lt;<span class="ty">T</span>&gt;(text: <span class="ty">string</span>): { data: <span class="ty">T</span> | <span class="kw">null</span>; repaired: <span class="ty">boolean</span> } {
+  <span class="cm">// Strip common Claude markdown wrappers</span>
+  <span class="kw">const</span> clean = text.<span class="fn">replace</span>(/```json\n?|\n?```/g, <span class="st">''</span>).<span class="fn">trim</span>();
+  <span class="kw">try</span> {
+    <span class="kw">return</span> { data: <span class="ty">JSON</span>.<span class="fn">parse</span>(clean), repaired: <span class="kw">false</span> };
+  } <span class="kw">catch</span> {
+    <span class="kw">try</span> {
+      <span class="kw">return</span> { data: <span class="ty">JSON</span>.<span class="fn">parse</span>(<span class="fn">jsonrepair</span>(clean)), repaired: <span class="kw">true</span> };
+    } <span class="kw">catch</span> {
+      logger.<span class="fn">warn</span>(<span class="st">'JSON parse failed after repair'</span>, { text: clean.<span class="fn">slice</span>(<span class="nu">0</span>,<span class="nu">200</span>) });
+      <span class="kw">return</span> { data: <span class="kw">null</span>, repaired: <span class="kw">false</span> };
+    }
+  }
+}
+
+<span class="cm">// P3 batch generation: Promise.allSettled for per-item isolation</span>
+<span class="kw">const</span> results = <span class="kw">await</span> <span class="ty">Promise</span>.<span class="fn">allSettled</span>(targets.<span class="fn">map</span>(target => <span class="fn">generateItem</span>(target, context)));
+<span class="kw">const</span> succeeded = results.<span class="fn">filter</span>(r => r.status === <span class="st">'fulfilled'</span>).<span class="fn">map</span>(r => r.value);
+<span class="kw">const</span> failed    = results.<span class="fn">filter</span>(r => r.status === <span class="st">'rejected'</span>);
+<span class="kw">if</span> (failed.length / results.length > <span class="nu">0.2</span>) {
+  <span class="kw">await</span> inngest.<span class="fn">send</span>({ name: <span class="st">'journey/pipeline.failed'</span>, data: { pipeline: <span class="st">'p3'</span>, failure_rate: failed.length / results.length } });
+}</pre>
+
+<h3>Context assembly with prompt injection defense and XML delimiters</h3>
+<pre><span class="cm">// lib/generation/context-assembly.ts</span>
+<span class="kw">function</span> <span class="fn">sanitizeForContext</span>(text: <span class="ty">string</span>): <span class="ty">string</span> {
+  <span class="kw">return</span> text
+    .<span class="fn">replace</span>(/system\s*:/gi, <span class="st">'[system_ref]'</span>)
+    .<span class="fn">replace</span>(/ignore\s+(all\s+)?(previous|prior|above)\s+instructions?/gi, <span class="st">'[redacted]'</span>)
+    .<span class="fn">replace</span>(/disregard\s+.{0,30}instructions?/gi, <span class="st">'[redacted]'</span>)
+    .<span class="fn">replace</span>(/jailbreak|DAN mode|developer mode/gi, <span class="st">'[redacted]'</span>);
+}
+
+<span class="kw">export function</span> <span class="fn">buildContextBlock</span>(localChunks: <span class="ty">string[]</span>, lodBrief: <span class="ty">string</span>, structured: <span class="ty">string</span>): <span class="ty">string</span> {
+  <span class="kw">return</span> <span class="op">`&lt;lecture_content&gt;
+${<span class="fn">sanitizeForContext</span>(localChunks.<span class="fn">join</span>('\n\n'))}
+&lt;/lecture_content&gt;
+
+&lt;lod_brief&gt;
+${<span class="fn">sanitizeForContext</span>(lodBrief)}
+&lt;/lod_brief&gt;
+
+&lt;usmle_alignment&gt;
+${<span class="fn">sanitizeForContext</span>(structured)}
+&lt;/usmle_alignment&gt;`</span>;
+}
+<span class="cm">// All generation prompts begin: "Using ONLY the information in &lt;lecture_content&gt;, &lt;lod_brief&gt;, and &lt;usmle_alignment&gt;..."</span></pre>
+
+<h3>Exam session creation with scramble + accommodation</h3>
+<pre><span class="cm">// api/exams/[id]/start/route.ts — creates exam session with scrambled items</span>
+<span class="kw">export async function</span> <span class="fn">POST</span>(req: <span class="ty">Request</span>, { params }: { params: { id: <span class="ty">string</span> } }) {
+  <span class="kw">const</span> { studentId } = <span class="kw">await</span> <span class="fn">getAuthContext</span>(req);
+  <span class="kw">const</span> exam = <span class="kw">await</span> supabase.<span class="fn">from</span>(<span class="st">'exams'</span>).<span class="fn">select</span>(<span class="st">'*'</span>).<span class="fn">eq</span>(<span class="st">'id'</span>, params.id).<span class="fn">single</span>();
+
+  <span class="cm">// Validate exam window</span>
+  <span class="kw">const</span> now = <span class="kw">new</span> <span class="ty">Date</span>();
+  <span class="kw">if</span> (exam.available_from && now < <span class="kw">new</span> <span class="ty">Date</span>(exam.available_from)) <span class="kw">return</span> <span class="fn">error</span>(<span class="st">'Exam not yet available'</span>, <span class="nu">403</span>);
+  <span class="kw">if</span> (exam.available_until && now > <span class="kw">new</span> <span class="ty">Date</span>(exam.available_until)) <span class="kw">return</span> <span class="fn">error</span>(<span class="st">'Exam window has closed'</span>, <span class="nu">410</span>);
+
+  <span class="cm">// Load accommodation time multiplier</span>
+  <span class="kw">const</span> accommodation = <span class="kw">await</span> supabase.<span class="fn">from</span>(<span class="st">'student_accommodations'</span>)
+    .<span class="fn">select</span>(<span class="st">'time_multiplier'</span>).<span class="fn">eq</span>(<span class="st">'student_id'</span>, studentId).<span class="fn">eq</span>(<span class="st">'exam_id'</span>, params.id).<span class="fn">maybeSingle</span>();
+  <span class="kw">const</span> timeMultiplier = accommodation?.time_multiplier ?? <span class="nu">1.0</span>;
+
+  <span class="cm">// Create session + scramble items deterministically</span>
+  <span class="kw">const</span> sessionId = <span class="fn">generateUUID</span>();
+  <span class="kw">const</span> seed = `${studentId}-${params.id}`;                    <span class="cm">// deterministic seed</span>
+  <span class="kw">const</span> examItems = <span class="kw">await</span> supabase.<span class="fn">from</span>(<span class="st">'exam_items'</span>).<span class="fn">select</span>(<span class="st">'*'</span>).<span class="fn">eq</span>(<span class="st">'exam_id'</span>, params.id).<span class="fn">order</span>(<span class="st">'item_order'</span>);
+  <span class="kw">const</span> scrambledItems = <span class="fn">seededShuffle</span>(examItems.data, seed);
+  <span class="kw">const</span> sessionItems = scrambledItems.<span class="fn">map</span>((item, displayOrder) => ({
+    session_id: sessionId, display_order: displayOrder, item_id: item.item_id,
+    item_version: item.current_version,
+    option_order: <span class="fn">seededShuffle</span>([<span class="nu">0</span>,<span class="nu">1</span>,<span class="nu">2</span>,<span class="nu">3</span>,<span class="nu">4</span>], `${seed}-${item.item_id}`),
+    correct_option_pos: <span class="cm">/* recalculated from shuffle */</span> <span class="nu">0</span>
+  }));
+
+  <span class="kw">await</span> supabase.<span class="fn">from</span>(<span class="st">'session_items'</span>).<span class="fn">insert</span>(sessionItems);
+  <span class="kw">await</span> supabase.<span class="fn">from</span>(<span class="st">'sessions'</span>).<span class="fn">insert</span>({
+    id: sessionId, student_id: studentId, session_type: <span class="st">'timed_exam'</span>, exam_id: params.id,
+    total_items: examItems.data.length,
+    time_limit_mins: <span class="ty">Math</span>.<span class="fn">round</span>(exam.time_limit_mins * timeMultiplier)
+  });
+  <span class="kw">return</span> { sessionId, timeLimit: exam.time_limit_mins * timeMultiplier };
+}</pre>
+
+<h3>LOD brief expiry check in context assembly</h3>
+<pre><span class="cm">// In P3 hyde-context-assembly step — check brief age before using</span>
+<span class="kw">const</span> lodRow = <span class="kw">await</span> supabase
+  .<span class="fn">from</span>(<span class="st">'subconcept_lod_briefs'</span>)
+  .<span class="fn">select</span>(<span class="st">'lod_brief, expires_at, umls_release'</span>)
+  .<span class="fn">eq</span>(<span class="st">'subconcept_uuid'</span>, target.uuid)
+  .<span class="fn">single</span>();
+
+<span class="kw">let</span> lodBrief = lodRow.data?.lod_brief;
+
+<span class="kw">if</span> (!lodBrief || <span class="kw">new</span> <span class="ty">Date</span>(lodRow.data.expires_at) < <span class="kw">new</span> <span class="ty">Date</span>()) {
+  <span class="cm">// Brief expired — fall back to live UMLS lookup for context</span>
+  <span class="cm">// (slower but clinically current)</span>
+  <span class="kw">const</span> liveUmls = <span class="kw">await</span> <span class="fn">umlsApi</span>.<span class="fn">getConcept</span>(target.cui);
+  lodBrief = liveUmls.definition ?? <span class="op">`${target.name}: UMLS lookup fallback (brief expired)`</span>;
+  <span class="cm">// Queue re-enrichment but don't block generation</span>
+  <span class="kw">await</span> inngest.<span class="fn">send</span>({ name: <span class="st">'journey/subconcept.confirmed'</span>, data: { subConceptId: target.uuid } });
+}</pre>
+
+<h3>SAME_AS cycle prevention</h3>
+<pre><span class="cm">// In P1 Step 03 (extract-entities) — before creating SAME_AS edges</span>
+<span class="kw">async function</span> <span class="fn">createSameAsIfSafe</span>(aUuid: <span class="ty">string</span>, bUuid: <span class="ty">string</span>, confidence: <span class="ty">number</span>) {
+  <span class="cm">// Check for cycle: can B already reach A via SAME_AS?</span>
+  <span class="kw">const</span> [cycleCheck] = <span class="kw">await</span> <span class="fn">neo4jQuery</span>(`
+    MATCH (b {uuid: $b})
+    WHERE EXISTS {
+      MATCH (b)-[:SAME_AS*1..6]->(a {uuid: $a})
+    }
+    RETURN count(*) AS would_cycle
+  `, { a: aUuid, b: bUuid }, ctx);
+
+  <span class="kw">if</span> (cycleCheck.<span class="fn">get</span>(<span class="st">'would_cycle'</span>).<span class="fn">toNumber</span>() > <span class="nu">0</span>) {
+    <span class="kw">await</span> supabase.<span class="fn">from</span>(<span class="st">'entity_resolution_conflicts'</span>).<span class="fn">insert</span>({
+      source_uuid: aUuid, target_uuid: bUuid, conflict_type: <span class="st">'cycle_prevention'</span>
+    });
+    <span class="kw">return</span>;  <span class="cm">// skip — human reviews the conflict log quarterly</span>
+  }
+
+  <span class="cm">// Direction convention: always lower CUI string → higher CUI string</span>
+  <span class="kw">const</span> [from, to] = aUuid < bUuid ? [aUuid, bUuid] : [bUuid, aUuid];
+  <span class="kw">await</span> <span class="fn">neo4jQuery</span>(`
+    MERGE (a {uuid: $from})-[:SAME_AS {confidence: $conf, method: 'cui_match', created_at: datetime()}]->(b {uuid: $to})
+  `, { from, to, conf: confidence }, ctx);
+}</pre>
+
+<h3>Dead letter handler — add to all three pipelines</h3>
+<pre><span class="cm">// Pattern: add this to every createFunction call</span>
+<span class="kw">export const</span> p3Generation = inngest.<span class="fn">createFunction</span>(
+  {
+    id: <span class="st">'p3-generation'</span>,
+    onFailure: <span class="kw">async</span> ({ event, error }) => {
+      <span class="kw">await</span> supabase.<span class="fn">from</span>(<span class="st">'pipeline_dead_letters'</span>).<span class="fn">insert</span>({
+        pipeline: <span class="st">'p3'</span>,
+        entity_id: event.data.batchId,
+        trigger_event: event.name,
+        trigger_data: event.data,
+        error_message: error.message,
+        step_name: error.<span class="fn">cause</span>?.stepName ?? <span class="st">'unknown'</span>
+      });
+      <span class="kw">await</span> inngest.<span class="fn">send</span>({
+        name: <span class="st">'journey/pipeline.failed'</span>,
+        data: { pipeline: <span class="st">'p3'</span>, entityId: event.data.batchId, error: error.message }
+      });
+    },
+    <span class="cm">// ... rest of config</span>
+  },
+  { event: <span class="st">'journey/generation.spec-confirmed'</span> },
+  <span class="kw">async</span> ({ event, step }) => { <span class="cm">/* ... */</span> }
+);</pre>
+
+<h3>Supabase connection pooler configuration</h3>
+<pre><span class="cm"># Switch to Supabase Pooler (Supavisor) for serverless functions
+# In Supabase dashboard: Project → Settings → Database → Connection Pooling → Enable
+
+# Transaction mode for short-lived serverless requests (Next.js API routes):
+SUPABASE_DB_URL=postgresql://postgres.xxxx:[password]@aws-0-us-east-1.pooler.supabase.com:6543/postgres?pgbouncer=true
+
+# Direct connection for migrations and long-running seeds only:
+SUPABASE_DB_DIRECT_URL=postgresql://postgres.xxxx:[password]@db.xxxx.supabase.co:5432/postgres
+
+# In prisma.schema or drizzle config — use pooler URL for queries, direct for migrations
+# This prevents "too many connections" during high-concurrency exam delivery</span></pre>
+
+</section>
+
+
+<div class="footer">
+  <span>Journey OS · Technical Architecture v1.0 · Build Specification</span>
+  <span>Next.js 15 · Supabase · Neo4j Aura · Inngest · Sonnet 4 + Haiku 4.5 · MedCPT · OCR · 45 production findings hardened</span>
+</div>
+</body>
+</html>

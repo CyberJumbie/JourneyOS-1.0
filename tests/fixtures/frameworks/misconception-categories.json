@@ -1,0 +1,13 @@
+{
+  "source": "MSM Quest internal definition — common medical student reasoning errors",
+  "categories": [
+    { "name": "Confusing similar conditions", "description": "Mistaking one condition for another with overlapping features", "remediation_strategy": "Side-by-side comparison tables highlighting distinguishing features" },
+    { "name": "Reversing cause and effect", "description": "Confusing the direction of a pathophysiological relationship", "remediation_strategy": "Causal chain diagrams with directional arrows" },
+    { "name": "Incomplete pathophysiology", "description": "Understanding part of a mechanism but missing key steps", "remediation_strategy": "Step-by-step mechanism walkthroughs with gap identification" },
+    { "name": "Overgeneralization", "description": "Applying a rule beyond its valid scope", "remediation_strategy": "Exception-focused practice with boundary cases" },
+    { "name": "Anchoring bias", "description": "Fixating on an early piece of information despite contradictory evidence", "remediation_strategy": "Serial re-evaluation exercises with evolving clinical data" },
+    { "name": "Availability heuristic", "description": "Overestimating likelihood of conditions recently encountered", "remediation_strategy": "Base rate training with epidemiological data" },
+    { "name": "Base rate neglect", "description": "Ignoring prevalence when estimating diagnostic probability", "remediation_strategy": "Bayesian reasoning exercises with pretest probability" },
+    { "name": "Premature closure", "description": "Accepting a diagnosis before all evidence is considered", "remediation_strategy": "Forced differential expansion before committing to diagnosis" }
+  ]
+}

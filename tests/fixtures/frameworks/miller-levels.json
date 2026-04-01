@@ -1,0 +1,9 @@
+{
+  "source": "Miller (1990) Miller's Pyramid of Clinical Competence",
+  "levels": [
+    { "level": 1, "name": "Knows", "description": "Factual knowledge", "assessment": "MCQ, short answer" },
+    { "level": 2, "name": "Knows How", "description": "Applied knowledge / clinical reasoning", "assessment": "Extended matching, case-based MCQ" },
+    { "level": 3, "name": "Shows How", "description": "Performance in controlled setting", "assessment": "OSCE, standardized patients" },
+    { "level": 4, "name": "Does", "description": "Performance in clinical practice", "assessment": "Workplace-based assessment, EPAs" }
+  ]
+}

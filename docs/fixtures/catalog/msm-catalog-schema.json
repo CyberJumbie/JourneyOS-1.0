@@ -1,0 +1,100 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MSM Quest Institutional Catalog",
+  "description": "Input data for SEED-002 and SEED-009. Defines the full institutional hierarchy.",
+  "type": "object",
+  "required": ["institution", "programs", "academic_terms", "session_types"],
+  "properties": {
+    "institution": {
+      "type": "object",
+      "required": ["id", "name", "abbreviation", "program"],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "abbreviation": { "type": "string" },
+        "program": { "type": "string" },
+        "total_credits": { "type": "number" },
+        "accreditation": { "type": "string" },
+        "tracks": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "programs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "academic_years"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "academic_years": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "name", "year_number", "type", "phases"],
+              "properties": {
+                "id": { "type": "string" },
+                "name": { "type": "string" },
+                "year_number": { "type": "integer" },
+                "type": { "type": "string", "enum": ["preclinical", "clinical"] },
+                "total_credits": { "type": "number" },
+                "phases": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["id", "name", "blocks"],
+                    "properties": {
+                      "id": { "type": "string" },
+                      "name": { "type": "string" },
+                      "abbreviation": { "type": "string" },
+                      "months": { "type": "string" },
+                      "order": { "type": "integer" },
+                      "blocks": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": ["id", "name", "courses"],
+                          "properties": {
+                            "courses": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "required": ["id", "code", "name", "course_type", "credit_hours"],
+                                "properties": {
+                                  "id": { "type": "string" },
+                                  "code": { "type": "string" },
+                                  "name": { "type": "string" },
+                                  "course_type": { "type": "string" },
+                                  "credit_hours": { "type": "number" },
+                                  "description": { "type": "string" },
+                                  "grading": { "type": "string" },
+                                  "required": { "type": "boolean" },
+                                  "usmle_systems": { "type": "array", "items": { "type": "string" } },
+                                  "duration_weeks": { "type": "integer" },
+                                  "acgme_domains": { "type": "array", "items": { "type": "string" } },
+                                  "clinical_sites": { "type": "array", "items": { "type": "string" } },
+                                  "ilos": { "type": "array", "items": { "type": "string" } },
+                                  "curriculum_units": { "type": "array" }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "longitudinal_courses": { "type": "array" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "prerequisites": { "type": "array" },
+    "promotion_gates": { "type": "array" },
+    "institutional_learning_objectives": { "type": "array" },
+    "academic_terms": { "type": "array" },
+    "session_types": { "type": "array" },
+    "clinical_sites": { "type": "array" }
+  }
+}

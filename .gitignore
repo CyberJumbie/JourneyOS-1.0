@@ -1,0 +1,46 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Environment
+.env.local
+.env.*.local
+.env.production
+
+# Next.js
+.next/
+out/
+
+# Build outputs
+dist/
+build/
+
+# Generated types (regenerate with pnpm db:types)
+packages/db/types/database.generated.ts
+
+# Supabase local
+supabase/.branches
+supabase/.temp
+
+# Test artifacts
+playwright-report/
+test-results/
+coverage/
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Epic status (local tracking — not committed)
+.epic-status/*.json
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*

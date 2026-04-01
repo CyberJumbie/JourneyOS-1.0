@@ -1,0 +1,142 @@
+{
+  "source": "USMLE Content Outline (2025) — Step 1 Content Specifications",
+  "source_url": "https://www.usmle.org/exam-resources/step-1-materials/step-1-content-outline-and-specifications",
+  "updated": "2025",
+  "note": "General Principles category was eliminated in 2024 update. Foundational science content redistributed into organ systems. New Human Development category added. See usmle-content-outline.json for full topic/subtopic hierarchies.",
+
+  "content_outline_systems": [
+    { "code": "SYS-01", "name": "Human Development", "step1_spec_category": "Human Development" },
+    { "code": "SYS-02", "name": "Immune System", "step1_spec_category": "Blood & Lymphoreticular/Immune Systems" },
+    { "code": "SYS-03", "name": "Blood & Lymphoreticular System", "step1_spec_category": "Blood & Lymphoreticular/Immune Systems" },
+    { "code": "SYS-04", "name": "Behavioral Health", "step1_spec_category": "Behavioral Health & Nervous Systems/Special Senses" },
+    { "code": "SYS-05", "name": "Nervous System & Special Senses", "step1_spec_category": "Behavioral Health & Nervous Systems/Special Senses" },
+    { "code": "SYS-06", "name": "Skin & Subcutaneous Tissue", "step1_spec_category": "Musculoskeletal, Skin & Subcutaneous Tissue" },
+    { "code": "SYS-07", "name": "Musculoskeletal System", "step1_spec_category": "Musculoskeletal, Skin & Subcutaneous Tissue" },
+    { "code": "SYS-08", "name": "Cardiovascular System", "step1_spec_category": "Cardiovascular System" },
+    { "code": "SYS-09", "name": "Respiratory System", "step1_spec_category": "Respiratory & Renal/Urinary Systems" },
+    { "code": "SYS-10", "name": "Gastrointestinal System", "step1_spec_category": "Gastrointestinal System" },
+    { "code": "SYS-11", "name": "Renal & Urinary System", "step1_spec_category": "Respiratory & Renal/Urinary Systems" },
+    { "code": "SYS-12", "name": "Pregnancy, Childbirth, & the Puerperium", "step1_spec_category": "Reproductive & Endocrine Systems" },
+    { "code": "SYS-13", "name": "Female and Transgender Reproductive System & Breast", "step1_spec_category": "Reproductive & Endocrine Systems" },
+    { "code": "SYS-14", "name": "Male and Transgender Reproductive System", "step1_spec_category": "Reproductive & Endocrine Systems" },
+    { "code": "SYS-15", "name": "Endocrine System", "step1_spec_category": "Reproductive & Endocrine Systems" },
+    { "code": "SYS-16", "name": "Multisystem Processes & Disorders", "step1_spec_category": "Multisystem Processes & Disorders" },
+    { "code": "SYS-17", "name": "Biostatistics, Epidemiology/Population Health, & Interpretation of the Medical Literature", "step1_spec_category": "Biostatistics & Epidemiology/Population Health" },
+    { "code": "SYS-18", "name": "Social Sciences", "step1_spec_category": "Social Sciences: Communication and Interpersonal Skills" }
+  ],
+
+  "step1_system_specifications": [
+    { "category": "Human Development", "range_pct_low": 1, "range_pct_high": 3, "systems": ["SYS-01"], "notes": "Includes Normal Age-Related Findings and Care of the Well Patient. Replaces old General Principles category." },
+    { "category": "Blood & Lymphoreticular/Immune Systems", "range_pct_low": 9, "range_pct_high": 13, "systems": ["SYS-02", "SYS-03"] },
+    { "category": "Behavioral Health & Nervous Systems/Special Senses", "range_pct_low": 10, "range_pct_high": 14, "systems": ["SYS-04", "SYS-05"] },
+    { "category": "Musculoskeletal, Skin & Subcutaneous Tissue", "range_pct_low": 8, "range_pct_high": 12, "systems": ["SYS-06", "SYS-07"] },
+    { "category": "Cardiovascular System", "range_pct_low": 7, "range_pct_high": 11, "systems": ["SYS-08"] },
+    { "category": "Respiratory & Renal/Urinary Systems", "range_pct_low": 11, "range_pct_high": 15, "systems": ["SYS-09", "SYS-11"] },
+    { "category": "Gastrointestinal System", "range_pct_low": 6, "range_pct_high": 10, "systems": ["SYS-10"] },
+    { "category": "Reproductive & Endocrine Systems", "range_pct_low": 12, "range_pct_high": 16, "systems": ["SYS-12", "SYS-13", "SYS-14", "SYS-15"] },
+    { "category": "Multisystem Processes & Disorders", "range_pct_low": 8, "range_pct_high": 12, "systems": ["SYS-16"] },
+    { "category": "Biostatistics & Epidemiology/Population Health", "range_pct_low": 4, "range_pct_high": 6, "systems": ["SYS-17"] },
+    { "category": "Social Sciences: Communication and Interpersonal Skills", "range_pct_low": 6, "range_pct_high": 9, "systems": ["SYS-18"] }
+  ],
+
+  "step1_discipline_specifications": [
+    {
+      "code": "DIS-01",
+      "name": "Pathology",
+      "range_pct_low": 45,
+      "range_pct_high": 55,
+      "includes": ["General pathology", "Systemic pathology", "Clinical pathology"],
+      "cross_referenced_systems": ["All systems"]
+    },
+    {
+      "code": "DIS-02",
+      "name": "Physiology",
+      "range_pct_low": 30,
+      "range_pct_high": 40,
+      "includes": ["Cell physiology", "Organ system physiology", "Integrative physiology"],
+      "cross_referenced_systems": ["All systems"]
+    },
+    {
+      "code": "DIS-03",
+      "name": "Pharmacology",
+      "range_pct_low": 10,
+      "range_pct_high": 20,
+      "includes": ["General principles", "Autonomic pharmacology", "CNS pharmacology", "Cardiovascular pharmacology", "Antimicrobial pharmacology", "Chemotherapy"],
+      "cross_referenced_systems": ["All systems"]
+    },
+    {
+      "code": "DIS-04",
+      "name": "Biochemistry & Nutrition",
+      "range_pct_low": 5,
+      "range_pct_high": 15,
+      "includes": ["Molecular biology", "Cell biology", "Metabolism", "Nutrition"],
+      "cross_referenced_systems": ["All systems"]
+    },
+    {
+      "code": "DIS-05",
+      "name": "Microbiology",
+      "range_pct_low": 10,
+      "range_pct_high": 20,
+      "includes": ["Bacteriology", "Virology", "Mycology", "Parasitology"],
+      "cross_referenced_systems": ["SYS-02", "SYS-03", "SYS-05", "SYS-09", "SYS-10", "SYS-16"]
+    },
+    {
+      "code": "DIS-06",
+      "name": "Immunology",
+      "range_pct_low": 5,
+      "range_pct_high": 15,
+      "includes": ["Innate immunity", "Adaptive immunity", "Immunopathology", "Immunodeficiency"],
+      "cross_referenced_systems": ["SYS-02", "SYS-03", "SYS-16"]
+    },
+    {
+      "code": "DIS-07",
+      "name": "Gross Anatomy & Embryology",
+      "range_pct_low": 10,
+      "range_pct_high": 20,
+      "includes": ["Gross anatomy", "Embryology", "Neuroanatomy", "Radiologic anatomy"],
+      "cross_referenced_systems": ["All systems"]
+    },
+    {
+      "code": "DIS-08",
+      "name": "Histology & Cell Biology",
+      "range_pct_low": 5,
+      "range_pct_high": 15,
+      "includes": ["Light microscopy", "Electron microscopy", "Cell biology"],
+      "cross_referenced_systems": ["All systems"]
+    },
+    {
+      "code": "DIS-09",
+      "name": "Behavioral Sciences",
+      "range_pct_low": 10,
+      "range_pct_high": 15,
+      "includes": ["Behavioral health", "Ethics", "Communication", "Patient safety", "Systems-based practice"],
+      "cross_referenced_systems": ["SYS-04", "SYS-18"]
+    },
+    {
+      "code": "DIS-10",
+      "name": "Genetics",
+      "range_pct_low": 5,
+      "range_pct_high": 10,
+      "includes": ["Molecular genetics", "Population genetics", "Clinical genetics", "Genomics"],
+      "cross_referenced_systems": ["SYS-16", "SYS-01"]
+    }
+  ],
+
+  "step1_physician_tasks": [
+    { "competency": "Medical Knowledge: Applying Foundational Science Concepts", "range_pct_low": 60, "range_pct_high": 70 },
+    { "competency": "Patient Care: Diagnosis", "range_pct_low": 20, "range_pct_high": 25, "subtasks": ["History/Physical Examination", "Diagnosis"] },
+    { "competency": "Communication and Interpersonal Skills", "range_pct_low": 6, "range_pct_high": 9 },
+    { "competency": "Practice-based Learning & Improvement", "range_pct_low": 4, "range_pct_high": 6 }
+  ],
+
+  "_migration_notes": {
+    "2024_update": "General Principles of Foundational Science category eliminated. Content redistributed into organ system categories. New Human Development category created containing Normal Age-Related Findings and Care of the Well Patient.",
+    "breaking_changes": [
+      "SYS-01 changed from 'General Principles' to 'Human Development'",
+      "Old SYS-18 'Pediatrics & Neonatology' removed (not a USMLE category; pediatric content distributed across organ systems and Human Development)",
+      "Disciplines reduced from 16 to 10 to match official Step 1 discipline specifications (clinical disciplines like Internal Medicine, Surgery, etc. are Step 2 CK categories, not Step 1)",
+      "All point-estimate weights replaced with official range percentages"
+    ],
+    "neo4j_impact": "UsmleSystem nodes in Neo4j should use the 18 content_outline_systems codes. Step 1 spec categories are a grouping layer above individual systems. Question tagging uses individual SYS-xx codes; blueprint balancing uses the 11 spec categories with range weights."
+  }
+}
