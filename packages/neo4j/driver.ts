@@ -9,6 +9,8 @@
 import neo4j, { type Driver } from 'neo4j-driver'
 
 const NEO4J_GLOBAL_KEY = '__journey_neo4j_driver__' as const
+const DEFAULT_MAX_POOL_SIZE = 20
+const AURA_TIMEOUT_MS = 30_000 // 30s — accommodates Aura wake-up from pause
 
 /**
  * Store driver on globalThis to survive Next.js HMR in development.
@@ -52,15 +54,15 @@ export function getDriver(): Driver | null {
     return null
   }
 
-  const maxPoolSize = parseInt(process.env.NEO4J_MAX_POOL_SIZE ?? '20', 10)
+  const maxPoolSize = parseInt(process.env.NEO4J_MAX_POOL_SIZE ?? String(DEFAULT_MAX_POOL_SIZE), 10)
 
   const driver = neo4j.driver(
     uri,
     neo4j.auth.basic(username, password),
     {
       maxConnectionPoolSize: maxPoolSize,
-      connectionAcquisitionTimeout: 30_000, // 30s — accommodates Aura wake-up
-      connectionTimeout: 30_000,
+      connectionAcquisitionTimeout: AURA_TIMEOUT_MS,
+      connectionTimeout: AURA_TIMEOUT_MS,
       logging: process.env.NODE_ENV === 'development'
         ? { level: 'warn', logger: (level, message) => console.log(`[neo4j:${level}] ${message}`) }
         : undefined,

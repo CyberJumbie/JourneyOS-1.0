@@ -13,6 +13,26 @@
  */
 
 import { getDriver } from './driver'
+import neo4j from 'neo4j-driver'
+
+/**
+ * Recursively convert Neo4j Integer objects to JS numbers.
+ * Neo4j driver returns { low: N, high: 0 } for integers, which breaks
+ * equality checks, JSON serialization, and arithmetic.
+ */
+function convertNeo4jIntegers(obj: unknown): unknown {
+  if (obj === null || obj === undefined) return obj
+  if (neo4j.isInt(obj)) return neo4j.integer.toNumber(obj)
+  if (Array.isArray(obj)) return obj.map(convertNeo4jIntegers)
+  if (typeof obj === 'object') {
+    const converted: Record<string, unknown> = {}
+    for (const [key, value] of Object.entries(obj as Record<string, unknown>)) {
+      converted[key] = convertNeo4jIntegers(value)
+    }
+    return converted
+  }
+  return obj
+}
 
 // ---------------------------------------------------------------------------
 // Types
@@ -53,10 +73,11 @@ const REFERENCE_NODE_LABELS = new Set([
 ])
 
 /**
- * Heuristic check: does this Cypher query exclusively target reference nodes?
+ * Heuristic check: does this Cypher query mention a reference node label?
  * Used to suppress the institution_id warning for global taxonomy queries.
+ * WARNING: This is a heuristic only — NEVER use for access control decisions.
  */
-function isReferenceOnlyQuery(cypher: string): boolean {
+function containsReferenceLabel(cypher: string): boolean {
   for (const label of REFERENCE_NODE_LABELS) {
     if (cypher.includes(`:${label}`)) return true
   }
@@ -93,7 +114,7 @@ export async function neo4jQuery<T = Record<string, unknown>>(
   ctx: RequestContext
 ): Promise<Neo4jQueryResult<T> | null> {
   // Validate institution_id
-  if (!ctx.institution_id && !isReferenceOnlyQuery(cypher)) {
+  if (!ctx.institution_id && !containsReferenceLabel(cypher)) {
     console.warn(
       '[neo4j] WARNING: neo4jQuery called without institution_id on a non-reference query. ' +
       'This may indicate a tenant isolation gap (C05).'
@@ -125,7 +146,7 @@ export async function neo4jQuery<T = Record<string, unknown>>(
     const result = await session.run(cypher, injectedParams)
 
     return {
-      records: result.records.map((r) => r.toObject() as T),
+      records: result.records.map((r) => convertNeo4jIntegers(r.toObject()) as T),
       summary: {
         countersUpdated: result.summary.counters.containsUpdates(),
       },

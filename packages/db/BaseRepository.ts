@@ -3,18 +3,16 @@
  *
  * Enforces Rule 6 (G08): Supabase FIRST, Neo4j SECOND, Neo4j failure NEVER blocks.
  * Uses dependency injection for the optional Neo4j sync callback.
+ * Provides defense-in-depth tenant isolation via institutionId on all queries.
  *
  * Every repository that writes data with a KG counterpart MUST extend this.
  */
 
 import type { SupabaseClient } from '@supabase/supabase-js'
 import type { Database } from './types/database.generated'
+import type { TableName } from './client'
 
-// ---------------------------------------------------------------------------
-// Types
-// ---------------------------------------------------------------------------
-
-type TableName = keyof Database['public']['Tables']
+const DEFAULT_QUERY_LIMIT = 1000
 
 /** Result of a Neo4j sync attempt. */
 export type Neo4jSyncResult = {
@@ -40,6 +38,8 @@ export interface BaseRepositoryOptions<TRow> {
   supabase: SupabaseClient<Database>
   /** The table this repository operates on. */
   table: TableName
+  /** Institution ID for tenant isolation (defense-in-depth on top of RLS). */
+  institutionId: string
   /** Optional Neo4j sync callback. If not provided, sync is deferred (status stays 'pending'). */
   neo4jSync?: Neo4jSyncCallback<TRow>
 }
@@ -52,9 +52,10 @@ export interface BaseRepositoryOptions<TRow> {
  * Abstract base class enforcing the dual-write pattern.
  *
  * Subclasses implement domain-specific queries. The base class handles:
- *   1. Supabase write (FIRST — always)
- *   2. Neo4j sync attempt (SECOND — never blocks on failure)
- *   3. neo4j_sync_status / neo4j_synced_at column updates
+ *   1. Tenant isolation via institution_id filter (defense-in-depth over RLS)
+ *   2. Supabase write (FIRST — always)
+ *   3. Neo4j sync attempt (SECOND — never blocks on failure)
+ *   4. neo4j_sync_status / neo4j_synced_at column updates
  *
  * The Neo4j sync callback is injected via constructor. If not provided,
  * records are created with neo4j_sync_status = 'pending' and the weekly
@@ -68,17 +69,19 @@ export abstract class BaseRepository<
 > {
   protected readonly supabase: SupabaseClient<Database>
   protected readonly table: T
+  protected readonly institutionId: string
   private readonly neo4jSync: Neo4jSyncCallback<TRow>
 
   constructor(options: BaseRepositoryOptions<TRow> & { table: T }) {
     this.supabase = options.supabase
     this.table = options.table
+    this.institutionId = options.institutionId
     // Default: no-op sync that leaves status as 'pending'
     this.neo4jSync = options.neo4jSync ?? (async () => ({ success: false }))
   }
 
   // -------------------------------------------------------------------------
-  // CRUD with dual-write
+  // CRUD with dual-write + tenant isolation
   // -------------------------------------------------------------------------
 
   /**
@@ -118,6 +121,7 @@ export abstract class BaseRepository<
       .from(this.table)
       .update(data as never)
       .eq('id' as never, id)
+      .eq('institution_id' as never, this.institutionId)
       .select()
       .single()
 
@@ -134,13 +138,14 @@ export abstract class BaseRepository<
   }
 
   /**
-   * Find a single record by ID.
+   * Find a single record by ID, scoped to institution.
    */
   async findById(id: string): Promise<{ data: TRow | null; error: Error | null }> {
     const { data: row, error } = await this.supabase
       .from(this.table)
       .select()
       .eq('id' as never, id)
+      .eq('institution_id' as never, this.institutionId)
       .single()
 
     if (error) {
@@ -151,13 +156,16 @@ export abstract class BaseRepository<
   }
 
   /**
-   * Find all records matching a filter. Scoped by institution_id when provided.
+   * Find all records matching a filter, scoped to institution.
    */
   async findMany(
     filters: Partial<Record<string, unknown>> = {},
     options: { limit?: number; orderBy?: string; ascending?: boolean } = {}
   ): Promise<{ data: TRow[]; error: Error | null }> {
-    let query = this.supabase.from(this.table).select()
+    let query = this.supabase
+      .from(this.table)
+      .select()
+      .eq('institution_id' as never, this.institutionId)
 
     for (const [key, value] of Object.entries(filters)) {
       query = query.eq(key as never, value as never)
@@ -167,9 +175,7 @@ export abstract class BaseRepository<
       query = query.order(options.orderBy, { ascending: options.ascending ?? true })
     }
 
-    if (options.limit) {
-      query = query.limit(options.limit)
-    }
+    query = query.limit(options.limit ?? DEFAULT_QUERY_LIMIT)
 
     const { data: rows, error } = await query
 
@@ -200,7 +206,6 @@ export abstract class BaseRepository<
       const result = await this.neo4jSync(id, row)
 
       if (result.success) {
-        // Mark as synced
         await this.supabase
           .from(this.table)
           .update({
@@ -208,11 +213,13 @@ export abstract class BaseRepository<
             neo4j_synced_at: new Date().toISOString(),
           } as never)
           .eq('id' as never, id)
+          .then(({ error }) => {
+            if (error) console.error(`[BaseRepository] Failed to update sync status to 'synced' for ${this.table}/${id}:`, error)
+          })
       }
       // If sync returned { success: false } without throwing, status stays 'pending'
     } catch (err) {
       // Neo4j failure NEVER blocks the user (G08)
-      // Mark status as 'failed' so the weekly reconciliation job picks it up
       console.error(`[BaseRepository] Neo4j sync failed for ${this.table}/${id}:`, err)
 
       await this.supabase
@@ -221,6 +228,9 @@ export abstract class BaseRepository<
           neo4j_sync_status: 'failed',
         } as never)
         .eq('id' as never, id)
+        .then(({ error }) => {
+          if (error) console.error(`[BaseRepository] Failed to update sync status to 'failed' for ${this.table}/${id}:`, error)
+        })
     }
   }
 }

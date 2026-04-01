@@ -62,7 +62,7 @@ test.describe('E01-S01: Supabase project setup + initial migration', () => {
   ]
 
   test('Acceptance: all expected tables exist in public schema', async () => {
-    const supabase = getServiceClient()
+    const supabase = await getServiceClient()
 
     // Query pg_catalog for all tables in the public schema
     const { data, error } = await supabase.rpc('pg_catalog_tables' as never)
@@ -107,7 +107,7 @@ test.describe('E01-S01: Supabase project setup + initial migration', () => {
   )
 
   test('Acceptance: RLS enabled on all user-facing tables', async () => {
-    const supabase = getServiceClient()
+    const supabase = await getServiceClient()
 
     // pg_tables view includes rowsecurity column
     const { data: pgTables, error } = await supabase
@@ -148,7 +148,7 @@ test.describe('E01-S01: Supabase project setup + initial migration', () => {
   // -------------------------------------------------------------------------
 
   test('Acceptance: RPC functions create_exam_session and submit_exam_session exist', async () => {
-    const supabase = getServiceClient()
+    const supabase = await getServiceClient()
 
     // Query pg_proc for our RPC functions
     const { data: procs, error } = await supabase
@@ -184,7 +184,7 @@ test.describe('E01-S01: Supabase project setup + initial migration', () => {
   ]
 
   test('Acceptance: neo4j_sync_status and neo4j_synced_at columns exist on dual-write tables', async () => {
-    const supabase = getServiceClient()
+    const supabase = await getServiceClient()
 
     for (const table of DUAL_WRITE_TABLES) {
       const { data: columns, error } = await supabase
@@ -266,6 +266,7 @@ test.describe('E01-S01: Supabase project setup + initial migration', () => {
         super({
           supabase: supabase as never,
           table: 'institutions',
+          institutionId: 'test-institution-001',
           neo4jSync: sync,
         })
       }
@@ -313,7 +314,7 @@ test.describe('E01-S01: Supabase project setup + initial migration', () => {
   // -------------------------------------------------------------------------
 
   test('Acceptance: HNSW vector indexes exist on content_chunks', async () => {
-    const supabase = getServiceClient()
+    const supabase = await getServiceClient()
 
     const { data: indexes, error } = await supabase
       .from('pg_indexes' as never)

@@ -9,6 +9,8 @@
  * NEVER expose SUPABASE_SERVICE_ROLE_KEY to the browser.
  */
 
+import 'server-only'
+
 import { createServerClient as createSSRServerClient } from '@supabase/ssr'
 import { createClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
