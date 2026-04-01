@@ -1,6 +1,7 @@
 module.exports = {
   root: true,
-  extends: ['next/core-web-vitals', '@typescript-eslint/recommended'],
+  extends: ['next/core-web-vitals', 'plugin:@typescript-eslint/recommended'],
+  parser: '@typescript-eslint/parser',
   rules: {
     // AP-01: Block raw neo4j-driver imports (canonical C05)
     'no-restricted-imports': ['error', {
@@ -26,9 +27,23 @@ module.exports = {
   },
   overrides: [
     {
-      // Allow driver import only in the driver file itself
+      // Allow neo4j-driver import only in the driver file itself
       files: ['packages/neo4j/driver.ts', 'packages/neo4j/driver.js'],
       rules: { 'no-restricted-imports': 'off' }
+    },
+    {
+      // Allow client.ts to import from ./driver (internal wiring)
+      files: ['packages/neo4j/client.ts'],
+      rules: {
+        'no-restricted-imports': ['error', {
+          patterns: [
+            {
+              group: ['neo4j-driver'],
+              message: 'Use @journey/neo4j/client. Never import raw driver (Rule 1 / C05 / AP-01).'
+            }
+          ]
+        }]
+      }
     },
     {
       // Allow model strings in constants.ts only
