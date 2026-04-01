@@ -13,7 +13,7 @@ const ctx = { institution_id: INSTITUTION_ID }
 test.describe('E01-S06: Seed LCME standards, IPEC competencies, CarePhase, and anatomy regions', () => {
   // ---- LCME Standards ----
 
-  test('LCME_Standard nodes >= 8', async () => {
+  test('12 LCME_Standard nodes', async () => {
     const { neo4jQuery } = await import('../../packages/neo4j/client')
 
     const result = await neo4jQuery<{ count: number }>(
@@ -24,17 +24,32 @@ test.describe('E01-S06: Seed LCME standards, IPEC competencies, CarePhase, and a
 
     if (result) {
       expect(result.records.length).toBe(1)
-      expect(result.records[0].count).toBeGreaterThanOrEqual(8)
+      expect(result.records[0].count).toBe(12)
     } else {
-      // Graceful degradation — Neo4j unavailable
       expect(result).toBeNull()
     }
   })
 
-  test('Every LCME_Element has a parent LCME_Standard', async () => {
+  test('93 LCME_Element nodes', async () => {
     const { neo4jQuery } = await import('../../packages/neo4j/client')
 
-    // Find elements without a parent standard
+    const result = await neo4jQuery<{ count: number }>(
+      'MATCH (e:LCME_Element {institution_id: $institution_id}) RETURN count(e) AS count',
+      {},
+      ctx
+    )
+
+    if (result) {
+      expect(result.records.length).toBe(1)
+      expect(result.records[0].count).toBe(93)
+    } else {
+      expect(result).toBeNull()
+    }
+  })
+
+  test('Every LCME_Element has a parent LCME_Standard via HAS_ELEMENT', async () => {
+    const { neo4jQuery } = await import('../../packages/neo4j/client')
+
     const result = await neo4jQuery<{ orphanCount: number }>(
       `MATCH (e:LCME_Element {institution_id: $institution_id})
        WHERE NOT (:LCME_Standard {institution_id: $institution_id})-[:HAS_ELEMENT]->(e)
@@ -70,10 +85,26 @@ test.describe('E01-S06: Seed LCME standards, IPEC competencies, CarePhase, and a
     }
   })
 
-  test('IPEC sub-competencies linked to domains', async () => {
+  test('38 IPEC sub-competencies linked to domains', async () => {
     const { neo4jQuery } = await import('../../packages/neo4j/client')
 
-    // All sub-competencies should have a parent domain
+    const result = await neo4jQuery<{ count: number }>(
+      'MATCH (sc:IPEC_SubCompetency {institution_id: $institution_id}) RETURN count(sc) AS count',
+      {},
+      ctx
+    )
+
+    if (result) {
+      expect(result.records.length).toBe(1)
+      expect(result.records[0].count).toBe(38)
+    } else {
+      expect(result).toBeNull()
+    }
+  })
+
+  test('No orphan IPEC sub-competencies', async () => {
+    const { neo4jQuery } = await import('../../packages/neo4j/client')
+
     const result = await neo4jQuery<{ orphanCount: number }>(
       `MATCH (sc:IPEC_SubCompetency {institution_id: $institution_id})
        WHERE NOT (:IPEC_Competency {institution_id: $institution_id})-[:HAS_SUBCOMPETENCY]->(sc)
@@ -92,7 +123,7 @@ test.describe('E01-S06: Seed LCME standards, IPEC competencies, CarePhase, and a
 
   // ---- CarePhase ----
 
-  test('CarePhase nodes >= 4', async () => {
+  test('5 CarePhase nodes (not 7)', async () => {
     const { neo4jQuery } = await import('../../packages/neo4j/client')
 
     const result = await neo4jQuery<{ count: number }>(
@@ -103,7 +134,25 @@ test.describe('E01-S06: Seed LCME standards, IPEC competencies, CarePhase, and a
 
     if (result) {
       expect(result.records.length).toBe(1)
-      expect(result.records[0].count).toBeGreaterThanOrEqual(4)
+      expect(result.records[0].count).toBe(5)
+    } else {
+      expect(result).toBeNull()
+    }
+  })
+
+  test('CarePhase ordinals are 1-5', async () => {
+    const { neo4jQuery } = await import('../../packages/neo4j/client')
+
+    const result = await neo4jQuery<{ ordinals: number[] }>(
+      `MATCH (cp:CarePhase {institution_id: $institution_id})
+       RETURN collect(cp.ordinal) AS ordinals`,
+      {},
+      ctx
+    )
+
+    if (result) {
+      const ordinals = result.records[0].ordinals.sort()
+      expect(ordinals).toEqual([1, 2, 3, 4, 5])
     } else {
       expect(result).toBeNull()
     }
@@ -111,7 +160,26 @@ test.describe('E01-S06: Seed LCME standards, IPEC competencies, CarePhase, and a
 
   // ---- AnatomyRegion ----
 
-  test('AnatomyRegion hierarchy valid (>= 10 regions)', async () => {
+  test('8 top-level AnatomyRegion nodes', async () => {
+    const { neo4jQuery } = await import('../../packages/neo4j/client')
+
+    const result = await neo4jQuery<{ count: number }>(
+      `MATCH (r:AnatomyRegion {institution_id: $institution_id})
+       WHERE r.parent_code IS NULL
+       RETURN count(r) AS count`,
+      {},
+      ctx
+    )
+
+    if (result) {
+      expect(result.records.length).toBe(1)
+      expect(result.records[0].count).toBe(8)
+    } else {
+      expect(result).toBeNull()
+    }
+  })
+
+  test('AnatomyRegion hierarchy has 55 total nodes (8 top + 47 sub)', async () => {
     const { neo4jQuery } = await import('../../packages/neo4j/client')
 
     const result = await neo4jQuery<{ count: number }>(
@@ -122,7 +190,27 @@ test.describe('E01-S06: Seed LCME standards, IPEC competencies, CarePhase, and a
 
     if (result) {
       expect(result.records.length).toBe(1)
-      expect(result.records[0].count).toBeGreaterThanOrEqual(10)
+      expect(result.records[0].count).toBe(55)
+    } else {
+      expect(result).toBeNull()
+    }
+  })
+
+  test('Every sub-region has a parent via HAS_SUBREGION', async () => {
+    const { neo4jQuery } = await import('../../packages/neo4j/client')
+
+    const result = await neo4jQuery<{ orphanCount: number }>(
+      `MATCH (sr:AnatomyRegion {institution_id: $institution_id})
+       WHERE sr.parent_code IS NOT NULL
+         AND NOT (:AnatomyRegion {institution_id: $institution_id})-[:HAS_SUBREGION]->(sr)
+       RETURN count(sr) AS orphanCount`,
+      {},
+      ctx
+    )
+
+    if (result) {
+      expect(result.records.length).toBe(1)
+      expect(result.records[0].orphanCount).toBe(0)
     } else {
       expect(result).toBeNull()
     }
@@ -133,7 +221,6 @@ test.describe('E01-S06: Seed LCME standards, IPEC competencies, CarePhase, and a
   test('All nodes have institution_id', async () => {
     const { neo4jQuery } = await import('../../packages/neo4j/client')
 
-    // Check for any seeded node types that lack institution_id
     const labels = [
       'LCME_Standard',
       'LCME_Element',
@@ -158,7 +245,6 @@ test.describe('E01-S06: Seed LCME standards, IPEC competencies, CarePhase, and a
           `${label} nodes should all have institution_id`
         ).toBe(0)
       } else {
-        // Graceful degradation
         expect(result).toBeNull()
       }
     }

@@ -2,7 +2,9 @@
  * scripts/seeds/04-anatomy-regions.ts
  *
  * Seeds anatomy region hierarchy into Neo4j.
- * Top-level regions with sub-regions.
+ * 8 top-level regions with medically accurate sub-regions.
+ * Simplified hierarchy for E01-S06 — full AnatomicalSystem/Organ/Structure
+ * taxonomy comes in E01-S08 with HetioNet.
  *
  * Node type:
  *   AnatomyRegion — uuid, name, code, parent_code (null for top-level), institution_id
@@ -15,7 +17,7 @@ import { neo4jQuery } from '@journey/neo4j/client'
 import { randomUUID } from 'crypto'
 
 // ---------------------------------------------------------------------------
-// Data
+// Data — medically accurate anatomy regions
 // ---------------------------------------------------------------------------
 
 interface AnatomyRegionData {
@@ -37,7 +39,7 @@ const ANATOMY_REGIONS: AnatomyRegionData[] = [
       { code: 'ANAT-HN-ORAL', name: 'Oral Cavity' },
       { code: 'ANAT-HN-PHAR', name: 'Pharynx' },
       { code: 'ANAT-HN-LARY', name: 'Larynx' },
-      { code: 'ANAT-HN-NEKT', name: 'Neck Triangles' },
+      { code: 'ANAT-HN-NECK', name: 'Neck' },
       { code: 'ANAT-HN-ORBT', name: 'Orbit' },
       { code: 'ANAT-HN-EAR', name: 'Ear' },
       { code: 'ANAT-HN-NASL', name: 'Nasal Cavity' },
@@ -59,12 +61,11 @@ const ANATOMY_REGIONS: AnatomyRegionData[] = [
     code: 'ANAT-ABD',
     name: 'Abdomen',
     subRegions: [
-      { code: 'ANAT-ABD-WALL', name: 'Anterior Abdominal Wall' },
+      { code: 'ANAT-ABD-WALL', name: 'Abdominal Wall' },
       { code: 'ANAT-ABD-PERI', name: 'Peritoneal Cavity' },
       { code: 'ANAT-ABD-GIT', name: 'GI Tract' },
-      { code: 'ANAT-ABD-LIVG', name: 'Liver/Gallbladder' },
+      { code: 'ANAT-ABD-HBIL', name: 'Hepatobiliary' },
       { code: 'ANAT-ABD-PANS', name: 'Pancreas/Spleen' },
-      { code: 'ANAT-ABD-KIDU', name: 'Kidneys/Ureters' },
       { code: 'ANAT-ABD-RETR', name: 'Retroperitoneum' },
     ],
   },
@@ -74,56 +75,54 @@ const ANATOMY_REGIONS: AnatomyRegionData[] = [
     subRegions: [
       { code: 'ANAT-PEL-WALL', name: 'Pelvic Walls' },
       { code: 'ANAT-PEL-FLOR', name: 'Pelvic Floor' },
-      { code: 'ANAT-PEL-MALE', name: 'Male Reproductive' },
-      { code: 'ANAT-PEL-FEML', name: 'Female Reproductive' },
       { code: 'ANAT-PEL-BLAD', name: 'Urinary Bladder' },
       { code: 'ANAT-PEL-RECT', name: 'Rectum/Anal Canal' },
     ],
   },
   {
-    code: 'ANAT-UPR',
+    code: 'ANAT-UL',
     name: 'Upper Limb',
     subRegions: [
-      { code: 'ANAT-UPR-SHLR', name: 'Shoulder' },
-      { code: 'ANAT-UPR-ARM', name: 'Arm' },
-      { code: 'ANAT-UPR-FARM', name: 'Forearm' },
-      { code: 'ANAT-UPR-HAND', name: 'Hand' },
-      { code: 'ANAT-UPR-BPLX', name: 'Brachial Plexus' },
+      { code: 'ANAT-UL-SHLR', name: 'Shoulder' },
+      { code: 'ANAT-UL-ARM', name: 'Arm' },
+      { code: 'ANAT-UL-FARM', name: 'Forearm' },
+      { code: 'ANAT-UL-HAND', name: 'Hand' },
+      { code: 'ANAT-UL-BPLX', name: 'Brachial Plexus' },
     ],
   },
   {
-    code: 'ANAT-LWR',
+    code: 'ANAT-LL',
     name: 'Lower Limb',
     subRegions: [
-      { code: 'ANAT-LWR-HIP', name: 'Hip' },
-      { code: 'ANAT-LWR-THGH', name: 'Thigh' },
-      { code: 'ANAT-LWR-KNEE', name: 'Knee' },
-      { code: 'ANAT-LWR-LEG', name: 'Leg' },
-      { code: 'ANAT-LWR-FOOT', name: 'Foot' },
-      { code: 'ANAT-LWR-LPLX', name: 'Lumbosacral Plexus' },
+      { code: 'ANAT-LL-HIP', name: 'Hip' },
+      { code: 'ANAT-LL-THGH', name: 'Thigh' },
+      { code: 'ANAT-LL-KNEE', name: 'Knee' },
+      { code: 'ANAT-LL-LEG', name: 'Leg' },
+      { code: 'ANAT-LL-FOOT', name: 'Foot' },
+      { code: 'ANAT-LL-LPLX', name: 'Lumbosacral Plexus' },
     ],
   },
   {
-    code: 'ANAT-BCK',
+    code: 'ANAT-BACK',
     name: 'Back',
     subRegions: [
-      { code: 'ANAT-BCK-VERT', name: 'Vertebral Column' },
-      { code: 'ANAT-BCK-CORD', name: 'Spinal Cord' },
-      { code: 'ANAT-BCK-MUSC', name: 'Back Muscles' },
+      { code: 'ANAT-BACK-VERT', name: 'Vertebral Column' },
+      { code: 'ANAT-BACK-CORD', name: 'Spinal Cord' },
+      { code: 'ANAT-BACK-MUSC', name: 'Back Muscles' },
     ],
   },
   {
-    code: 'ANAT-NEU',
+    code: 'ANAT-NEURO',
     name: 'Neuroanatomy',
     subRegions: [
-      { code: 'ANAT-NEU-CRTX', name: 'Cerebral Cortex' },
-      { code: 'ANAT-NEU-BSTM', name: 'Brainstem' },
-      { code: 'ANAT-NEU-CRBL', name: 'Cerebellum' },
-      { code: 'ANAT-NEU-BGNG', name: 'Basal Ganglia' },
-      { code: 'ANAT-NEU-THAL', name: 'Thalamus/Hypothalamus' },
-      { code: 'ANAT-NEU-VENT', name: 'Ventricular System' },
-      { code: 'ANAT-NEU-CRNR', name: 'Cranial Nerves' },
-      { code: 'ANAT-NEU-SPNL', name: 'Spinal Tracts' },
+      { code: 'ANAT-NEURO-CRTX', name: 'Cerebral Cortex' },
+      { code: 'ANAT-NEURO-BSTM', name: 'Brainstem' },
+      { code: 'ANAT-NEURO-CRBL', name: 'Cerebellum' },
+      { code: 'ANAT-NEURO-BGNG', name: 'Basal Ganglia' },
+      { code: 'ANAT-NEURO-THAL', name: 'Thalamus/Hypothalamus' },
+      { code: 'ANAT-NEURO-VENT', name: 'Ventricular System' },
+      { code: 'ANAT-NEURO-CRNR', name: 'Cranial Nerves' },
+      { code: 'ANAT-NEURO-SPNL', name: 'Spinal Tracts' },
     ],
   },
 ]
