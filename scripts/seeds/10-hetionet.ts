@@ -170,7 +170,7 @@ const DISEASES: DiseaseData[] = [
   // Infectious
   { name: 'Tuberculosis', doid: 'DOID:399', category: 'infectious' },
   { name: 'HIV/AIDS', doid: 'DOID:526', category: 'infectious' },
-  { name: 'Sepsis', doid: 'DOID:0080600', category: 'infectious' },
+  { name: 'Sepsis', doid: 'DOID:0040085', category: 'infectious' },
 
   // Cancer
   { name: 'Breast cancer', doid: 'DOID:1612', category: 'cancer' },
