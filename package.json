@@ -11,6 +11,7 @@
     "test:api": "playwright test --project=api",
     "test:pipeline": "playwright test --project=pipeline",
     "test:ui": "playwright test --project=ui",
+    "dev-seed": "tsx scripts/seeds/dev-seed.ts",
     "dev:seed": "tsx scripts/seeds/dev-seed.ts",
     "validate-seed": "tsx scripts/seeds/validate-seed.ts",
     "db:types": "supabase gen types typescript --project-id hccahmnekiammnkdijwx > packages/db/types/database.generated.ts && echo '✓ Types regenerated'",
