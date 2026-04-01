@@ -2,11 +2,11 @@
  * tests/E01/E01-S05.seed.test.ts — Acceptance tests for USMLE taxonomy seed
  *
  * Validates:
- * - 18 USMLE_System nodes exist
- * - ~100 USMLE_Topic nodes (>=90, <=120)
- * - ~400 USMLE_Subtopic nodes (>=350, <=450)
- * - Every topic has exactly one parent system (HAS_TOPIC)
- * - Every subtopic has exactly one parent topic (HAS_SUBTOPIC)
+ * - 18 USMLE_System nodes exist (from usmle-systems-disciplines.json)
+ * - 117 USMLE_Topic nodes (from usmle-content-outline.json)
+ * - 757 USMLE_Subtopic nodes (from usmle-content-outline.json)
+ * - Every topic PART_OF exactly one system (child → parent)
+ * - Every subtopic BELONGS_TO exactly one topic (child → parent)
  * - All nodes have institution_id
  * - Seed is idempotent (running twice produces same counts)
  */
@@ -23,20 +23,36 @@ test.describe('E01-S05: USMLE Taxonomy Seed', () => {
     expect(SYSTEMS).toHaveLength(18)
   })
 
-  test('Static: TOPICS array has 90-120 entries', async () => {
-    const { TOPICS } = await import('../../scripts/seeds/05-usmle-taxonomy')
-    expect(TOPICS.length).toBeGreaterThanOrEqual(90)
-    expect(TOPICS.length).toBeLessThanOrEqual(120)
+  test('Static: every system has SYS-XX code format', async () => {
+    const { SYSTEMS } = await import('../../scripts/seeds/05-usmle-taxonomy')
+    for (const sys of SYSTEMS) {
+      expect(sys.code).toMatch(/^SYS-\d{2}$/)
+    }
   })
 
-  test('Static: total subtopics is 350-450', async () => {
+  test('Static: system codes are SYS-01 through SYS-18', async () => {
+    const { SYSTEMS } = await import('../../scripts/seeds/05-usmle-taxonomy')
+    const codes = SYSTEMS.map((s: { code: string }) => s.code).sort()
+    const expected = Array.from({ length: 18 }, (_, i) =>
+      `SYS-${String(i + 1).padStart(2, '0')}`
+    )
+    expect(codes).toEqual(expected)
+  })
+
+  test('Static: TOPICS array has 110-125 entries', async () => {
+    const { TOPICS } = await import('../../scripts/seeds/05-usmle-taxonomy')
+    expect(TOPICS.length).toBeGreaterThanOrEqual(110)
+    expect(TOPICS.length).toBeLessThanOrEqual(125)
+  })
+
+  test('Static: total subtopics is 700-800', async () => {
     const { TOPICS } = await import('../../scripts/seeds/05-usmle-taxonomy')
     const subtopicCount = TOPICS.reduce(
       (acc: number, t: { subtopics: unknown[] }) => acc + t.subtopics.length,
       0,
     )
-    expect(subtopicCount).toBeGreaterThanOrEqual(350)
-    expect(subtopicCount).toBeLessThanOrEqual(450)
+    expect(subtopicCount).toBeGreaterThanOrEqual(700)
+    expect(subtopicCount).toBeLessThanOrEqual(800)
   })
 
   test('Static: every topic references a valid system code', async () => {
@@ -63,6 +79,13 @@ test.describe('E01-S05: USMLE Taxonomy Seed', () => {
     expect(new Set(codes).size).toBe(codes.length)
   })
 
+  test('Static: topic codes follow SYS-XX-TXX format', async () => {
+    const { TOPICS } = await import('../../scripts/seeds/05-usmle-taxonomy')
+    for (const topic of TOPICS) {
+      expect(topic.code).toMatch(/^SYS-\d{2}-T\d{2}$/)
+    }
+  })
+
   test('Static: all subtopic codes are unique', async () => {
     const { TOPICS } = await import('../../scripts/seeds/05-usmle-taxonomy')
     const codes: string[] = []
@@ -74,11 +97,19 @@ test.describe('E01-S05: USMLE Taxonomy Seed', () => {
     expect(new Set(codes).size).toBe(codes.length)
   })
 
-  test('Static: every topic has 3-6 subtopics', async () => {
+  test('Static: subtopic codes follow SYS-XX-TXX-SXXX format', async () => {
     const { TOPICS } = await import('../../scripts/seeds/05-usmle-taxonomy')
     for (const topic of TOPICS) {
-      expect(topic.subtopics.length).toBeGreaterThanOrEqual(3)
-      expect(topic.subtopics.length).toBeLessThanOrEqual(6)
+      for (const sub of topic.subtopics) {
+        expect(sub.code).toMatch(/^SYS-\d{2}-T\d{2}-S\d{3}$/)
+      }
+    }
+  })
+
+  test('Static: every topic has at least 1 subtopic', async () => {
+    const { TOPICS } = await import('../../scripts/seeds/05-usmle-taxonomy')
+    for (const topic of TOPICS) {
+      expect(topic.subtopics.length).toBeGreaterThanOrEqual(1)
     }
   })
 
@@ -98,7 +129,7 @@ test.describe('E01-S05: USMLE Taxonomy Seed', () => {
     expect(result.records[0].count).toBe(18)
   })
 
-  test('Integration: 90-120 USMLE_Topic nodes exist', async () => {
+  test('Integration: 110-125 USMLE_Topic nodes exist', async () => {
     const { neo4jQuery } = await import('../../packages/neo4j/client')
     const result = await neo4jQuery<{ count: number }>(
       'MATCH (t:USMLE_Topic {institution_id: $institution_id}) RETURN count(t) AS count',
@@ -109,11 +140,11 @@ test.describe('E01-S05: USMLE Taxonomy Seed', () => {
       test.skip()
       return
     }
-    expect(result.records[0].count).toBeGreaterThanOrEqual(90)
-    expect(result.records[0].count).toBeLessThanOrEqual(120)
+    expect(result.records[0].count).toBeGreaterThanOrEqual(110)
+    expect(result.records[0].count).toBeLessThanOrEqual(125)
   })
 
-  test('Integration: 350-450 USMLE_Subtopic nodes exist', async () => {
+  test('Integration: 700-800 USMLE_Subtopic nodes exist', async () => {
     const { neo4jQuery } = await import('../../packages/neo4j/client')
     const result = await neo4jQuery<{ count: number }>(
       'MATCH (st:USMLE_Subtopic {institution_id: $institution_id}) RETURN count(st) AS count',
@@ -124,15 +155,15 @@ test.describe('E01-S05: USMLE Taxonomy Seed', () => {
       test.skip()
       return
     }
-    expect(result.records[0].count).toBeGreaterThanOrEqual(350)
-    expect(result.records[0].count).toBeLessThanOrEqual(450)
+    expect(result.records[0].count).toBeGreaterThanOrEqual(700)
+    expect(result.records[0].count).toBeLessThanOrEqual(800)
   })
 
-  test('Integration: every topic has exactly one parent system via HAS_TOPIC', async () => {
+  test('Integration: every topic has exactly one parent system via PART_OF', async () => {
     const { neo4jQuery } = await import('../../packages/neo4j/client')
     const result = await neo4jQuery<{ topicCode: string; parentCount: number }>(
       `MATCH (t:USMLE_Topic {institution_id: $institution_id})
-       OPTIONAL MATCH (s:USMLE_System)-[:HAS_TOPIC]->(t)
+       OPTIONAL MATCH (t)-[:PART_OF]->(s:USMLE_System)
        RETURN t.code AS topicCode, count(s) AS parentCount`,
       {},
       { institution_id: INSTITUTION_ID },
@@ -146,11 +177,11 @@ test.describe('E01-S05: USMLE Taxonomy Seed', () => {
     }
   })
 
-  test('Integration: every subtopic has exactly one parent topic via HAS_SUBTOPIC', async () => {
+  test('Integration: every subtopic has exactly one parent topic via BELONGS_TO', async () => {
     const { neo4jQuery } = await import('../../packages/neo4j/client')
     const result = await neo4jQuery<{ subtopicCode: string; parentCount: number }>(
       `MATCH (st:USMLE_Subtopic {institution_id: $institution_id})
-       OPTIONAL MATCH (t:USMLE_Topic)-[:HAS_SUBTOPIC]->(st)
+       OPTIONAL MATCH (st)-[:BELONGS_TO]->(t:USMLE_Topic)
        RETURN st.code AS subtopicCode, count(t) AS parentCount`,
       {},
       { institution_id: INSTITUTION_ID },
@@ -164,7 +195,7 @@ test.describe('E01-S05: USMLE Taxonomy Seed', () => {
     }
   })
 
-  test('Integration: all nodes have institution_id', async () => {
+  test('Integration: no USMLE nodes missing institution_id', async () => {
     const { neo4jQuery } = await import('../../packages/neo4j/client')
     const result = await neo4jQuery<{ count: number }>(
       `MATCH (n)
