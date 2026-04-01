@@ -2,18 +2,22 @@
  * scripts/seeds/08-few-shot-examples.ts
  *
  * Seeds FewShotExample nodes into Neo4j and links them to TaskShells via EXEMPLIFIES.
- * Idempotent: uses MERGE on item_type + quality_score + institution_id.
+ * 8 gold-standard USMLE-style vignettes: 2 per concept family (diagnosis, mechanism,
+ * next_step, test_selection).
+ *
+ * Idempotent: uses MERGE on example_id + institution_id.
  *
  * Run: pnpm tsx scripts/seeds/08-few-shot-examples.ts
  */
 
 import { neo4jQuery } from '../../packages/neo4j/client'
-import { randomUUID } from 'crypto'
 
 const INSTITUTION_ID = process.env.INSTITUTION_ID ?? 'msm-default'
 
 interface FewShotExampleData {
+  example_id: string
   item_type: string
+  task_shell_id: string
   quality_score: number
   content: {
     stem: string
@@ -24,27 +28,30 @@ interface FewShotExampleData {
 }
 
 const FEW_SHOT_EXAMPLES: FewShotExampleData[] = [
-  // SBA — Single Best Answer
+  // ── diagnosis (2 examples) ──────────────────────────────────────────────
   {
-    item_type: 'SBA',
+    example_id: 'fse-dx-inferior-stemi',
+    item_type: 'diagnosis',
+    task_shell_id: 'ts-dx-from-presentation',
     quality_score: 0.95,
     content: {
-      stem: 'A 58-year-old man with a history of type 2 diabetes mellitus and hypertension presents to the emergency department with sudden onset of severe substernal chest pain radiating to the left arm for the past 45 minutes. He is diaphoretic and nauseated. ECG shows ST-segment elevation in leads II, III, and aVF. Troponin I is elevated at 2.4 ng/mL (normal <0.04 ng/mL). He is given aspirin, heparin, and morphine. His blood pressure is 88/60 mmHg, and heart rate is 52 bpm.',
-      lead_in: 'Which of the following is the most appropriate next step in management?',
+      stem: 'A 58-year-old man with a history of type 2 diabetes mellitus and hypertension presents to the emergency department with sudden onset of severe substernal chest pain radiating to the left arm for the past 45 minutes. He is diaphoretic and nauseated. ECG shows ST-segment elevation in leads II, III, and aVF. Troponin I is elevated at 2.4 ng/mL (normal <0.04 ng/mL).',
+      lead_in: 'Which of the following is the most likely diagnosis?',
       options: [
-        { label: 'A', text: 'Administer IV nitroglycerin', is_correct: false },
-        { label: 'B', text: 'Administer IV normal saline bolus', is_correct: true },
-        { label: 'C', text: 'Perform immediate pericardiocentesis', is_correct: false },
-        { label: 'D', text: 'Start dobutamine infusion', is_correct: false },
-        { label: 'E', text: 'Administer alteplase (tPA)', is_correct: false },
+        { label: 'A', text: 'Acute pericarditis', is_correct: false },
+        { label: 'B', text: 'Inferior ST-elevation myocardial infarction', is_correct: true },
+        { label: 'C', text: 'Pulmonary embolism', is_correct: false },
+        { label: 'D', text: 'Aortic dissection', is_correct: false },
+        { label: 'E', text: 'Unstable angina', is_correct: false },
       ],
-      explanation: 'This patient presents with an acute inferior STEMI (ST elevation in II, III, aVF) complicated by hypotension and bradycardia, which is characteristic of right ventricular involvement. The right coronary artery supplies the inferior wall and typically the RV. RV infarction causes decreased RV preload to the left ventricle, leading to hypotension. The immediate treatment is IV fluid resuscitation to increase preload. Nitroglycerin (A) is contraindicated because it reduces preload further. Pericardiocentesis (C) is for cardiac tamponade. Dobutamine (D) may be considered if fluids fail but is not the first step. Alteplase (E) is a fibrinolytic and is not preferred when PCI is available; regardless, volume resuscitation takes priority for the hypotension.',
+      explanation: 'ST-segment elevation in leads II, III, and aVF with elevated troponin indicates an acute inferior STEMI. The inferior wall is supplied by the right coronary artery in ~85% of patients. Acute pericarditis (A) shows diffuse ST elevation with PR depression. Pulmonary embolism (C) may show right heart strain pattern (S1Q3T3) but not focal ST elevation. Aortic dissection (D) typically presents with tearing chest pain radiating to the back. Unstable angina (E) lacks biomarker elevation.',
     },
   },
-  // EMQ — Extended Matching
   {
-    item_type: 'EMQ',
-    quality_score: 0.93,
+    example_id: 'fse-dx-hashimoto',
+    item_type: 'diagnosis',
+    task_shell_id: 'ts-dx-from-lab',
+    quality_score: 0.95,
     content: {
       stem: 'A 32-year-old woman presents with fatigue, weight gain of 15 pounds over 3 months, constipation, and cold intolerance. Physical examination reveals dry skin, periorbital edema, and delayed relaxation of deep tendon reflexes. Laboratory studies show TSH 45 mIU/L (normal 0.4-4.0) and free T4 0.3 ng/dL (normal 0.8-1.8).',
       lead_in: 'Which of the following is the most likely diagnosis?',
@@ -54,85 +61,55 @@ const FEW_SHOT_EXAMPLES: FewShotExampleData[] = [
         { label: 'C', text: 'Subacute thyroiditis (de Quervain)', is_correct: false },
         { label: 'D', text: 'Toxic multinodular goiter', is_correct: false },
         { label: 'E', text: 'Euthyroid sick syndrome', is_correct: false },
-        { label: 'F', text: 'TSH-secreting pituitary adenoma', is_correct: false },
-        { label: 'G', text: 'Riedel thyroiditis', is_correct: false },
-        { label: 'H', text: 'Postpartum thyroiditis', is_correct: false },
       ],
-      explanation: 'The elevated TSH with low free T4 confirms primary hypothyroidism. In a 32-year-old woman, the most common cause of primary hypothyroidism in iodine-sufficient areas is Hashimoto thyroiditis (chronic lymphocytic thyroiditis), an autoimmune condition. Anti-TPO and anti-thyroglobulin antibodies would confirm the diagnosis. Graves disease (A) and toxic multinodular goiter (D) cause hyperthyroidism. Subacute thyroiditis (C) typically follows a viral illness with neck pain. Euthyroid sick syndrome (E) shows low T3/T4 with normal or low TSH. TSH-secreting adenoma (F) would show elevated TSH with elevated T4. Riedel thyroiditis (G) is rare and presents with a rock-hard fixed thyroid.',
+      explanation: 'Elevated TSH with low free T4 confirms primary hypothyroidism. In a 32-year-old woman in an iodine-sufficient area, the most common cause is Hashimoto thyroiditis (chronic lymphocytic thyroiditis), an autoimmune condition confirmed by anti-TPO and anti-thyroglobulin antibodies. Graves disease (A) and toxic multinodular goiter (D) cause hyperthyroidism. Subacute thyroiditis (C) typically follows a viral illness with neck pain. Euthyroid sick syndrome (E) shows low T3/T4 with normal or low TSH.',
     },
   },
-  // SIS — Sequential Item Set
+
+  // ── mechanism (2 examples) ──────────────────────────────────────────────
   {
-    item_type: 'SIS',
-    quality_score: 0.94,
-    content: {
-      stem: 'A 67-year-old man is brought to the emergency department after being found confused at home. His wife reports progressive memory loss over 6 months, but today he became acutely disoriented. Medical history includes atrial fibrillation for which he takes warfarin. On examination, temperature is 37.0°C, blood pressure is 170/95 mmHg, pulse is 88/min and irregularly irregular. He is oriented only to person. There is right-sided hemiparesis with right facial droop. Non-contrast CT of the head shows a hyperdense lesion in the left basal ganglia with surrounding edema.',
-      lead_in: 'What is the most likely diagnosis?',
-      options: [
-        { label: 'A', text: 'Ischemic stroke in the left MCA territory', is_correct: false },
-        { label: 'B', text: 'Intracerebral hemorrhage', is_correct: true },
-        { label: 'C', text: 'Brain metastasis', is_correct: false },
-        { label: 'D', text: 'Brain abscess', is_correct: false },
-        { label: 'E', text: 'Subdural hematoma', is_correct: false },
-      ],
-      explanation: 'A hyperdense lesion on non-contrast CT indicates acute blood. The location in the basal ganglia is the most common site for hypertensive intracerebral hemorrhage. This patient has two major risk factors: hypertension and warfarin anticoagulation. Ischemic stroke (A) appears hypodense on CT (or may not be visible in the first 6 hours). Brain metastasis (C) and abscess (D) would typically show ring enhancement on contrast CT. Subdural hematoma (E) is extra-axial and crescent-shaped.',
-    },
-  },
-  // DRUG — Drug Mechanism
-  {
-    item_type: 'DRUG',
+    example_id: 'fse-mech-hydroxychloroquine',
+    item_type: 'mechanism',
+    task_shell_id: 'ts-mechanism-drug',
     quality_score: 0.95,
     content: {
-      stem: 'A 45-year-old woman with a history of systemic lupus erythematosus is started on a new medication for lupus nephritis. Three months later, she presents for follow-up. Fundoscopic examination reveals bilateral bull\'s eye maculopathy. She reports no visual symptoms at this time.',
-      lead_in: 'Which of the following medications is most likely responsible for this finding?',
+      stem: 'A 55-year-old woman with rheumatoid arthritis is started on methotrexate. After 4 weeks, she develops pancytopenia with a megaloblastic bone marrow.',
+      lead_in: 'Which of the following best describes the mechanism of action responsible for this adverse effect?',
       options: [
-        { label: 'A', text: 'Methotrexate', is_correct: false },
-        { label: 'B', text: 'Cyclophosphamide', is_correct: false },
-        { label: 'C', text: 'Hydroxychloroquine', is_correct: true },
-        { label: 'D', text: 'Mycophenolate mofetil', is_correct: false },
-        { label: 'E', text: 'Azathioprine', is_correct: false },
+        { label: 'A', text: 'Inhibition of cyclooxygenase-2', is_correct: false },
+        { label: 'B', text: 'Inhibition of dihydrofolate reductase', is_correct: true },
+        { label: 'C', text: 'Alkylation of DNA', is_correct: false },
+        { label: 'D', text: 'Inhibition of topoisomerase II', is_correct: false },
+        { label: 'E', text: 'Inhibition of thymidylate synthase', is_correct: false },
       ],
-      explanation: 'Hydroxychloroquine (and chloroquine) accumulates in melanin-containing structures including the retinal pigment epithelium, causing irreversible retinal toxicity that manifests as bull\'s eye maculopathy. This is a classic board-testable adverse effect. Current guidelines recommend baseline eye examination and annual screening after 5 years of use (or sooner with risk factors). Methotrexate (A) can cause hepatotoxicity and bone marrow suppression. Cyclophosphamide (B) causes hemorrhagic cystitis. Mycophenolate (D) causes GI side effects and bone marrow suppression. Azathioprine (E) causes bone marrow suppression and hepatotoxicity.',
+      explanation: 'Methotrexate inhibits dihydrofolate reductase (DHFR), blocking the conversion of dihydrofolate to tetrahydrofolate. This depletes reduced folate cofactors required for purine and thymidylate synthesis, impairing DNA synthesis in rapidly dividing cells. The resulting megaloblastic anemia and pancytopenia are dose-dependent toxicities. Leucovorin (folinic acid) bypasses the DHFR block and is used as rescue therapy. Thymidylate synthase (E) is the target of 5-fluorouracil, not methotrexate directly.',
     },
   },
-  // LAB — Lab Interpretation
   {
-    item_type: 'LAB',
-    quality_score: 0.94,
+    example_id: 'fse-mech-pathophys-ascites',
+    item_type: 'mechanism',
+    task_shell_id: 'ts-mechanism-pathophysiology',
+    quality_score: 0.95,
     content: {
-      stem: 'A 28-year-old woman presents with recurrent episodes of abdominal pain, anxiety, and dark urine that turns reddish-brown upon standing. She reports that symptoms worsen during her menstrual period and after starting a new oral contraceptive. Laboratory studies show: Sodium 128 mEq/L, potassium 3.2 mEq/L, urine porphobilinogen markedly elevated, urine delta-aminolevulinic acid (ALA) elevated. CBC and liver function tests are normal.',
-      lead_in: 'Which of the following is the most likely diagnosis?',
+      stem: 'A 52-year-old man with a 20-year history of heavy alcohol use presents with increasing abdominal distension over the past 2 months. Physical examination reveals shifting dullness and a fluid wave. Paracentesis yields straw-colored fluid with a serum-ascites albumin gradient (SAAG) of 2.1 g/dL.',
+      lead_in: 'Which of the following best explains the pathophysiological mechanism responsible for this finding?',
       options: [
-        { label: 'A', text: 'Porphyria cutanea tarda', is_correct: false },
-        { label: 'B', text: 'Acute intermittent porphyria', is_correct: true },
-        { label: 'C', text: 'Lead poisoning', is_correct: false },
-        { label: 'D', text: 'Hereditary coproporphyria', is_correct: false },
-        { label: 'E', text: 'Gilbert syndrome', is_correct: false },
+        { label: 'A', text: 'Decreased oncotic pressure from nephrotic syndrome', is_correct: false },
+        { label: 'B', text: 'Portal hypertension from hepatic sinusoidal resistance', is_correct: true },
+        { label: 'C', text: 'Increased capillary permeability from peritoneal inflammation', is_correct: false },
+        { label: 'D', text: 'Lymphatic obstruction from mesenteric tumor', is_correct: false },
+        { label: 'E', text: 'Increased hydrostatic pressure from right heart failure', is_correct: false },
       ],
-      explanation: 'Acute intermittent porphyria (AIP) is caused by deficiency of porphobilinogen deaminase (also known as hydroxymethylbilane synthase), the third enzyme in the heme synthesis pathway. It presents with the classic triad of abdominal pain, neuropsychiatric symptoms, and autonomic dysfunction. The markedly elevated urine PBG is the diagnostic hallmark. Precipitants include drugs (especially P450 inducers like OCPs, barbiturates), fasting, and hormonal changes. Hyponatremia results from SIADH. Porphyria cutanea tarda (A) causes photosensitive skin lesions, not acute attacks. Lead poisoning (C) elevates ALA but not PBG. Gilbert syndrome (E) involves unconjugated hyperbilirubinemia.',
+      explanation: 'A SAAG >= 1.1 g/dL indicates portal hypertension as the cause of ascites. In alcoholic cirrhosis, hepatic fibrosis increases sinusoidal resistance, raising portal venous pressure. This drives splanchnic vasodilation via nitric oxide, activating RAAS and ADH, causing sodium and water retention that accumulates as ascites. Nephrotic syndrome (A) causes ascites through low oncotic pressure (SAAG < 1.1). Peritoneal inflammation (C) causes exudative ascites (SAAG < 1.1). Right heart failure (E) can cause a high SAAG but would present with JVD, peripheral edema, and hepatojugular reflux.',
     },
   },
-  // IMG — Image-Based
+
+  // ── next_step (2 examples) ──────────────────────────────────────────────
   {
-    item_type: 'IMG',
-    quality_score: 0.92,
-    content: {
-      stem: 'A 55-year-old man undergoes upper endoscopy for evaluation of dysphagia and chronic heartburn. Biopsy of the distal esophagus reveals replacement of the normal stratified squamous epithelium with columnar epithelium containing goblet cells.',
-      lead_in: 'Which of the following best describes this histological finding?',
-      options: [
-        { label: 'A', text: 'Squamous cell carcinoma in situ', is_correct: false },
-        { label: 'B', text: 'Intestinal metaplasia (Barrett esophagus)', is_correct: true },
-        { label: 'C', text: 'Gastric heterotopia', is_correct: false },
-        { label: 'D', text: 'High-grade dysplasia', is_correct: false },
-        { label: 'E', text: 'Eosinophilic esophagitis', is_correct: false },
-      ],
-      explanation: 'The replacement of normal esophageal stratified squamous epithelium with intestinal-type columnar epithelium containing goblet cells defines Barrett esophagus, a metaplastic change resulting from chronic gastroesophageal reflux (GERD). This is a premalignant condition with increased risk for esophageal adenocarcinoma. The key diagnostic feature is the presence of goblet cells (intestinal metaplasia), which distinguishes Barrett from simple columnar metaplasia. Gastric heterotopia (C) contains gastric-type columnar epithelium without goblet cells. Eosinophilic esophagitis (E) shows eosinophilic infiltration of squamous epithelium.',
-    },
-  },
-  // ACUTE — Acute Management
-  {
-    item_type: 'ACUTE',
-    quality_score: 0.96,
+    example_id: 'fse-next-tension-pneumo',
+    item_type: 'next_step',
+    task_shell_id: 'ts-next-step-emergency',
+    quality_score: 0.95,
     content: {
       stem: 'A 22-year-old man is brought to the emergency department after a motorcycle accident. On arrival, he is unresponsive with a GCS of 6. His blood pressure is 70/40 mmHg, heart rate is 130 bpm, respiratory rate is 28/min, and oxygen saturation is 88% on room air. Physical examination reveals absent breath sounds on the left side with tracheal deviation to the right. Neck veins are distended.',
       lead_in: 'Which of the following is the most appropriate immediate action?',
@@ -143,24 +120,63 @@ const FEW_SHOT_EXAMPLES: FewShotExampleData[] = [
         { label: 'D', text: 'Insert a left-sided chest tube', is_correct: false },
         { label: 'E', text: 'Administer 2 liters of normal saline', is_correct: false },
       ],
-      explanation: 'This patient presents with the classic findings of tension pneumothorax: hypotension, tachycardia, absent breath sounds on the affected side, tracheal deviation away from the affected side, and distended neck veins. Tension pneumothorax is a clinical diagnosis that requires immediate needle decompression (large-bore needle in the 2nd intercostal space, midclavicular line) before obtaining imaging. This is a life-threatening emergency where delay for imaging (A) can be fatal. Chest tube (D) is the definitive treatment but takes longer to place; needle decompression is the temporizing bridge. Intubation (C) without decompression will worsen the pneumothorax via positive pressure ventilation. IV fluids (E) alone will not correct obstructive shock.',
+      explanation: 'This patient presents with classic tension pneumothorax: hypotension, tachycardia, absent breath sounds on the affected side, tracheal deviation away from the affected side, and distended neck veins. This is a clinical diagnosis requiring immediate needle decompression (large-bore needle in the 2nd intercostal space, midclavicular line) before imaging. Chest tube (D) is definitive but slower; needle decompression is the temporizing bridge. Intubation (C) without decompression worsens pneumothorax via positive pressure ventilation. IV fluids (E) alone will not correct obstructive shock.',
     },
   },
-  // ETH — Ethics/Legal
   {
-    item_type: 'ETH',
-    quality_score: 0.93,
+    example_id: 'fse-next-rv-infarct-fluids',
+    item_type: 'next_step',
+    task_shell_id: 'ts-next-step-management',
+    quality_score: 0.95,
     content: {
-      stem: 'A 78-year-old woman with advanced pancreatic cancer is admitted for pain management. She has decision-making capacity and tells her physician that she does not want CPR or mechanical ventilation if her heart stops. Her adult son, who holds her healthcare power of attorney, disagrees and insists that "everything possible" be done. The patient has not completed a written advance directive.',
-      lead_in: 'Which of the following is the most appropriate course of action?',
+      stem: 'A 63-year-old man with a history of hypertension presents to the emergency department with severe substernal chest pain for 1 hour. ECG shows ST-segment elevation in leads II, III, and aVF. He is given aspirin, heparin, and morphine. His blood pressure is 82/55 mmHg and heart rate is 48 bpm. Right-sided ECG leads show ST elevation in V4R.',
+      lead_in: 'Which of the following is the most appropriate next step in management?',
       options: [
-        { label: 'A', text: 'Follow the son\'s wishes as the healthcare proxy', is_correct: false },
-        { label: 'B', text: 'Honor the patient\'s expressed wishes', is_correct: true },
-        { label: 'C', text: 'Convene an ethics committee before making any decision', is_correct: false },
-        { label: 'D', text: 'Obtain a court order to resolve the disagreement', is_correct: false },
-        { label: 'E', text: 'Defer the decision until the patient loses capacity', is_correct: false },
+        { label: 'A', text: 'Administer IV nitroglycerin', is_correct: false },
+        { label: 'B', text: 'Administer IV normal saline bolus', is_correct: true },
+        { label: 'C', text: 'Start dobutamine infusion', is_correct: false },
+        { label: 'D', text: 'Place a temporary pacemaker', is_correct: false },
+        { label: 'E', text: 'Administer alteplase (tPA)', is_correct: false },
       ],
-      explanation: 'The fundamental principle is that a patient with decision-making capacity has the right to make their own medical decisions, including the refusal of life-sustaining treatment. The healthcare power of attorney (proxy) only activates when the patient lacks decision-making capacity. Since this patient currently has capacity and has clearly communicated her preferences, her wishes take precedence over the surrogate\'s. An ethics committee (C) may help mediate the family conflict but is not required before honoring the patient\'s autonomous decision. A court order (D) is unnecessary when the patient has capacity.',
+      explanation: 'ST elevation in V4R confirms right ventricular infarction complicating inferior STEMI. RV infarction causes decreased RV output and reduced LV preload, leading to hypotension. The immediate treatment is IV fluid resuscitation to increase preload. Nitroglycerin (A) is contraindicated as it reduces preload further. Dobutamine (C) may be considered if fluids fail but is not the first step. A temporary pacemaker (D) may be needed for persistent bradycardia but IV fluids address the hypotension first.',
+    },
+  },
+
+  // ── test_selection (2 examples) ─────────────────────────────────────────
+  {
+    example_id: 'fse-test-troponin',
+    item_type: 'test_selection',
+    task_shell_id: 'ts-biomarker-select',
+    quality_score: 0.95,
+    content: {
+      stem: 'A 48-year-old woman presents to the emergency department with acute-onset substernal chest pressure radiating to the jaw for 2 hours. ECG shows no ST-segment changes. The physician wants to evaluate for acute myocardial injury.',
+      lead_in: 'Which of the following laboratory tests is most appropriate to confirm or exclude acute myocardial infarction?',
+      options: [
+        { label: 'A', text: 'CK-MB', is_correct: false },
+        { label: 'B', text: 'High-sensitivity troponin I', is_correct: true },
+        { label: 'C', text: 'Myoglobin', is_correct: false },
+        { label: 'D', text: 'LDH', is_correct: false },
+        { label: 'E', text: 'BNP', is_correct: false },
+      ],
+      explanation: 'High-sensitivity cardiac troponin (hs-cTnI or hs-cTnT) is the preferred biomarker for diagnosis of acute myocardial infarction per current ACC/AHA guidelines. It has superior sensitivity and specificity for myocardial injury compared to CK-MB (A), which was the prior standard but is less sensitive and rises later. Myoglobin (C) rises early but is nonspecific (skeletal muscle). LDH (D) is outdated and nonspecific. BNP (E) is a marker of volume overload and heart failure, not acute myocardial necrosis.',
+    },
+  },
+  {
+    example_id: 'fse-test-colon-screening',
+    item_type: 'test_selection',
+    task_shell_id: 'ts-screening-recommendation',
+    quality_score: 0.95,
+    content: {
+      stem: 'A 46-year-old man presents for a routine health maintenance visit. He has no significant medical history and no family history of cancer. He is asymptomatic and has never had a colonoscopy. His BMI is 28 kg/m2.',
+      lead_in: 'According to current USPSTF guidelines, which of the following screening tests is most appropriate at this time?',
+      options: [
+        { label: 'A', text: 'Colonoscopy', is_correct: true },
+        { label: 'B', text: 'Flexible sigmoidoscopy every 10 years', is_correct: false },
+        { label: 'C', text: 'CT colonography every 5 years', is_correct: false },
+        { label: 'D', text: 'No screening recommended until age 50', is_correct: false },
+        { label: 'E', text: 'Annual fecal occult blood test only', is_correct: false },
+      ],
+      explanation: 'The USPSTF (2021) recommends initiating colorectal cancer screening at age 45 for average-risk adults (previously age 50, updated based on rising incidence in younger adults). Colonoscopy every 10 years is one of several acceptable modalities. This 46-year-old should have already begun screening. Waiting until age 50 (D) reflects outdated guidelines. FIT/FOBT alone (E) is an option but annual, not the sole recommended test. Flexible sigmoidoscopy (B) is every 5 years (with or without FIT), not every 10. CT colonography (C) is every 5 years.',
     },
   },
 ]
@@ -173,23 +189,23 @@ async function seedFewShotExamples(): Promise<void> {
   for (const fse of FEW_SHOT_EXAMPLES) {
     const contentStr = JSON.stringify(fse.content)
 
-    // MERGE FewShotExample node on item_type + quality_score + institution_id
+    // MERGE FewShotExample node on example_id + institution_id
     const result = await neo4jQuery(
-      `MERGE (fse:FewShotExample {
-         item_type: $item_type,
-         quality_score: $quality_score,
-         institution_id: $institution_id
-       })
+      `MERGE (fse:FewShotExample {example_id: $example_id, institution_id: $institution_id})
        ON CREATE SET
-         fse.uuid = $uuid,
+         fse.uuid = randomUUID(),
+         fse.item_type = $item_type,
+         fse.quality_score = $quality_score,
          fse.content = $content,
          fse.created_at = datetime()
        ON MATCH SET
+         fse.item_type = $item_type,
+         fse.quality_score = $quality_score,
          fse.content = $content,
          fse.updated_at = datetime()
-       RETURN fse.uuid AS uuid, fse.item_type AS item_type`,
+       RETURN fse.uuid AS uuid, fse.example_id AS example_id`,
       {
-        uuid: randomUUID(),
+        example_id: fse.example_id,
         item_type: fse.item_type,
         quality_score: fse.quality_score,
         content: contentStr,
@@ -198,20 +214,20 @@ async function seedFewShotExamples(): Promise<void> {
     )
 
     if (result) {
-      const record = result.records[0]
-      console.log(`  ✓ FewShotExample (${record?.item_type ?? fse.item_type})`)
+      console.log(`  ✓ FewShotExample (${fse.example_id})`)
     } else {
-      console.error(`  ✗ Failed to seed FewShotExample (${fse.item_type}) — Neo4j unavailable`)
+      console.error(`  ✗ Failed to seed FewShotExample (${fse.example_id}) — Neo4j unavailable`)
     }
 
-    // Create EXEMPLIFIES edge to matching TaskShell
+    // Create EXEMPLIFIES edge to matching TaskShell by id
     const edgeResult = await neo4jQuery(
-      `MATCH (fse:FewShotExample {item_type: $item_type, institution_id: $institution_id})
-       MATCH (ts:TaskShell {item_type: $item_type, institution_id: $institution_id})
+      `MATCH (fse:FewShotExample {example_id: $example_id, institution_id: $institution_id})
+       MATCH (ts:TaskShell {id: $task_shell_id, institution_id: $institution_id})
        MERGE (fse)-[:EXEMPLIFIES]->(ts)
-       RETURN fse.item_type AS item_type, ts.name AS task_shell_name`,
+       RETURN fse.example_id AS example_id, ts.name AS task_shell_name`,
       {
-        item_type: fse.item_type,
+        example_id: fse.example_id,
+        task_shell_id: fse.task_shell_id,
       },
       ctx
     )
@@ -219,7 +235,7 @@ async function seedFewShotExamples(): Promise<void> {
     if (edgeResult && edgeResult.records.length > 0) {
       console.log(`    → EXEMPLIFIES → ${edgeResult.records[0]?.task_shell_name}`)
     } else {
-      console.warn(`    ⚠ Could not link to TaskShell (${fse.item_type}) — run 03-task-shells first`)
+      console.warn(`    ⚠ Could not link to TaskShell (${fse.task_shell_id}) — run 03-task-shells first`)
     }
   }
 

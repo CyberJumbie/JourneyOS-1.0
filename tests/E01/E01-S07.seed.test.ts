@@ -4,11 +4,11 @@
  *
  * Validates:
  *   1. 15 MisconceptionCategory nodes exist
- *   2. MisconceptionCategory nodes have required properties
+ *   2. MisconceptionCategory has required props: name, description, usmle_systems, example_distractor_pattern
  *   3. 12 TaskShell nodes exist
- *   4. TaskShell nodes have bloom level ranges
- *   5. Few-shot examples linked to TaskShells via EXEMPLIFIES
- *   6. At least one few-shot example per common TaskShell
+ *   4. TaskShell has: concept_family, bloom_range, lead_in_type, variable_slots, template_structure
+ *   5. FewShotExample nodes linked to TaskShells via EXEMPLIFIES
+ *   6. At least 8 few-shot examples covering 4 concept families
  *   7. Seeds are idempotent
  */
 
@@ -44,16 +44,19 @@ test.describe('E01-S07: Seed MisconceptionCategory, TaskShell, FewShotExample', 
   // 2. MisconceptionCategory nodes have required properties
   // ---------------------------------------------------------------------------
 
-  test('Acceptance: MisconceptionCategory nodes have required properties (name, description, common_in)', async () => {
+  test('Acceptance: MisconceptionCategory nodes have required properties', async () => {
     const result = await neo4jQuery<{
       name: string
       description: string
-      common_in: string[]
+      usmle_systems: string[]
+      example_distractor_pattern: string
       uuid: string
     }>(
       `MATCH (mc:MisconceptionCategory {institution_id: $institution_id})
        RETURN mc.name AS name, mc.description AS description,
-              mc.common_in AS common_in, mc.uuid AS uuid`,
+              mc.usmle_systems AS usmle_systems,
+              mc.example_distractor_pattern AS example_distractor_pattern,
+              mc.uuid AS uuid`,
       {},
       ctx
     )
@@ -73,8 +76,11 @@ test.describe('E01-S07: Seed MisconceptionCategory, TaskShell, FewShotExample', 
       expect(record.description, 'description should be a non-empty string').toBeTruthy()
       expect(typeof record.description).toBe('string')
 
-      expect(Array.isArray(record.common_in), 'common_in should be an array').toBe(true)
-      expect(record.common_in.length, 'common_in should have at least one entry').toBeGreaterThan(0)
+      expect(Array.isArray(record.usmle_systems), 'usmle_systems should be an array').toBe(true)
+      expect(record.usmle_systems.length, 'usmle_systems should have at least one entry').toBeGreaterThan(0)
+
+      expect(record.example_distractor_pattern, 'example_distractor_pattern should be a non-empty string').toBeTruthy()
+      expect(typeof record.example_distractor_pattern).toBe('string')
 
       expect(record.uuid, 'uuid should be a non-empty string').toBeTruthy()
     }
@@ -102,20 +108,23 @@ test.describe('E01-S07: Seed MisconceptionCategory, TaskShell, FewShotExample', 
   })
 
   // ---------------------------------------------------------------------------
-  // 4. TaskShell nodes have bloom level ranges
+  // 4. TaskShell nodes have canonical properties
   // ---------------------------------------------------------------------------
 
-  test('Acceptance: TaskShell nodes have valid bloom level ranges', async () => {
+  test('Acceptance: TaskShell nodes have canonical properties', async () => {
     const result = await neo4jQuery<{
       name: string
-      item_type: string
-      bloom_level_min: number
-      bloom_level_max: number
+      concept_family: string
+      bloom_range: number[]
+      lead_in_type: string
+      variable_slots: string[]
+      template_structure: string
     }>(
       `MATCH (ts:TaskShell {institution_id: $institution_id})
-       RETURN ts.name AS name, ts.item_type AS item_type,
-              ts.bloom_level_min AS bloom_level_min,
-              ts.bloom_level_max AS bloom_level_max`,
+       RETURN ts.name AS name, ts.concept_family AS concept_family,
+              ts.bloom_range AS bloom_range, ts.lead_in_type AS lead_in_type,
+              ts.variable_slots AS variable_slots,
+              ts.template_structure AS template_structure`,
       {},
       ctx
     )
@@ -129,28 +138,38 @@ test.describe('E01-S07: Seed MisconceptionCategory, TaskShell, FewShotExample', 
     expect(result.records.length).toBe(12)
 
     for (const record of result.records) {
-      expect(record.bloom_level_min, `${record.name}: bloom_level_min should be >= 1`).toBeGreaterThanOrEqual(1)
-      expect(record.bloom_level_max, `${record.name}: bloom_level_max should be <= 6`).toBeLessThanOrEqual(6)
-      expect(
-        record.bloom_level_min,
-        `${record.name}: bloom_level_min should be <= bloom_level_max`
-      ).toBeLessThanOrEqual(record.bloom_level_max)
-      expect(record.item_type, `${record.name}: item_type should be a non-empty string`).toBeTruthy()
+      expect(record.concept_family, `${record.name}: concept_family should be set`).toBeTruthy()
+      expect(typeof record.concept_family).toBe('string')
+
+      expect(Array.isArray(record.bloom_range), `${record.name}: bloom_range should be an array`).toBe(true)
+      expect(record.bloom_range.length, `${record.name}: bloom_range should have 2 elements`).toBe(2)
+      expect(record.bloom_range[0], `${record.name}: bloom_range[0] should be >= 1`).toBeGreaterThanOrEqual(1)
+      expect(record.bloom_range[1], `${record.name}: bloom_range[1] should be <= 6`).toBeLessThanOrEqual(6)
+      expect(record.bloom_range[0], `${record.name}: bloom_range[0] <= bloom_range[1]`).toBeLessThanOrEqual(record.bloom_range[1])
+
+      expect(record.lead_in_type, `${record.name}: lead_in_type should be set`).toBeTruthy()
+
+      expect(Array.isArray(record.variable_slots), `${record.name}: variable_slots should be an array`).toBe(true)
+      expect(record.variable_slots.length, `${record.name}: variable_slots should have at least one entry`).toBeGreaterThan(0)
+
+      expect(record.template_structure, `${record.name}: template_structure should be set`).toBeTruthy()
+      expect(typeof record.template_structure).toBe('string')
     }
   })
 
   // ---------------------------------------------------------------------------
-  // 5. Few-shot examples linked to TaskShells via EXEMPLIFIES
+  // 5. FewShotExample nodes linked to TaskShells via EXEMPLIFIES
   // ---------------------------------------------------------------------------
 
   test('Acceptance: FewShotExample nodes linked to TaskShells via EXEMPLIFIES', async () => {
     const result = await neo4jQuery<{
-      fse_item_type: string
+      example_id: string
+      item_type: string
       ts_name: string
     }>(
       `MATCH (fse:FewShotExample {institution_id: $institution_id})
              -[:EXEMPLIFIES]->(ts:TaskShell {institution_id: $institution_id})
-       RETURN fse.item_type AS fse_item_type, ts.name AS ts_name`,
+       RETURN fse.example_id AS example_id, fse.item_type AS item_type, ts.name AS ts_name`,
       {},
       ctx
     )
@@ -164,17 +183,18 @@ test.describe('E01-S07: Seed MisconceptionCategory, TaskShell, FewShotExample', 
     expect(result.records.length, 'All few-shot examples should be linked to a TaskShell').toBeGreaterThanOrEqual(8)
 
     for (const record of result.records) {
-      expect(record.fse_item_type).toBeTruthy()
+      expect(record.example_id).toBeTruthy()
+      expect(record.item_type).toBeTruthy()
       expect(record.ts_name).toBeTruthy()
     }
   })
 
   // ---------------------------------------------------------------------------
-  // 6. At least one few-shot example per common TaskShell
+  // 6. At least 2 few-shot examples per concept family
   // ---------------------------------------------------------------------------
 
-  test('Acceptance: at least one few-shot example per common TaskShell type', async () => {
-    const COMMON_TYPES = ['SBA', 'EMQ', 'SIS', 'DRUG', 'LAB', 'IMG', 'ACUTE', 'ETH']
+  test('Acceptance: at least 2 few-shot examples per concept family', async () => {
+    const CONCEPT_FAMILIES = ['diagnosis', 'mechanism', 'next_step', 'test_selection']
 
     const result = await neo4jQuery<{ item_type: string; count: number }>(
       `MATCH (fse:FewShotExample {institution_id: $institution_id})
@@ -189,13 +209,14 @@ test.describe('E01-S07: Seed MisconceptionCategory, TaskShell, FewShotExample', 
       return
     }
 
-    const coveredTypes = new Set(result.records.map((r) => r.item_type))
+    const familyCounts = new Map(result.records.map((r) => [r.item_type, r.count]))
 
-    for (const itemType of COMMON_TYPES) {
+    for (const family of CONCEPT_FAMILIES) {
+      const count = familyCounts.get(family) ?? 0
       expect(
-        coveredTypes.has(itemType),
-        `Should have at least one FewShotExample for item_type ${itemType}`
-      ).toBe(true)
+        count,
+        `Should have at least 2 FewShotExamples for concept family '${family}', got ${count}`
+      ).toBeGreaterThanOrEqual(2)
     }
   })
 
@@ -246,6 +267,6 @@ test.describe('E01-S07: Seed MisconceptionCategory, TaskShell, FewShotExample', 
 
     expect(mcCount.records[0]?.count).toBe(15)
     expect(tsCount.records[0]?.count).toBe(12)
-    expect(fseCount.records[0]?.count).toBeGreaterThanOrEqual(8)
+    expect(fseCount.records[0]?.count).toBe(8)
   })
 })

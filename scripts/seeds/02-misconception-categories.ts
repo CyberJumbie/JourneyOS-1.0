@@ -1,124 +1,69 @@
 /**
  * scripts/seeds/02-misconception-categories.ts
  *
- * Seeds 15 MisconceptionCategory nodes into Neo4j.
- * Idempotent: uses MERGE on name + institution_id.
+ * Seeds 15 MisconceptionCategory nodes into Neo4j from the canonical fixture file.
+ * Idempotent: uses MERGE on id + institution_id.
  *
  * Run: pnpm tsx scripts/seeds/02-misconception-categories.ts
  */
 
 import { neo4jQuery } from '../../packages/neo4j/client'
-import { randomUUID } from 'crypto'
+import { readFileSync } from 'fs'
+import { resolve } from 'path'
 
 const INSTITUTION_ID = process.env.INSTITUTION_ID ?? 'msm-default'
 
-interface MisconceptionCategoryData {
-  name: string
-  description: string
-  common_in: string[]
+const FIXTURES = resolve(__dirname, '../../tests/fixtures/frameworks')
+
+function loadFixture<T>(name: string): T {
+  return JSON.parse(readFileSync(resolve(FIXTURES, name), 'utf-8')) as T
 }
 
-const MISCONCEPTION_CATEGORIES: MisconceptionCategoryData[] = [
-  {
-    name: 'Mechanism Confusion',
-    description: 'Confuses mechanism of action with related pathway',
-    common_in: ['Pharmacology', 'Biochemistry'],
-  },
-  {
-    name: 'Anatomical Adjacency Error',
-    description: 'Selects anatomically adjacent but incorrect structure',
-    common_in: ['Anatomy', 'Surgery'],
-  },
-  {
-    name: 'Temporal Sequence Error',
-    description: 'Confuses order of events in a process',
-    common_in: ['Physiology', 'Embryology'],
-  },
-  {
-    name: 'Similar Name Confusion',
-    description: 'Confuses diseases/drugs/structures with similar names',
-    common_in: ['All disciplines'],
-  },
-  {
-    name: 'Pathophysiology Reversal',
-    description: 'Confuses cause and effect in disease process',
-    common_in: ['Pathology'],
-  },
-  {
-    name: 'Drug Class Generalization',
-    description: 'Applies class effect to wrong member',
-    common_in: ['Pharmacology'],
-  },
-  {
-    name: 'Statistical Misinterpretation',
-    description: 'Misapplies statistical concept or study design',
-    common_in: ['Biostatistics', 'Epidemiology'],
-  },
-  {
-    name: 'Incomplete Differential',
-    description: 'Fixates on one diagnosis, misses critical alternative',
-    common_in: ['Clinical Medicine'],
-  },
-  {
-    name: 'Age-Group Extrapolation',
-    description: 'Applies adult findings/treatments to pediatric or vice versa',
-    common_in: ['Pediatrics', 'Geriatrics'],
-  },
-  {
-    name: 'Enzyme/Receptor Substitution',
-    description: 'Confuses related enzymes or receptor subtypes',
-    common_in: ['Biochemistry', 'Pharmacology'],
-  },
-  {
-    name: 'Inheritance Pattern Error',
-    description: 'Misidentifies mode of genetic inheritance',
-    common_in: ['Genetics'],
-  },
-  {
-    name: 'Immunological Cross-Reactivity',
-    description: 'Confuses immune mechanisms or cell types',
-    common_in: ['Immunology'],
-  },
-  {
-    name: 'Microorganism Misidentification',
-    description: 'Confuses organisms with similar characteristics',
-    common_in: ['Microbiology'],
-  },
-  {
-    name: 'Electrolyte Imbalance Confusion',
-    description: 'Confuses presentations of different electrolyte disorders',
-    common_in: ['Internal Medicine'],
-  },
-  {
-    name: 'Management Sequence Error',
-    description: 'Selects correct intervention but at wrong stage',
-    common_in: ['Clinical Medicine'],
-  },
-]
+interface MisconceptionCategoryFixture {
+  id: string
+  name: string
+  description: string
+  usmle_systems: string[]
+  example_distractor_pattern: string
+  empirical_frequency: number
+}
+
+interface MisconceptionFixtureFile {
+  source: string
+  categories: MisconceptionCategoryFixture[]
+}
 
 async function seedMisconceptionCategories(): Promise<void> {
   console.log('--- 02-misconception-categories: Seeding 15 MisconceptionCategory nodes ---')
 
   const ctx = { institution_id: INSTITUTION_ID }
+  const fixture = loadFixture<MisconceptionFixtureFile>('misconception-categories.json')
 
-  for (const mc of MISCONCEPTION_CATEGORIES) {
+  for (const mc of fixture.categories) {
     const result = await neo4jQuery(
-      `MERGE (mc:MisconceptionCategory {name: $name, institution_id: $institution_id})
+      `MERGE (mc:MisconceptionCategory {id: $id, institution_id: $institution_id})
        ON CREATE SET
-         mc.uuid = $uuid,
+         mc.uuid = randomUUID(),
+         mc.name = $name,
          mc.description = $description,
-         mc.common_in = $common_in,
+         mc.usmle_systems = $usmle_systems,
+         mc.example_distractor_pattern = $pattern,
+         mc.empirical_frequency = $freq,
          mc.created_at = datetime()
        ON MATCH SET
+         mc.name = $name,
          mc.description = $description,
-         mc.common_in = $common_in,
+         mc.usmle_systems = $usmle_systems,
+         mc.example_distractor_pattern = $pattern,
          mc.updated_at = datetime()
        RETURN mc.uuid AS uuid, mc.name AS name`,
       {
-        uuid: randomUUID(),
+        id: mc.id,
         name: mc.name,
         description: mc.description,
-        common_in: mc.common_in,
+        usmle_systems: mc.usmle_systems,
+        pattern: mc.example_distractor_pattern,
+        freq: mc.empirical_frequency,
       },
       ctx
     )
@@ -152,4 +97,4 @@ seedMisconceptionCategories().catch((err) => {
   process.exit(1)
 })
 
-export { seedMisconceptionCategories, MISCONCEPTION_CATEGORIES }
+export { seedMisconceptionCategories }
