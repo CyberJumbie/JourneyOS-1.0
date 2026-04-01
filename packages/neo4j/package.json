@@ -6,5 +6,8 @@
   "types": "./index.ts",
   "scripts": {
     "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "neo4j-driver": "^5.27.0"
   }
 }
