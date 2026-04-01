@@ -21,13 +21,16 @@
       "@journey/db": ["./packages/db/index.ts"],
       "@journey/inngest/*": ["./apps/inngest/*"],
       "@journey/inngest": ["./apps/inngest/client.ts"],
+      "@journey/neo4j/*": ["./packages/neo4j/*"],
+      "@journey/neo4j": ["./packages/neo4j/index.ts"],
       "@/*": ["./apps/web/*"]
     }
   },
   "include": [
     "packages/**/*.ts",
     "apps/**/*.ts",
-    "apps/**/*.tsx"
+    "apps/**/*.tsx",
+    "scripts/**/*.ts"
   ],
   "exclude": ["node_modules", "**/node_modules", "**/dist", "**/*.tsbuildinfo"]
 }
