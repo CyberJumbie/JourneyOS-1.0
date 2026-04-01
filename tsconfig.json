@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "types": ["node"],
+    "paths": {
+      "@journey/types/*": ["./packages/types/*"],
+      "@journey/types": ["./packages/types/index.ts"],
+      "@journey/db/*": ["./packages/db/*"],
+      "@journey/db": ["./packages/db/index.ts"],
+      "@journey/inngest/*": ["./apps/inngest/*"],
+      "@journey/inngest": ["./apps/inngest/client.ts"],
+      "@/*": ["./apps/web/*"]
+    }
+  },
+  "include": [
+    "packages/**/*.ts",
+    "apps/**/*.ts",
+    "apps/**/*.tsx"
+  ],
+  "exclude": ["node_modules", "**/node_modules", "**/dist", "**/*.tsbuildinfo"]
+}

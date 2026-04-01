@@ -1,0 +1,22 @@
+{
+  "name": "@journey/inngest",
+  "version": "0.0.1",
+  "private": true,
+  "main": "./client.ts",
+  "types": "./client.ts",
+  "exports": {
+    ".": "./client.ts",
+    "./client": "./client.ts",
+    "./functions": "./functions/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@journey/types": "workspace:*",
+    "inngest": "^4.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0"
+  }
+}
