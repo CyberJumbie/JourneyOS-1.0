@@ -106,6 +106,9 @@ async function validateSeed(): Promise<void> {
   const anatomyCount = await countNodes('AnatomyRegion')
   checks.push({ name: '04: AnatomyRegion', pass: anatomyCount >= 50, expected: '>=50', actual: anatomyCount })
 
+  const hasSubregionCount = await countEdges('AnatomyRegion', 'HAS_SUBREGION', 'AnatomyRegion')
+  checks.push({ name: '04: AnatomyRegion→HAS_SUBREGION→AnatomyRegion', pass: hasSubregionCount >= 40, expected: '>=40', actual: hasSubregionCount })
+
   // ── 05: USMLE Taxonomy ─────────────────────────────────────────────────
   const systemCount = await countNodes('USMLE_System')
   checks.push({ name: '05: USMLE_System', pass: systemCount === 18, expected: 18, actual: systemCount })
@@ -130,12 +133,18 @@ async function validateSeed(): Promise<void> {
   const lcmeElementCount = await countNodes('LCME_Element')
   checks.push({ name: '06: LCME_Element', pass: lcmeElementCount >= 90, expected: '>=90', actual: lcmeElementCount })
 
+  const hasElementCount = await countEdges('LCME_Standard', 'HAS_ELEMENT', 'LCME_Element')
+  checks.push({ name: '06: LCME_Standard→HAS_ELEMENT→LCME_Element', pass: hasElementCount >= 93, expected: '>=93', actual: hasElementCount })
+
   // ── 07: IPEC + CarePhase ────────────────────────────────────────────────
   const ipecCompetencyCount = await countNodes('IPEC_Competency')
   checks.push({ name: '07: IPEC_Competency', pass: ipecCompetencyCount === 4, expected: 4, actual: ipecCompetencyCount })
 
   const ipecSubCompetencyCount = await countNodes('IPEC_SubCompetency')
   checks.push({ name: '07: IPEC_SubCompetency', pass: ipecSubCompetencyCount >= 35, expected: '>=35', actual: ipecSubCompetencyCount })
+
+  const hasSubcompetencyCount = await countEdges('IPEC_Competency', 'HAS_SUBCOMPETENCY', 'IPEC_SubCompetency')
+  checks.push({ name: '07: IPEC_Competency→HAS_SUBCOMPETENCY→IPEC_SubCompetency', pass: hasSubcompetencyCount >= 38, expected: '>=38', actual: hasSubcompetencyCount })
 
   const carePhaseCount = await countNodes('CarePhase')
   checks.push({ name: '07: CarePhase', pass: carePhaseCount === 5, expected: 5, actual: carePhaseCount })
@@ -162,7 +171,7 @@ async function validateSeed(): Promise<void> {
   checks.push({ name: '10: Gene', pass: geneCount >= 50, expected: '>=50', actual: geneCount })
 
   const diseaseCount = await countNodes('Disease')
-  checks.push({ name: '10: Disease', pass: diseaseCount >= 49, expected: '>=49', actual: diseaseCount })
+  checks.push({ name: '10: Disease', pass: diseaseCount >= 54, expected: '>=54', actual: diseaseCount })
 
   const compoundCount = await countNodes('Compound')
   checks.push({ name: '10: Compound', pass: compoundCount >= 30, expected: '>=30', actual: compoundCount })
@@ -175,7 +184,7 @@ async function validateSeed(): Promise<void> {
 
   // ── 11: DrugBank ────────────────────────────────────────────────────────
   const drugCount = await countNodes('Drug')
-  checks.push({ name: '11: Drug', pass: drugCount >= 50, expected: '>=50', actual: drugCount })
+  checks.push({ name: '11: Drug', pass: drugCount >= 51, expected: '>=51', actual: drugCount })
 
   const drugTargetCount = await countNodes('DrugTarget')
   checks.push({ name: '11: DrugTarget', pass: drugTargetCount >= 40, expected: '>=40', actual: drugTargetCount })

@@ -65,10 +65,11 @@ export async function seedIPECAndCarePhase(): Promise<void> {
   // ---- IPEC Competencies ----
   const ipec = loadIPEC()
   console.log('[seed:07] Seeding IPEC competency domains and sub-competencies from fixture...')
+  let errors = 0
 
   for (const domain of ipec.domains) {
     // MERGE domain node
-    await neo4jQuery(
+    const domainResult = await neo4jQuery(
       `MERGE (c:IPEC_Competency {code: $code, institution_id: $institution_id})
        ON CREATE SET
          c.uuid = $uuid,
@@ -85,10 +86,14 @@ export async function seedIPECAndCarePhase(): Promise<void> {
       },
       ctx
     )
+    if (!domainResult) {
+      console.error(`  ✗ Failed: IPEC_Competency (${domain.name})`)
+      errors++
+    }
 
     // MERGE each sub-competency and edge
     for (const sub of domain.sub_competencies) {
-      await neo4jQuery(
+      const subResult = await neo4jQuery(
         `MERGE (sc:IPEC_SubCompetency {code: $subCode, institution_id: $institution_id})
          ON CREATE SET
            sc.uuid = $uuid,
@@ -108,6 +113,10 @@ export async function seedIPECAndCarePhase(): Promise<void> {
         },
         ctx
       )
+      if (!subResult) {
+        console.error(`  ✗ Failed: IPEC_SubCompetency (${sub.code})`)
+        errors++
+      }
     }
   }
 
@@ -125,7 +134,7 @@ export async function seedIPECAndCarePhase(): Promise<void> {
 
   for (let i = 0; i < carePhases.phases.length; i++) {
     const phase = carePhases.phases[i]
-    await neo4jQuery(
+    const phaseResult = await neo4jQuery(
       `MERGE (cp:CarePhase {name: $name, institution_id: $institution_id})
        ON CREATE SET
          cp.uuid = $uuid,
@@ -142,8 +151,16 @@ export async function seedIPECAndCarePhase(): Promise<void> {
       },
       ctx
     )
+    if (!phaseResult) {
+      console.error(`  ✗ Failed: CarePhase (${phase.name})`)
+      errors++
+    }
   }
 
+  if (errors > 0) {
+    console.error(`[seed:07] ⚠ ${errors} nodes failed`)
+    throw new Error(`[seed:07] ${errors} nodes failed to seed`)
+  }
   console.log(`[seed:07] CarePhase done — ${carePhases.phases.length} phases`)
 }
 

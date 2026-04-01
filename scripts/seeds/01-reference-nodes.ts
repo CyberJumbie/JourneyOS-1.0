@@ -191,4 +191,12 @@ export async function seedReferenceNodes(): Promise<SeedResult[]> {
 }
 
 // Run if executed directly
-seedReferenceNodes().catch(console.error)
+seedReferenceNodes()
+  .then(results => {
+    const hasErrors = results.some(r => r.errors > 0)
+    if (hasErrors) process.exit(1)
+  })
+  .catch(err => {
+    console.error(err)
+    process.exit(1)
+  })

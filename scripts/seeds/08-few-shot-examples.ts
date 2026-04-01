@@ -68,7 +68,7 @@ const FEW_SHOT_EXAMPLES: FewShotExampleData[] = [
 
   // ── mechanism (2 examples) ──────────────────────────────────────────────
   {
-    example_id: 'fse-mech-hydroxychloroquine',
+    example_id: 'fse-mech-methotrexate',
     item_type: 'mechanism',
     task_shell_id: 'ts-mechanism-drug',
     quality_score: 0.95,

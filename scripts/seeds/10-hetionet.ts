@@ -184,6 +184,15 @@ const DISEASES: DiseaseData[] = [
   { name: 'Down syndrome', doid: 'DOID:14250', category: 'genetic' },
   { name: 'Turner syndrome', doid: 'DOID:3911', category: 'genetic' },
   { name: 'Phenylketonuria', doid: 'DOID:9281', category: 'genetic' },
+  { name: 'Tay-Sachs disease', doid: 'DOID:14499', category: 'genetic' },
+  { name: 'Huntington disease', doid: 'DOID:12858', category: 'genetic' },
+
+  // Hematologic (additional)
+  { name: 'Hemolytic anemia', doid: 'DOID:583', category: 'hematologic' },
+
+  // Cancer (additional)
+  { name: 'Medullary thyroid carcinoma', doid: 'DOID:3973', category: 'cancer' },
+  { name: 'Renal cell carcinoma', doid: 'DOID:4450', category: 'cancer' },
 
   // Psychiatric
   { name: 'Major depressive disorder', doid: 'DOID:1596', category: 'psychiatric' },
@@ -260,14 +269,14 @@ const GENE_DISEASE_ASSOCIATIONS: GeneDisease[] = [
   { gene: 'HER2', disease: 'Breast cancer', score: 0.90, source: 'hetionet' },
   { gene: 'EGFR', disease: 'Lung cancer', score: 0.89, source: 'hetionet' },
   { gene: 'ALK', disease: 'Lung cancer', score: 0.78, source: 'hetionet' },
-  { gene: 'RET', disease: 'Hyperthyroidism', score: 0.75, source: 'hetionet' },
-  { gene: 'VHL', disease: 'Chronic kidney disease', score: 0.80, source: 'hetionet' },
+  { gene: 'RET', disease: 'Medullary thyroid carcinoma', score: 0.95, source: 'hetionet' },
+  { gene: 'VHL', disease: 'Renal cell carcinoma', score: 0.95, source: 'hetionet' },
   { gene: 'CFTR', disease: 'Cystic fibrosis', score: 0.99, source: 'hetionet' },
   { gene: 'HBB', disease: 'Sickle cell disease', score: 0.99, source: 'hetionet' },
   { gene: 'DMD', disease: 'Heart failure', score: 0.65, source: 'hetionet' },
   { gene: 'FBN1', disease: 'Marfan syndrome', score: 0.99, source: 'hetionet' },
   { gene: 'FBN1', disease: 'Aortic aneurysm', score: 0.85, source: 'hetionet' },
-  { gene: 'HTT', disease: 'Alzheimer disease', score: 0.55, source: 'hetionet' },
+  { gene: 'HTT', disease: 'Huntington disease', score: 0.99, source: 'hetionet' },
   { gene: 'LDLR', disease: 'Coronary artery disease', score: 0.88, source: 'hetionet' },
   { gene: 'F5', disease: 'Deep vein thrombosis', score: 0.90, source: 'hetionet' },
   { gene: 'F5', disease: 'Pulmonary embolism', score: 0.85, source: 'hetionet' },
@@ -285,11 +294,11 @@ const GENE_DISEASE_ASSOCIATIONS: GeneDisease[] = [
   { gene: 'IL6', disease: 'Rheumatoid arthritis', score: 0.75, source: 'hetionet' },
   { gene: 'ACE', disease: 'Hypertension', score: 0.85, source: 'hetionet' },
   { gene: 'ACE', disease: 'Heart failure', score: 0.80, source: 'hetionet' },
-  { gene: 'G6PD', disease: 'Iron deficiency anemia', score: 0.60, source: 'hetionet' },
+  { gene: 'G6PD', disease: 'Hemolytic anemia', score: 0.92, source: 'hetionet' },
   { gene: 'SCN5A', disease: 'Atrial fibrillation', score: 0.72, source: 'hetionet' },
   { gene: 'VEGFA', disease: 'Colorectal cancer', score: 0.70, source: 'hetionet' },
   { gene: 'NF1', disease: 'Epilepsy', score: 0.55, source: 'hetionet' },
-  { gene: 'HEXA', disease: 'Down syndrome', score: 0.30, source: 'hetionet' },
+  { gene: 'HEXA', disease: 'Tay-Sachs disease', score: 0.99, source: 'hetionet' },
 ]
 
 interface CompoundDisease {

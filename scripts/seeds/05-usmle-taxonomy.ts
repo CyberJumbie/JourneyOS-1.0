@@ -183,22 +183,27 @@ export const TOPICS: TopicDef[] = buildTopicsFromFixture()
 // ---------------------------------------------------------------------------
 export async function seedUsmle(): Promise<void> {
   console.log('[seed:05] Seeding USMLE taxonomy...')
+  let errors = 0
 
   // 1. Create system nodes
   for (const sys of SYSTEMS) {
-    await neo4jQuery(
+    const result = await neo4jQuery(
       `MERGE (s:USMLE_System {code: $code, institution_id: $institution_id})
        ON CREATE SET s.uuid = randomUUID(), s.name = $name, s.step1_spec_category = $spec, s.created_at = datetime()
        ON MATCH SET s.name = $name, s.step1_spec_category = $spec, s.updated_at = datetime()`,
       { code: sys.code, name: sys.name, spec: sys.step1_spec_category },
       ctx
     )
+    if (!result) {
+      console.error(`  ✗ Failed: USMLE_System (${sys.name})`)
+      errors++
+    }
   }
   console.log(`[seed:05]   ✓ ${SYSTEMS.length} systems`)
 
   // 2. Create topic nodes + PART_OF edges (topic → system)
   for (const topic of TOPICS) {
-    await neo4jQuery(
+    const result = await neo4jQuery(
       `MATCH (s:USMLE_System {code: $systemCode, institution_id: $institution_id})
        MERGE (t:USMLE_Topic {code: $code, institution_id: $institution_id})
        ON CREATE SET t.uuid = randomUUID(), t.name = $name, t.system_code = $systemCode, t.created_at = datetime()
@@ -207,6 +212,10 @@ export async function seedUsmle(): Promise<void> {
       { systemCode: topic.systemCode, code: topic.code, name: topic.name },
       ctx
     )
+    if (!result) {
+      console.error(`  ✗ Failed: USMLE_Topic (${topic.name})`)
+      errors++
+    }
   }
   console.log(`[seed:05]   ✓ ${TOPICS.length} topics`)
 
@@ -214,7 +223,7 @@ export async function seedUsmle(): Promise<void> {
   let subtopicCount = 0
   for (const topic of TOPICS) {
     for (const sub of topic.subtopics) {
-      await neo4jQuery(
+      const result = await neo4jQuery(
         `MATCH (t:USMLE_Topic {code: $topicCode, institution_id: $institution_id})
          MERGE (st:USMLE_Subtopic {code: $code, institution_id: $institution_id})
          ON CREATE SET st.uuid = randomUUID(), st.name = $name, st.topic_code = $topicCode, st.created_at = datetime()
@@ -223,10 +232,19 @@ export async function seedUsmle(): Promise<void> {
         { topicCode: topic.code, code: sub.code, name: sub.name },
         ctx
       )
+      if (!result) {
+        console.error(`  ✗ Failed: USMLE_Subtopic (${sub.name})`)
+        errors++
+      }
       subtopicCount++
     }
   }
   console.log(`[seed:05]   ✓ ${subtopicCount} subtopics`)
+
+  if (errors > 0) {
+    console.error(`[seed:05] ⚠ ${errors} nodes failed`)
+    throw new Error(`[seed:05] ${errors} nodes failed to seed`)
+  }
   console.log('[seed:05] Done.')
 }
 
